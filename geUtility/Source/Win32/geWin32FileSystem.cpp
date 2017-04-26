@@ -166,7 +166,7 @@ namespace geEngineSDK
 	bool Win32_IsDevice(const WString& path)
 	{
 		WString ucPath = path;
-		StringUtil::ToUpperCase(ucPath);
+		StringUtil::toUpperCase(ucPath);
 
 		return
 			ucPath.compare(0, 4, L"\\\\.\\") == 0 ||

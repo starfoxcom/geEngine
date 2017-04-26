@@ -717,51 +717,50 @@ namespace geEngineSDK
 	/************************************************************************************************************************/
 	template<> struct RTTIPlainType<Path>
 	{
-		enum { id = TYPEID_UTILITY::TID_Path }; enum { hasDynamicSize = 1 };
+		enum { kID = TYPEID_UTILITY::kID_Path }; enum { kHasDynamicSize = 1 };
 
-		static void ToMemory(const Path& data, char* memory)
-		{
-			uint32 size = GetDynamicSize(data);
-			memcpy(memory, &size, sizeof(uint32));
-			memory += sizeof(uint32);
+		static void
+    toMemory(const Path& data, char* memory) {
+      uint64 size = getDynamicSize(data);
+      memcpy(memory, &size, sizeof(uint64));
+      memory += sizeof(uint64);
 
-			memory = RTTIWriteElement(data.m_Device, memory);
-			memory = RTTIWriteElement(data.m_Node, memory);
-			memory = RTTIWriteElement(data.m_Filename, memory);
-			memory = RTTIWriteElement(data.m_IsAbsolute, memory);
-			memory = RTTIWriteElement(data.m_Directories, memory);
+      memory = rttiWriteElement(data.m_Device, memory);
+      memory = rttiWriteElement(data.m_Node, memory);
+      memory = rttiWriteElement(data.m_Filename, memory);
+      memory = rttiWriteElement(data.m_IsAbsolute, memory);
+      memory = rttiWriteElement(data.m_Directories, memory);
+    }
+
+		static uint64
+    fromMemory(Path& data, char* memory) {
+      uint64 size;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
+
+      memory = rttiReadElement(data.m_Device, memory);
+      memory = rttiReadElement(data.m_Node, memory);
+      memory = rttiReadElement(data.m_Filename, memory);
+      memory = rttiReadElement(data.m_IsAbsolute, memory);
+      memory = rttiReadElement(data.m_Directories, memory);
+
+      return size;
 		}
 
-		static uint32 FromMemory(Path& data, char* memory)
-		{
-			uint32 size;
-			memcpy(&size, memory, sizeof(uint32));
-			memory += sizeof(uint32);
-
-			memory = RTTIReadElement(data.m_Device, memory);
-			memory = RTTIReadElement(data.m_Node, memory);
-			memory = RTTIReadElement(data.m_Filename, memory);
-			memory = RTTIReadElement(data.m_IsAbsolute, memory);
-			memory = RTTIReadElement(data.m_Directories, memory);
-
-			return size;
-		}
-
-		static uint32 GetDynamicSize(const Path& data)
-		{
-			SIZE_T dataSize =	RTTIGetElementSize(data.m_Device) + 
-								RTTIGetElementSize(data.m_Node) + 
-								RTTIGetElementSize(data.m_Filename) + 
-								RTTIGetElementSize(data.m_IsAbsolute) + 
-								RTTIGetElementSize(data.m_Directories) + sizeof(uint32);
+		static uint64
+    getDynamicSize(const Path& data) {
+      uint64 dataSize =	rttiGetElementSize(data.m_Device) +
+                        rttiGetElementSize(data.m_Node) + 
+                        rttiGetElementSize(data.m_Filename) + 
+                        rttiGetElementSize(data.m_IsAbsolute) + 
+                        rttiGetElementSize(data.m_Directories) + sizeof(uint64);
 
 #if GE_DEBUG_MODE
-			if( dataSize > std::numeric_limits<uint32>::max() )
-			{
-				__string_throwDataOverflowException();
-			}
+      if (dataSize > std::numeric_limits<uint64>::max()) {
+        __string_throwDataOverflowException();
+      }
 #endif
-			return (uint32)dataSize;
+			return dataSize;
 		}
 	};
 }

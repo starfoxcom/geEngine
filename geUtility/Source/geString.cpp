@@ -30,19 +30,19 @@ namespace geEngineSDK
 	const String StringUtil::BLANK;
 	const WString StringUtil::WBLANK;
 
-	void StringUtil::Trim(String& str, bool left, bool right)
+	void StringUtil::trim(String& str, bool left, bool right)
 	{
 		static const String delims = " \t\r";
-		Trim(str, delims, left, right);
+		trim(str, delims, left, right);
 	}
 
-	void StringUtil::Trim(WString& str, bool left, bool right)
+	void StringUtil::trim(WString& str, bool left, bool right)
 	{
 		static const WString delims = L" \t\r";
-		Trim(str, delims, left, right);
+		trim(str, delims, left, right);
 	}
 
-	void StringUtil::Trim(String& str, const String& delims, bool left, bool right)
+	void StringUtil::trim(String& str, const String& delims, bool left, bool right)
 	{
 		if(right)
 		{
@@ -54,7 +54,7 @@ namespace geEngineSDK
 		}
 	}
 
-	void StringUtil::Trim(WString& str, const WString& delims, bool left, bool right)
+	void StringUtil::trim(WString& str, const WString& delims, bool left, bool right)
 	{
 		if(right)
 		{
@@ -66,82 +66,82 @@ namespace geEngineSDK
 		}
 	}
 
-	Vector<String> StringUtil::Split(const String& str, const String& delims, uint32 maxSplits)
+	Vector<String> StringUtil::split(const String& str, const String& delims, uint32 maxSplits)
 	{
 		return SplitInternal<ANSICHAR>(str, delims, maxSplits);
 	}
 
-	Vector<WString> StringUtil::Split(const WString& str, const WString& delims, uint32 maxSplits)
+	Vector<WString> StringUtil::split(const WString& str, const WString& delims, uint32 maxSplits)
 	{
 		return SplitInternal<UNICHAR>(str, delims, maxSplits);
 	}
 
-	Vector<String> StringUtil::Tokenise(const String& str, const String& singleDelims, const String& doubleDelims, uint32 maxSplits)
+	Vector<String> StringUtil::tokenise(const String& str, const String& singleDelims, const String& doubleDelims, uint32 maxSplits)
 	{
 		return TokeniseInternal<ANSICHAR>(str, singleDelims, doubleDelims, maxSplits);
 	}
 
-	Vector<WString> StringUtil::Tokenise(const WString& str, const WString& singleDelims, const WString& doubleDelims, uint32 maxSplits)
+	Vector<WString> StringUtil::tokenise(const WString& str, const WString& singleDelims, const WString& doubleDelims, uint32 maxSplits)
 	{
 		return TokeniseInternal<UNICHAR>(str, singleDelims, doubleDelims, maxSplits);
 	}
 
-	void StringUtil::ToLowerCase(String& str)
+	void StringUtil::toLowerCase(String& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), tolower);
 	}
 
-	void StringUtil::ToLowerCase(WString& str)
+	void StringUtil::toLowerCase(WString& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), tolower);
 	}
 
-	void StringUtil::ToUpperCase(String& str)
+	void StringUtil::toUpperCase(String& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), toupper);
 	}
 
-	void StringUtil::ToUpperCase(WString& str)
+	void StringUtil::toUpperCase(WString& str)
 	{
 		std::transform(str.begin(), str.end(), str.begin(), toupper);
 	}
 
-	bool StringUtil::StartsWith(const String& str, const String& pattern, bool lowerCase)
+	bool StringUtil::startsWith(const String& str, const String& pattern, bool lowerCase)
 	{
 		return StartsWithInternal<ANSICHAR>(str, pattern, lowerCase);
 	}
 
-	bool StringUtil::StartsWith(const WString& str, const WString& pattern, bool lowerCase)
+	bool StringUtil::startsWith(const WString& str, const WString& pattern, bool lowerCase)
 	{
 		return StartsWithInternal<UNICHAR>(str, pattern, lowerCase);
 	}
 
-	bool StringUtil::EndsWith(const String& str, const String& pattern, bool lowerCase)
+	bool StringUtil::endsWith(const String& str, const String& pattern, bool lowerCase)
 	{
 		return EndsWithInternal<ANSICHAR>(str, pattern, lowerCase);
 	}
 
-	bool StringUtil::EndsWith(const WString& str, const WString& pattern, bool lowerCase)
+	bool StringUtil::endsWith(const WString& str, const WString& pattern, bool lowerCase)
 	{
 		return EndsWithInternal<UNICHAR>(str, pattern, lowerCase);
 	}
 
-	bool StringUtil::Match(const String& str, const String& pattern, bool caseSensitive)
+	bool StringUtil::match(const String& str, const String& pattern, bool caseSensitive)
 	{
 		return MatchInternal<ANSICHAR>(str, pattern, caseSensitive);
 	}
 
-	bool StringUtil::Match(const WString& str, const WString& pattern, bool caseSensitive)
+	bool StringUtil::match(const WString& str, const WString& pattern, bool caseSensitive)
 	{
 		return MatchInternal<UNICHAR>(str, pattern, caseSensitive);
 	}
 
-	const String StringUtil::ReplaceAll(const String& source, const String& replaceWhat, const String& replaceWithWhat)
+	const String StringUtil::replaceAll(const String& source, const String& replaceWhat, const String& replaceWithWhat)
 	{
 		return ReplaceAllInternal<ANSICHAR>(source, replaceWhat, replaceWithWhat);
 	}
 
-	const WString StringUtil::ReplaceAll(const WString& source, const WString& replaceWhat, const WString& replaceWithWhat)
+	const WString StringUtil::replaceAll(const WString& source, const WString& replaceWhat, const WString& replaceWithWhat)
 	{
 		return ReplaceAllInternal<UNICHAR>(source, replaceWhat, replaceWithWhat);
 	}
@@ -706,11 +706,11 @@ namespace geEngineSDK
 
 	bool ParseBool(const String& val, bool defaultValue)
 	{
-		if( (StringUtil::StartsWith(val, "true") || StringUtil::StartsWith(val, "yes") || StringUtil::StartsWith(val, "1")) )
+		if( (StringUtil::startsWith(val, "true") || StringUtil::startsWith(val, "yes") || StringUtil::startsWith(val, "1")) )
 		{
 			return true;
 		}
-		else if( (StringUtil::StartsWith(val, "false") || StringUtil::StartsWith(val, "no") || StringUtil::StartsWith(val, "0")) )
+		else if( (StringUtil::startsWith(val, "false") || StringUtil::startsWith(val, "no") || StringUtil::startsWith(val, "0")) )
 		{
 			return false;
 		}
@@ -760,11 +760,11 @@ namespace geEngineSDK
 
 	bool ParseBool(const WString& val, bool defaultValue)
 	{
-		if( (StringUtil::StartsWith(val, L"true") || StringUtil::StartsWith(val, L"yes") || StringUtil::StartsWith(val, L"1")) )
+		if( (StringUtil::startsWith(val, L"true") || StringUtil::startsWith(val, L"yes") || StringUtil::startsWith(val, L"1")) )
 		{
 			return true;
 		}
-		else if( (StringUtil::StartsWith(val, L"false") || StringUtil::StartsWith(val, L"no") || StringUtil::StartsWith(val, L"0")) )
+		else if( (StringUtil::startsWith(val, L"false") || StringUtil::startsWith(val, L"no") || StringUtil::startsWith(val, L"0")) )
 		{
 			return false;
 		}

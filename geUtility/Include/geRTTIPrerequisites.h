@@ -1,265 +1,254 @@
 /*****************************************************************************/
 /**
-* @file    geRTTIPrerequisites.h
-* @author  Samuel Prince (samuel.prince.quezada@gmail.com)
-* @date    2015/02/09
-* @brief   Run-time type information utilities
-*
-* Utilities and functions created for RTTI purposes
-*
-* @bug	    No known bugs.
-*/
+ * @file    geRTTIPrerequisites.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2015/02/09
+ * @brief   Run-time type information utilities
+ *
+ * Utilities and functions created for RTTI purposes
+ *
+ * @bug	    No known bugs.
+ */
 /*****************************************************************************/
 #pragma once
 
 namespace geEngineSDK {
-  /************************************************************************************************************************/
   /**
-  * @brief	Template that you may specialize with a class if you want to provide
-  * 			simple serialization for it.
-  *
-  *			Any type that uses the "plain" field in the RTTI system must specialize this class.
-  *
-  * @note		Normally you will want to implement IReflectable interface if you want to provide serialization
-  * 			as that interface properly handles versioning, nested objects, pointer handling and more.
-  *
-  *			This class is useful for types you can easily serialize using a memcpy (built-in types like int/float/etc), or
-  *			types you cannot modify so they implement IReflectable interface (like std::string or std::vector).
-  *
-  * @see		RTTIType
-  * @see		RTTIField
-  */
-  /************************************************************************************************************************/
+   * @brief Template that you may specialize with a class if you want to provide simple
+   *        serialization for it.
+   *
+   *        Any type that uses the "plain" field in the RTTI system must
+   *        specialize this class.
+   *
+   * @note  Normally you will want to implement IReflectable interface if you want to provide
+   *        serialization as that interface properly handles versioning, nested objects,
+   *        pointer handling and more.
+   *
+   *        This class is useful for types you can easily serialize using a memcpy
+   *        (built-in types like int/float/etc), or types you cannot modify so they implement
+   *        IReflectable interface (like std::string or std::vector).
+   *
+   * @see   RTTIType
+   * @see   RTTIField
+   */
   template<class T>
   struct RTTIPlainType
   {
     static_assert(std::is_pod<T>::value,
-      "Provided type isn't plain-old-data. You need to specialize RTTIPlainType template in order to serialize this type. "\
-      "(Or call GE_ALLOW_MEMCPY_SERIALIZATION(type) macro if you are sure the type can be properly serialized using just memcpy.)");
+                  "Provided type isn't plain-old-data. You need to specialize RTTIPlainType" \
+                  "template in order to serialize this type."                                \
+                  "(Or call GE_ALLOW_MEMCPY_SERIALIZATION(type) macro if you are sure the"   \
+                  "type can be properly serialized using just memcpy.)");
 
-    enum
-    {
-      id = 0 /**< Unique id for the serializable type. */
-    };
-    enum
-    {
-      hasDynamicSize = 0 /**< 0 (Object has static size less than 255 bytes, e.g. int) or 1 (Dynamic size with no size restriction, e.g. string) */
+    enum {
+      /**
+       * Unique id for the serializable type.
+       */
+      kID = 0
     };
 
-    /************************************************************************************************************************/
+    enum {
+      /**
+       * 0 (Object has static size less than 255 bytes, e.g. int)
+       * 1 (Dynamic size with no size restriction, e.g. string)
+       */
+      kHasDynamicSize = 0
+    };
+
     /**
-    * @brief	Serializes the provided object into the provided pre-allocated
-    * 			memory buffer.
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(const T& data, char* memory)
-    {
+     * @brief Serializes the provided object into the provided pre-allocated memory buffer.
+     */
+    static void
+    toMemory(const T& data, char* memory) {
       memcpy(memory, &data, sizeof(T));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @brief	Deserializes a previously allocated object from the provided
-    * 			memory buffer. Return the number of bytes read from the memory buffer.
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(T& data, char* memory)
-    {
+     * @brief Deserializes a previously allocated object from the provided memory buffer.
+     *        Return the number of bytes read from the memory buffer.
+     */
+    static uint64
+    fromMemory(T& data, char* memory) {
       memcpy(&data, memory, sizeof(T));
-      return sizeof(T);
+      return static_cast<uint64>(sizeof(T));
     }
 
     /**
-    * @brief	Returns the size of the provided object. (Works for both
-    * 			static and dynamic size types)
-    */
-    static uint32 GetDynamicSize(const T&)
-    {
-      return sizeof(T);
+     * @brief Returns the size of the provided object.
+     *        (Works for both static and dynamic size types)
+     */
+    static uint64
+    getDynamicSize(const T&) {
+      return static_cast<uint64>(sizeof(T));
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Helper method when serializing known data types that have valid RTTIPlainType specialization.
-  *
-  *			Returns the size of the element. If elements serializable type is specialized with hasDynamicSize == true,
-  *			the dynamic size is calculated, otherwise sizeof() is used.
-  */
-  /************************************************************************************************************************/
+   * @brief Helper method when serializing known data types that have valid
+   *        RTTIPlainType specialization.
+   *
+   *        Returns the size of the element. If elements serializable type is
+   *        specialized with hasDynamicSize == true, the dynamic size is calculated,
+   *        otherwise sizeof() is used.
+   */
   template<class ElemType>
-  uint32 RTTIGetElementSize(const ElemType& data)
-  {
+  uint64
+  rttiGetElementSize(const ElemType& data) {
 #if GE_COMPILER == GE_COMPILER_MSVC
 #	pragma warning( disable : 4127 )
 #endif
-    if (RTTIPlainType<ElemType>::hasDynamicSize == 1)
-    {
-      return RTTIPlainType<ElemType>::GetDynamicSize(data);
+    if (RTTIPlainType<ElemType>::kHasDynamicSize == 1) {
+      return RTTIPlainType<ElemType>::getDynamicSize(data);
     }
-    else
-    {
-      return sizeof(ElemType);
-    }
+
+    return sizeof(ElemType);
 #if GE_COMPILER == GE_COMPILER_MSVC
 #	pragma warning( default: 4127 )
 #endif
   }
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Helper method when serializing known data types that have valid
-  * 			RTTIPlainType specialization.
-  *
-  *			Writes the specified data into memory, advances the memory pointer by the
-  *			bytes written and returns pointer to new memory.
-  */
-  /************************************************************************************************************************/
+   * @brief	Helper method when serializing known data types that have valid
+   *        RTTIPlainType specialization.
+   *
+   *        Writes the specified data into memory, advances the memory pointer by the
+   *        bytes written and returns pointer to new memory.
+   */
   template<class ElemType>
-  char* RTTIWriteElement(const ElemType& data, char* memory)
-  {
-    RTTIPlainType<ElemType>::ToMemory(data, memory);
-    return memory + RTTIGetElementSize(data);
+  char*
+  rttiWriteElement(const ElemType& data, char* memory) {
+    RTTIPlainType<ElemType>::toMemory(data, memory);
+    return memory + rttiGetElementSize(data);
   }
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Helper method when serializing known data types that have valid
-  * 			RTTIPlainType specialization.
-  *
-  *			Writes the specified data into memory, advances the memory pointer by the
-  *			bytes written and returns pointer to new memory. Also increases the size
-  *			value by the size of the written element.
-  */
-  /************************************************************************************************************************/
+   * @brief Helper method when serializing known data types that have valid
+   *        RTTIPlainType specialization.
+   *
+   *        Writes the specified data into memory, advances the memory pointer
+   *        by the bytes written and returns pointer to new memory. Also
+   *        increases the size value by the size of the written element.
+   */
   template<class ElemType>
-  char* RTTIWriteElement(const ElemType& data, char* memory, uint32& size)
-  {
-    RTTIPlainType<ElemType>::ToMemory(data, memory);
+  char*
+  rttiWriteElement(const ElemType& data, char* memory, uint64& size) {
+    RTTIPlainType<ElemType>::toMemory(data, memory);
 
-    uint32 elemSize = RTTIGetElementSize(data);
+    uint64 elemSize = rttiGetElementSize(data);
     size += elemSize;
 
     return memory + elemSize;
   }
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Helper method when serializing known data types that have valid
-  * 			RTTIPlainType specialization.
-  *
-  *			Reads the specified data into memory, advances the memory pointer by the
-  *			bytes read and returns pointer to new memory.
-  */
-  /************************************************************************************************************************/
+   * @brief	Helper method when serializing known data types that have valid
+   *        RTTIPlainType specialization.
+   *
+   *        Reads the specified data into memory, advances the memory pointer
+   *        by the bytes read and returns pointer to new memory.
+   */
   template<class ElemType>
-  char* RTTIReadElement(ElemType& data, char* memory)
-  {
-    RTTIPlainType<ElemType>::FromMemory(data, memory);
-    return memory + RTTIGetElementSize(data);
+  char*
+  rttiReadElement(ElemType& data, char* memory) {
+    RTTIPlainType<ElemType>::fromMemory(data, memory);
+    return memory + rttiGetElementSize(data);
   }
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Helper method when serializing known data types that have valid
-  * 			RTTIPlainType specialization.
-  *
-  *			Reads the specified data into memory, advances the memory pointer by the
-  *			bytes read and returns pointer to new memory. Also increases the size
-  *			value by the size of the read element.
-  */
-  /************************************************************************************************************************/
+   * @brief Helper method when serializing known data types that have valid
+   *        RTTIPlainType specialization.
+   *
+   *        Reads the specified data into memory, advances the memory pointer
+   *        by the bytes read and returns pointer to new memory. Also increases
+   *        the size value by the size of the read element.
+   */
   template<class ElemType>
-  char* RTTIReadElement(ElemType& data, char* memory, uint32& size)
-  {
-    RTTIPlainType<ElemType>::FromMemory(data, memory);
+  char*
+  rttiReadElement(ElemType& data, char* memory, uint64& size) {
+    RTTIPlainType<ElemType>::fromMemory(data, memory);
 
-    uint32 elemSize = RTTIGetElementSize(data);
+    uint64 elemSize = rttiGetElementSize(data);
     size += elemSize;
 
     return memory + elemSize;
   }
 
-  /************************************************************************************************************************/
   /**
-  * @brief	Tell the RTTI system that the specified type may be serialized just by
-  * 			using a memcpy.
-  *
-  * @note		Internally this creates a basic RTTIPlainType specialization for the type.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
-#define GE_ALLOW_MEMCPY_SERIALIZATION(type)										\
-	template<> struct RTTIPlainType<type>{										\
-		enum {id=0}; enum {hasDynamicSize = 0};									\
-		static void ToMemory(const type& data, char* memory)					\
-		{ memcpy(memory, &data, sizeof(type)); }								\
-		static uint32 FromMemory(type& data, char* memory)						\
-		{ memcpy(&data, memory, sizeof(type)); return sizeof(type); }			\
-		static uint32 GetDynamicSize(const type&)								\
-		{ return sizeof(type); }												\
-	};
+   * @brief Tell the RTTI system that the specified type may be serialized
+   *        just by using a memcpy.
+   *
+   * @note  Internally this creates a basic RTTIPlainType specialization for the type.
+   *
+   * @see   RTTIPlainType
+   */
+#define GE_ALLOW_MEMCPY_SERIALIZATION(type)                                   \
+  template<> struct RTTIPlainType<type> {                                     \
+    enum {kID=0}; enum {kHasDynamicSize = 0};                                 \
+    static void                                                               \
+    toMemory(const type& data, char* memory) {                                \
+      memcpy(memory, &data, sizeof(type));                                    \
+    }                                                                         \
+    static uint64                                                             \
+    fromMemory(type& data, char* memory) {                                    \
+      memcpy(&data, memory, sizeof(type));                                    \
+      return static_cast<uint64>(sizeof(type));                               \
+    }                                                                         \
+    static uint64                                                             \
+    getDynamicSize(const type&) {                                             \
+      return static_cast<uint64>(sizeof(type));                               \
+    }                                                                         \
+  };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::vector.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::vector.
+   * @see   RTTIPlainType
+   */
   template<class T>
   struct RTTIPlainType<std::vector<T, StdAlloc<T>>>
   {
-    enum { id = TYPEID_UTILITY::TID_Vector }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_Vector }; enum { kHasDynamicSize = 1 };
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(const std::vector<T, StdAlloc<T>>& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc	RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const std::vector<T, StdAlloc<T>>& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 numElements = (uint32)data.size();
-      memcpy(memory, &numElements, sizeof(uint32));
-      memory += sizeof(uint32);
-      size += sizeof(uint32);
+      uint64 numElements = static_cast<uint64>(data.size());
+      memcpy(memory, &numElements, sizeof(uint64));
+      memory += sizeof(uint64);
+      size += sizeof(uint64);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        uint32 elementSize = RTTIPlainType<T>::GetDynamicSize(*iter);
-        RTTIPlainType<T>::ToMemory(*iter, memory);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        uint64 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
+        RTTIPlainType<T>::toMemory(*iter, memory);
 
         memory += elementSize;
         size += elementSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(std::vector<T, StdAlloc<T>>& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(std::vector<T, StdAlloc<T>>& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 numElements;
-      memcpy(&numElements, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+      uint64 numElements;
+      memcpy(&numElements, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      for (uint32 i = 0; i < numElements; i++)
-      {
+      for (uint64 i = 0; i < numElements; i++) {
         T element;
-        uint32 elementSize = RTTIPlainType<T>::FromMemory(element, memory);
+        uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.push_back(element);
 
         memory += elementSize;
@@ -268,85 +257,73 @@ namespace geEngineSDK {
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const std::vector<T, StdAlloc<T>>& data)
-    {
-      SIZE_T dataSize = sizeof(uint32) * 2;
+     * @copydoc  RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
+      uint64 dataSize = sizeof(uint64) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        dataSize += RTTIPlainType<T>::GetDynamicSize(*iter);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        dataSize += RTTIPlainType<T>::getDynamicSize(*iter);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::set.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::set.
+   * @see   RTTIPlainType
+   */
   template<class T>
   struct RTTIPlainType<std::set<T, std::less<T>, StdAlloc<T>>>
   {
-    enum { id = TYPEID_UTILITY::TID_Set }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_Set }; enum { kHasDynamicSize = 1 };
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(const std::vector<T, StdAlloc<T>>& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const std::vector<T, StdAlloc<T>>& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 numElements = (uint32)data.size();
-      memcpy(memory, &numElements, sizeof(uint32));
-      memory += sizeof(uint32);
-      size += sizeof(uint32);
+      uint64 numElements = static_cast<uint64>(data.size());
+      memcpy(memory, &numElements, sizeof(uint64));
+      memory += sizeof(uint64);
+      size += sizeof(uint64);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        uint32 elementSize = RTTIPlainType<T>::GetDynamicSize(*iter);
-        RTTIPlainType<T>::ToMemory(*iter, memory);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        uint64 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
+        RTTIPlainType<T>::toMemory(*iter, memory);
 
         memory += elementSize;
         size += elementSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(std::vector<T, StdAlloc<T>>& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc	RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(std::vector<T, StdAlloc<T>>& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 numElements;
-      memcpy(&numElements, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+      uint64 numElements;
+      memcpy(&numElements, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      for (uint32 i = 0; i < numElements; i++)
-      {
+      for (uint64 i = 0; i < numElements; i++) {
         T element;
-        uint32 elementSize = RTTIPlainType<T>::FromMemory(element, memory);
+        uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.insert(element);
 
         memory += elementSize;
@@ -355,95 +332,92 @@ namespace geEngineSDK {
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc	RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const std::vector<T, StdAlloc<T>>& data)
-    {
-      SIZE_T dataSize = sizeof(uint32) * 2;
+     * @copydoc	RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
+      uint64 dataSize = sizeof(uint64) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        dataSize += RTTIPlainType<T>::GetDynamicSize(*iter);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        dataSize += RTTIPlainType<T>::getDynamicSize(*iter);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::map.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::map.
+   * @see   RTTIPlainType
+   */
   template<class Key, class Value>
-  struct RTTIPlainType<std::map<Key, Value, std::less<Key>, StdAlloc<std::pair<const Key, Value>>>>
+  struct RTTIPlainType<std::map<Key,
+                                Value,
+                                std::less<Key>,
+                                StdAlloc<std::pair<const Key, Value>>>>
   {
-    enum { id = TYPEID_UTILITY::TID_Map }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_Map }; enum { kHasDynamicSize = 1 };
 
-    /************************************************************************************************************************/
+    typedef std::map<Key,
+                     Value,
+                     std::less<Key>,
+                     StdAlloc<std::pair<const Key, Value>>>
+                     MapType;
+
     /**
-    * @copydoc		RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(const std::map<Key, Value, std::less<Key>, StdAlloc<std::pair<const Key, Value>>>& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc		RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const MapType& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 numElements = (uint32)data.size();
-      memcpy(memory, &numElements, sizeof(uint32));
-      memory += sizeof(uint32);
-      size += sizeof(uint32);
+      uint64 numElements = static_cast<uint64>(data.size());
+      memcpy(memory, &numElements, sizeof(uint64));
+      memory += sizeof(uint64);
+      size += sizeof(uint64);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        uint32 keySize = RTTIPlainType<Key>::GetDynamicSize(iter->first);
-        RTTIPlainType<Key>::ToMemory(iter->first, memory);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
+        RTTIPlainType<Key>::toMemory(iter->first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint32 valueSize = RTTIPlainType<Value>::GetDynamicSize(iter->second);
-        RTTIPlainType<Value>::ToMemory(iter->second, memory);
+        uint64 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
+        RTTIPlainType<Value>::toMemory(iter->second, memory);
 
         memory += valueSize;
         size += valueSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(std::map<Key, Value, std::less<Key>, StdAlloc<std::pair<const Key, Value>>>& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc   RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(MapType& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 numElements;
-      memcpy(&numElements, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+      uint64 numElements;
+      memcpy(&numElements, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      for (uint32 i = 0; i < numElements; i++)
-      {
+      for (uint64 i = 0; i < numElements; i++) {
         Key key;
-        uint32 keySize = RTTIPlainType<Key>::FromMemory(key, memory);
+        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         Value value;
-        uint32 valueSize = RTTIPlainType<Value>::FromMemory(value, memory);
+        uint64 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
         memory += valueSize;
 
         data[key] = value;
@@ -452,98 +426,95 @@ namespace geEngineSDK {
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const std::map<Key, Value, std::less<Key>, StdAlloc<std::pair<const Key, Value>>>& data)
-    {
-      SIZE_T dataSize = sizeof(uint32) * 2;
+     * @copydoc   RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const MapType& data) {
+      uint64 dataSize = sizeof(uint64) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        dataSize += RTTIPlainType<Key>::GetDynamicSize(iter->first);
-        dataSize += RTTIPlainType<Value>::GetDynamicSize(iter->second);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
+        dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::unordered_map.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::unordered_map.
+   * @see   RTTIPlainType
+   */
   template<class Key, class Value>
-  struct RTTIPlainType<std::unordered_map<Key, Value, std::hash<Key>, std::equal_to<Key>, StdAlloc<std::pair<const Key, Value>>>>
+  struct RTTIPlainType<std::unordered_map<Key,
+                                          Value,
+                                          std::hash<Key>,
+                                          std::equal_to<Key>,
+                                          StdAlloc<std::pair<const Key, Value>>>>
   {
-    enum { id = TYPEID_UTILITY::TID_UnorderedMap }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_UnorderedMap }; enum { kHasDynamicSize = 1 };
 
-    typedef std::unordered_map<Key, Value, std::hash<Key>, std::equal_to<Key>, StdAlloc<std::pair<const Key, Value>>> MapType;
+    typedef std::unordered_map<Key,
+                               Value,
+                               std::hash<Key>,
+                               std::equal_to<Key>,
+                               StdAlloc<std::pair<const Key, Value>>>
+                               UnorderedMapType;
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(MapType& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc   RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const UnorderedMapType& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 numElements = (uint32)data.size();
-      memcpy(memory, &numElements, sizeof(uint32));
-      memory += sizeof(uint32);
-      size += sizeof(uint32);
+      uint64 numElements = static_cast<uint64>(data.size());
+      memcpy(memory, &numElements, sizeof(uint64));
+      memory += sizeof(uint64);
+      size += sizeof(uint64);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        uint32 keySize = RTTIPlainType<Key>::GetDynamicSize(iter->first);
-        RTTIPlainType<Key>::ToMemory(iter->first, memory);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
+        RTTIPlainType<Key>::toMemory(iter->first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint32 valueSize = RTTIPlainType<Value>::GetDynamicSize(iter->second);
-        RTTIPlainType<Value>::ToMemory(iter->second, memory);
+        uint64 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
+        RTTIPlainType<Value>::toMemory(iter->second, memory);
 
         memory += valueSize;
         size += valueSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(MapType& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc   RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(UnorderedMapType& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 numElements;
-      memcpy(&numElements, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+      uint64 numElements;
+      memcpy(&numElements, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      for (uint32 i = 0; i < numElements; i++)
-      {
+      for (uint64 i = 0; i < numElements; i++) {
         Key key;
-        uint32 keySize = RTTIPlainType<Key>::FromMemory(key, memory);
+        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         Value value;
-        uint32 valueSize = RTTIPlainType<Value>::FromMemory(value, memory);
+        uint64 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
         memory += valueSize;
 
         data[key] = value;
@@ -552,88 +523,83 @@ namespace geEngineSDK {
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const MapType& data)
-    {
-      SIZE_T dataSize = sizeof(uint32) * 2;
+     * @copydoc   RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const UnorderedMapType& data) {
+      uint64 dataSize = sizeof(uint64) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        dataSize += RTTIPlainType<Key>::GetDynamicSize(iter->first);
-        dataSize += RTTIPlainType<Value>::GetDynamicSize(iter->second);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
+        dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::unordered_set.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::unordered_set.
+   * @see   RTTIPlainType
+   */
   template<class Key>
-  struct RTTIPlainType<std::unordered_set<Key, std::hash<Key>, std::equal_to<Key>, StdAlloc<Key>>>
+  struct RTTIPlainType<std::unordered_set<Key,
+                                          std::hash<Key>,
+                                          std::equal_to<Key>,
+                                          StdAlloc<Key>>>
   {
-    enum { id = TYPEID_UTILITY::TID_UnorderedSet }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_UnorderedSet }; enum { kHasDynamicSize = 1 };
 
-    typedef std::unordered_set<Key, std::hash<Key>, std::equal_to<Key>, StdAlloc<Key>> MapType;
+    typedef std::unordered_set<Key,
+                               std::hash<Key>,
+                               std::equal_to<Key>,
+                               StdAlloc<Key>>
+                               UnorderedSetType;
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(MapType& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc    RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const UnorderedSetType& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 numElements = (uint32)data.size();
-      memcpy(memory, &numElements, sizeof(uint32));
-      memory += sizeof(uint32);
-      size += sizeof(uint32);
+      uint64 numElements = static_cast<uint64>(data.size());
+      memcpy(memory, &numElements, sizeof(uint64));
+      memory += sizeof(uint64);
+      size += sizeof(uint64);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        uint32 keySize = RTTIPlainType<Key>::GetDynamicSize(*iter);
-        RTTIPlainType<Key>::ToMemory(*iter, memory);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(*iter);
+        RTTIPlainType<Key>::toMemory(*iter, memory);
 
         memory += keySize;
         size += keySize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(MapType& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc   RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(UnorderedSetType& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 numElements;
-      memcpy(&numElements, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+      uint64 numElements;
+      memcpy(&numElements, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      for (uint32 i = 0; i<numElements; i++)
-      {
+      for (uint64 i = 0; i<numElements; i++) {
         Key key;
-        uint32 keySize = RTTIPlainType<Key>::FromMemory(key, memory);
+        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         data.insert(key);
@@ -642,99 +608,87 @@ namespace geEngineSDK {
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const MapType& data)
-    {
-      SIZE_T dataSize = sizeof(uint32) * 2;
+     * @copydoc   RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const UnorderedSetType& data) {
+      uint64 dataSize = sizeof(uint64) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter)
-      {
-        dataSize += RTTIPlainType<Key>::GetDynamicSize(*iter);
+      for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        dataSize += RTTIPlainType<Key>::getDynamicSize(*iter);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 
-  /************************************************************************************************************************/
   /**
-  * @brief	RTTIPlainType for std::pair.
-  *
-  * @see		RTTIPlainType
-  */
-  /************************************************************************************************************************/
+   * @brief RTTIPlainType for std::pair.
+   * @see   RTTIPlainType
+   */
   template<class A, class B>
   struct RTTIPlainType<std::pair<A, B>>
   {
-    enum { id = TYPEID_UTILITY::TID_Pair }; enum { hasDynamicSize = 1 };
+    enum { kID = TYPEID_UTILITY::kID_Pair }; enum { kHasDynamicSize = 1 };
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::ToMemory
-    */
-    /************************************************************************************************************************/
-    static void ToMemory(const std::pair<A, B>& data, char* memory)
-    {
-      uint32 size = sizeof(uint32);
+     * @copydoc   RTTIPlainType::toMemory
+     */
+    static void
+    toMemory(const std::pair<A, B>& data, char* memory) {
+      uint64 size = sizeof(uint64);
       char* memoryStart = memory;
-      memory += sizeof(uint32);
+      memory += sizeof(uint64);
 
-      uint32 firstSize = RTTIPlainType<A>::GetDynamicSize(data.first);
-      RTTIPlainType<A>::ToMemory(data.first, memory);
+      uint64 firstSize = RTTIPlainType<A>::getDynamicSize(data.first);
+      RTTIPlainType<A>::toMemory(data.first, memory);
 
       memory += firstSize;
       size += firstSize;
 
-      uint32 secondSize = RTTIPlainType<B>::GetDynamicSize(data.second);
-      RTTIPlainType<B>::ToMemory(data.second, memory);
+      uint64 secondSize = RTTIPlainType<B>::getDynamicSize(data.second);
+      RTTIPlainType<B>::toMemory(data.second, memory);
 
       memory += secondSize;
       size += secondSize;
 
-      memcpy(memoryStart, &size, sizeof(uint32));
+      memcpy(memoryStart, &size, sizeof(uint64));
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::FromMemory
-    */
-    /************************************************************************************************************************/
-    static uint32 FromMemory(std::pair<A, B>& data, char* memory)
-    {
-      uint32 size = 0;
-      memcpy(&size, memory, sizeof(uint32));
-      memory += sizeof(uint32);
+     * @copydoc   RTTIPlainType::fromMemory
+     */
+    static uint64
+    fromMemory(std::pair<A, B>& data, char* memory) {
+      uint64 size = 0;
+      memcpy(&size, memory, sizeof(uint64));
+      memory += sizeof(uint64);
 
-      uint32 firstSize = RTTIPlainType<A>::FromMemory(data.first, memory);
+      uint64 firstSize = RTTIPlainType<A>::fromMemory(data.first, memory);
       memory += firstSize;
 
-      uint32 secondSize = RTTIPlainType<B>::FromMemory(data.second, memory);
+      uint64 secondSize = RTTIPlainType<B>::fromMemory(data.second, memory);
       memory += secondSize;
 
       return size;
     }
 
-    /************************************************************************************************************************/
     /**
-    * @copydoc		RTTIPlainType::GetDynamicSize
-    */
-    /************************************************************************************************************************/
-    static uint32 GetDynamicSize(const std::pair<A, B>& data)
-    {
-      SIZE_T dataSize = sizeof(uint32);
+     * @copydoc   RTTIPlainType::getDynamicSize
+     */
+    static uint64
+    getDynamicSize(const std::pair<A, B>& data) {
+      uint64 dataSize = sizeof(uint64);
 
-      dataSize += RTTIPlainType<A>::GetDynamicSize(data.first);
-      dataSize += RTTIPlainType<B>::GetDynamicSize(data.second);
+      dataSize += RTTIPlainType<A>::getDynamicSize(data.first);
+      dataSize += RTTIPlainType<B>::getDynamicSize(data.second);
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
 
-      return (uint32)dataSize;
+      return dataSize;
     }
   };
 }

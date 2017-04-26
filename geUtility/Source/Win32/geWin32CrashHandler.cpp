@@ -129,7 +129,7 @@ namespace geEngineSDK
 			DWORD64 dummy;
 			if( SymGetSymFromAddr64(hProcess, funcAddress, &dummy, symbol) )
 			{
-				outputStream << StringUtil::Format("{0}() - ", symbol->Name);
+				outputStream << StringUtil::format("{0}() - ", symbol->Name);
 			}
 
 			//Output file name and line
@@ -143,11 +143,11 @@ namespace geEngineSDK
 			{
 				Path filePath = lineData.FileName;
 
-				outputStream << StringUtil::Format("0x{0} File[{1}:{2} ({3})]", addressString, filePath.GetFilename(), lineData.LineNumber, column);
+				outputStream << StringUtil::format("0x{0} File[{1}:{2} ({3})]", addressString, filePath.GetFilename(), lineData.LineNumber, column);
 			}
 			else
 			{
-				outputStream << StringUtil::Format("0x{0}", addressString);
+				outputStream << StringUtil::format("0x{0}", addressString);
 			}
 
 			//Output module name
@@ -157,7 +157,7 @@ namespace geEngineSDK
 			if( SymGetModuleInfo64(hProcess, funcAddress, &moduleData) )
 			{
 				Path filePath = moduleData.ImageName;
-				outputStream << StringUtil::Format(" Module[{0}]", filePath.GetFilename());
+				outputStream << StringUtil::format(" Module[{0}]", filePath.GetFilename());
 			}
 		}
 
@@ -340,7 +340,7 @@ namespace geEngineSDK
 				}
 
 				String violatedAddressStr = ToString((uint64)violatedAddress, 0, ' ', std::ios::hex);
-				return StringUtil::Format(format, exceptionAddress, violatedAddressStr);
+				return StringUtil::format(format, exceptionAddress, violatedAddressStr);
 			}
 			case EXCEPTION_IN_PAGE_ERROR:
 			{
@@ -371,79 +371,79 @@ namespace geEngineSDK
 
 				String violatedAddressStr = ToString((uint64)violatedAddress, 0, ' ', std::ios::hex);
 				String codeStr = ToString((uint64)code, 0, ' ', std::ios::hex);
-				return StringUtil::Format(format, exceptionAddress, violatedAddressStr, codeStr);
+				return StringUtil::format(format, exceptionAddress, violatedAddressStr, codeStr);
 			}
 			case STATUS_ARRAY_BOUNDS_EXCEEDED:
 			{
 				format = "Unhandled exception at 0x{0}. Attempting to access an out of range array element.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_DATATYPE_MISALIGNMENT:
 			{
 				format = "Unhandled exception at 0x{0}. Attempting to access missaligned data.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_DENORMAL_OPERAND:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point operand too small.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_DIVIDE_BY_ZERO:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point operation attempted to divide by zero.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_INVALID_OPERATION:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point invalid operation.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_OVERFLOW:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point overflow.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_UNDERFLOW:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point underflow.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_FLT_STACK_CHECK:
 			{
 				format = "Unhandled exception at 0x{0}. Floating point stack overflow/underflow.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_ILLEGAL_INSTRUCTION:
 			{
 				format = "Unhandled exception at 0x{0}. Attempting to execute an illegal instruction.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_PRIV_INSTRUCTION:
 			{
 				format = "Unhandled exception at 0x{0}. Attempting to execute a private instruction.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_INT_DIVIDE_BY_ZERO:
 			{
 				format = "Unhandled exception at 0x{0}. Integer operation attempted to divide by zero.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_INT_OVERFLOW:
 			{
 				format = "Unhandled exception at 0x{0}. Integer operation result has overflown.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			case EXCEPTION_STACK_OVERFLOW:
 			{
 				format = "Unhandled exception at 0x{0}. Stack overflow.";
-				return StringUtil::Format(format, exceptionAddress);
+				return StringUtil::format(format, exceptionAddress);
 			}
 			default:
 			{
 				format = "Unhandled exception at 0x{0}. Code 0x{1}.";
 
 				String exceptionCode = ToString((uint32)record->ExceptionCode, 0, ' ', std::ios::hex);
-				return StringUtil::Format(format, exceptionAddress, exceptionCode);
+				return StringUtil::format(format, exceptionAddress, exceptionCode);
 			}
 		}
 	}
@@ -582,8 +582,8 @@ namespace geEngineSDK
 		WString strHour =	ToWString(systemTime.wHour,  2, '0');
 		WString strMinute = ToWString(systemTime.wMinute,2, '0');
 
-		//timeStamp = StringUtil::Format(timeStamp, strYear, strMonth, strDay, strHour, strMinute);
-		WString folderName = StringUtil::Format(CrashReportFolder, timeStamp);
+		//timeStamp = StringUtil::format(timeStamp, strYear, strMonth, strDay, strHour, strMinute);
+		WString folderName = StringUtil::format(CrashReportFolder, timeStamp);
 
 		return FileSystem::GetWorkingDirectoryPath() + folderName;
 	}

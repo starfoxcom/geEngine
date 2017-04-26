@@ -179,7 +179,7 @@ R"(			</TBODY>
 				stream << R"(					<TD>Debug</TD>)" << std::endl;
 			}
 
-			String parsedMessage = StringUtil::ReplaceAll(entry.GetLogMessage(), "\n", "<BR>\n");
+			String parsedMessage = StringUtil::replaceAll(entry.GetLogMessage(), "\n", "<BR>\n");
 
 			stream << R"(					<TD>)" << parsedMessage << "</TD>" << std::endl;
 			stream << R"(				</TR>)" << std::endl;
