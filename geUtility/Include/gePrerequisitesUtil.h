@@ -1,0 +1,115 @@
+/*****************************************************************************/
+/**
+ * @file    gePrerequisitesUtil.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2015/02/09
+ * @brief   Utility include with the most basic defines needed
+ *
+ * Utility include with the most basic defines needed for compilation
+ * This is the file that must be included for use on external objects
+ *
+ * @bug	    No known bugs.
+ */
+/*****************************************************************************/
+#pragma once
+
+/*****************************************************************************/
+/**
+ * Most basic includes (required for everything else)
+ */
+/*****************************************************************************/
+#include <cassert>
+
+/*****************************************************************************/
+/**
+ * GE_THREAD_SUPPORT
+ * 0 - No thread support
+ * 1 - Render system is thread safe (TODO: NOT WORKING and will probably be removed)
+ * 2 - Thread support but render system can only be accessed from main thread
+ */
+/*****************************************************************************/
+#define GE_THREAD_SUPPORT		2
+
+/*****************************************************************************/
+/**
+ * GE_PROFILING_ENABLED - Enabled/Disable Profiling
+ */
+/*****************************************************************************/
+#define GE_PROFILING_ENABLED	1
+
+/*****************************************************************************/
+/**
+ * Version tracking constants
+ */
+/*****************************************************************************/
+#define GE_VER_DEV      1           //Development Version
+#define GE_VER_PREVIEW  2           //Preview Version
+#define GE_VER          GE_VER_DEV  //This is the one that will be checked
+
+/*****************************************************************************/
+/**
+ * Platform specific stuff
+ */
+/*****************************************************************************/
+#include "gePlatformDefines.h"
+
+//If we are compiling with Visual Studio
+#if GE_COMPILER == GE_COMPILER_MSVC
+  /**
+   * TODO:  This is not deactivated anywhere, therefore it applies to any file
+   * that includes this header. Right now I don't have an easier way to apply
+   * these warnings globally so I'm keeping it this way.
+   */
+
+  //Secure versions aren't multi platform, so we won't be using them
+# define _CRT_SECURE_NO_WARNINGS
+
+  /**
+   * Disable: "<type> needs to have DLL interface to be used by clients'
+   * Happens on STL member variables which are not public therefore is ok
+   */
+# pragma warning (disable: 4251)
+
+  //Disable: 'X' Function call with parameters that may be unsafe
+# pragma warning(disable: 4996) 
+
+  /**
+   * Disable: decorated name length exceeded, name was truncated. Happens with
+   * really long type names. Even fairly standard use of std::unordered_map
+   * with custom parameters, meaning I can't really do much to avoid it.
+   * It shouldn't effect execution but might cause problems if you compile library
+   * with one compiler and use it in another.
+   */
+# pragma warning(disable: 4503)
+	
+  /**
+   * Disable: nonstandard extension used: override specifier 'keyword'.
+   * Happens when a keyword was used that is not in the C++ standard, for example,
+   * one of the override specifiers that also works under /clr.
+   */
+# pragma warning(disable : 4481)
+#endif
+
+/*****************************************************************************/
+/**
+ * Include of short-hand names for various built-in types
+ */
+/*****************************************************************************/
+#include "gePlatformTypes.h"        //Platform types
+#include "geMacroUtil.h"            //Utility Macros
+#include "geMemoryAllocator.h"      //Memory Allocator
+#include "geStdHeaders.h"           //Commonly used standard headers
+
+#include "geThreadDefines.h"        //Threading Defines
+#include "geFwdDeclUtil.h"          //Forward declarations
+#include "geRTTIPrerequisites.h"    //Run-time type information Prerequisites
+
+#include "geString.h"               //String objects
+
+#include "geMessageHandlerFwd.h"    //Forward declarations of the message objects
+#include "geUtil.h"                 //Hashing utilities
+#include "gePath.h"                 //Paths to files
+#include "geStringID.h"             //For string fast comparison
+#include "geEvent.h"                //Event objects and handlers
+#include "gePlatformUtility.h"      //Utilities for the specific operating system
+#include "geCrashHandler.h"         //Crash handling functions
