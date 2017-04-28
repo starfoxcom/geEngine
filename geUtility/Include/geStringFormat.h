@@ -1,371 +1,400 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geStringFormat.h
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/03/05
- * @brief  Helper class used for string formatting operations
+ * @file    geStringFormat.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/05
+ * @brief   Helper class used for string formatting operations
  *
  * Helper class used for string formatting operations
  *
- * @bug	   No known bugs.
+ * @bug     No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 #pragma once
 
-namespace geEngineSDK
-{
-	/************************************************************************************************************************/
-	/* Template functions specialization																					*/
-	/************************************************************************************************************************/
-	template<class T> inline std::string ToString(const T& param) { return std::to_string(param); }
-	template<class T> inline std::string ToString(T*) { GE_ASSERT("Invalid pointer type."); return std::string(""); }
-	template<class T> inline std::wstring ToWString(const T& param) { return std::to_wstring(param); }
-	template<class T> inline std::wstring ToWString(T*) { GE_ASSERT("Invalid pointer type.");  return std::wstring(L""); }
+namespace geEngineSDK {
+  /***************************************************************************/
+  /**
+   * String conversion templates
+   */
+  /***************************************************************************/
+  template<class T>
+  inline std::string
+  toString(const T& param) {
+    return std::to_string(param);
+  }
 
-	template<> inline std::string ToString(const std::string& param) { return param; }
-	template<> inline std::string ToString(const String& param) { return std::string(param.c_str()); }
-	template<> inline std::string ToString<const ANSICHAR>(const ANSICHAR* param) { return std::string(param); }
-	template<> inline std::string ToString<ANSICHAR>(ANSICHAR* param) { return std::string(param); }
+  template<class T>
+  inline std::string
+  toString(T*) {
+    GE_ASSERT("Invalid pointer type.");
+    return std::string("");
+  }
 
-	template<> inline std::wstring ToWString<std::wstring>(const std::wstring& param) { return param; }
-	template<> inline std::wstring ToWString<WString>(const WString& param) { return std::wstring(param.c_str()); }
-	template<> inline std::wstring ToWString<const UNICHAR>(const UNICHAR* param) { return std::wstring(param); }
-	template<> inline std::wstring ToWString<UNICHAR>(UNICHAR* param) { return std::wstring(param); }
+  template<class T>
+  inline std::wstring
+  toWString(const T& param) {
+    return std::to_wstring(param);
+  }
 
-	class StringFormat
-	{
-	private:
-		static const uint32 MAX_PARAMS = 20;
-		static const uint32 MAX_IDENTIFIER_SIZE = 2;
-		static const uint32 MAX_PARAM_REFERENCES = 200;
+  template<class T>
+  inline std::wstring
+  toWString(T*) {
+    GE_ASSERT("Invalid pointer type.");
+    return std::wstring(L"");
+  }
 
-	private:
-		/************************************************************************************************************************/
-		/**
-		* @brief	Data structure used during string formatting. It holds information about parameter identifiers to replace
-		*			with actual parameters.
-		*/
-		/************************************************************************************************************************/
-		struct FormatParamRange
-		{
-			FormatParamRange()
-			{
-			}
+  /***************************************************************************/
+  /**
+  * String template function specializations
+  */
+  /***************************************************************************/
+  template<>
+  inline std::string
+  toString(const std::string& param) {
+    return param;
+  }
+  
+  template<>
+  inline std::string
+  toString(const String& param) {
+    return std::string(param.c_str());
+  }
 
-			FormatParamRange(uint32 start, uint32 identifierSize, uint32 paramIdx)
-				: Start(start), IdentifierSize(identifierSize), ParamIdx(paramIdx)
-			{
-			}
+  template<>
+  inline std::string
+  toString<const ANSICHAR>(const ANSICHAR* param) {
+    return std::string(param);
+  }
 
-			uint32 Start;
-			uint32 IdentifierSize;
-			uint32 ParamIdx;
-		};
+  template<>
+  inline std::string
+  toString<ANSICHAR>(ANSICHAR* param) {
+    return std::string(param);
+  }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Structure that holds value of a parameter during string formatting.
-		*/
-		/************************************************************************************************************************/
-		template<class T>
-		struct ParamData
-		{
-			T* Buffer;
-			uint32 Size;
-		};
+  template<>
+  inline std::wstring
+  toWString<std::wstring>(const std::wstring& param) {
+    return param;
+  }
 
-	public:
-		/************************************************************************************************************************/
-		/**
-		* @brief	Formats the provided string by replacing the identifiers with the provided parameters. The identifiers are
-		*			represented like "{0}, {1}" in the source string, where the number represents the position of the parameter
-		*			that will be used for replacing the identifier.
-		*
-		* @note		You may use "\" to escape ID brackets.
-		* @note		Maximum ID number is 19 (for a total of 20 unique IDs. e.g. {20} won't be recognized as an Identifier).
-		* @note		Total number of parameters that can be referenced is 200.
-		*/
-		/************************************************************************************************************************/
-		template<class T, class... Args>
-		static BasicString<T> Format(const T* source, Args&&... args)
-		{
-			//Get the length of the string
-			uint32 strLength = GetLength(source);
+  template<>
+  inline std::wstring
+  toWString<WString>(const WString& param) {
+    return std::wstring(param.c_str());
+  }
 
-			//Create an array to store the parameters and fill it with the parameters sent
-			ParamData<T> parameters[MAX_PARAMS];
-			memset(parameters, 0, sizeof(parameters));
-			GetParams(parameters, 0U, std::forward<Args>(args)...);
+  template<>
+  inline std::wstring
+  toWString<const UNICHAR>(const UNICHAR* param) {
+    return std::wstring(param);
+  }
 
-			//Brackets characters plus NULL terminator
-			T bracketChars[MAX_IDENTIFIER_SIZE + 1];
-			uint32 bracketWriteIdx = 0;
+  template<>
+  inline std::wstring
+  toWString<UNICHAR>(UNICHAR* param) {
+    return std::wstring(param);
+  }
 
-			FormatParamRange paramRanges[MAX_PARAM_REFERENCES];
-			memset(paramRanges, 0, sizeof(paramRanges));
-			uint32 paramRangeWriteIdx = 0;
+  /***************************************************************************/
+  /**
+   * @class StringFormat
+   * @brief Helper class used for string formatting operations
+   */
+  /***************************************************************************/
+  class StringFormat
+  {
+   private:
+    /**
+     * @brief Data structure used during string formatting. It holds information
+     *        about parameter identifiers to replace with actual parameters.
+     */
+    struct FormatParamRange
+    {
+      FormatParamRange() {}
+      FormatParamRange(SIZE_T start, uint32 identifierSize, uint32 paramIdx) :
+        m_start(start), m_identifierSize(identifierSize), m_paramIdx(paramIdx) {}
 
-			//Determine parameter positions
-			int32 lastBracket = -1;
-			bool escaped = false;
-			uint32 charWriteIdx = 0;
-			for( uint32 i = 0; i < strLength; i++ )
-			{
-				if( source[i] == '\\' && !escaped && paramRangeWriteIdx < MAX_PARAM_REFERENCES )
-				{
-					escaped = true;
-					paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx, 1, (uint32)-1);	//TODO: Test -1 this with PS4 or change for MAX_UINT32
-					continue;
-				}
+      SIZE_T m_start;
+      uint32 m_identifierSize;
+      uint32 m_paramIdx;
+    };
 
-				if( lastBracket == -1 )
-				{
-					//If current char is non-escaped opening bracket start parameter definition
-					if( source[i] == '{' && !escaped )
-					{
-						lastBracket = (int32)i;
-					}
-					else
-					{
-						charWriteIdx++;
-					}
-				}
-				else
-				{
-					if( isdigit(source[i]) && bracketWriteIdx < MAX_IDENTIFIER_SIZE )
-					{
-						bracketChars[bracketWriteIdx++] = source[i];
-					}
-					else
-					{
-						//If current char is non-escaped closing bracket end parameter definition
-						uint32 numParamChars = bracketWriteIdx;
-						bool processedBracket = false;
-						if( source[i] == '}' && numParamChars > 0 && !escaped )
-						{
-							bracketChars[bracketWriteIdx] = '\0';
-							uint32 paramIdx = StrToInt(bracketChars);
+    /**
+     * @brief Structure that holds value of a parameter during string formatting.
+     */
+    template<class T>
+    struct ParamData
+    {
+      T* m_buffer;
+      SIZE_T m_size;
+    };
 
-							//Check if exceeded maximum parameter limit
-							if( paramIdx < MAX_PARAMS && paramRangeWriteIdx < MAX_PARAM_REFERENCES )
-							{
-								paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx, numParamChars + 2, paramIdx);
-								charWriteIdx += parameters[paramIdx].Size;
-								processedBracket = true;
-							}
-						}
+   public:
+    /**
+     * @brief	Formats the provided string by replacing the identifiers with the
+     *        provided parameters. The identifiers are represented like "{0}, {1}"
+     *        in the source string, where the number represents the position of the
+     *        parameter that will be used for replacing the identifier.
+     *
+     * @note  You may use "\" to escape ID brackets.
+     * @note  Maximum ID number is 19 (for a total of 20 unique IDs.
+     *        e.g. {20} won't be recognized as an Identifier).
+     * @note  Total number of parameters that can be referenced is 200.
+     */
+    template<class T, class... Args>
+    static BasicString<T>
+    format(const T* source, Args&&... args) {
+      //Get the length of the string
+      SIZE_T strLength = getLength(source);
 
-						if( !processedBracket )
-						{
-							//Last bracket wasn't really a parameter
-							for( uint32 j=(uint32)lastBracket; j<=i; ++j )
-							{
-								charWriteIdx++;
-							}
-						}
+      //Create an array to store the parameters and fill it with the parameters sent
+      ParamData<T> parameters[MAX_PARAMS];
+      memset(parameters, 0, sizeof(parameters));
+      getParams(parameters, 0U, std::forward<Args>(args)...);
 
-						lastBracket = -1;
-						bracketWriteIdx = 0;
-					}
-				}
+      //Brackets characters plus NULL terminator
+      T bracketChars[MAX_IDENTIFIER_SIZE + 1];
+      uint32 bracketWriteIdx = 0;
 
-				escaped = false;
-			}
+      FormatParamRange paramRanges[MAX_PARAM_REFERENCES];
+      memset(paramRanges, 0, sizeof(paramRanges));
+      SIZE_T paramRangeWriteIdx = 0;
 
-			//Copy the clean string into output buffer
-			uint32 finalStringSize = charWriteIdx;
+      //Determine parameter positions
+      int32 lastBracket = -1;
+      bool escaped = false;
+      SIZE_T charWriteIdx = 0;
+      for (SIZE_T i = 0; i < strLength; ++i) {
+        if ('\\' == source[i] && !escaped && MAX_PARAM_REFERENCES > paramRangeWriteIdx) {
+          escaped = true;
+          //TODO: Test -1 this with PS4 or change for MAX_UINT32
+          paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx,
+                                                               1,
+                                                               static_cast<uint32>(-1));
+          continue;
+        }
 
-			T* outputBuffer = (T*)ge_alloc(finalStringSize * sizeof(T));
-			uint32 copySourceIdx = 0;
-			uint32 copyDestIdx = 0;
+        if (-1 == lastBracket) {
+          //If current char is non-escaped opening bracket start parameter definition
+          if ('{' == source[i] && !escaped) {
+            lastBracket = static_cast<int32>(i);
+          }
+          else {
+            charWriteIdx++;
+          }
+        }
+        else {
+          if (isdigit(source[i]) && bracketWriteIdx < MAX_IDENTIFIER_SIZE) {
+            bracketChars[bracketWriteIdx++] = source[i];
+          }
+          else {
+            //If current char is non-escaped closing bracket end parameter definition
+            uint32 numParamChars = bracketWriteIdx;
+            bool processedBracket = false;
+            if ('}' == source[i] && 0 < numParamChars && !escaped)
+            {
+              bracketChars[bracketWriteIdx] = '\0';
+              uint32 paramIdx = strToInt(bracketChars);
 
-			for( uint32 i=0; i<paramRangeWriteIdx; i++ )
-			{
-				const FormatParamRange& rangeInfo = paramRanges[i];
-				uint32 copySize = rangeInfo.Start - copyDestIdx;
+              //Check if exceeded maximum parameter limit
+              if (MAX_PARAMS > paramIdx && MAX_PARAM_REFERENCES > paramRangeWriteIdx) {
+                paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx,
+                                                                     numParamChars + 2,
+                                                                     paramIdx);
+                charWriteIdx += parameters[paramIdx].Size;
+                processedBracket = true;
+              }
+            }
 
-				memcpy(outputBuffer + copyDestIdx, source + copySourceIdx, copySize * sizeof(T));
-				copySourceIdx += copySize + rangeInfo.IdentifierSize;
-				copyDestIdx += copySize;
+            if (!processedBracket) {
+              //Last bracket wasn't really a parameter
+              for (uint32 j = static_cast<uint32>(lastBracket); j <= i; ++j) {
+                charWriteIdx++;
+              }
+            }
 
-				if( rangeInfo.ParamIdx == (uint32)-1 )
-				{
-					continue;
-				}
+            lastBracket = -1;
+            bracketWriteIdx = 0;
+          }
+        }
 
-				uint32 paramSize = parameters[rangeInfo.ParamIdx].Size;
-				memcpy(outputBuffer + copyDestIdx, parameters[rangeInfo.ParamIdx].Buffer, paramSize * sizeof(T));
-				copyDestIdx += paramSize;
-			}
+        escaped = false;
+      }
 
-			memcpy(outputBuffer + copyDestIdx, source + copySourceIdx, (finalStringSize - copyDestIdx) * sizeof(T));
+      //Copy the clean string into output buffer
+      SIZE_T finalStringSize = charWriteIdx;
 
-			BasicString<T> outputStr(outputBuffer, finalStringSize);
-			ge_free(outputBuffer);
+      T* outputBuffer = reinterpret_cast<T*>(ge_alloc(finalStringSize * sizeof(T)));
+      SIZE_T copySourceIdx = 0;
+      SIZE_T copyDestIdx = 0;
 
-			//Free the memory of all the parameters buffers
-			for( uint32 i=0; i<MAX_PARAMS; i++ )
-			{
-				if( parameters[i].Buffer != nullptr )
-				{
-					ge_free(parameters[i].Buffer);
-				}
-			}
+      for (SIZE_T i = 0; i < paramRangeWriteIdx; ++i) {
+        const FormatParamRange& rangeInfo = paramRanges[i];
+        SIZE_T copySize = rangeInfo.m_start - copyDestIdx;
 
-			return outputStr;
-		}
+        memcpy(outputBuffer + copyDestIdx, source + copySourceIdx, copySize * sizeof(T));
+        copySourceIdx += copySize + rangeInfo.m_identifierSize;
+        copyDestIdx += copySize;
 
-	private:
-		/************************************************************************************************************************/
-		/**
-		* @brief	Set of methods that can be specialized so we have a generalized way for retrieving length of strings of
-		*			different types.
-		*/
-		/************************************************************************************************************************/
-		static uint32 GetLength(const ANSICHAR* source)
-		{
-			return (uint32)strlen(source);
-		}
+        if (static_cast<uint32>(-1) == rangeInfo.m_paramIdx) {
+          continue;
+        }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Set of methods that can be specialized so we have a generalized way for retrieving length of strings of
-		*			different types.
-		*/
-		/************************************************************************************************************************/
-		static uint32 GetLength(const UNICHAR* source)
-		{
-			return (uint32)wcslen(source);
-		}
+        SIZE_T paramSize = parameters[rangeInfo.m_paramIdx].Size;
+        memcpy(outputBuffer + copyDestIdx,
+               parameters[rangeInfo.m_paramIdx].Buffer,
+               paramSize * sizeof(T));
+        copyDestIdx += paramSize;
+      }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Parses the string and returns an integer value extracted from string characters.
-		*/
-		/************************************************************************************************************************/
-		static uint32 StrToInt(const ANSICHAR* buffer)
-		{
-			return (uint32)strtoul(buffer, NULL, 10);
-		}
+      memcpy(outputBuffer + copyDestIdx, 
+             source + copySourceIdx, 
+             (finalStringSize - copyDestIdx) * sizeof(T));
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Parses the string and returns an integer value extracted from string characters.
-		*/
-		/************************************************************************************************************************/
-		static uint32 StrToInt(const UNICHAR* buffer)
-		{
-			return (uint32)wcstoul(buffer, nullptr, 10);
-		}
+      BasicString<T> outputStr(outputBuffer, finalStringSize);
+      ge_free(outputBuffer);
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method for converting any data type to a narrow string.
-		*/
-		/************************************************************************************************************************/
-		template<class T>
-		static std::string ToString(const T& param)
-		{
-			return geEngineSDK::ToString<T>(param);
-		}
+      //Free the memory of all the parameters buffers
+      for (uint32 i = 0; i < MAX_PARAMS; ++i) {
+        if (nullptr != parameters[i].Buffer) {
+          ge_free(parameters[i].Buffer);
+        }
+      }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method that converts a narrow character array to a narrow string.
-		*/
-		/************************************************************************************************************************/
-		template<class T>
-		static std::string ToString(T* param)
-		{
-			return geEngineSDK::ToString<T>(param);
-		}
+      return outputStr;
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method for converting any data type to a wide string.
-		*/
-		/************************************************************************************************************************/
-		template<class T>
-		static std::wstring ToWString(const T& param)
-		{
-			return geEngineSDK::ToWString<T>(param);
-		}
+   private:
+    /**
+     * @brief Set of methods that can be specialized so we have a generalized
+     *        way for retrieving length of strings of different types.
+     */
+    static SIZE_T
+    getLength(const ANSICHAR* source) {
+      return strlen(source);
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method that converts a wide character array to a wide string.
-		*/
-		/************************************************************************************************************************/
-		template<class T>
-		static std::wstring ToWString(T* param)
-		{
-			return geEngineSDK::ToWString<T>(param);
-		}
+    /**
+     * @brief Set of methods that can be specialized so we have a generalized
+     *        way for retrieving length of strings of different types.
+     */
+    static SIZE_T
+    getLength(const UNICHAR* source) {
+      return wcslen(source);
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Converts all the provided parameters into string representations and populates the provided @p parameters array.
-		*/
-		/************************************************************************************************************************/
-		template<class P, class... Args>
-		static void GetParams(ParamData<ANSICHAR>* parameters, uint32 idx, P&& param, Args&&... args)
-		{
-			if( idx >= MAX_PARAMS )
-			{
-				return;
-			}
+    /**
+     * @brief Parses the string and returns an integer value extracted from string characters.
+     */
+    static uint32
+    strToInt(const ANSICHAR* buffer) {
+      return static_cast<uint32>(strtoul(buffer, nullptr, 10));
+    }
 
-			std::basic_string<ANSICHAR> sourceParam = ToString(param);
-			parameters[idx].Buffer = (ANSICHAR*)ge_alloc((uint32)sourceParam.size() * sizeof(ANSICHAR));
-			parameters[idx].Size = (uint32)sourceParam.size();
+    /**
+     * @brief Parses the string and returns an integer value extracted from string characters.
+     */
+    static uint32
+    strToInt(const UNICHAR* buffer) {
+      return static_cast<uint32>(wcstoul(buffer, nullptr, 10));
+    }
 
-			sourceParam.copy(parameters[idx].Buffer, parameters[idx].Size, 0);
+    /**
+     * @brief Helper method for converting any data type to a narrow string.
+     */
+    template<class T>
+    static std::string
+    toString(const T& param) {
+      return geEngineSDK::toString<T>(param);
+    }
 
-			GetParams(parameters, idx + 1, std::forward<Args>(args)...);
-		}
+    /**
+     * @brief Helper method that converts a narrow character array to a narrow string.
+     */
+    template<class T>
+    static std::string
+    toString(T* param) {
+      return geEngineSDK::toString<T>(param);
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Converts all the provided parameters into string representations and populates the provided @p parameters array.
-		*/
-		/************************************************************************************************************************/
-		template<class P, class... Args>
-		static void GetParams(ParamData<UNICHAR>* parameters, uint32 idx, P&& param, Args&&... args)
-		{
-			if( idx >= MAX_PARAMS )
-			{
-				return;
-			}
+    /**
+     * @brief Helper method for converting any data type to a wide string.
+     */
+    template<class T>
+    static std::wstring
+    toWString(const T& param) {
+      return geEngineSDK::toWString<T>(param);
+    }
 
-			std::basic_string<UNICHAR> sourceParam = ToWString(param);
-			parameters[idx].Buffer = (UNICHAR*)ge_alloc((uint32)sourceParam.size() * sizeof(UNICHAR));
-			parameters[idx].Size = (uint32)sourceParam.size();
+    /**
+     * @brief Helper method that converts a wide character array to a wide string.
+     */
+    template<class T>
+    static std::wstring toWString(T* param) {
+      return geEngineSDK::toWString<T>(param);
+    }
 
-			sourceParam.copy(parameters[idx].Buffer, parameters[idx].Size, 0);
+    /**
+     * @brief Converts all the provided parameters into string representations
+     *        and populates the provided @p parameters array.
+     */
+    template<class P, class... Args>
+    static void
+    getParams(ParamData<ANSICHAR>* parameters, uint32 idx, P&& param, Args&&... args) {
+      if (MAX_PARAMS <= idx) {
+        return;
+      }
 
-			GetParams(parameters, idx + 1, std::forward<Args>(args)...);
-		}
+      std::basic_string<ANSICHAR> sourceParam = toString(param);
+      parameters[idx].m_buffer = reinterpret_cast<ANSICHAR*>(ge_alloc(sourceParam.size()
+                                                                    * sizeof(ANSICHAR)));
+      parameters[idx].m_size = sourceParam.size();
+      sourceParam.copy(parameters[idx].m_buffer, parameters[idx].m_size, 0);
+      getParams(parameters, idx + 1, std::forward<Args>(args)...);
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method for parameter size calculation. Used as a stopping point in template recursion.
-		*/
-		/************************************************************************************************************************/
-		static void GetParams(ParamData<ANSICHAR>*, uint32)
-		{
-			// Do nothing
-		}
+    /**
+     * @brief Converts all the provided parameters into string representations
+     *        and populates the provided @p parameters array.
+     */
+    template<class P, class... Args>
+    static void
+    getParams(ParamData<UNICHAR>* parameters, uint32 idx, P&& param, Args&&... args) {
+      if (MAX_PARAMS <= idx) {
+        return;
+      }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Helper method for parameter size calculation. Used as a stopping point in template recursion.
-		*/
-		/************************************************************************************************************************/
-		static void GetParams(ParamData<UNICHAR>*, uint32)
-		{
-			// Do nothing
-		}		
-	};
+      std::basic_string<UNICHAR> sourceParam = toWString(param);
+      parameters[idx].m_buffer = reinterpret_cast<UNICHAR*>(ge_alloc(sourceParam.size()
+                                                                   * sizeof(UNICHAR)));
+      parameters[idx].m_size = sourceParam.size();
+      sourceParam.copy(parameters[idx].m_buffer, parameters[idx].m_size, 0);
+      getParams(parameters, idx + 1, std::forward<Args>(args)...);
+    }
 
-	
+    /**
+     * @brief Helper method used for parameter size calculation.
+     *        Used as a stopping point in template recursion.
+     */
+    static void
+    getParams(ParamData<ANSICHAR>*, uint32) {
+      // Do nothing
+    }
+
+    /**
+     * @brief Helper method used for parameter size calculation.
+     *        Used as a stopping point in template recursion.
+     */
+    static void
+    getParams(ParamData<UNICHAR>*, uint32) {
+      // Do nothing
+    }
+
+   private:
+    static const uint32 MAX_PARAMS = 20;
+    static const uint32 MAX_IDENTIFIER_SIZE = 2;
+    static const uint32 MAX_PARAM_REFERENCES = 200;
+  };
 }

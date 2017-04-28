@@ -272,7 +272,7 @@ namespace geEngineSDK {
     template<class T, class... Args>
     static BasicString<T>
     format(const BasicString<T>& source, Args&&... args) {
-      return StringFormat::Format(source.c_str(), std::forward<Args>(args)...);
+      return StringFormat::format(source.c_str(), std::forward<Args>(args)...);
     }
 
     /**
@@ -281,7 +281,7 @@ namespace geEngineSDK {
     template<class T, class... Args>
     static BasicString<T>
     format(const T* source, Args&&... args) {
-      return StringFormat::Format(source, std::forward<Args>(args)...);
+      return StringFormat::format(source, std::forward<Args>(args)...);
     }
 
     /**
@@ -840,7 +840,7 @@ namespace geEngineSDK {
       memcpy(memory, &size, sizeof(uint64));
       memory += sizeof(uint64);
       size -= sizeof(uint64);
-      memcpy(memory, data.data(), size);
+      memcpy(memory, data.data(), static_cast<SIZE_T>(size));
     }
 
     static uint64
@@ -850,8 +850,8 @@ namespace geEngineSDK {
       memory += sizeof(uint64);
 
       uint64 stringSize = size - sizeof(uint64);
-      char* buffer = (char*)ge_alloc(stringSize + 1);
-      memcpy(buffer, memory, stringSize);
+      char* buffer = reinterpret_cast<char*>(ge_alloc(static_cast<SIZE_T>(stringSize + 1)));
+      memcpy(buffer, memory, static_cast<SIZE_T>(stringSize));
       buffer[stringSize] = '\0';
       data = String(buffer);
 
@@ -890,7 +890,7 @@ namespace geEngineSDK {
       memcpy(memory, &size, sizeof(uint64));
       memory += sizeof(uint64);
       size -= sizeof(uint64);
-      memcpy(memory, data.data(), size);
+      memcpy(memory, data.data(), static_cast<SIZE_T>(size));
     }
 
     static uint64
@@ -902,8 +902,9 @@ namespace geEngineSDK {
       memory += sizeof(uint64);
 
       uint64 stringSize = size - sizeof(uint64);
-      wcTemp* buffer = reinterpret_cast<wcTemp*>(ge_alloc(stringSize + sizeof(wcTemp)));
-      memcpy(buffer, memory, stringSize);
+      wcTemp* buffer = reinterpret_cast<wcTemp*>(ge_alloc(static_cast<SIZE_T>(stringSize)
+                                                          + sizeof(wcTemp)));
+      memcpy(buffer, memory, static_cast<SIZE_T>(stringSize));
 
       uint64 numChars = stringSize / sizeof(wcTemp);
       buffer[numChars] = L'\0';

@@ -1,58 +1,67 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
-* @file   geStringID.h
-* @author Samuel Prince (samuel.prince.quezada@gmail.com)
-* @date   2016/03/07
-* @brief  A string identifier for very fast comparisons
-*
-* A string identifier that provides very fast comparisons to other
-* string ids.
-*
-* @bug	   No known bugs.
-*/
-/********************************************************************/
+ * @file    geStringID.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/07
+ * @brief   A string identifier for very fast comparisons
+ *
+ * A string identifier that provides very fast comparisons to other string ids.
+ *
+ * @bug     No known bugs.
+ */
+/*****************************************************************************/
 #pragma once
 
-/************************************************************************************************************************/
-/* Includes																												*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geSpinLock.h"
 
-namespace geEngineSDK
-{
-  /************************************************************************************************************************/
+namespace geEngineSDK {
+  /***************************************************************************/
   /**
-  * @brief	A string identifier that provides very fast comparisons to other string ids.
-  * @note		Essentially a unique ID is generated for each string and then the ID is used for comparisons as if you were
-  *			using an integer or an enum.
-  * @note		Thread safe.
-  */
-  /************************************************************************************************************************/
+   * @class StringID
+   * @brief A string identifier that provides very fast comparisons to other string ids.
+   * @note  Essentially a unique ID is generated for each string and then the ID is used
+   *        for comparisons as if you were using an integer or an enum.
+   * @note  Thread safe.
+   */
+  /***************************************************************************/
   class GE_UTILITY_EXPORT StringID
   {
-  public:
+   public:
     static const StringID NONE;
 
-  private:
+   private:
     static const int32 HASH_TABLE_SIZE = 4096;
     static const int32 MAX_CHUNK_COUNT = 50;
     static const int32 ELEMENTS_PER_CHUNK = 256;
     static const int32 STRING_SIZE = 256;
 
-  private:
-    /************************************************************************************************************************/
+   private:
     /**
-    * @brief	Helper class that performs string actions on both null terminated character arrays and standard strings.
-    */
-    /************************************************************************************************************************/
+     * @brief	Helper class that performs string actions on both null terminated
+     *        character arrays and standard strings.
+     */
     template<class T>
     class StringIDUtil
     {
-    public:
-      static uint32 Size(T const&) { return 0; }
-      static void Copy(T const&, ANSICHAR*) {}
-      static bool Compare(T const&, ANSICHAR*) { return 0; }
+     public:
+      static uint32
+      size(T const&) {
+        return 0;
+      }
+
+      static void
+      copy(T const&, ANSICHAR*) {}
+      
+      static bool
+      compare(T const&, ANSICHAR*) {
+        return 0;
+      }
     };
 
     /**	Internal data that is shared by all instances for a specific string. */
@@ -63,11 +72,9 @@ namespace geEngineSDK
       ANSICHAR Chars[STRING_SIZE];
     };
 
-    /************************************************************************************************************************/
     /**
-    * @brief	Performs initialization of static members as soon as the library is loaded.
-    */
-    /************************************************************************************************************************/
+     * @brief	Performs initialization of static members as soon as the library is loaded.
+     */
     struct InitStatics
     {
       InitStatics();
@@ -88,11 +95,11 @@ namespace geEngineSDK
     StringID();
 
     StringID(const ANSICHAR* name) : m_Data(nullptr) {
-      Construct(name);
+      construct(name);
     }
 
     StringID(const String& name) : m_Data(nullptr) {
-      Construct(name);
+      construct(name);
     }
 
     /*
@@ -103,11 +110,9 @@ namespace geEngineSDK
     }
     */
 
-    /************************************************************************************************************************/
     /**
-    * @brief	Compare to string ids for equality. Uses fast integer comparison.
-    */
-    /************************************************************************************************************************/
+     * @brief Compare to string ids for equality. Uses fast integer comparison.
+     */
     bool operator== (const StringID& rhs) const {
       return m_Data == rhs.m_Data;
     }
@@ -175,11 +180,11 @@ namespace geEngineSDK
     enum { kID = TYPEID_UTILITY::kID_StringID }; enum { kHasDynamicSize = 1 };
 
     static void
-    toMemory(const StringID& data, char* memory) {
+      toMemory(const StringID& data, char* memory) {
       uint64 size = getDynamicSize(data);
 
       uint64 curSize = sizeof(uint64);
-      memcpy(memory, &size, curSize);
+      memcpy(memory, &size, static_cast<SIZE_T>(curSize));
       memory += curSize;
 
       bool isEmpty = data.Empty();
@@ -187,12 +192,12 @@ namespace geEngineSDK
 
       if (!isEmpty) {
         uint64 length = static_cast<uint64>(strlen(data.c_str()));
-        memcpy(memory, data.c_str(), length * sizeof(ANSICHAR));
+        memcpy(memory, data.c_str(), static_cast<SIZE_T>(length) * sizeof(ANSICHAR));
       }
     }
 
     static uint64
-    fromMemory(StringID& data, char* memory) {
+      fromMemory(StringID& data, char* memory) {
       uint64 size;
       memcpy(&size, memory, sizeof(uint64));
       memory += sizeof(uint64);
@@ -203,8 +208,9 @@ namespace geEngineSDK
       if (!empty) {
         uint64 length = (size - sizeof(uint64) - sizeof(bool)) / sizeof(ANSICHAR);
 
-        ANSICHAR* name = reinterpret_cast<ANSICHAR*>(ge_alloc(length + 1));
-        memcpy(name, memory, length);
+        ANSICHAR* name = reinterpret_cast<ANSICHAR*>(ge_alloc(static_cast<SIZE_T>(length
+                                                              + 1)));
+        memcpy(name, memory, static_cast<SIZE_T>(length));
         name[length] = '\0';
 
         data = StringID(name);
@@ -214,7 +220,7 @@ namespace geEngineSDK
     }
 
     static uint64
-    getDynamicSize(const StringID& data) {
+      getDynamicSize(const StringID& data) {
       uint64 dataSize = sizeof(bool) + sizeof(uint64);
 
       bool isEmpty = data.Empty();
