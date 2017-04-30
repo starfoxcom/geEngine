@@ -874,7 +874,7 @@ namespace geEngineSDK
 			}
 
 			T sub = THIRD * A;
-			for( uint32 i=0; i<numRoots; i++ )
+			for( uint32 i=0; i<numRoots; ++i )
 			{
 				roots[i] -= sub;
 			}
@@ -963,7 +963,7 @@ namespace geEngineSDK
 			}
 
 			T sub = (1 / (T)4) * A;
-			for( uint32 i=0; i<numRoots; i++ )
+			for( uint32 i=0; i<numRoots; ++i )
 			{
 				roots[i] -= sub;
 			}

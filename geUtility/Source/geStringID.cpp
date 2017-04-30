@@ -1,167 +1,186 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geStringID.h
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/03/07
- * @brief  A string identifier for very fast comparisons
+ * @file    geStringID.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/07
+ * @brief   A string identifier for very fast comparisons
  *
- * A string identifier that provides very fast comparisons to other
- * string ids.
+ * A string identifier that provides very fast comparisons to other string ids.
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 
-/************************************************************************************************************************/
-/* Includes																												*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+* Includes
+*/
+/*****************************************************************************/
 #include "geStringID.h"
 
-namespace geEngineSDK
-{
-	const StringID StringID::NONE = StringID();
-	
-	volatile StringID::InitStatics StringID::m_InitStatics = StringID::InitStatics();
-	StringID::InternalData* StringID::m_StringHashTable[HASH_TABLE_SIZE];
-	StringID::InternalData* StringID::m_Chunks[MAX_CHUNK_COUNT];
+namespace geEngineSDK {
+  const StringID StringID::NONE = StringID();
 
-	uint32 StringID::m_NextId = 0;
-	uint32 StringID::m_NumChunks = 0;
-	SpinLock StringID::m_Sync;
+  volatile StringID::InitStatics StringID::m_InitStatics = StringID::InitStatics();
+  StringID::InternalData* StringID::m_StringHashTable[HASH_TABLE_SIZE];
+  StringID::InternalData* StringID::m_Chunks[MAX_CHUNK_COUNT];
 
-	StringID::InitStatics::InitStatics()
-	{
-		ScopedSpinLock lock(m_Sync);
+  uint32 StringID::m_NextId = 0;
+  uint32 StringID::m_NumChunks = 0;
+  SpinLock StringID::m_Sync;
 
-		memset(m_StringHashTable, 0, sizeof(m_StringHashTable));
-		memset(m_Chunks, 0, sizeof(m_Chunks));
+  StringID::InitStatics::InitStatics() {
+    ScopedSpinLock lock(m_Sync);
+    memset(m_StringHashTable, 0, sizeof(m_StringHashTable));
+    memset(m_Chunks, 0, sizeof(m_Chunks));
+    m_Chunks[0] = reinterpret_cast<InternalData*>
+                    (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
+    memset(m_Chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
+    m_NumChunks++;
+  }
 
-		m_Chunks[0] = (InternalData*)ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-		memset(m_Chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
+  StringID::StringID() : m_Data(nullptr) {}
 
-		m_NumChunks++;
-	}
+  template<class T>
+  void
+  StringID::construct(T const& name) {
+    GE_ASSERT(StringIDUtil<T>::size(name) <= STRING_SIZE);
 
-	StringID::StringID() : m_Data(nullptr)
-	{
-	}
+    uint32 hash = calcHash(name)
+                  & (sizeof(m_StringHashTable) / sizeof(m_StringHashTable[0]) - 1);
+    InternalData* existingEntry = m_StringHashTable[hash];
 
-	template<class T>
-	void StringID::Construct(T const& name)
-	{
-		GE_ASSERT(StringIDUtil<T>::Size(name) <= STRING_SIZE);
+    while (nullptr != existingEntry) {
+      if (StringIDUtil<T>::compare(name, existingEntry->m_chars)) {
+        m_Data = existingEntry;
+        return;
+      }
 
-		uint32 hash = CalcHash(name) & (sizeof(m_StringHashTable) / sizeof(m_StringHashTable[0]) - 1);
-		InternalData* existingEntry = m_StringHashTable[hash];
+      existingEntry = existingEntry->m_next;
+    }
 
-		while( existingEntry != nullptr )
-		{
-			if( StringIDUtil<T>::Compare(name, existingEntry->Chars) )
-			{
-				m_Data = existingEntry;
-				return;
-			}
+    ScopedSpinLock lock(m_Sync);
 
-			existingEntry = existingEntry->Next;
-		}
+    //Search for the value again in case other thread just added it
+    existingEntry = m_StringHashTable[hash];
+    InternalData* lastEntry = nullptr;
+    while (nullptr != existingEntry) {
+      if (StringIDUtil<T>::compare(name, existingEntry->m_chars)) {
+        m_Data = existingEntry;
+        return;
+      }
 
-		ScopedSpinLock lock(m_Sync);
+      lastEntry = existingEntry;
+      existingEntry = existingEntry->m_next;
+    }
 
-		//Search for the value again in case other thread just added it
-		existingEntry = m_StringHashTable[hash];
-		InternalData* lastEntry = nullptr;
-		while( existingEntry != nullptr )
-		{
-			if( StringIDUtil<T>::Compare(name, existingEntry->Chars) )
-			{
-				m_Data = existingEntry;
-				return;
-			}
+    m_Data = allocEntry();
+    StringIDUtil<T>::copy(name, m_Data->m_chars);
+    if (nullptr == lastEntry) {
+      m_StringHashTable[hash] = m_Data;
+    }
+    else {
+      lastEntry->m_next = m_Data;
+    }
+  }
 
-			lastEntry = existingEntry;
-			existingEntry = existingEntry->Next;
-		}
+  template<class T>
+  uint32
+  StringID::calcHash(T const& input) {
+    uint32 size = StringIDUtil<T>::size(input);
 
-		m_Data = AllocEntry();
-		StringIDUtil<T>::Copy(name, m_Data->Chars);
+    uint32 hash = 0;
+    for (uint32 i = 0; i < size; ++i) {
+      hash = hash * 101 + input[i];
+    }
 
-		if( lastEntry == nullptr )
-		{
-			m_StringHashTable[hash] = m_Data;
-		}
-		else
-		{
-			lastEntry->Next = m_Data;
-		}
-	}
+    return hash;
+  }
 
-	template<class T>
-	uint32 StringID::CalcHash(T const& input)
-	{
-		uint32 size = StringIDUtil<T>::Size(input);
+  StringID::InternalData*
+  StringID::allocEntry() {
+    uint32 chunkIdx = m_NextId / ELEMENTS_PER_CHUNK;
 
-		uint32 hash = 0;
-		for( uint32 i=0; i<size; i++ )
-		{
-			hash = hash * 101 + input[i];
-		}
+    GE_ASSERT(chunkIdx < MAX_CHUNK_COUNT);
+    GE_ASSERT(chunkIdx <= m_NumChunks); //Can only increment sequentially
 
-		return hash;
-	}
+    if (chunkIdx >= m_NumChunks) {
+      m_Chunks[chunkIdx] = reinterpret_cast<InternalData*>
+                             (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
+      memset(m_Chunks[chunkIdx], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
+      m_NumChunks++;
+    }
 
-	StringID::InternalData* StringID::AllocEntry()
-	{
-		uint32 chunkIdx = m_NextId / ELEMENTS_PER_CHUNK;
+    InternalData* chunk = m_Chunks[chunkIdx];
+    uint32 chunkSpecificIndex = m_NextId % ELEMENTS_PER_CHUNK;
 
-		GE_ASSERT(chunkIdx < MAX_CHUNK_COUNT);
-		GE_ASSERT(chunkIdx <= m_NumChunks); //Can only increment sequentially
+    InternalData* newEntry = &chunk[chunkSpecificIndex];
+    newEntry->m_id = m_NextId++;
+    newEntry->m_next = nullptr;
 
-		if( chunkIdx >= m_NumChunks )
-		{
-			m_Chunks[chunkIdx] = (InternalData*)ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-			memset(m_Chunks[chunkIdx], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-			m_NumChunks++;
-		}
+    return newEntry;
+  }
 
-		InternalData* chunk = m_Chunks[chunkIdx];
-		uint32 chunkSpecificIndex = m_NextId % ELEMENTS_PER_CHUNK;
+  template<>
+  class StringID::StringIDUtil<const ANSICHAR*>
+  {
+  public:
+    static uint32
+    size(const ANSICHAR* const& input) {
+      return (uint32)strlen(input);
+    }
 
-		InternalData* newEntry = &chunk[chunkSpecificIndex];
-		newEntry->Id = m_NextId++;
-		newEntry->Next = nullptr;
+    static void
+    copy(const ANSICHAR* const& input, ANSICHAR* dest) {
+      memcpy(dest, input, strlen(input) + 1);
+    }
 
-		return newEntry;
-	}
+    static bool
+    compare(const ANSICHAR* const& a,
+            ANSICHAR* b) {
+      return strcmp(a, b) == 0;
+    }
+  };
 
-	template<>
-	class StringID::StringIDUtil<const ANSICHAR*>
-	{
-	public:
-		static uint32 Size(const ANSICHAR* const& input){ return (uint32)strlen(input); }
-		static void Copy(const ANSICHAR* const& input, ANSICHAR* dest) { memcpy(dest, input, strlen(input) + 1); }
-		static bool Compare(const ANSICHAR* const& a, ANSICHAR* b) { return strcmp(a, b) == 0; }
-	};
+  template<>
+  class StringID::StringIDUtil<String>
+  {
+  public:
+    static uint32
+    size(String const& input) {
+        return(uint32)input.length();
+    }
 
-	template<>
-	class StringID::StringIDUtil<String>
-	{
-	public:
-		static uint32 Size(String const& input) { return (uint32)input.length(); }
-		static void Copy(String const& input, ANSICHAR* dest)
-		{
-			uint32 len = (uint32)input.length();
-			input.copy(dest, len);
-			dest[len] = '\0';
-		}
-		static bool Compare(String const& a, ANSICHAR* b) { return a.compare(b) == 0; }
-	};
+    static void
+    copy(String const& input, ANSICHAR* dest) {
+      uint32 len = (uint32)input.length();
+      input.copy(dest, len);
+      dest[len] = '\0';
+    }
 
-	template class StringID::StringIDUtil<const ANSICHAR*>;
-	template class StringID::StringIDUtil<String>;
+    static bool
+    compare(String const& a, ANSICHAR* b) {
+      return a.compare(b) == 0;
+    }
+  };
 
-	template GE_UTILITY_EXPORT void StringID::Construct(const ANSICHAR* const&);
-	template GE_UTILITY_EXPORT void StringID::Construct(String const&);
+  template
+  class StringID::StringIDUtil<const ANSICHAR*>;
+  
+  template
+  class StringID::StringIDUtil<String>;
 
-	template GE_UTILITY_EXPORT uint32 StringID::CalcHash(const ANSICHAR* const&);
-	template GE_UTILITY_EXPORT uint32 StringID::CalcHash(String const&);
+  template
+  GE_UTILITY_EXPORT void
+  StringID::construct(const ANSICHAR* const&);
+  
+  template
+  GE_UTILITY_EXPORT void
+  StringID::construct(String const&);
+
+  template
+  GE_UTILITY_EXPORT uint32 StringID::calcHash(const ANSICHAR* const&);
+  
+  template
+  GE_UTILITY_EXPORT uint32 StringID::calcHash(String const&);
 }

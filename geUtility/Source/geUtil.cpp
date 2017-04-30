@@ -29,7 +29,7 @@ namespace geEngineSDK
 		md5.decdigest( digest, sizeof(digest) );
 
 		ANSICHAR buf[33];
-		for( uint32 i=0; i<16; i++ )
+		for( uint32 i=0; i<16; ++i )
 		{
 			sprintf( buf + i * 2, "%02x", digest[i] );
 		}
@@ -48,7 +48,7 @@ namespace geEngineSDK
 		md5.decdigest(digest, sizeof(digest));
 
 		ANSICHAR buf[33];
-		for( uint32 i=0; i<16; i++ )
+		for( uint32 i=0; i<16; ++i )
 		{
 			sprintf(buf + i * 2, "%02x", digest[i]);
 		}

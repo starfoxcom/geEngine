@@ -246,7 +246,7 @@ namespace geEngineSDK {
       memcpy(&numElements, memory, sizeof(uint64));
       memory += sizeof(uint64);
 
-      for (uint64 i = 0; i < numElements; i++) {
+      for (uint64 i = 0; i < numElements; ++i) {
         T element;
         uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.push_back(element);
@@ -321,7 +321,7 @@ namespace geEngineSDK {
       memcpy(&numElements, memory, sizeof(uint64));
       memory += sizeof(uint64);
 
-      for (uint64 i = 0; i < numElements; i++) {
+      for (uint64 i = 0; i < numElements; ++i) {
         T element;
         uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.insert(element);
@@ -411,7 +411,7 @@ namespace geEngineSDK {
       memcpy(&numElements, memory, sizeof(uint64));
       memory += sizeof(uint64);
 
-      for (uint64 i = 0; i < numElements; i++) {
+      for (uint64 i = 0; i < numElements; ++i) {
         Key key;
         uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
@@ -508,7 +508,7 @@ namespace geEngineSDK {
       memcpy(&numElements, memory, sizeof(uint64));
       memory += sizeof(uint64);
 
-      for (uint64 i = 0; i < numElements; i++) {
+      for (uint64 i = 0; i < numElements; ++i) {
         Key key;
         uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
@@ -597,7 +597,7 @@ namespace geEngineSDK {
       memcpy(&numElements, memory, sizeof(uint64));
       memory += sizeof(uint64);
 
-      for (uint64 i = 0; i<numElements; i++) {
+      for (uint64 i = 0; i<numElements; ++i) {
         Key key;
         uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;

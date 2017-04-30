@@ -288,7 +288,7 @@ namespace geEngineSDK
 		/************************************************************************************************************************/
 		void SetFilename(const String& filename)
 		{
-			m_Filename = geEngineSDK::ToWString(filename);
+			m_Filename = geEngineSDK::toWString(filename);
 		}
 
 		/************************************************************************************************************************/
@@ -330,7 +330,7 @@ namespace geEngineSDK
 
 		void SetNode(const String& node)
 		{
-			m_Node = geEngineSDK::ToWString(node);
+			m_Node = geEngineSDK::toWString(node);
 		}
 
 		void SetDevice(const WString& device)
@@ -340,7 +340,7 @@ namespace geEngineSDK
 
 		void SetDevice(const String& device)
 		{
-			m_Device = geEngineSDK::ToWString(device);
+			m_Device = geEngineSDK::toWString(device);
 		}
 
 		/************************************************************************************************************************/
@@ -414,7 +414,7 @@ namespace geEngineSDK
 		/************************************************************************************************************************/
 		String GetDevice() const
 		{
-			return geEngineSDK::ToString(m_Device);
+			return geEngineSDK::toString(m_Device);
 		}
 
 		/************************************************************************************************************************/
@@ -434,7 +434,7 @@ namespace geEngineSDK
 		/************************************************************************************************************************/
 		String GetNode() const
 		{
-			return geEngineSDK::ToString(m_Node);
+			return geEngineSDK::toString(m_Node);
 		}
 
 		/************************************************************************************************************************/
@@ -563,7 +563,7 @@ namespace geEngineSDK
 						}
 
 						m_IsAbsolute = true;
-						SetDevice( geEngineSDK::ToWString(drive) );
+						SetDevice( geEngineSDK::toWString(drive) );
 
 						idx++;
 						if( idx >= numChars || (pathStr[idx] != '\\' && pathStr[idx] != '/') )
@@ -628,7 +628,7 @@ namespace geEngineSDK
 					idx++;
 					if( idx >= numChars || pathStr[idx] == '/' )
 					{
-						PushDirectory(geEngineSDK::ToWString('~'));
+						PushDirectory(geEngineSDK::toWString('~'));
 						m_IsAbsolute = true;
 					}
 					else

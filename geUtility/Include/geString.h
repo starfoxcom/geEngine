@@ -220,25 +220,25 @@ namespace geEngineSDK {
     static bool
     match(const WString& str, const WString& pattern, bool caseSensitive = true);
 
-    /************************************************************************************************************************/
     /**
-    * @brief	Replace all instances of a substring with a another substring.
-    *
-    * @param	source		   	String to search.
-    * @param	replaceWhat	   	Substring to find and replace
-    * @param	replaceWithWhat	Substring to replace with (the new sub-string)
-    *
-    * @return	An updated string with the substrings replaced.
-    */
-    /************************************************************************************************************************/
+     * @brief Replace all instances of a substring with a another substring.
+     * @param	source          String to search.
+     * @param	replaceWhat     Substring to find and replace
+     * @param	replaceWithWhat Substring to replace with (the new sub-string)
+     * @return	An updated string with the substrings replaced.
+     */
     static const String
-    replaceAll(const String& source, const String& replaceWhat, const String& replaceWithWhat);
+    replaceAll(const String& source, 
+               const String& replaceWhat, 
+               const String& replaceWithWhat);
 
     /**
      * @copydoc  replaceAll(const String&, const String&, const String&)
      */
     static const WString
-    replaceAll(const WString& source, const WString& replaceWhat, const WString& replaceWithWhat);
+    replaceAll(const WString& source, 
+               const WString& replaceWhat, 
+               const WString& replaceWithWhat);
 
     /**
      * @brief Compares two strings. Returns 0 if the two compare equal,
@@ -252,13 +252,15 @@ namespace geEngineSDK {
      */
     template <class T>
     static int32
-    compare(const BasicString<T>& lhs, const BasicString<T>& rhs, bool caseSensitive = true) {
+    compare(const BasicString<T>& lhs,
+            const BasicString<T>& rhs,
+            bool caseSensitive = true) {
       if (caseSensitive) {
         return lhs.compare(rhs);
       }
 
       SIZE_T size = std::min(lhs.size(), rhs.size());
-      for (SIZE_T i = 0; i < size; i++) {
+      for (SIZE_T i = 0; i < size; ++i) {
         if (toupper(lhs[i]) < toupper(rhs[i])) return -1;
         if (toupper(lhs[i]) > toupper(rhs[i])) return 1;
       }
@@ -289,39 +291,38 @@ namespace geEngineSDK {
      */
     static const String BLANK;
 
-    /************************************************************************************************************************/
     /**
-    * @brief	Constant blank wide string, useful for returning by ref where local does not exist.
-    */
-    /************************************************************************************************************************/
+     * @brief Constant blank wide string, useful for returning by ref where
+     *        local does not exist.
+     */
     static const WString WBLANK;
 
-  private:
+   private:
     template <class T>
-    static Vector<BasicString<T>> SplitInternal(const BasicString<T>& str, const BasicString<T>& delims, uint32 maxSplits) {
+    static Vector<BasicString<T>>
+    splitInternal(const BasicString<T>& str, 
+                  const BasicString<T>& delims,
+                  uint32 maxSplits) {
       Vector<BasicString<T>> ret;
       //Preallocate some space for performance
-      ret.reserve(maxSplits ? maxSplits + 1 : 10);    //10 is guessed capacity for most case
+      ret.reserve(maxSplits ? maxSplits + 1 : 10);  //10 is guessed capacity for most cases
 
       uint32 numSplits = 0;
 
       //Use STL methods 
       SIZE_T start, pos;
       start = 0;
-      do
-      {
+      do {
         pos = str.find_first_of(delims, start);
-        if (pos == start)
-        {//Do nothing
+        if (pos == start) {
           start = pos + 1;
         }
-        else if (pos == BasicString<T>::npos || (maxSplits && numSplits == maxSplits))
-        {//Copy the rest of the string
+        else if (pos == BasicString<T>::npos || (maxSplits && numSplits == maxSplits)) {
+          //Copy the rest of the string
           ret.push_back(str.substr(start));
           break;
         }
-        else
-        {//Copy up to delimiter
+        else {//Copy up to delimiter
           ret.push_back(str.substr(start, pos - start));
           start = pos + 1;
         }
@@ -336,10 +337,14 @@ namespace geEngineSDK {
     }
 
     template <class T>
-    static Vector<BasicString<T>> TokeniseInternal(const BasicString<T>& str, const BasicString<T>& singleDelims, const BasicString<T>& doubleDelims, uint32 maxSplits) {
+    static Vector<BasicString<T>>
+    tokeniseInternal(const BasicString<T>& str, 
+                     const BasicString<T>& singleDelims, 
+                     const BasicString<T>& doubleDelims, 
+                     uint32 maxSplits) {
       Vector<BasicString<T>> ret;
       //Preallocate some space for performance
-      ret.reserve(maxSplits ? maxSplits + 1 : 10);    // 10 is guessed capacity for most case
+      ret.reserve(maxSplits ? maxSplits + 1 : 10);  // 10 is guessed capacity for most cases
 
       uint32 numSplits = 0;
       BasicString<T> delims = singleDelims + doubleDelims;
@@ -348,41 +353,32 @@ namespace geEngineSDK {
       SIZE_T start, pos;
       T curDoubleDelim = 0;
       start = 0;
-      do
-      {
-        if (curDoubleDelim != 0)
-        {
+      do {
+        if (0 != curDoubleDelim ) {
           pos = str.find(curDoubleDelim, start);
         }
-        else
-        {
+        else {
           pos = str.find_first_of(delims, start);
         }
 
-        if (pos == start)
-        {
+        if (pos == start) {
           T curDelim = str.at(pos);
-          if (doubleDelims.find_first_of(curDelim) != BasicString<T>::npos)
-          {
+          if (doubleDelims.find_first_of(curDelim) != BasicString<T>::npos) {
             curDoubleDelim = curDelim;
           }
           // Do nothing
           start = pos + 1;
         }
-        else if (pos == BasicString<T>::npos || (maxSplits && numSplits == maxSplits))
-        {
-          if (curDoubleDelim != 0)
-          {
+        else if (pos == BasicString<T>::npos || (maxSplits && numSplits == maxSplits)) {
+          if (curDoubleDelim != 0) {
             //Missing closer. Warn or throw exception?
           }
           // Copy the rest of the string
           ret.push_back(str.substr(start));
           break;
         }
-        else
-        {
-          if (curDoubleDelim != 0)
-          {
+        else {
+          if (curDoubleDelim != 0) {
             curDoubleDelim = 0;
           }
 
@@ -390,8 +386,7 @@ namespace geEngineSDK {
           ret.push_back(str.substr(start, pos - start));
           start = pos + 1;
         }
-        if (curDoubleDelim == 0)
-        {
+        if (0== curDoubleDelim) {
           // parse up to next real data
           start = str.find_first_not_of(singleDelims, start);
         }
@@ -404,17 +399,18 @@ namespace geEngineSDK {
     }
 
     template <class T>
-    static bool StartsWithInternal(const BasicString<T>& str, const BasicString<T>& pattern, bool lowerCase) {
+    static bool
+    startsWithInternal(const BasicString<T>& str, 
+                       const BasicString<T>& pattern, 
+                       bool lowerCase) {
       SIZE_T thisLen = str.length();
       SIZE_T patternLen = pattern.length();
-      if (thisLen < patternLen || patternLen == 0)
-      {
+      if (thisLen < patternLen || 0 == patternLen) {
         return false;
       }
 
       BasicString<T> startOfThis = str.substr(0, patternLen);
-      if (lowerCase)
-      {
+      if (lowerCase) {
         StringUtil::toLowerCase(startOfThis);
       }
 
@@ -422,17 +418,18 @@ namespace geEngineSDK {
     }
 
     template <class T>
-    static bool EndsWithInternal(const BasicString<T>& str, const BasicString<T>& pattern, bool lowerCase) {
+    static bool
+    endsWithInternal(const BasicString<T>& str, 
+                     const BasicString<T>& pattern, 
+                     bool lowerCase) {
       SIZE_T thisLen = str.length();
       SIZE_T patternLen = pattern.length();
-      if (thisLen < patternLen || patternLen == 0)
-      {
+      if (thisLen < patternLen || 0 == patternLen) {
         return false;
       }
 
       BasicString<T> endOfThis = str.substr(thisLen - patternLen, patternLen);
-      if (lowerCase)
-      {
+      if (lowerCase) {
         StringUtil::toLowerCase(endOfThis);
       }
 
@@ -440,11 +437,13 @@ namespace geEngineSDK {
     }
 
     template <class T>
-    static bool MatchInternal(const BasicString<T>& str, const BasicString<T>& pattern, bool caseSensitive) {
+    static bool
+    matchInternal(const BasicString<T>& str, 
+                  const BasicString<T>& pattern, 
+                  bool caseSensitive) {
       BasicString<T> tmpStr = str;
       BasicString<T> tmpPattern = pattern;
-      if (!caseSensitive)
-      {
+      if (!caseSensitive) {
         StringUtil::toLowerCase(tmpStr);
         StringUtil::toLowerCase(tmpPattern);
       }
@@ -452,47 +451,37 @@ namespace geEngineSDK {
       typename BasicString<T>::const_iterator strIt = tmpStr.begin();
       typename BasicString<T>::const_iterator patIt = tmpPattern.begin();
       typename BasicString<T>::const_iterator lastWildCardIt = tmpPattern.end();
-      while (strIt != tmpStr.end() && patIt != tmpPattern.end())
-      {
-        if (*patIt == '*')
-        {
+      while (strIt != tmpStr.end() && patIt != tmpPattern.end()) {
+        if (*patIt == '*') {
           lastWildCardIt = patIt;
 
           //Skip over looking for next character
           ++patIt;
-          if (patIt == tmpPattern.end())
-          {
+          if (patIt == tmpPattern.end()) {
             // Skip right to the end since * matches the entire rest of the string
             strIt = tmpStr.end();
           }
-          else
-          {
+          else {
             // scan until we find next pattern character
-            while (strIt != tmpStr.end() && *strIt != *patIt)
-            {
+            while (strIt != tmpStr.end() && *strIt != *patIt) {
               ++strIt;
             }
           }
         }
-        else
-        {
-          if (*patIt != *strIt)
-          {
-            if (lastWildCardIt != tmpPattern.end())
-            {
+        else {
+          if (*patIt != *strIt) {
+            if (lastWildCardIt != tmpPattern.end()) {
               //The last wildcard can match this incorrect sequence
               //rewind pattern to wildcard and keep searching
               patIt = lastWildCardIt;
               lastWildCardIt = tmpPattern.end();
             }
-            else
-            {
+            else {
               //No wildwards left
               return false;
             }
           }
-          else
-          {
+          else {
             ++patIt;
             ++strIt;
           }
@@ -501,22 +490,22 @@ namespace geEngineSDK {
       }
 
       // If we reached the end of both the pattern and the string, we succeeded
-      if (patIt == tmpPattern.end() && strIt == tmpStr.end())
-      {
+      if (patIt == tmpPattern.end() && strIt == tmpStr.end()) {
         return true;
       }
-      else
-      {
+      else {
         return false;
       }
     }
 
     template <class T>
-    static const BasicString<T> ReplaceAllInternal(const BasicString<T>& source, const BasicString<T>& replaceWhat, const BasicString<T>& replaceWithWhat) {
+    static const BasicString<T>
+    replaceAllInternal(const BasicString<T>& source, 
+                       const BasicString<T>& replaceWhat, 
+                       const BasicString<T>& replaceWithWhat) {
       BasicString<T> result = source;
       typename BasicString<T>::size_type pos = 0;
-      for (;;)
-      {
+      for (;;) {
         pos = result.find(replaceWhat, pos);
         if (pos == BasicString<T>::npos) break;
         result.replace(pos, replaceWhat.size(), replaceWithWhat);
@@ -526,315 +515,431 @@ namespace geEngineSDK {
     }
   };
 
-  /************************************************************************************************************************/
-  /* String conversion functions																							*/
-  /************************************************************************************************************************/
-
-  GE_UTILITY_EXPORT WString ToWString(const String& source);	/** Converts a narrow string to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(float val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts a float to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(double val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts a double to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(Radian val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts a Radian to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(Degree val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts a Degree to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(int32 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts an int to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(uint32 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts an unsigned int to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(int64 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts an 64bit integer to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(uint64 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));		/** Converts an 64bit unsigned to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(ANSICHAR val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts an narrow char unsigned to a wide string. */
-  GE_UTILITY_EXPORT WString ToWString(UNICHAR val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts an wide bit char unsigned to a wide string. */
-
-                                                                                                                                          /************************************************************************************************************************/
-                                                                                                                                          /**
-                                                                                                                                          * @brief	Converts a boolean to a wide string.
-                                                                                                                                          *
-                                                                                                                                          * @param	val  	Value to convert.
-                                                                                                                                          * @param	yesNo	(optional) If set to true, result is "yes" or "no" instead of "true" or "false".
-                                                                                                                                          */
-                                                                                                                                          /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(bool val, bool yesNo = false);
-
-  /************************************************************************************************************************/
+  /***************************************************************************/
   /**
-  * @brief	Converts a 2 dimensional vector to a wide string.
-  *
-  * @note		Format is "x y".
+  * String conversion functions
   */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Vector2& val);
-
-  /************************************************************************************************************************/
+  /***************************************************************************/
+  
   /**
-  * @brief	Converts a 3 dimensional vector to a wide string.
-  *
-  * @note		Format is "x y z".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Vector3& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 4 dimensional vector to a wide string.
-  *
-  * @note		Format is "x y z w".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Vector4& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 3x3 matrix to a wide string.
-  *
-  * @note		Format is "00 01 02 10 11 12 20 21 22".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Matrix3& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 4x4 matrix to a wide string.
-  *
-  * @note		Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Matrix4& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a Quaternion to a wide string.
-  *
-  * @note		Format is "w x y z".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Quaternion& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a linear color to a string.
-  *
-  * @note		Format is "r g b a".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const LinearColor& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a color to a string.
-  *
-  * @note		Format is "r g b a".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Color& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a vector of strings into a single string where the substrings are
-  *			delimited by spaces.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT WString ToWString(const Vector<geEngineSDK::WString>& val);
-
-  GE_UTILITY_EXPORT String ToString(const WString& source);	/** Converts a wide string to a narrow string. */
-  GE_UTILITY_EXPORT String ToString(float val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts a float to a string. */
-  GE_UTILITY_EXPORT String ToString(double val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts a double to a string. */
-  GE_UTILITY_EXPORT String ToString(Radian val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts a Radian to a string. */
-  GE_UTILITY_EXPORT String ToString(Degree val, uint16 precision = 6, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts a Degree to a string. */
-  GE_UTILITY_EXPORT String ToString(int32 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts an int to a string. */
-  GE_UTILITY_EXPORT String ToString(uint32 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts an unsigned int to a string. */
-  GE_UTILITY_EXPORT String ToString(int64 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts a 64bit int to a string. */
-  GE_UTILITY_EXPORT String ToString(uint64 val, uint16 width = 0, char fill = ' ', std::ios::fmtflags flags = std::ios::fmtflags(0));	/** Converts an 64bit unsigned int to a string. */
-
-                                                                                                                                      /************************************************************************************************************************/
-                                                                                                                                      /**
-                                                                                                                                      * @brief	Converts a boolean to a string.
-                                                                                                                                      *
-                                                                                                                                      * @param	val  	true to value.
-                                                                                                                                      * @param	yesNo	(optional) If set to true, result is "yes" or "no" instead of "true" or "false".
-                                                                                                                                      */
-                                                                                                                                      /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(bool val, bool yesNo = false);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 2 dimensional vector to a string.
-  *
-  * @note		Format is "x y".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Vector2& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 3 dimensional vector to a string.
-  *
-  * @note		Format is "x y z".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Vector3& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 4 dimensional vector to a string.
-  *
-  * @note		Format is "x y z w".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Vector4& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 3x3 matrix to a string.
-  *
-  * @note		Format is "00 01 02 10 11 12 20 21 22".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Matrix3& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a 4x4 matrix to a string.
-  *
-  * @note		Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Matrix4& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a Quaternion to a string.
-  *
-  * @note		Format is "w x y z".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Quaternion& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a linear color to a string.
-  *
-  * @note		Format is "r g b a".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const LinearColor& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a color to a string.
-  *
-  * @note		Format is "r g b a".
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Color& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a vector of strings into a single string where the substrings are
-  *			delimited by spaces.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT String ToString(const Vector<geEngineSDK::String>& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a String to a float.
-  *
-  * @note		0.0f if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT float ParseFloat(const String& val, float defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a String to a whole number.
-  *
-  * @note		0 if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  GE_UTILITY_EXPORT int32 ParseInt(const String& val, int32 defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a String to a whole number.
-  *
-  * @note		0 if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT uint32 ParseUnsignedInt(const String& val, uint32 defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a String to a boolean.
-  *
-  * @note		Returns true if case-insensitive match of the start of the string
-  *			matches "true", "yes" or "1", false otherwise.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT bool ParseBool(const String& val, bool defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Checks the String is a valid number value.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT bool IsNumber(const String& val);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a WString to a float.
-  *
-  * @note		0.0f if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT float ParseFloat(const WString& val, float defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a WString to a whole number.
-  *
-  * @note		0 if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT int32 ParseInt(const WString& val, int32 defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a WString to a whole number.
-  *
-  * @note		0 if the value could not be parsed, otherwise the numeric version of the string.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT uint32 ParseUnsignedInt(const WString& val, uint32 defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Converts a WString to a boolean.
-  *
-  * @note		Returns true if case-insensitive match of the start of the string
-  *			matches "true", "yes" or "1", false otherwise.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT bool ParseBool(const WString& val, bool defaultValue = 0);
-
-  /************************************************************************************************************************/
-  /**
-  * @brief	Checks the WString is a valid number value.
-  */
-  /************************************************************************************************************************/
-  GE_UTILITY_EXPORT bool IsNumber(const WString& val);
+   * @brief Converts a narrow string to a wide string.
+   */
+  GE_UTILITY_EXPORT WString
+  toWString(const String& source);
 
   /**
-  * @brief Helper method that throws an exception regarding a data overflow.
-  */
-  void GE_UTILITY_EXPORT __string_throwDataOverflowException();
+   * @brief Converts a float to a wide string.
+   */
+  GE_UTILITY_EXPORT WString
+  toWString(float val,
+            uint16 precision = 6,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a double to a wide string.
+   */
+  GE_UTILITY_EXPORT WString
+  toWString(double val,
+            uint16 precision = 6,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a Radian to a wide string.
+   */
+  GE_UTILITY_EXPORT WString
+  toWString(Radian val,
+            uint16 precision = 6,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a Degree to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(Degree val,
+            uint16 precision = 6,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an int to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(int32 val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an unsigned int to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(uint32 val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an 64bit integer to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(int64 val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an 64bit unsigned to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(uint64 val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an narrow char unsigned to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(ANSICHAR val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an wide bit char unsigned to a wide string.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(UNICHAR val,
+            uint16 width = 0,
+            char fill = ' ',
+            std::ios::fmtflags flags = std::ios::fmtflags(0));
 
   /**
-  * @brief RTTIPlainType specialization for String that allows strings be
-  *        serialized as value types.
-  * @see   RTTIPlainType
-  */
+   * @brief	Converts a boolean to a wide string.
+   * @param	val   Value to convert.
+   * @param	yesNo (optional) If set to true, result is "yes" or "no"
+   *              instead of "true" or "false".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(bool val, bool yesNo = false);
+
+  /**
+   * @brief Converts a 2 dimensional vector to a wide string.
+   * @note  Format is "x y".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Vector2& val);
+
+  /**
+   * @brief Converts a 3 dimensional vector to a wide string.
+   * @note  Format is "x y z".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Vector3& val);
+
+  /**
+   * @brief Converts a 4 dimensional vector to a wide string.
+   * @note  Format is "x y z w".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Vector4& val);
+
+  /**
+   * @brief Converts a 3x3 matrix to a wide string.
+   * @note  Format is "00 01 02 10 11 12 20 21 22".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Matrix3& val);
+
+  /**
+   * @brief Converts a 4x4 matrix to a wide string.
+   * @note  Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Matrix4& val);
+
+  /**
+   * @brief Converts a Quaternion to a wide string.
+   * @note  Format is "w x y z".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Quaternion& val);
+
+  /**
+   * @brief Converts a linear color to a string.
+   * @note  Format is "r g b a".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const LinearColor& val);
+
+  /**
+   * @brief Converts a color to a string.
+   * @note  Format is "r g b a".
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Color& val);
+
+  /**
+   * @brief Converts a vector of strings into a single string where the
+   *        substrings are delimited by spaces.
+   */
+  GE_UTILITY_EXPORT WString 
+  toWString(const Vector<geEngineSDK::WString>& val);
+
+  /**
+   * @brief Converts a wide string to a narrow string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const WString& source);
+
+  /**
+   * @brief Converts a float to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(float val,
+           uint16 precision = 6,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+
+  /**
+   * @brief Converts a double to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(double val,
+           uint16 precision = 6,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a Radian to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(Radian val,
+           uint16 precision = 6,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a Degree to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(Degree val,
+           uint16 precision = 6,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an int to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(int32 val,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an unsigned int to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(uint32 val,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts a 64bit int to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(int64 val,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+  
+  /**
+   * @brief Converts an 64bit unsigned int to a string.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(uint64 val,
+           uint16 width = 0,
+           char fill = ' ',
+           std::ios::fmtflags flags = std::ios::fmtflags(0));
+
+  /**
+   * @brief Converts a boolean to a string.
+   * @param	val   true to value.
+   * @param	yesNo (optional) If set to true, result is "yes" or "no"
+   *              instead of "true" or "false".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(bool val, bool yesNo = false);
+
+  /**
+   * @brief Converts a 2 dimensional vector to a string.
+   * @note  Format is "x y".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Vector2& val);
+
+  /**
+   * @brief Converts a 3 dimensional vector to a string.
+   * @note  Format is "x y z".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Vector3& val);
+
+  /**
+   * @brief Converts a 4 dimensional vector to a string.
+   * @note  Format is "x y z w".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Vector4& val);
+
+  /**
+   * @brief Converts a 3x3 matrix to a string.
+   * @note  Format is "00 01 02 10 11 12 20 21 22".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Matrix3& val);
+
+  /**
+   * @brief Converts a 4x4 matrix to a string.
+   * @note  Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Matrix4& val);
+
+  /**
+   * @brief Converts a Quaternion to a string.
+   * @note  Format is "w x y z".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Quaternion& val);
+
+  /**
+   * @brief Converts a linear color to a string.
+   * @note  Format is "r g b a".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const LinearColor& val);
+
+  /**
+   * @brief Converts a color to a string.
+   * @note  Format is "r g b a".
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Color& val);
+
+  /**
+   * @brief Converts a vector of strings into a single string where the
+   *        substrings are delimited by spaces.
+   */
+  GE_UTILITY_EXPORT String 
+  toString(const Vector<geEngineSDK::String>& val);
+
+  /**
+   * @brief Converts a String to a float.
+   * @note  0.0f if the value could not be parsed, otherwise the numeric
+   *        version of the string.
+   */
+  GE_UTILITY_EXPORT float 
+  parseFloat(const String& val, float defaultValue = 0);
+
+  /**
+   * @brief Converts a String to a whole number.
+   * @note  0 if the value could not be parsed, otherwise the numeric
+   *        version of the string.
+   */
+  GE_UTILITY_EXPORT int32 
+  parseInt(const String& val, int32 defaultValue = 0);
+
+  /**
+   * @brief Converts a String to a whole number.
+   * @note  0 if the value could not be parsed, otherwise the numeric
+   *        version of the string.
+   */
+  GE_UTILITY_EXPORT uint32 
+  parseUnsignedInt(const String& val, uint32 defaultValue = 0);
+
+  /**
+   * @brief Converts a String to a boolean.
+   * @note  Returns true if case-insensitive match of the start of the string
+   *        matches "true", "yes" or "1", false otherwise.
+   */
+  GE_UTILITY_EXPORT bool 
+  parseBool(const String& val, bool defaultValue = 0);
+
+  /**
+   * @brief Checks the String is a valid number value.
+   */
+  GE_UTILITY_EXPORT bool 
+  isNumber(const String& val);
+
+  /**
+   * @brief Converts a WString to a float.
+   * @note  0.0f if the value could not be parsed, otherwise the numeric
+   *        version of the string.
+   */
+  GE_UTILITY_EXPORT float 
+  parseFloat(const WString& val, float defaultValue = 0);
+
+  /**
+   * @brief Converts a WString to a whole number.
+   * @note  0 if the value could not be parsed, otherwise the numeric version
+   *        of the string.
+   */
+  GE_UTILITY_EXPORT int32 
+  parseInt(const WString& val, int32 defaultValue = 0);
+
+  /**
+   * @brief Converts a WString to a whole number.
+   * @note  0 if the value could not be parsed, otherwise the numeric version
+   *        of the string.
+   */
+  GE_UTILITY_EXPORT uint32 
+  parseUnsignedInt(const WString& val, uint32 defaultValue = 0);
+
+  /**
+   * @brief Converts a WString to a boolean.
+   * @note  Returns true if case-insensitive match of the start of the string
+   *        matches "true", "yes" or "1", false otherwise.
+   */
+  GE_UTILITY_EXPORT bool 
+  parseBool(const WString& val, bool defaultValue = 0);
+
+  /**
+   * @brief	Checks the WString is a valid number value.
+   */
+  GE_UTILITY_EXPORT bool 
+  isNumber(const WString& val);
+
+  /**
+   * @brief Helper method that throws an exception regarding a data overflow.
+   */
+  void GE_UTILITY_EXPORT 
+  __string_throwDataOverflowException();
+
+  /**
+   * @brief RTTIPlainType specialization for String that allows strings be
+   *        serialized as value types.
+   * @see   RTTIPlainType
+   */
   template<> struct RTTIPlainType<String>
   {
     enum { kID = TYPEID_UTILITY::kID_String }; enum { kHasDynamicSize = 1 };
 
     static void
-      toMemory(const String& data, char* memory) {
+    toMemory(const String& data, char* memory) {
       uint64 size = getDynamicSize(data);
 
       memcpy(memory, &size, sizeof(uint64));
@@ -844,7 +949,7 @@ namespace geEngineSDK {
     }
 
     static uint64
-      fromMemory(String& data, char* memory) {
+    fromMemory(String& data, char* memory) {
       uint64 size;
       memcpy(&size, memory, sizeof(uint64));
       memory += sizeof(uint64);
@@ -861,7 +966,7 @@ namespace geEngineSDK {
     }
 
     static uint64
-      getDynamicSize(const String& data) {
+    getDynamicSize(const String& data) {
       uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint64);
 
 #if GE_DEBUG_MODE
@@ -884,7 +989,7 @@ namespace geEngineSDK {
     enum { kID = TYPEID_UTILITY::kID_WString }; enum { kHasDynamicSize = 1 };
 
     static void
-      toMemory(const WString& data, char* memory) {
+    toMemory(const WString& data, char* memory) {
       uint64 size = getDynamicSize(data);
 
       memcpy(memory, &size, sizeof(uint64));
@@ -894,7 +999,7 @@ namespace geEngineSDK {
     }
 
     static uint64
-      fromMemory(WString& data, char* memory) {
+    fromMemory(WString& data, char* memory) {
       typedef WString::value_type wcTemp;
 
       uint64 size;
@@ -917,7 +1022,7 @@ namespace geEngineSDK {
     }
 
     static uint64
-      getDynamicSize(const WString& data) {
+    getDynamicSize(const WString& data) {
       uint64 dataSize = data.size() * sizeof(WString::value_type) + sizeof(uint64);
 
 #if GE_DEBUG_MODE
@@ -931,18 +1036,15 @@ namespace geEngineSDK {
   };
 }
 
-/************************************************************************************************************************/
 /**
-* @brief	Hash value generator for SString.
-*/
-/************************************************************************************************************************/
+ * @brief Hash value generator for SString.
+ */
 template<>
 struct std::hash<geEngineSDK::String>
 {
   size_t operator()(const geEngineSDK::String& string) const {
     size_t hash = 0;
-    for (size_t i = 0; i < string.size(); i++)
-    {
+    for (size_t i = 0; i < string.size(); ++i) {
       hash = 65599 * hash + string[i];
     }
 
@@ -950,18 +1052,15 @@ struct std::hash<geEngineSDK::String>
   }
 };
 
-/************************************************************************************************************************/
 /**
-* @brief	Hash value generator for WString.
-*/
-/************************************************************************************************************************/
+ * @brief Hash value generator for WString.
+ */
 template<>
 struct std::hash<geEngineSDK::WString>
 {
   size_t operator()(const geEngineSDK::WString& string) const {
     size_t hash = 0;
-    for (size_t i = 0; i < string.size(); i++)
-    {
+    for (size_t i = 0; i < string.size(); ++i) {
       hash = 65599 * hash + string[i];
     }
     return hash ^ (hash >> 16);

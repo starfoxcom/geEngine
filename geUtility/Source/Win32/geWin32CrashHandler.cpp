@@ -136,7 +136,7 @@ namespace geEngineSDK
 			IMAGEHLP_LINE64	lineData;
 			lineData.SizeOfStruct = sizeof(lineData);
 
-			String addressString = ToString(funcAddress, 0, ' ', std::ios::hex);
+			String addressString = toString(funcAddress, 0, ' ', std::ios::hex);
 
 			DWORD column;
 			if( SymGetLineFromAddr64(hProcess, funcAddress, &column, &lineData) )
@@ -241,7 +241,7 @@ namespace geEngineSDK
 		SymSetOptions(options);
 		if( !SymInitialize(hProcess, nullptr, false) )
 		{
-			LOGERR("SymInitialize failed. Error code: " + ToString((uint32)GetLastError()));
+			LOGERR("SymInitialize failed. Error code: " + toString((uint32)GetLastError()));
 			return;
 		}
 
@@ -280,7 +280,7 @@ namespace geEngineSDK
 
 				if( !SymGetModuleInfo64(GetCurrentProcess(), moduleAddress, &imageInfo) )
 				{
-					LOGWRN("Failed retrieving module info for module: " + String(moduleName) + ". Error code: " + ToString((uint32)GetLastError()));
+					LOGWRN("Failed retrieving module info for module: " + String(moduleName) + ". Error code: " + toString((uint32)GetLastError()));
 				}
 				else
 				{
@@ -294,7 +294,7 @@ namespace geEngineSDK
 			}
 			else
 			{
-				LOGWRN("Failed loading module " + String(moduleName) + ".Error code: " + ToString((uint32)GetLastError()) + ". Search path: " + String(pdbSearchPath) + ". Image name: " + String(imageName));
+				LOGWRN("Failed loading module " + String(moduleName) + ".Error code: " + toString((uint32)GetLastError()) + ". Search path: " + String(pdbSearchPath) + ". Image name: " + String(imageName));
 			}
 		}
 
@@ -309,7 +309,7 @@ namespace geEngineSDK
 	/************************************************************************************************************************/
 	String Win32_GetExceptionMessage(EXCEPTION_RECORD* record)
 	{
-		String exceptionAddress = ToString((uint64)record->ExceptionAddress, 0, ' ', std::ios::hex);
+		String exceptionAddress = toString((uint64)record->ExceptionAddress, 0, ' ', std::ios::hex);
 
 		String format;
 		switch( record->ExceptionCode )
@@ -339,7 +339,7 @@ namespace geEngineSDK
 					format = "Unhandled exception at 0x{0}. Access violation.";
 				}
 
-				String violatedAddressStr = ToString((uint64)violatedAddress, 0, ' ', std::ios::hex);
+				String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', std::ios::hex);
 				return StringUtil::format(format, exceptionAddress, violatedAddressStr);
 			}
 			case EXCEPTION_IN_PAGE_ERROR:
@@ -369,8 +369,8 @@ namespace geEngineSDK
 					format = "Unhandled exception at 0x{0}. Page fault.";
 				}
 
-				String violatedAddressStr = ToString((uint64)violatedAddress, 0, ' ', std::ios::hex);
-				String codeStr = ToString((uint64)code, 0, ' ', std::ios::hex);
+				String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', std::ios::hex);
+				String codeStr = toString((uint64)code, 0, ' ', std::ios::hex);
 				return StringUtil::format(format, exceptionAddress, violatedAddressStr, codeStr);
 			}
 			case STATUS_ARRAY_BOUNDS_EXCEEDED:
@@ -442,7 +442,7 @@ namespace geEngineSDK
 			{
 				format = "Unhandled exception at 0x{0}. Code 0x{1}.";
 
-				String exceptionCode = ToString((uint32)record->ExceptionCode, 0, ' ', std::ios::hex);
+				String exceptionCode = toString((uint32)record->ExceptionCode, 0, ' ', std::ios::hex);
 				return StringUtil::format(format, exceptionAddress, exceptionCode);
 			}
 		}
@@ -478,7 +478,7 @@ namespace geEngineSDK
 	{
 		MiniDumpParams param = { filePath, exceptionData };
 
-		//Write minidump on a second thread in order to preserve the current thread's call stack
+		//Write mini dump on a second thread in order to preserve the current thread's call stack
 		DWORD threadId = 0;
 		HANDLE hThread = CreateThread(nullptr, 0, &Win32_WriteMiniDumpWorker, &param, 0, &threadId);
 
@@ -576,11 +576,11 @@ namespace geEngineSDK
 		GetLocalTime(&systemTime);
 
 		WString timeStamp = L"{0}{1}{2}_{3}{4}";
-		WString strYear =	ToWString(systemTime.wYear,	 4, '0');
-		WString strMonth =	ToWString(systemTime.wMonth, 2, '0');
-		WString strDay =	ToWString(systemTime.wDay,   2, '0');
-		WString strHour =	ToWString(systemTime.wHour,  2, '0');
-		WString strMinute = ToWString(systemTime.wMinute,2, '0');
+		WString strYear =	toWString(systemTime.wYear,	 4, '0');
+		WString strMonth =	toWString(systemTime.wMonth, 2, '0');
+		WString strDay =	toWString(systemTime.wDay,   2, '0');
+		WString strHour =	toWString(systemTime.wHour,  2, '0');
+		WString strMinute = toWString(systemTime.wMinute,2, '0');
 
 		//timeStamp = StringUtil::format(timeStamp, strYear, strMonth, strDay, strHour, strMinute);
 		WString folderName = StringUtil::format(CrashReportFolder, timeStamp);

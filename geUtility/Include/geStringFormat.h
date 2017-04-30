@@ -203,7 +203,7 @@ namespace geEngineSDK {
                 paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx,
                                                                      numParamChars + 2,
                                                                      paramIdx);
-                charWriteIdx += parameters[paramIdx].Size;
+                charWriteIdx += parameters[paramIdx].m_size;
                 processedBracket = true;
               }
             }
@@ -242,9 +242,9 @@ namespace geEngineSDK {
           continue;
         }
 
-        SIZE_T paramSize = parameters[rangeInfo.m_paramIdx].Size;
+        SIZE_T paramSize = parameters[rangeInfo.m_paramIdx].m_size;
         memcpy(outputBuffer + copyDestIdx,
-               parameters[rangeInfo.m_paramIdx].Buffer,
+               parameters[rangeInfo.m_paramIdx].m_buffer,
                paramSize * sizeof(T));
         copyDestIdx += paramSize;
       }
@@ -258,8 +258,8 @@ namespace geEngineSDK {
 
       //Free the memory of all the parameters buffers
       for (uint32 i = 0; i < MAX_PARAMS; ++i) {
-        if (nullptr != parameters[i].Buffer) {
-          ge_free(parameters[i].Buffer);
+        if (nullptr != parameters[i].m_buffer) {
+          ge_free(parameters[i].m_buffer);
         }
       }
 

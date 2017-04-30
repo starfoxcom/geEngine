@@ -194,15 +194,15 @@ namespace geEngineSDK
 		switch (type)
 		{
 		case PATH_TYPE::Windows:
-			return geEngineSDK::ToString(BuildWindows());
+			return geEngineSDK::toString(BuildWindows());
 		case PATH_TYPE::Unix:
-			return geEngineSDK::ToString(BuildUnix());
+			return geEngineSDK::toString(BuildUnix());
 		case PATH_TYPE::Default:
 		default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-			return geEngineSDK::ToString(BuildWindows());
+			return geEngineSDK::toString(BuildWindows());
 #elif GE_PLATFORM == GE_PLATFORM_APPLE || GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_PS4
-			return geEngineSDK::ToString(BuildUnix());
+			return geEngineSDK::toString(BuildUnix());
 #else
 			static_assert(false, "Unsupported platform for path.");
 #endif
@@ -444,7 +444,7 @@ namespace geEngineSDK
 
 	void Path::SetBasename(const String& basename)
 	{
-		m_Filename = geEngineSDK::ToWString(basename) + GetWExtension();
+		m_Filename = geEngineSDK::toWString(basename) + GetWExtension();
 	}
 
 	void Path::SetExtension(const WString& extension)
@@ -457,7 +457,7 @@ namespace geEngineSDK
 
 	void Path::SetExtension(const String& extension)
 	{
-		SetExtension(geEngineSDK::ToWString(extension));
+		SetExtension(geEngineSDK::toWString(extension));
 	}
 
 	WString Path::GetWFilename(bool extension) const
@@ -482,7 +482,7 @@ namespace geEngineSDK
 
 	String Path::GetFilename(bool extension) const
 	{
-		return geEngineSDK::ToString(GetWFilename(extension));
+		return geEngineSDK::toString(GetWFilename(extension));
 	}
 
 	WString Path::GetWExtension() const
@@ -498,14 +498,14 @@ namespace geEngineSDK
 
 	String Path::GetExtension() const
 	{
-		return geEngineSDK::ToString(GetWExtension());
+		return geEngineSDK::toString(GetWExtension());
 	}
 
 	const WString& Path::GetWDirectory(uint32 idx) const
 	{
 		if( idx >= (uint32)m_Directories.size() )
 		{
-			GE_EXCEPT(InvalidParametersException, "Index out of range: " + geEngineSDK::ToString(idx) + ". Valid range: [0, " + geEngineSDK::ToString((uint32)m_Directories.size() - 1) + "]");
+			GE_EXCEPT(InvalidParametersException, "Index out of range: " + geEngineSDK::toString(idx) + ". Valid range: [0, " + geEngineSDK::toString((uint32)m_Directories.size() - 1) + "]");
 		}
 
 		return m_Directories[idx];
@@ -513,7 +513,7 @@ namespace geEngineSDK
 
 	String Path::GetDirectory(uint32 idx) const
 	{
-		return geEngineSDK::ToString(GetWDirectory(idx));
+		return geEngineSDK::toString(GetWDirectory(idx));
 	}
 
 	WString Path::GetWTail(PATH_TYPE::E) const
@@ -534,7 +534,7 @@ namespace geEngineSDK
 
 	String Path::GetTail(PATH_TYPE::E type) const
 	{
-		return geEngineSDK::ToString(GetWTail(type));
+		return geEngineSDK::toString(GetWTail(type));
 	}
 
 	void Path::Clear()
@@ -548,7 +548,7 @@ namespace geEngineSDK
 
 	void Path::throwInvalidPathException(const WString& path) const
 	{
-		GE_EXCEPT(InvalidParametersException, "Incorrectly formatted path provided: " + geEngineSDK::ToString(path));
+		GE_EXCEPT(InvalidParametersException, "Incorrectly formatted path provided: " + geEngineSDK::toString(path));
 	}
 
 	void Path::throwInvalidPathException(const String& path) const
@@ -635,7 +635,7 @@ namespace geEngineSDK
 		}
 
 		//TODO: Case sensitive/insensitive file path actually depends on used file-system
-		for( uint32 i=0; i<(uint32)left.size(); i++ )
+		for( uint32 i=0; i<(uint32)left.size(); ++i )
 		{
 			if (tolower(left[i]) != tolower(right[i]))
 			{
@@ -676,6 +676,6 @@ namespace geEngineSDK
 
 	void Path::PushDirectory(const String& dir)
 	{
-		PushDirectory(geEngineSDK::ToWString(dir));
+		PushDirectory(geEngineSDK::toWString(dir));
 	}
 }

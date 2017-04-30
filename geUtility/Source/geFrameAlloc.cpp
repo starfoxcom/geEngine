@@ -159,7 +159,7 @@ namespace geEngineSDK
 			if( numFreedBlocks > 1 )
 			{
 				uint32 totalBytes = 0;
-				for( uint32 i=0; i<numFreedBlocks; i++ )
+				for( uint32 i=0; i<numFreedBlocks; ++i )
 				{
 					MemBlock* curBlock = m_Blocks[m_NextBlockIdx];
 					totalBytes += curBlock->m_Size;
