@@ -1,0 +1,3 @@
+Enviromental variables needed
+
+%DEVLIBS% - Root folder where the external libraries are located
