@@ -64,7 +64,7 @@ namespace geEngineSDK {
     /**
      * Constructor
      */
-  public:
+   public:
     QWord() : m_lower(0), m_upper(0) {}
     QWord(bool from)   : m_lower(static_cast<uint64>(from)), m_upper(0) {}
     QWord(uint8 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
@@ -79,7 +79,7 @@ namespace geEngineSDK {
     QWord(double from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
 
     /**
-     * @brief	  The cast operator for casting/truncating to 64 bits.
+     * @brief   The cast operator for casting/truncating to 64 bits.
      * @returns The lower 64 bits of the value.
      */
     operator int64() const { return static_cast<uint64>(m_lower); }
@@ -87,7 +87,7 @@ namespace geEngineSDK {
    public:
     uint64 m_lower; //The lower 64 bits of the 128 bit integer.
     int64	m_upper;  //The upper 64 bits of the 128 bit integer.
-	}GCC_ALIGN(16);
+  }GCC_ALIGN(16);
 	
   typedef QWord int128;   //Signed 128 bit integer.
   typedef QWord uint128;  //Unsigned 128 bit integer.
@@ -110,7 +110,7 @@ namespace geEngineSDK {
    * NULL data type
    */
   /***************************************************************************/
-	typedef int32				TYPE_OF_NULL;
+  typedef int32           TYPE_OF_NULL;
 
   /***************************************************************************/
   /**
@@ -118,8 +118,8 @@ namespace geEngineSDK {
    */
   /***************************************************************************/
 #if ((GE_ARCH_TYPE == GE_ARCHITECTURE_x86_64) && (GE_COMPILER == GE_COMPILER_MSVC))
-	typedef unsigned __int64	SIZE_T;
+  typedef unsigned __int64 SIZE_T;
 #else
-	typedef unsigned long		SIZE_T;
+  typedef unsigned long SIZE_T;
 #endif
 }

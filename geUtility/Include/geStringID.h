@@ -83,11 +83,11 @@ namespace geEngineSDK {
    public:
     StringID();
 
-    StringID(const ANSICHAR* name) : m_Data(nullptr) {
+    explicit StringID(const ANSICHAR* name) : m_data(nullptr) {
       construct(name);
     }
 
-    StringID(const String& name) : m_Data(nullptr) {
+    explicit StringID(const String& name) : m_data(nullptr) {
       construct(name);
     }
 
@@ -103,7 +103,7 @@ namespace geEngineSDK {
      */
     bool
     operator==(const StringID& rhs) const {
-      return m_Data == rhs.m_Data;
+      return m_data == rhs.m_data;
     }
 
     /**
@@ -111,7 +111,7 @@ namespace geEngineSDK {
      */
     bool
     operator!=(const StringID& rhs) const {
-      return m_Data != rhs.m_Data;
+      return m_data != rhs.m_data;
     }
 
     /**
@@ -119,7 +119,7 @@ namespace geEngineSDK {
      */
     bool
     empty() const {
-      return m_Data == nullptr;
+      return m_data == nullptr;
     }
 
     /**
@@ -127,11 +127,11 @@ namespace geEngineSDK {
      */
     const ANSICHAR*
     c_str() const {
-      if (m_Data == nullptr) {
+      if (m_data == nullptr) {
         return nullptr;
       }
 
-      return m_Data->m_chars;
+      return m_data->m_chars;
     }
 
    private:
@@ -158,14 +158,14 @@ namespace geEngineSDK {
     allocEntry();
 
    private:
-    static volatile InitStatics m_InitStatics;
-    static InternalData* m_StringHashTable[HASH_TABLE_SIZE];
-    static InternalData* m_Chunks[MAX_CHUNK_COUNT];
+    static volatile InitStatics m_initStatics;
+    static InternalData* m_stringHashTable[HASH_TABLE_SIZE];
+    static InternalData* m_chunks[MAX_CHUNK_COUNT];
 
-    static uint32 m_NextId;
-    static uint32 m_NumChunks;
-    static SpinLock m_Sync;
-    InternalData* m_Data;
+    static uint32 m_nextId;
+    static uint32 m_numChunks;
+    static SpinLock m_sync;
+    InternalData* m_data;
   };
 
   template<>

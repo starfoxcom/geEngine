@@ -300,12 +300,12 @@ namespace geEngineSDK
 
 	DataStreamPtr FileSystem::OpenFile(const Path& fullPath, bool readOnly)
 	{
-		WString pathWString = fullPath.ToWString();
+		WString pathWString = fullPath.toWString();
 		const wchar_t* pathString = pathWString.c_str();
 
 		if( !Win32_PathExists(pathString) || !Win32_IsFile(pathString) )
 		{
-			LOGWRN("Attempting to open a file that doesn't exist: " + fullPath.ToString());
+			LOGWRN("Attempting to open a file that doesn't exist: " + fullPath.toString());
 			return nullptr;
 		}
 
@@ -334,7 +334,7 @@ namespace geEngineSDK
 		//Should check ensure open succeeded, in case fail for some reason.
 		if( baseStream->fail() )
 		{
-			LOGWRN("Cannot open file: " + fullPath.ToString());
+			LOGWRN("Cannot open file: " + fullPath.toString());
 			return nullptr;
 		}
 
@@ -359,12 +359,12 @@ namespace geEngineSDK
 		//Always open in binary mode. Also, always include reading
 		std::ios::openmode mode = std::ios::out | std::ios::binary;
 		std::shared_ptr<std::fstream> rwStream = ge_shared_ptr_new<std::fstream>();
-		rwStream->open(fullPath.ToWString().c_str(), mode);
+		rwStream->open(fullPath.toWString().c_str(), mode);
 
 		//Should check ensure open succeeded, in case fail for some reason.
 		if( rwStream->fail() )
 		{
-			GE_EXCEPT(FileNotFoundException, "Cannot open file: " + fullPath.ToString());
+			GE_EXCEPT(FileNotFoundException, "Cannot open file: " + fullPath.toString());
 		}
 
 		//Construct return stream, tell it to delete on destroy
@@ -373,12 +373,12 @@ namespace geEngineSDK
 
 	uint64 FileSystem::GetFileSize(const Path& fullPath)
 	{
-		return Win32_GetFileSize(fullPath.ToWString());
+		return Win32_GetFileSize(fullPath.toWString());
 	}
 
 	void FileSystem::Remove(const Path& fullPath, bool recursively)
 	{
-		WString fullPathStr = fullPath.ToWString();
+		WString fullPathStr = fullPath.toWString();
 
 		if( !FileSystem::Exists(fullPath) )
 		{
@@ -408,8 +408,8 @@ namespace geEngineSDK
 
 	void FileSystem::Move(const Path& oldPath, const Path& newPath, bool overwriteExisting)
 	{
-		WString oldPathStr = oldPath.ToWString();
-		WString newPathStr = newPath.ToWString();
+		WString oldPathStr = oldPath.toWString();
+		WString newPathStr = newPath.toWString();
 
 		if( Win32_PathExists(newPathStr) )
 		{
@@ -438,7 +438,7 @@ namespace geEngineSDK
 			todo.pop();
 
 			Path sourcePath = std::get<0>(current);
-			WString sourcePathStr = sourcePath.ToWString();
+			WString sourcePathStr = sourcePath.toWString();
 			if( !Win32_PathExists(sourcePathStr) )
 			{
 				continue;
@@ -447,7 +447,7 @@ namespace geEngineSDK
 			bool srcIsFile = Win32_IsFile(sourcePathStr);
 
 			Path destinationPath = std::get<1>(current);
-			WString destPathStr = destinationPath.ToWString();
+			WString destPathStr = destinationPath.toWString();
 
 			bool destExists = Win32_PathExists(destPathStr);
 			if( destExists )
@@ -466,7 +466,7 @@ namespace geEngineSDK
 				}
 			}
 
-			bool destIsFile = !destinationPath.GetWExtension().empty();
+			bool destIsFile = !destinationPath.getWExtension().empty();
 
 			if( !srcIsFile && destIsFile )
 			{
@@ -476,9 +476,9 @@ namespace geEngineSDK
 			else if( srcIsFile && !destIsFile )
 			{
 				Path destinationFilePath = destinationPath;
-				destinationFilePath.Append(sourcePath.GetWTail());
+				destinationFilePath.append(sourcePath.getWTail());
 
-				Win32_CopyFile(sourcePathStr, destinationFilePath.ToWString());
+				Win32_CopyFile(sourcePathStr, destinationFilePath.toWString());
 			}
 			else if( srcIsFile && destIsFile )
 			{
@@ -498,7 +498,7 @@ namespace geEngineSDK
 				for( auto& file : files )
 				{
 					Path fileDestPath = destinationPath;
-					fileDestPath.Append(file.GetWTail());
+					fileDestPath.append(file.getWTail());
 
 					todo.push(std::make_tuple(file, fileDestPath));
 				}
@@ -506,7 +506,7 @@ namespace geEngineSDK
 				for( auto& dir : directories )
 				{
 					Path dirDestPath = destinationPath;
-					dirDestPath.Append(dir.GetWTail());
+					dirDestPath.append(dir.getWTail());
 
 					todo.push(std::make_tuple(dir, dirDestPath));
 				}
@@ -516,19 +516,19 @@ namespace geEngineSDK
 
 	bool FileSystem::Exists(const Path& fullPath)
 	{
-		return Win32_PathExists(fullPath.ToWString());
+		return Win32_PathExists(fullPath.toWString());
 	}
 
 	bool FileSystem::IsFile(const Path& fullPath)
 	{
-		WString pathStr = fullPath.ToWString();
+		WString pathStr = fullPath.toWString();
 
 		return Win32_PathExists(pathStr) && Win32_IsFile(pathStr);
 	}
 
 	bool FileSystem::IsDirectory(const Path& fullPath)
 	{
-		WString pathStr = fullPath.ToWString();
+		WString pathStr = fullPath.toWString();
 
 		return Win32_PathExists(pathStr) && Win32_IsDirectory(pathStr);
 	}
@@ -536,31 +536,30 @@ namespace geEngineSDK
 	void FileSystem::CreateDir(const Path& fullPath)
 	{
 		Path parentPath = fullPath;
-		while( !Exists(parentPath) && parentPath.GetNumDirectories() > 0 )
+		while( !Exists(parentPath) && parentPath.getNumDirectories() > 0 )
 		{
-			parentPath = parentPath.GetParent();
+			parentPath = parentPath.getParent();
 		}
 
-		for( uint32 i = parentPath.GetNumDirectories(); i < fullPath.GetNumDirectories(); ++i )
-		{
-			parentPath.Append(fullPath[i]);
-			Win32_CreateDirectory(parentPath.ToWString());
-		}
+    for (SIZE_T i = parentPath.getNumDirectories(); i < fullPath.getNumDirectories(); ++i) {
+      parentPath.append(fullPath[i]);
+      Win32_CreateDirectory(parentPath.toWString());
+    }
 
-		if( fullPath.IsFile() )
+		if( fullPath.isFile() )
 		{
-			Win32_CreateDirectory(fullPath.ToWString());
+			Win32_CreateDirectory(fullPath.toWString());
 		}
 	}
 
 	void FileSystem::GetChildren(const Path& dirPath, Vector<Path>& files, Vector<Path>& directories)
 	{
-		if( dirPath.IsFile() )
+		if( dirPath.isFile() )
 		{
 			return;
 		}
 
-		WString findPath = dirPath.ToWString();
+		WString findPath = dirPath.toWString();
 		findPath.append(L"*");
 
 		WIN32_FIND_DATAW findData;
@@ -590,11 +589,11 @@ namespace geEngineSDK
 					Path fullPath = dirPath;
 					if( (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0 )
 					{
-						directories.push_back(fullPath.Append(tempName + L"/"));
+						directories.push_back(fullPath.append(tempName + L"/"));
 					}
 					else
 					{
-						files.push_back(fullPath.Append(tempName));
+						files.push_back(fullPath.append(tempName));
 					}
 				}
 			}
@@ -607,12 +606,12 @@ namespace geEngineSDK
 
 	bool FileSystem::Iterate(const Path& dirPath, std::function<bool(const Path&)> fileCallback, std::function<bool(const Path&)> dirCallback, bool recursive)
 	{
-		if( dirPath.IsFile() )
+		if( dirPath.isFile() )
 		{
 			return true;
 		}
 
-		WString findPath = dirPath.ToWString();
+		WString findPath = dirPath.toWString();
 		findPath.append(L"*");
 
 		WIN32_FIND_DATAW findData;
@@ -640,7 +639,7 @@ namespace geEngineSDK
 					Path fullPath = dirPath;
 					if( (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0 )
 					{
-						Path childDir = fullPath.Append(tempName + L"/");
+						Path childDir = fullPath.append(tempName + L"/");
 						if( dirCallback != nullptr )
 						{
 							if( !dirCallback(childDir) )
@@ -661,7 +660,7 @@ namespace geEngineSDK
 					}
 					else
 					{
-						Path filePath = fullPath.Append(tempName);
+						Path filePath = fullPath.append(tempName);
 						if( fileCallback != nullptr )
 						{
 							if( !fileCallback(filePath) )
@@ -683,7 +682,7 @@ namespace geEngineSDK
 
 	std::time_t FileSystem::GetLastModifiedTime(const Path& fullPath)
 	{
-		return Win32_GetLastModifiedTime(fullPath.ToWString().c_str());
+		return Win32_GetLastModifiedTime(fullPath.toWString().c_str());
 	}
 
 	Path FileSystem::GetWorkingDirectoryPath()

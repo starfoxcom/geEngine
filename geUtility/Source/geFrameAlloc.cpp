@@ -96,6 +96,8 @@ namespace geEngineSDK
 		data -= sizeof(uint32);
 		uint32* storedSize = reinterpret_cast<uint32*>(data);
 		m_TotalAllocBytes -= *storedSize;
+#else
+    GE_UNREFERENCED_PARAMETER(data);
 #endif
 	}
 
@@ -260,6 +262,8 @@ namespace geEngineSDK
 	{
 #if GE_DEBUG_MODE
 		m_OwnerThread = thread;
+#else
+    GE_UNREFERENCED_PARAMETER(thread);
 #endif
 	}
 }

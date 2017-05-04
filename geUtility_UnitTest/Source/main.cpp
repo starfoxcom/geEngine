@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
+#include <geFileSystem.h>
 
 using namespace geEngineSDK;
 
@@ -25,6 +26,17 @@ TEST(geUtility, DEFINED_TYPES_SIZES) {
 
 TEST(geUtility, String) {
   String testString = "This is a test";
-
   ASSERT_TRUE(testString.size() == 14);
+}
+
+TEST(geUtility, Path) {
+  Path testPath;
+  WString lastDirectory;
+  
+  testPath = FileSystem::GetWorkingDirectoryPath();
+  ASSERT_TRUE(testPath.isDirectory());
+  ASSERT_TRUE(testPath.getNumDirectories());
+
+  lastDirectory.append(testPath[testPath.getNumDirectories() - 1]);
+  ASSERT_TRUE(lastDirectory.compare(L"BIN"));
 }

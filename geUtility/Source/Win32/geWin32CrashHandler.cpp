@@ -143,7 +143,7 @@ namespace geEngineSDK
 			{
 				Path filePath = lineData.FileName;
 
-				outputStream << StringUtil::format("0x{0} File[{1}:{2} ({3})]", addressString, filePath.GetFilename(), lineData.LineNumber, column);
+				outputStream << StringUtil::format("0x{0} File[{1}:{2} ({3})]", addressString, filePath.getFilename(), lineData.LineNumber, column);
 			}
 			else
 			{
@@ -157,7 +157,7 @@ namespace geEngineSDK
 			if( SymGetModuleInfo64(hProcess, funcAddress, &moduleData) )
 			{
 				Path filePath = moduleData.ImageName;
-				outputStream << StringUtil::format(" Module[{0}]", filePath.GetFilename());
+				outputStream << StringUtil::format(" Module[{0}]", filePath.getFilename());
 			}
 		}
 
@@ -458,7 +458,7 @@ namespace geEngineSDK
 	{
 		MiniDumpParams* params = (MiniDumpParams*)data;
 
-		HANDLE hFile = CreateFileW(params->FilePath.ToWString().c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+		HANDLE hFile = CreateFileW(params->FilePath.toWString().c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if( hFile != INVALID_HANDLE_VALUE )
 		{
 			MINIDUMP_EXCEPTION_INFORMATION DumpExceptionInfo;
@@ -530,7 +530,7 @@ namespace geEngineSDK
 		g_Debug().SaveLog(crashFolder + WString(CrashLogName));
 		Win32_WriteMiniDump(crashFolder + WString(g_MiniDumpName), nullptr);
 
-		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n " + crashFolder.ToWString();
+		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n " + crashFolder.toWString();
 		MessageBoxW(nullptr, simpleErrorMessage.c_str(), L"Fatal Error!", MB_OK);
 		//TODO: Potentially also log Windows Error Report and/or send crash data to server
 	}
@@ -562,7 +562,7 @@ namespace geEngineSDK
 		g_Debug().SaveLog(crashFolder + WString(CrashLogName));
 		Win32_WriteMiniDump(crashFolder + WString(g_MiniDumpName), exceptionData);
 
-		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n" + crashFolder.ToWString();
+		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n" + crashFolder.toWString();
 
 		MessageBoxW(nullptr, simpleErrorMessage.c_str(), L"Fatal Error!", MB_OK);
 		//TODO: Potentially also log Windows Error Report and/or send crash data to server

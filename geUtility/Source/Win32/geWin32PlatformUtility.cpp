@@ -169,7 +169,7 @@ namespace geEngineSDK
 
 	void PlatformUtility::Open(const Path& path)
 	{
-		ShellExecute(nullptr, "open", path.ToString().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+		ShellExecute(nullptr, "open", path.toString().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 	}
 
 	HBITMAP Win32PlatformUtility::CreateBitmap(const Color* pixels, UINT32 width, UINT32 height, bool premultiplyAlpha)

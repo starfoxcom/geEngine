@@ -72,7 +72,7 @@ namespace geEngineSDK
 			}
 			else
 			{
-				GE_EXCEPT(FileNotFoundException, "File already exists at specified location: " + filePath.ToString());
+				GE_EXCEPT(FileNotFoundException, "File already exists at specified location: " + filePath.toString());
 			}
 		}
 

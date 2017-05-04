@@ -21,25 +21,25 @@
 namespace geEngineSDK {
   const StringID StringID::NONE = StringID();
 
-  volatile StringID::InitStatics StringID::m_InitStatics = StringID::InitStatics();
-  StringID::InternalData* StringID::m_StringHashTable[HASH_TABLE_SIZE];
-  StringID::InternalData* StringID::m_Chunks[MAX_CHUNK_COUNT];
+  volatile StringID::InitStatics StringID::m_initStatics = StringID::InitStatics();
+  StringID::InternalData* StringID::m_stringHashTable[HASH_TABLE_SIZE];
+  StringID::InternalData* StringID::m_chunks[MAX_CHUNK_COUNT];
 
-  uint32 StringID::m_NextId = 0;
-  uint32 StringID::m_NumChunks = 0;
-  SpinLock StringID::m_Sync;
+  uint32 StringID::m_nextId = 0;
+  uint32 StringID::m_numChunks = 0;
+  SpinLock StringID::m_sync;
 
   StringID::InitStatics::InitStatics() {
-    ScopedSpinLock lock(m_Sync);
-    memset(m_StringHashTable, 0, sizeof(m_StringHashTable));
-    memset(m_Chunks, 0, sizeof(m_Chunks));
-    m_Chunks[0] = reinterpret_cast<InternalData*>
+    ScopedSpinLock lock(m_sync);
+    memset(m_stringHashTable, 0, sizeof(m_stringHashTable));
+    memset(m_chunks, 0, sizeof(m_chunks));
+    m_chunks[0] = reinterpret_cast<InternalData*>
                     (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
-    memset(m_Chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-    m_NumChunks++;
+    memset(m_chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
+    m_numChunks++;
   }
 
-  StringID::StringID() : m_Data(nullptr) {}
+  StringID::StringID() : m_data(nullptr) {}
 
   template<class T>
   void
@@ -47,26 +47,26 @@ namespace geEngineSDK {
     GE_ASSERT(StringIDUtil<T>::size(name) <= STRING_SIZE);
 
     uint32 hash = calcHash(name)
-                  & (sizeof(m_StringHashTable) / sizeof(m_StringHashTable[0]) - 1);
-    InternalData* existingEntry = m_StringHashTable[hash];
+                  & (sizeof(m_stringHashTable) / sizeof(m_stringHashTable[0]) - 1);
+    InternalData* existingEntry = m_stringHashTable[hash];
 
     while (nullptr != existingEntry) {
       if (StringIDUtil<T>::compare(name, existingEntry->m_chars)) {
-        m_Data = existingEntry;
+        m_data = existingEntry;
         return;
       }
 
       existingEntry = existingEntry->m_next;
     }
 
-    ScopedSpinLock lock(m_Sync);
+    ScopedSpinLock lock(m_sync);
 
     //Search for the value again in case other thread just added it
-    existingEntry = m_StringHashTable[hash];
+    existingEntry = m_stringHashTable[hash];
     InternalData* lastEntry = nullptr;
     while (nullptr != existingEntry) {
       if (StringIDUtil<T>::compare(name, existingEntry->m_chars)) {
-        m_Data = existingEntry;
+        m_data = existingEntry;
         return;
       }
 
@@ -74,13 +74,13 @@ namespace geEngineSDK {
       existingEntry = existingEntry->m_next;
     }
 
-    m_Data = allocEntry();
-    StringIDUtil<T>::copy(name, m_Data->m_chars);
+    m_data = allocEntry();
+    StringIDUtil<T>::copy(name, m_data->m_chars);
     if (nullptr == lastEntry) {
-      m_StringHashTable[hash] = m_Data;
+      m_stringHashTable[hash] = m_data;
     }
     else {
-      lastEntry->m_next = m_Data;
+      lastEntry->m_next = m_data;
     }
   }
 
@@ -99,23 +99,23 @@ namespace geEngineSDK {
 
   StringID::InternalData*
   StringID::allocEntry() {
-    uint32 chunkIdx = m_NextId / ELEMENTS_PER_CHUNK;
+    uint32 chunkIdx = m_nextId / ELEMENTS_PER_CHUNK;
 
     GE_ASSERT(chunkIdx < MAX_CHUNK_COUNT);
-    GE_ASSERT(chunkIdx <= m_NumChunks); //Can only increment sequentially
+    GE_ASSERT(chunkIdx <= m_numChunks); //Can only increment sequentially
 
-    if (chunkIdx >= m_NumChunks) {
-      m_Chunks[chunkIdx] = reinterpret_cast<InternalData*>
+    if (chunkIdx >= m_numChunks) {
+      m_chunks[chunkIdx] = reinterpret_cast<InternalData*>
                              (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
-      memset(m_Chunks[chunkIdx], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-      m_NumChunks++;
+      memset(m_chunks[chunkIdx], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
+      m_numChunks++;
     }
 
-    InternalData* chunk = m_Chunks[chunkIdx];
-    uint32 chunkSpecificIndex = m_NextId % ELEMENTS_PER_CHUNK;
+    InternalData* chunk = m_chunks[chunkIdx];
+    uint32 chunkSpecificIndex = m_nextId % ELEMENTS_PER_CHUNK;
 
     InternalData* newEntry = &chunk[chunkSpecificIndex];
-    newEntry->m_id = m_NextId++;
+    newEntry->m_id = m_nextId++;
     newEntry->m_next = nullptr;
 
     return newEntry;
