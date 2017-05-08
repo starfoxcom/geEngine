@@ -52,7 +52,7 @@ namespace geEngineSDK {
     allocBlock(m_blockSize);
   }
 #else
-  FrameAlloc::FrameAlloc(uint32 blockSize)
+  FrameAlloc::FrameAlloc(SIZE_T blockSize)
     : m_blockSize(blockSize),
       m_freeBlock(nullptr),
       m_nextBlockIdx(0),

@@ -13,17 +13,17 @@
 
 /*****************************************************************************/
 /**
-* Includes
-*/
+ * Includes
+ */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geGlobalFrameAlloc.h"
 #include "geFrameAlloc.h"
 
 namespace geEngineSDK {
-	GE_THREADLOCAL FrameAlloc* _GlobalFrameAlloc = nullptr;
+  GE_THREADLOCAL FrameAlloc* _GlobalFrameAlloc = nullptr;
 
-	FrameAlloc&
+  FrameAlloc&
   g_frameAlloc() {
     if (nullptr == _GlobalFrameAlloc) {
       /** HACK: This will leak memory but since it should exist throughout the
@@ -31,27 +31,27 @@ namespace geEngineSDK {
       it anyway. */
       _GlobalFrameAlloc = new FrameAlloc();
     }
-		return *_GlobalFrameAlloc;
-	}
+    return *_GlobalFrameAlloc;
+  }
 
-	uint8*
+  uint8*
   ge_frame_alloc(SIZE_T numBytes) {
-		return g_frameAlloc().alloc(numBytes);
-	}
+    return g_frameAlloc().alloc(numBytes);
+  }
 
-	void
+  void
   ge_frame_free(void* data) {
-		//HACK: Test if this casting is working correctly on PS4
-		g_frameAlloc().dealloc(*reinterpret_cast<uint32**>(data));
-	}
+    //HACK: Test if this casting is working correctly on PS4
+    g_frameAlloc().dealloc(*reinterpret_cast<uint32**>(data));
+  }
 
-	void
+  void
   ge_frame_mark() {
-		g_frameAlloc().markFrame();
-	}
+    g_frameAlloc().markFrame();
+  }
 
-	void
+  void
   ge_frame_clear() {
-		g_frameAlloc().clear();
-	}
+    g_frameAlloc().clear();
+  }
 }
