@@ -53,7 +53,7 @@ namespace geEngineSDK
 		{
 			name += ".so";
 		}
-#elif GE_PLATFORM == GE_PLATFORM_APPLE
+#elif GE_PLATFORM == GE_PLATFORM_OSX
 		//dlopen() does not add .dylib to the filename, like windows does for .dll
 		if( name.substr(name.length() - 6, 6) != ".dylib" )
 		{
@@ -104,7 +104,7 @@ namespace geEngineSDK
 		String ret = (char*)lpMsgBuf;
 		LocalFree(lpMsgBuf);	//Free the buffer.
 		return ret;
-#elif GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_APPLE
+#elif GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_OSX
 		return String(dlerror());
 #else
 		return String("");

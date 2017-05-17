@@ -31,13 +31,13 @@ namespace geEngineSDK
 
 	void Log::LogMsg(const String& message, uint32 channel)
 	{
-		GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+		RecursiveLock lock(m_Mutex);
 		m_UnreadEntries.push(LogEntry(message, channel));
 	}
 
 	void Log::Clear()
 	{
-		GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+    RecursiveLock lock(m_Mutex);
 		m_Entries.clear();
 
 		while( !m_UnreadEntries.empty() )
@@ -50,7 +50,7 @@ namespace geEngineSDK
 
 	void Log::Clear(uint32 channel)
 	{
-		GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+    RecursiveLock lock(m_Mutex);
 		
 		Vector<LogEntry> newEntries;
 		for(auto& entry : m_Entries)
@@ -85,7 +85,7 @@ namespace geEngineSDK
 
 	bool Log::GetUnreadEntry(LogEntry& entry)
 	{
-		GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+    RecursiveLock lock(m_Mutex);
 
 		if( m_UnreadEntries.empty() )
 		{
@@ -114,7 +114,7 @@ namespace geEngineSDK
 
 	Vector<LogEntry> Log::GetEntries() const
 	{
-		GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+    RecursiveLock lock(m_Mutex);
 		return m_Entries;
 	}
 
@@ -122,7 +122,7 @@ namespace geEngineSDK
 	{
 		Vector<LogEntry> entries;
 		{
-			GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+      RecursiveLock lock(m_Mutex);
 
 			for(auto& entry : m_Entries)
 			{

@@ -200,6 +200,9 @@
     <ClInclude Include="Include\geDynLib.h">
       <Filter>Header Files\General</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geEnumClassHash.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">

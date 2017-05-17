@@ -39,10 +39,19 @@ namespace geEngineSDK {
     return g_frameAlloc().alloc(numBytes);
   }
 
+  uint8* ge_frame_alloc_aligned(SIZE_T count, SIZE_T align) {
+    return g_frameAlloc().allocAligned(count, align);
+  }
+
   void
   ge_frame_free(void* data) {
     //HACK: Test if this casting is working correctly on PS4
     g_frameAlloc().dealloc(*reinterpret_cast<uint32**>(data));
+  }
+
+  void
+  ge_frame_free_aligned(void* data) {
+    g_frameAlloc().dealloc(reinterpret_cast<uint8*>(data));
   }
 
   void

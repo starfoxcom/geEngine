@@ -18,6 +18,9 @@
  * Includes
  */
 /*****************************************************************************/
+#include <limits>
+#include <new>
+
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
@@ -76,9 +79,19 @@ namespace geEngineSDK {
      */
     template<class T, class... Args>
     T*
-    alloc(Args&&... args) {
+    alloc(Args&& ...args) {
       return new (reinterpret_cast<T*>(alloc(sizeof(T)))) T(std::forward<Args>(args)...);
     }
+
+    /**
+     * @brief Allocates a new block of memory of the specified size aligned to
+     *        the specified boundary. If the alignment is less or equal to 16 it is
+              more efficient to use the allocAligned16() alternative of this method.
+     * @param[in] amount  Amount of memory to allocate, in bytes.
+     * @param[in] alignment Alignment of the allocated memory. Must be power of two.
+     * @note  Not thread safe.
+     */
+    uint8* allocAligned(SIZE_T amount, SIZE_T alignment);
 
     /**
      * @brief Deallocates a previously allocated block of memory.
@@ -126,7 +139,7 @@ namespace geEngineSDK {
      *        has changed only allocations from that thread can be made.
      */
     void
-    setOwnerThread(GE_THREAD_ID_TYPE thread);
+    setOwnerThread(ThreadId thread);
 
     /**
      * @brief Allocates a dynamic block of memory of the wanted size. The exact
@@ -151,7 +164,7 @@ namespace geEngineSDK {
     uint32* m_lastFrame;
 
 #if GE_DEBUG_MODE
-    GE_THREAD_ID_TYPE m_ownerThread;
+    ThreadId m_ownerThread;
 #endif
   };
 
@@ -162,25 +175,39 @@ namespace geEngineSDK {
   class StdFrameAlloc
   {
    public:
-    FrameAlloc* m_FrameAlloc;
-
-   public:
     typedef T value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
     
     StdFrameAlloc() _NOEXCEPT : m_FrameAlloc(nullptr) {}
     StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
 
-    template<class T>
-    StdFrameAlloc(const StdFrameAlloc<T>& stdAlloc) _NOEXCEPT 
-      : m_FrameAlloc(stdAlloc.m_FrameAlloc) {}
-    
-    template<class T>
-    bool
-    operator==(const StdFrameAlloc<T>&) const _NOEXCEPT { return true; }
+    template<class U>
+    StdFrameAlloc(const StdFrameAlloc<U>& refAlloc) _NOEXCEPT
+      : m_FrameAlloc(refAlloc.m_FrameAlloc) {
+    }
 
-    template<class T>
+    template<class U>
     bool
-    operator!=(const StdFrameAlloc<T>&) const _NOEXCEPT { return false; }
+    operator==(const StdFrameAlloc<U>&) const _NOEXCEPT {
+      return true;
+    }
+
+    template<class U>
+    bool
+    operator!=(const StdFrameAlloc<U>&) const _NOEXCEPT {
+      return false;
+    }
+
+    template<class U>
+    class rebind
+    {
+     public: typedef StdFrameAlloc<U> other;
+    };
 
     /**
      * @brief Allocate but don't initialize number elements of type T.
@@ -210,6 +237,30 @@ namespace geEngineSDK {
     deallocate(T* p, size_t) const _NOEXCEPT {
       m_FrameAlloc->dealloc(reinterpret_cast<uint8*>(p));
     }
+
+  public:
+    FrameAlloc* m_FrameAlloc;
+
+    size_t
+    max_size() const {
+      return std::numeric_limits<size_type>::max() / sizeof(T);
+    }
+
+    void
+    construct(pointer p, const_reference t) {
+      new (p) T(t);
+    }
+    
+    void
+    destroy(pointer p) {
+      p->~T();
+    }
+
+    template<class U, class... Args>
+    void
+    construct(U* p, Args&& ...args) {
+      new(p) U(std::forward<Args>(args)...);
+    }
   };
 
   /**
@@ -217,7 +268,7 @@ namespace geEngineSDK {
    */
   template <class T1, class T2>
   bool
-  operator==(const StdFrameAlloc<T1>&, const StdFrameAlloc<T2>&) _NOEXCEPT {
+  operator==(const StdFrameAlloc<T1>&, const StdFrameAlloc<T2>&) throw() {
     return true;
   }
 
@@ -226,7 +277,7 @@ namespace geEngineSDK {
    */
   template <class T1, class T2>
   bool
-  operator!=(const StdFrameAlloc<T1>&, const StdFrameAlloc<T2>&) _NOEXCEPT {
+  operator!=(const StdFrameAlloc<T1>&, const StdFrameAlloc<T2>&) throw() {
     return false;
   }
 }

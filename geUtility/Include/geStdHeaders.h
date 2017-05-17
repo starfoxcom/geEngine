@@ -156,7 +156,7 @@ extern "C" {
  * Apple specifics
  */
 /*****************************************************************************/
-#if GE_PLATFORM == GE_PLATFORM_APPLE
+#if GE_PLATFORM == GE_PLATFORM_OSX
   extern "C" {
 #   include <unistd.h>
 #   include <sys/param.h>
@@ -176,12 +176,19 @@ extern "C" {
   }
 #endif
 
+#include "geEnumClassHash.h"
+
 namespace geEngineSDK {
   /***************************************************************************/
 	/**
    * Standard containers, for easier access in my own namespace
    */
   /***************************************************************************/
+  template <typename Key>
+  using HashType = typename std::conditional<std::is_enum<Key>::value,
+                                             EnumClassHash,
+                                             std::hash<Key>>::type;
+
   template <typename T, typename A = StdAlloc<T>>
   using Deque = std::deque<T, A>;
 
@@ -213,21 +220,21 @@ namespace geEngineSDK {
   using MultiMap = std::multimap<K, V, P, A>;
 
   template <typename T, 
-            typename H = std::hash<T>, 
+            typename H = HashType<T>,
             typename C = std::equal_to<T>, 
             typename A = StdAlloc<T>>
   using UnorderedSet = std::unordered_set<T, H, C, A>;
 
   template <typename K, 
             typename V, 
-            typename H = std::hash<K>, 
+            typename H = HashType<K>,
             typename C = std::equal_to<K>, 
             typename A = StdAlloc<std::pair<const K, V>>>
   using UnorderedMap = std::unordered_map<K, V, H, C, A>;
 
   template <typename K, 
             typename V, 
-            typename H = std::hash<K>, 
+            typename H = HashType<K>,
             typename C = std::equal_to<K>, 
             typename A = StdAlloc<std::pair<const K, V>>>
   using UnorderedMultimap = std::unordered_multimap<K, V, H, C, A>;

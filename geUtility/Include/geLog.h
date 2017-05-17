@@ -129,6 +129,6 @@ namespace geEngineSDK
 		Vector<LogEntry> m_Entries;
 		Queue<LogEntry> m_UnreadEntries;
 		uint64 m_Hash;
-		GE_RECURSIVE_MUTEX(m_Mutex);
+		mutable RecursiveMutex m_Mutex;
 	};
 }

@@ -31,6 +31,77 @@
 namespace geEngineSDK {
   class MemoryAllocatorBase;
 
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+  inline void*
+  platformAlignedAlloc16(SIZE_T size) {
+    return _aligned_malloc(size, 16);
+  }
+
+  inline void
+  platformAlignedFree16(void* ptr) {
+    _aligned_free(ptr);
+  }
+
+  inline void*
+  platformAlignedAlloc(SIZE_T size, SIZE_T alignment) {
+    return _aligned_malloc(size, alignment);
+  }
+
+  inline void
+  platformAlignedFree(void* ptr) {
+    _aligned_free(ptr);
+  }
+#elif GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_ANDROID
+  inline void*
+  platformAlignedAlloc16(SIZE_T size) {
+    return ::memalign(16, size);
+  }
+
+  inline void
+  platformAlignedFree16(void* ptr) {
+    ::free(ptr);
+  }
+
+  inline void*
+  platformAlignedAlloc(SIZE_T size, SIZE_T alignment) {
+    return ::memalign(alignment, size);
+  }
+
+  inline void
+  platformAlignedFree(void* ptr) {
+    ::free(ptr);
+  }
+#else //16 byte alignment by default
+  inline void*
+  platformAlignedAlloc16(SIZE_T size) {
+    return ::malloc(size);
+  }
+
+  inline void
+  platformAlignedFree16(void* ptr) {
+    ::free(ptr);
+  }
+
+  inline void*
+  platformAlignedAlloc(SIZE_T size, SIZE_T alignment) {
+    void* data = ::malloc(size + (alignment - 1) + sizeof(void*));
+    if (nullptr == data) {
+      return nullptr;
+    }
+
+    uint8* alignedData = (reinterpret_cast<uint8*>(data)) + sizeof(void*);
+    alignedData += alignment - (reinterpret_cast<uintptr_t>(alignedData)) & (alignment - 1);
+
+    (reinterpret_cast<void**>(alignedData))[-1] = data;
+    return alignedData;
+  }
+
+  inline void
+  platformAlignedFree(void* ptr) {
+    ::free(((void**)ptr)[-1]);
+  }
+#endif
+
   /**
    * @class MemoryCounter
    * @brief Thread safe class used for storing total number of memory
@@ -100,7 +171,7 @@ namespace geEngineSDK {
   class MemoryAllocator : public MemoryAllocatorBase
   {
    public:
-    static inline void*
+    static void*
     allocate(SIZE_T bytes) {
 #if GE_PROFILING_ENABLED
       incrementAllocCount();
@@ -108,15 +179,32 @@ namespace geEngineSDK {
       return malloc(bytes);
     }
 
-    static inline void*
-    allocateArray(SIZE_T bytes, SIZE_T count) {
+    /**
+     * @brief Allocates @p bytes and aligns them to the specified boundary (in bytes).
+     *        If the alignment is less or equal to 16 it is more efficient to use the
+     *        allocateAligned16() alternative of this method.
+     *        Alignment must be power of two.
+     */
+    static void*
+    allocateAligned(SIZE_T bytes, SIZE_T alignment) {
 #if GE_PROFILING_ENABLED
       incrementAllocCount();
 #endif
-      return malloc(bytes * count);
+      return platformAlignedAlloc(bytes, alignment);
     }
 
-    static inline void
+    /**
+     * @brief Allocates @p bytes and aligns them to a 16 byte boundary.
+     */
+    static void*
+    allocateAligned16(SIZE_T bytes) {
+#if GE_PROFILING_ENABLED
+      incrementAllocCount();
+#endif
+      return platformAlignedAlloc16(bytes);
+    }
+
+    static void
     free(void* ptr) {
 #if GE_PROFILING_ENABLED
       incrementFreeCount();
@@ -124,13 +212,26 @@ namespace geEngineSDK {
       ::free(ptr);
     }
 
-    static inline void
-    freeArray(void* ptr, SIZE_T count) {
-      GE_UNREFERENCED_PARAMETER(count);
+    /**
+     * @brief Frees memory allocated with allocateAligned()
+     */
+    static void
+    freeAligned(void* ptr) {
 #if GE_PROFILING_ENABLED
       incrementFreeCount();
 #endif
-      ::free(ptr);
+      platformAlignedFree(ptr);
+    }
+
+    /**
+     * @brief Frees memory allocated with allocateAligned16()
+     */
+    static void
+    freeAligned16(void* ptr) {
+#if GE_PROFILING_ENABLED
+      incrementFreeCount();
+#endif
+      platformAlignedFree16(ptr);
     }
   };
 
@@ -156,7 +257,7 @@ namespace geEngineSDK {
   template<class T, class Alloc>
   inline T*
   ge_alloc() {
-    return (T*)MemoryAllocator<Alloc>::allocate(sizeof(T));
+    return reinterpret_cast<T*>(MemoryAllocator<Alloc>::allocate(sizeof(T)));
   }
 
   /**
@@ -165,7 +266,8 @@ namespace geEngineSDK {
   template<class T, class Alloc>
   inline T*
   ge_newN(SIZE_T count) {
-    T* ptr = reinterpret_cast<T*>(MemoryAllocator<Alloc>::allocateArray(sizeof(T), count));
+    T* ptr = reinterpret_cast<T*>(MemoryAllocator<Alloc>::allocate(sizeof(T) * count));
+
     for (SIZE_T i = 0; i < count; ++i) {
       new (reinterpret_cast<void*>(&ptr[i])) T;
     }
@@ -178,7 +280,7 @@ namespace geEngineSDK {
    */
   template<class T, class Alloc, class... Args>
   T*
-  ge_new(Args&&... args) {
+  ge_new(Args&& ...args) {
     return new (ge_alloc<Alloc>(sizeof(T))) T(std::forward<Args>(args)...);
   }
 
@@ -210,7 +312,7 @@ namespace geEngineSDK {
     for (SIZE_T i = 0; i < count; ++i) {
       ptr[i].~T();
     }
-    MemoryAllocator<Alloc>::freeArray(ptr, count);
+    MemoryAllocator<Alloc>::free(ptr);
   }
 
   /***************************************************************************/
@@ -237,12 +339,38 @@ namespace geEngineSDK {
   }
 
   /**
+   * @brief Allocates the specified number of bytes aligned to the provided boundary.
+   *        Boundary is in bytes and must be a power of two.
+   */
+  inline void*
+  ge_alloc_aligned(SIZE_T count, SIZE_T align) {
+    return MemoryAllocator<GenAlloc>::allocateAligned(count, align);
+  }
+
+  /**
+   * @brief Allocates the specified number of bytes aligned to a 16 bytes boundary.
+   */
+  inline void*
+  ge_alloc_aligned16(SIZE_T count) {
+    return MemoryAllocator<GenAlloc>::allocateAligned16(count);
+  }
+
+  /**
    * @brief Creates and constructs an array of "count" elements.
    */
   template<class T>
   inline T*
+  ge_allocN(SIZE_T count) {
+    return reinterpret_cast<T*>(MemoryAllocator<GenAlloc>::allocate(sizeof(T) * count));
+  }
+
+  /**
+  * @brief Creates and constructs an array of "count" elements.
+  */
+  template<class T>
+  inline T*
   ge_newN(SIZE_T count) {
-    T* ptr = reinterpret_cast<T*>(MemoryAllocator<GenAlloc>::allocateArray(sizeof(T), count));
+    T* ptr = reinterpret_cast<T*>(MemoryAllocator<GenAlloc>::allocate(sizeof(T) * count));
     for (SIZE_T i = 0; i < count; ++i) {
       new (reinterpret_cast<void*>(&ptr[i])) T;
     }
@@ -255,7 +383,7 @@ namespace geEngineSDK {
    */
   template<class T, class... Args>
   T*
-  ge_new(Args&&... args) {
+  ge_new(Args&& ...args) {
     return new (ge_alloc<GenAlloc>(sizeof(T))) T(std::forward<Args>(args)...);
   }
 
@@ -265,6 +393,22 @@ namespace geEngineSDK {
   inline void
   ge_free(void* ptr) {
     MemoryAllocator<GenAlloc>::free(ptr);
+  }
+
+  /**
+   * @brief Frees memory previously allocated with bs_alloc_aligned().
+   */
+  inline void
+  ge_free_aligned(void* ptr) {
+    MemoryAllocator<GenAlloc>::freeAligned(ptr);
+  }
+
+  /**
+   * @brief Frees memory previously allocated with bs_alloc_aligned16().
+   */
+  inline void
+  ge_free_aligned16(void* ptr) {
+    MemoryAllocator<GenAlloc>::freeAligned16(ptr);
   }
 
   /***************************************************************************/
@@ -281,9 +425,7 @@ namespace geEngineSDK {
 #define GE_PVT_DELETE_A(T, ptr, Alloc)                                        \
       (ptr)->~T();                                                            \
       MemoryAllocator<Alloc>::free(ptr);
-}
 
-namespace geEngineSDK {
   /**
    * @brief Allocator for the standard library that internally uses the
    *        Genesis Engine memory allocator.
@@ -293,23 +435,36 @@ namespace geEngineSDK {
   {
    public:
     typedef T value_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
     
     StdAlloc() _NOEXCEPT {}
     
-    template<class T, class Alloc>
-    StdAlloc(const StdAlloc<T, Alloc>&) _NOEXCEPT {}
-    
-    template<class T, class Alloc>
+    template<class U, class Alloc2>
+    StdAlloc(const StdAlloc<U, Alloc2>&) _NOEXCEPT {}
+
+    template<class U, class Alloc2>
     bool
-    operator==(const StdAlloc<T, Alloc>&) const _NOEXCEPT {
+    operator==(const StdAlloc<U, Alloc2>&) const _NOEXCEPT {
       return true;
     }
 
-    template<class T, class Alloc>
+    template<class U, class Alloc2>
     bool
-    operator!=(const StdAlloc<T, Alloc>&) const _NOEXCEPT {
+    operator!=(const StdAlloc<U, Alloc2>&) const _NOEXCEPT {
       return false;
     }
+
+    template<class U>
+    class rebind
+    {
+     public:
+      typedef StdAlloc<U, Alloc> other;
+    };
 
     /**
      * @brief Allocate but don't initialize number elements of type T.
@@ -337,8 +492,35 @@ namespace geEngineSDK {
      */
     void
     deallocate(T* p, size_t) const _NOEXCEPT {
-      ge_free<Alloc>((void*)p);
+      ge_free<Alloc>(reinterpret_cast<void*>(p));
     }
+
+    size_t
+    max_size() const {
+      return std::numeric_limits<size_type>::max() / sizeof(T);
+    }
+
+    void
+    construct(pointer p, const_reference t) {
+      new (p) T(t);
+    }
+
+    void destroy(pointer p) {
+      p->~T();
+    }
+
+    /**
+     * @brief This version of construct() (with a varying number of parameters)
+     *        seems necessary in order to use some STL data structures from
+     *        libstdc++-4.8, but compilation fails on OSX, hence the #if.
+     */
+#if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_WIN32
+    template<class U, class... Args>
+    void
+    construct(U* p, Args&& ...args) {
+      new(p) U(std::forward<Args>(args)...);
+    }
+#endif
   };
 }
 

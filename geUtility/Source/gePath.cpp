@@ -136,7 +136,7 @@ namespace geEngineSDK {
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       parseWindows(pathStr, numChars);
-#elif GE_PLATFORM == GE_PLATFORM_APPLE || \
+#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
       //TODO: Test parsing with PS4
@@ -161,7 +161,7 @@ namespace geEngineSDK {
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       parseWindows(pathStr, numChars);
-#elif GE_PLATFORM == GE_PLATFORM_APPLE || \
+#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
       //TODO: Test parsing with PS4
@@ -184,7 +184,7 @@ namespace geEngineSDK {
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       return geEngineSDK::toString(buildWindows());
-#elif GE_PLATFORM == GE_PLATFORM_APPLE || \
+#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
       return geEngineSDK::toString(BuildUnix());
@@ -206,7 +206,7 @@ namespace geEngineSDK {
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       return buildWindows();
-#elif GE_PLATFORM == GE_PLATFORM_APPLE || \
+#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
       return buildUnix();

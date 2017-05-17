@@ -386,7 +386,7 @@ namespace geEngineSDK {
           ret.push_back(str.substr(start, pos - start));
           start = pos + 1;
         }
-        if (0== curDoubleDelim) {
+        if (0 == curDoubleDelim) {
           // parse up to next real data
           start = str.find_first_not_of(singleDelims, start);
         }

@@ -17,10 +17,12 @@
  * Initial platform/compiler-related stuff to set.
  */
 /*****************************************************************************/
-#define GE_PLATFORM_WIN32 1                   //Windows Platform
-#define GE_PLATFORM_LINUX 2                   //Linux Platform
-#define GE_PLATFORM_APPLE 3                   //Apple Platform
-#define GE_PLATFORM_PS4   4                   //PlayStation 4 Platform
+#define GE_PLATFORM_WIN32   1                 //Windows Platform
+#define GE_PLATFORM_LINUX   2                 //Linux Platform
+#define GE_PLATFORM_OSX     3                 //Apple Platform
+#define GE_PLATFORM_IOS     4                 //Apple Platform
+#define GE_PLATFORM_ANDROID 5                 //Apple Platform
+#define GE_PLATFORM_PS4     6                 //PlayStation 4 Platform
 
 #define GE_COMPILER_MSVC 1                    //Visual Studio Compiler
 #define GE_COMPILER_GNUC 2                    //GCC Compiler
@@ -64,7 +66,7 @@
  */
 #elif defined ( __clang__ )                   //Clang compiler
 # define GE_COMPILER GE_COMPILER_CLANG        //Set as Actual Compiler
-# define GE_COMP_VER __clang_major__          //Compiler version
+# define GE_COMP_VER __clang_version__        //Compiler version
 # define GE_THREADLOCAL __thread              //Local Thread type
 #else
 //No know compiler found, send the error to the output (if any)
@@ -105,7 +107,7 @@
 #if defined(__WIN32__) || defined(_WIN32)     //If it's a Windows platform
 # define GE_PLATFORM GE_PLATFORM_WIN32
 #elif defined( __APPLE_CC__ )                 //It's an Apple platform
-# define GE_PLATFORM GE_PLATFORM_APPLE
+# define GE_PLATFORM GE_PLATFORM_OSX
 #elif defined( __ORBIS__ )                    //It's a PlayStation 4
 # define GE_PLATFORM GE_PLATFORM_PS4
 #else                                         //Will consider it as a Linux platform
@@ -198,7 +200,7 @@
  * Linux/Apple specific Settings
  */
 /*****************************************************************************/
-#if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_APPLE
+#if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_OSX
 //Enable GCC symbol visibility
 # if defined( GE_GCC_VISIBILITY )
 #   define GE_UTILITY_EXPORT  __attribute__ ((visibility("default")))
@@ -218,7 +220,7 @@
 # if GE_COMPILER == GE_COMPILER_INTEL
 #   define GE_THREADLOCAL __thread          //Set the local thread for the Intel compiler
 # endif
-#endif	//GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_APPLE
+#endif	//GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_OSX
 
 /*****************************************************************************/
 /**
@@ -246,7 +248,7 @@
 # else
 #   define GE_DEBUG_MODE 0                  //We are not on a DEBUG build
 # endif
-#endif	//GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_APPLE
+#endif	//GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_OSX
 
 /*****************************************************************************/
 /**

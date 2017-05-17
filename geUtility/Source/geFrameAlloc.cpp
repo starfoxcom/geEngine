@@ -94,6 +94,51 @@ namespace geEngineSDK {
 #endif
   }
 
+  uint8*
+  FrameAlloc::allocAligned(SIZE_T amount, SIZE_T alignment) {
+#if GE_DEBUG_MODE
+    GE_ASSERT(GE_THREAD_CURRENT_ID == m_ownerThread &&
+              "Frame allocator called from invalid thread.");
+
+    amount += sizeof(SIZE_T);
+    SIZE_T freePtr = m_freeBlock->m_freePtr + sizeof(SIZE_T);
+#else
+    SIZE_T freePtr = m_freeBlock->m_freePtr;
+#endif
+
+    SIZE_T alignOffset = alignment - freePtr & (alignment - 1);
+    SIZE_T freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
+    if ((amount + alignOffset) > freeMem) {
+      /** New blocks are allocated on a 16 byte boundary, ensure we enough
+      space is allocated taking into account the requested alignment */
+#if GE_DEBUG_MODE
+      alignOffset = alignment - sizeof(SIZE_T) & (alignment - 1);
+#else
+      if (alignment > 16) {
+        alignOffset = alignment - 16;
+      }
+      else {
+        alignOffset = 0;
+      }
+#endif
+      allocBlock(amount + alignOffset);
+    }
+
+    amount += alignOffset;
+    uint8* data = m_freeBlock->alloc(amount);
+
+#if GE_DEBUG_MODE
+    m_totalAllocBytes += amount;
+
+    SIZE_T* storedSize = reinterpret_cast<SIZE_T*>(data + alignOffset);
+    *storedSize = amount;
+
+    return data + sizeof(SIZE_T) + alignOffset;
+#else
+    return data + alignOffset;
+#endif
+  }
+
   void
   FrameAlloc::dealloc(uint8* data) {
 #if GE_DEBUG_MODE
@@ -248,7 +293,7 @@ namespace geEngineSDK {
   }
 
   void
-  FrameAlloc::setOwnerThread(GE_THREAD_ID_TYPE thread) {
+  FrameAlloc::setOwnerThread(ThreadId thread) {
 #if GE_DEBUG_MODE
     m_ownerThread = thread;
 #else

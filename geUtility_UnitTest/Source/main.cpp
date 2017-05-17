@@ -1,7 +1,9 @@
+#include <vld.h>
 #include <gtest/gtest.h>
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
 #include <geFileSystem.h>
+#include <geDataStream.h>
 
 using namespace geEngineSDK;
 
@@ -27,6 +29,12 @@ TEST(geUtility, DEFINED_TYPES_SIZES) {
 TEST(geUtility, String) {
   String testString = "This is a test";
   ASSERT_TRUE(testString.size() == 14);
+
+  WString testWString = L"This is a test";
+  ASSERT_TRUE(testWString.size() == 14);
+
+  ASSERT_TRUE(toString(testWString).size() == 14);
+  ASSERT_TRUE(toWString(testString).size() == 14);
 }
 
 TEST(geUtility, Path) {
@@ -39,4 +47,19 @@ TEST(geUtility, Path) {
 
   lastDirectory.append(testPath[testPath.getNumDirectories() - 1]);
   ASSERT_TRUE(lastDirectory.compare(L"BIN"));
+}
+
+TEST(geUtility, Parser) {
+  DataStreamPtr fileData = FileSystem::OpenFile("Test/test.txt");
+  ASSERT_TRUE(fileData);
+  if (fileData) {
+    String strParse = fileData->GetAsString();
+    Vector<String> lineList = StringUtil::split(strParse, "\n");
+
+    for (auto& line : lineList) {
+      StringUtil::trim(line);
+    }
+
+    ASSERT_TRUE(lineList.size() == 9);
+  }
 }

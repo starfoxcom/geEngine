@@ -509,7 +509,7 @@ namespace geEngineSDK
 	void CrashHandler::ReportCrash(const String& type, const String& description, const String& function, const String& file, uint32 line) const
 	{
 		//Win32 debug methods are not thread safe
-		Lock<>(m_CrashData->mutex);
+		Lock(m_CrashData->mutex);
 
 		String stackTrace = GetStackTrace();
 
@@ -540,7 +540,7 @@ namespace geEngineSDK
 		EXCEPTION_POINTERS* exceptionData = (EXCEPTION_POINTERS*)exceptionDataPtr;
 
 		//Win32 debug methods are not thread safe
-		Lock<>(m_CrashData->mutex);
+		Lock(m_CrashData->mutex);
 
 		Win32_InitPSAPI();
 		Win32_LoadSymbols();

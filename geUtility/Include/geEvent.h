@@ -1,412 +1,425 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geEvent.h
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2015/02/22
- * @brief  Templates and Classes for the creating on Event objects
+ * @file    geEvent.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2015/02/22
+ * @brief   Templates and Classes for the creating on Event objects
  *
  * Thread safe Event object with callbacks for disconnection
  *
- * @bug	   No known bugs.
+ * @bug     No known bugs.
  */
- /********************************************************************/
+/*****************************************************************************/
 #pragma once
 
-/************************************************************************************************************************/
-/* Includes                                                                     										*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+* Includes
+*/
+/*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 
-namespace geEngineSDK
-{
-	/************************************************************************************************************************/
-	/**
-	* @brief	Data common to all event connections.
-	*/
-	/************************************************************************************************************************/
-	class BaseConnectionData
-	{
-	public:
-		BaseConnectionData* m_Prev;
-		BaseConnectionData* m_Next;
-		bool m_IsActive;
-		uint32 m_HandleLinks;
+namespace geEngineSDK {
+  /**
+   * @brief Data common to all event connections.
+   */
+  class BaseConnectionData
+  {
+   public:
+    BaseConnectionData() 
+      : m_prev(nullptr),
+        m_next(nullptr),
+        m_isActive(true),
+        m_handleLinks(0) {}
 
-	public:
-		BaseConnectionData() : m_Prev(nullptr), m_Next(nullptr), m_IsActive(true), m_HandleLinks(0)
-		{
+    virtual ~BaseConnectionData() {
+      GE_ASSERT(!m_handleLinks && !m_isActive);
+    }
 
-		}
+    virtual void
+    deactivate() {
+      m_isActive = false;
+    }
 
-		virtual ~BaseConnectionData()
-		{
-			GE_ASSERT(!m_HandleLinks && !m_IsActive);
-		}
+   public:
+    BaseConnectionData* m_prev;
+    BaseConnectionData* m_next;
+    bool m_isActive;
+    uint32 m_handleLinks;
+  };
 
-		virtual void Deactivate()
-		{
-			m_IsActive = false;
-		}
-	};
+  /**
+   * @brief Internal data for an Event, storing all connections.
+   */
+  struct EventInternalData
+  {
+    EventInternalData()
+      : m_connections(nullptr),
+        m_freeConnections(nullptr),
+        m_lastConnection(nullptr),
+        m_newConnections(nullptr),
+        m_isCurrentlyTriggering(false) {}
 
-	/************************************************************************************************************************/
-	/**
-	* @brief	Internal data for an Event, storing all connections.
-	*/
-	/************************************************************************************************************************/
-	struct EventInternalData
-	{
-		BaseConnectionData* m_Connections;
-		BaseConnectionData* m_FreeConnections;
-		GE_RECURSIVE_MUTEX(m_Mutex);
+    ~EventInternalData() {
+      BaseConnectionData* conn = m_connections;
+      while (nullptr != conn) {
+        BaseConnectionData* next = conn->m_next;
+        ge_free(conn);
+        conn = next;
+      }
 
-		EventInternalData() : m_Connections(nullptr), m_FreeConnections(nullptr)
-		{
-		}
+      conn = m_freeConnections;
+      while (nullptr != conn) {
+        BaseConnectionData* next = conn->m_next;
+        ge_free(conn);
+        conn = next;
+      }
 
-		~EventInternalData()
-		{
-			BaseConnectionData* conn = m_Connections;
-			while( conn != nullptr )
-			{
-				BaseConnectionData* next = conn->m_Next;
-				ge_free(conn);
-				conn = next;
-			}
+      conn = m_newConnections;
+      while (nullptr != conn) {
+        BaseConnectionData* next = conn->m_next;
+        ge_free(conn);
+        conn = next;
+      }
+    }
 
-			conn = m_FreeConnections;
-			while( conn != nullptr )
-			{
-				BaseConnectionData* next = conn->m_Next;
-				ge_free(conn);
-				conn = next;
-			}
-		}
+    /**
+     * @brief Appends a new connection to the active connection array.
+     */
+    void
+    connect(BaseConnectionData* conn) {
+      conn->m_prev = m_lastConnection;
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Disconnects the connection with the specified data, ensuring the event doesn't call its callback again.
-		* @note		Only call this once.
-		*/
-		/************************************************************************************************************************/
-		void Disconnect(BaseConnectionData* conn)
-		{
-			GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+      if (nullptr != m_lastConnection) {
+        m_lastConnection->m_next = conn;
+      }
 
-			conn->Deactivate();
-			conn->m_HandleLinks--;
+      m_lastConnection = conn;
 
-			if( conn->m_HandleLinks == 0 )
-			{
-				free(conn);
-			}
-		}
+      //First connection
+      if (nullptr == m_connections) {
+        m_connections = conn;
+      }
+    }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Disconnects all connections in the event.
-		*/
-		/************************************************************************************************************************/
-		void Clear()
-		{
-			GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+    /**
+     * @brief Disconnects the connection with the specified data, ensuring the
+     *        event doesn't call its callback again.
+     * @note  Only call this once.
+     */
+    void
+    disconnect(BaseConnectionData* conn) {
+      RecursiveLock lock(m_mutex);
 
-			BaseConnectionData* conn = m_Connections;
-			while( conn != nullptr )
-			{
-				BaseConnectionData* next = conn->m_Next;
-				conn->Deactivate();
+      conn->deactivate();
+      conn->m_handleLinks--;
 
-				if( conn->m_HandleLinks == 0 )
-				{
-					free(conn);
-				}
+      if (0 == conn->m_handleLinks) {
+        free(conn);
+      }
+    }
 
-				conn = next;
-			}
-		}
+    /**
+     * @brief Disconnects all connections in the event.
+     */
+    void
+    clear() {
+      RecursiveLock lock(m_mutex);
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Called when the event handle no longer keeps a reference to the connection data. This means we might be able
-		*			to free (and reuse) its memory if the event is done with it too.
-		*/
-		/************************************************************************************************************************/
-		void FreeHandle(BaseConnectionData* conn)
-		{
-			GE_LOCK_RECURSIVE_MUTEX(m_Mutex);
+      BaseConnectionData* conn = m_connections;
+      while (nullptr  != conn) {
+        BaseConnectionData* next = conn->m_next;
+        conn->deactivate();
 
-			conn->m_HandleLinks--;
+        if (0 == conn->m_handleLinks) {
+          free(conn);
+        }
 
-			if(conn->m_HandleLinks == 0 && !conn->m_IsActive)
-			{
-				free(conn);
-			}
-		}
+        conn = next;
+      }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Releases connection data and makes it available for re-use when next connection is formed.
-		*/
-		/************************************************************************************************************************/
-		void Free(BaseConnectionData* conn)
-		{
-			if( conn->m_Prev != nullptr )
-			{
-				conn->m_Prev->m_Next = conn->m_Next;
-			}
-			else
-			{
-				m_Connections = conn->m_Next;
-			}
+      m_connections = nullptr;
+      m_lastConnection = nullptr;
+    }
 
-			if( conn->m_Next != nullptr )
-			{
-				conn->m_Next->m_Prev = conn->m_Prev;
-			}
+    /**
+     * @brief Called when the event handle no longer keeps a reference to the
+     *        connection data. This means we might be able to free (and reuse)
+     *        its memory if the event is done with it too.
+     */
+    void
+    freeHandle(BaseConnectionData* conn) {
+      RecursiveLock lock(m_mutex);
 
-			conn->m_Prev = nullptr;
-			conn->m_Next = nullptr;
+      conn->m_handleLinks--;
+      if (0 == conn->m_handleLinks&& !conn->m_isActive) {
+        free(conn);
+      }
+    }
 
-			if( m_FreeConnections != nullptr )
-			{
-				conn->m_Next = m_FreeConnections;
-				m_FreeConnections->m_Prev = conn;
-			}
+    /**
+     * @brief Releases connection data and makes it available for re-use when
+     *        next connection is formed.
+     */
+    void
+    free(BaseConnectionData* conn) {
+      if (nullptr != conn->m_prev) {
+        conn->m_prev->m_next = conn->m_next;
+      }
+      else {
+        m_connections = conn->m_next;
+      }
 
-			m_FreeConnections = conn;
-			m_FreeConnections->~BaseConnectionData();
-		}
-	};
+      if (nullptr != conn->m_next) {
+        conn->m_next->m_prev = conn->m_prev;
+      }
+      else {
+        m_lastConnection = conn->m_prev;
+      }
 
-	/************************************************************************************************************************/
-	/**
-	* @brief	Event handle. Allows you to track to which events you subscribed to and disconnect from them when needed.
-	*/
-	/************************************************************************************************************************/
-	class HEvent
-	{
-	private:
-		BaseConnectionData* m_Connection;
-		SPtr<EventInternalData> m_EventData;
+      conn->m_prev = nullptr;
+      conn->m_next = nullptr;
 
-	public:
-		HEvent() : m_Connection(nullptr)
-		{
-		}
+      if (nullptr != m_freeConnections) {
+        conn->m_next = m_freeConnections;
+        m_freeConnections->m_prev = conn;
+      }
 
-		explicit HEvent(const SPtr<EventInternalData>& eventData, BaseConnectionData* connection)
-			: m_Connection(connection), m_EventData(eventData)
-		{
-			connection->m_HandleLinks++;
-		}
+      m_freeConnections = conn;
+      m_freeConnections->~BaseConnectionData();
+    }
 
-		~HEvent()
-		{
-			if( m_Connection != nullptr )
-			{
-				m_EventData->FreeHandle(m_Connection);
-			}
-		}
+    BaseConnectionData* m_connections;
+    BaseConnectionData* m_freeConnections;
+    BaseConnectionData* m_lastConnection;
+    BaseConnectionData* m_newConnections;
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Disconnect from the event you are subscribed to.
-		*/
-		/************************************************************************************************************************/
-		void Disconnect()
-		{
-			if( m_Connection != nullptr )
-			{
-				m_EventData->Disconnect(m_Connection);
-				m_Connection = nullptr;
-				m_EventData = nullptr;
-			}
-		}
+    RecursiveMutex m_mutex;
+    bool m_isCurrentlyTriggering;
+  };
 
-		struct Bool_struct
-		{
-			int _Member;
-		};
+  /**
+   * @brief Event handle. Allows you to track to which events you subscribed to
+   *        and disconnect from them when needed.
+   */
+  class HEvent
+  {
+   public:
+    HEvent() : m_connection(nullptr) {}
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Allows direct conversion of a handle to bool.
-		* @note		Additional struct is needed because we can't directly convert to bool since then we can assign pointer
-		*			to bool and that's wrong.
-		*/
-		/************************************************************************************************************************/
-		operator int Bool_struct::*() const
-		{
-			return (m_Connection != nullptr ? &Bool_struct::_Member : 0);
-		}
+    explicit HEvent(const SPtr<EventInternalData>& eventData, BaseConnectionData* connection)
+      : m_connection(connection),
+        m_eventData(eventData) {
+      connection->m_handleLinks++;
+    }
 
-		HEvent& operator=(const HEvent& rhs)
-		{
-			m_Connection = rhs.m_Connection;
-			m_EventData = rhs.m_EventData;
+    ~HEvent() {
+      if (nullptr != m_connection) {
+        m_eventData->freeHandle(m_connection);
+      }
+    }
 
-			if( m_Connection != nullptr )
-			{
-				m_Connection->m_HandleLinks++;
-			}
+    /**
+     * @brief Disconnect from the event you are subscribed to.
+     */
+    void
+    disconnect() {
+      if (nullptr != m_connection) {
+        m_eventData->disconnect(m_connection);
+        m_connection = nullptr;
+        m_eventData = nullptr;
+      }
+    }
 
-			return *this;
-		}
-	};
+    struct Bool_struct
+    {
+      int _member;
+    };
 
-	/************************************************************************************************************************/
-	/**
-	* @brief	Events allows you to register method callbacks that get notified when the event is triggered.
-	*
-	* @note		Callback method return value is ignored.
-	*/
-	/************************************************************************************************************************/
-	template <class RetType, class... Args>
-	class TEvent
-	{
-	private:
-		SPtr<EventInternalData> m_InternalData;
+    /**
+     * @brief Allows direct conversion of a handle to bool.
+     * @note  Additional struct is needed because we can't directly convert to
+     *        bool since then we can assign pointer to bool and that's wrong.
+     */
+    operator int
+    Bool_struct::*() const {
+      return (m_connection != nullptr ? &Bool_struct::_member : 0);
+    }
 
-	private:
-		struct ConnectionData : BaseConnectionData
-		{
-		public:
-			void Deactivate() override
-			{
-				m_func = nullptr;
-				BaseConnectionData::Deactivate();
-			}
+    HEvent& operator=(const HEvent& rhs) {
+      m_connection = rhs.m_connection;
+      m_eventData = rhs.m_eventData;
 
-			std::function<RetType(Args...)> m_func;
-		};
+      if (nullptr != m_connection) {
+        m_connection->m_handleLinks++;
+      }
+      return *this;
+    }
 
-	public:
-		TEvent() : m_InternalData( ge_shared_ptr_new<EventInternalData>() )
-		{
-		
-		}
+   private:
+    BaseConnectionData* m_connection;
+    SPtr<EventInternalData> m_eventData;
+  };
 
-		~TEvent()
-		{
-			Clear();
-		}
+  /**
+   * @brief Events allows you to register method callbacks that get notified
+   *        when the event is triggered.
+   * @note  Callback method return value is ignored.
+   */
+  //Note: I could create a policy template argument that allows creation of 
+  //lockable and non-lockable events in the case mutex is causing too much overhead.
+  template <class RetType, class... Args>
+  class TEvent
+  {
+   private:
+    struct ConnectionData : BaseConnectionData
+    {
+     public:
+      void
+      deactivate() override {
+        m_func = nullptr;
+        BaseConnectionData::deactivate();
+      }
+      
+      std::function<RetType(Args...)> m_func;
+    };
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Register a new callback that will get notified once the event is triggered.
-		*/
-		/************************************************************************************************************************/
-		HEvent Connect(std::function<RetType(Args...)> func)
-		{
-			GE_LOCK_RECURSIVE_MUTEX(m_InternalData->m_Mutex);
+   public:
+    TEvent() : m_internalData(ge_shared_ptr_new<EventInternalData>()) {}
 
-			ConnectionData* connData = nullptr;
-			if(m_InternalData->m_FreeConnections != nullptr )
-			{
-				connData = static_cast<ConnectionData*>(m_InternalData->m_FreeConnections);
-				m_InternalData->m_FreeConnections = connData->m_Next;
+    ~TEvent() {
+      clear();
+    }
 
-				new (connData)ConnectionData();
-				if( connData->m_Next != nullptr )
-				{
-					connData->m_Next->m_Prev = nullptr;
-				}
+    /**
+     * @brief Register a new callback that will get notified once the event is triggered.
+     */
+    HEvent
+    connect(std::function<RetType(Args...)> func) {
+      RecursiveLock lock(m_internalData->m_Mutex);
 
-				connData->m_IsActive = true;
-			}
+      ConnectionData* connData = nullptr;
+      if (nullptr != m_internalData->m_freeConnections) {
+        connData = static_cast<ConnectionData*>(m_internalData->m_freeConnections);
+        m_internalData->m_freeConnections = connData->m_next;
 
-			if( connData == nullptr )
-			{
-				connData = ge_new<ConnectionData>();
-			}
+        new (connData)ConnectionData();
+        if (nullptr != connData->m_next) {
+          connData->m_next->m_prev = nullptr;
+        }
 
-			connData->m_Next = m_InternalData->m_Connections;
+        connData->m_isActive = true;
+      }
 
-			if( m_InternalData->m_Connections != nullptr )
-			{
-				m_InternalData->m_Connections->m_Prev = connData;
-			}
+      if (nullptr == connData) {
+        connData = ge_new<ConnectionData>();
+      }
 
-			m_InternalData->m_Connections = connData;
-			connData->m_func = func;
+      //If currently iterating over the connection list, delay modifying it until done
+      if (m_internalData->m_isCurrentlyTriggering) {
+        connData->m_prev = m_internalData->m_newConnections;
 
-			return HEvent(m_InternalData, connData);
-		}
+        if (nullptr != m_internalData->m_newConnections) {
+          m_internalData->m_newConnections->m_next = connData;
+        }
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Trigger the event, notifying all register callback methods.
-		*/
-		/************************************************************************************************************************/
-		void operator() (Args... args)
-		{
-			//Increase ref count to ensure this event data isn't destroyed if one of the callbacks deletes the event itself.
-			SPtr<EventInternalData> internalData = m_InternalData;
-			
-			GE_LOCK_RECURSIVE_MUTEX(internalData->m_Mutex);
+        m_internalData->m_newConnections = connData;
+      }
+      else
+      {
+        m_internalData->connect(connData);
+      }
+      
+      connData->m_func = func;
 
-			//Hidden dependency: If any new connections are made during these callbacks they must be inserted at the start of
-			//the linked list so that we don't trigger them here.
-			ConnectionData* conn = static_cast<ConnectionData*>(internalData->m_Connections);
-			while( conn != nullptr )
-			{
-				//Save next here in case the callback itself disconnects this connection
-				ConnectionData* next = static_cast<ConnectionData*>(conn->m_Next);
+      return HEvent(m_internalData, connData);
+    }
 
-				if( conn->m_func != nullptr )
-				{
-					conn->m_func(std::forward<Args>(args)...);
-				}
+    /**
+     * @brief Trigger the event, notifying all register callback methods.
+     */
+    void
+    operator()(Args... args) {
+      //Increase ref count to ensure this event data isn't destroyed if one of
+      //the callbacks deletes the event itself.
+      SPtr<EventInternalData> internalData = m_internalData;
 
-				conn = next;
-			}
-		}
+      RecursiveLock lock(internalData->m_mutex);
+      internalData->m_isCurrentlyTriggering = true;
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Clear all callbacks from the event.
-		*/
-		/************************************************************************************************************************/
-		void Clear()
-		{
-			m_InternalData->Clear();
-		}
+      ConnectionData* conn = static_cast<ConnectionData*>(internalData->m_connections);
+      while (nullptr != conn) {
+        //Save next here in case the callback itself disconnects this connection
+        ConnectionData* next = static_cast<ConnectionData*>(conn->m_next);
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Check if event has any callbacks registered.
-		*
-		* @note		It is safe to trigger an event even if no callbacks are registered.
-		*/
-		/************************************************************************************************************************/
-		bool Empty()
-		{
-			GE_LOCK_RECURSIVE_MUTEX(m_InternalData->m_Mutex);
-			return m_InternalData->m_Connections == nullptr;
-		}
-	};
+        if (nullptr != conn->m_func) {
+          conn->m_func(std::forward<Args>(args)...);
+        }
 
-	/************************************************************************************************************************/
-	/* 													SPECIALIZATIONS                      								*/
-	/* 							SO YOU MAY USE FUNCTION LIKE SYNTAX FOR DECLARING EVENT SIGNATURE							*/
-	/************************************************************************************************************************/
+        conn = next;
+      }
 
-	/************************************************************************************************************************/
-	/**
-	* @copydoc	TEvent
-	*/
-	/************************************************************************************************************************/
-	template <typename Signature>
-	class Event;
+      internalData->m_isCurrentlyTriggering = false;
 
-	/************************************************************************************************************************/
-	/**
-	* @copydoc	TEvent
-	*/
-	/************************************************************************************************************************/
-	template <class RetType, class... Args>
-	class Event<RetType(Args...) > : public TEvent<RetType, Args...>
-	{
-	};
+      //If any new connections were added during the above calls,
+      //add them to the connection list
+      if (nullptr != internalData->m_newConnections) {
+        BaseConnectionData* lastNewConnection = internalData->m_newConnections;
+        while (nullptr != lastNewConnection) {
+          lastNewConnection = lastNewConnection->m_next;
+        }
+
+        BaseConnectionData* currentConnection = lastNewConnection;
+        while (nullptr != currentConnection) {
+          BaseConnectionData* prevConnection = currentConnection->m_prev;
+          currentConnection->m_next = nullptr;
+          currentConnection->m_prev = nullptr;
+
+          m_internalData->connect(currentConnection);
+          currentConnection = prevConnection;
+        }
+
+        internalData->m_newConnections = nullptr;
+      }
+    }
+
+    /**
+     * @brief Clear all callbacks from the event.
+     */
+    void
+    clear() {
+      m_internalData->clear();
+    }
+
+    /**
+     * @brief Check if event has any callbacks registered.
+     * @note  It is safe to trigger an event even if no callbacks are registered.
+     */
+    bool
+    empty() {
+      RecursiveLock lock(m_internalData->m_mutex);
+      return m_internalData->m_connections == nullptr;
+    }
+
+   private:
+    SPtr<EventInternalData> m_internalData;
+  };
+
+  /***************************************************************************/
+  /**                       SPECIALIZATIONS                                  */
+  /**   SO YOU MAY USE FUNCTION LIKE SYNTAX FOR DECLARING EVENT SIGNATURE    */
+  /***************************************************************************/
+
+  /**
+   * @copydoc TEvent
+   */
+  template<typename Signature>
+  class Event;
+
+  /**
+   * @copydoc TEvent
+   */
+  template<class RetType, class... Args>
+  class Event<RetType(Args...) > : public TEvent<RetType, Args...>
+  { };
 }

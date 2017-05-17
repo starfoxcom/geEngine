@@ -184,7 +184,7 @@ namespace geEngineSDK {
       MemBlock* newBlock = nullptr;
       MemBlock* curBlock = m_freeBlock;
 
-      while (curBlock != nullptr) {
+      while (nullptr != curBlock) {
         MemBlock* nextBlock = curBlock->m_nextBlock;
         if (nullptr != nextBlock && nextBlock->m_size >= blockSize) {
           newBlock = nextBlock;
@@ -286,7 +286,7 @@ namespace geEngineSDK {
   template<class T>
   T*
   ge_stack_alloc() {
-    return (T*)MemStack::alloc(sizeof(T));
+    return reinterpret_cast<T*>(MemStack::alloc(sizeof(T)));
   }
 
   /**
@@ -297,7 +297,7 @@ namespace geEngineSDK {
   template<class T>
   T*
   ge_stack_alloc(SIZE_T count) {
-    return (T*)MemStack::alloc(sizeof(T) * count);
+    return reinterpret_cast<T*>(MemStack::alloc(sizeof(T) * count));
   }
 
   /**
@@ -309,7 +309,7 @@ namespace geEngineSDK {
   T*
   ge_stack_new(SIZE_T count = 0) {
     T* data = ge_stack_alloc<T>(count);
-    for (uint32 i = 0; i<count; i++) {
+    for (uint32 i = 0; i<count; ++i) {
       new (reinterpret_cast<void*>(&data[i])) T;
     }
 
@@ -323,13 +323,11 @@ namespace geEngineSDK {
    */
   template<class T, class... Args>
   T*
-  ge_stack_new(Args&&... args, SIZE_T count = 0) {
+  ge_stack_new(Args&& ...args, SIZE_T count = 0) {
     T* data = ge_stack_alloc<T>(count);
-
     for (SIZE_T i = 0; i<count; ++i) {
       new (reinterpret_cast<void*>(&data[i])) T(std::forward<Args>(args)...);
     }
-
     return data;
   }
 
@@ -381,23 +379,13 @@ namespace geEngineSDK {
   class MemoryAllocator<StackAlloc> : public MemoryAllocatorBase
   {
    public:
-    static inline void*
+    static void*
     allocate(SIZE_T bytes) {
       return ge_stack_alloc(bytes);
     }
 
-    static inline void*
-    allocateArray(SIZE_T bytes, SIZE_T count) {
-      return ge_stack_alloc(bytes * count);
-    }
-
-    static inline void
+    static void
     free(void* ptr) {
-      ge_stack_free(ptr);
-    }
-
-    static inline void
-    freeArray(void* ptr, SIZE_T) {
       ge_stack_free(ptr);
     }
   };

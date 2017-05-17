@@ -42,25 +42,25 @@ namespace geEngineSDK {
 
   uint8*
   MemStack::alloc(SIZE_T numBytes) {
-    GE_ASSERT(threadMemStack != nullptr &&
+    GE_ASSERT(nullptr != threadMemStack &&
               "Stack allocation failed. Did you call BeginThread?");
     return threadMemStack->alloc(numBytes);
   }
 
   void
   MemStack::deallocLast(uint8* data) {
-    GE_ASSERT(threadMemStack != nullptr &&
+    GE_ASSERT(nullptr != threadMemStack&&
               "Stack deallocation failed. Did you call BeginThread?");
     threadMemStack->dealloc(data);
   }
 
   void*
   ge_stack_alloc(SIZE_T numBytes) {
-    return (void*)MemStack::alloc(numBytes);
+    return reinterpret_cast<void*>(MemStack::alloc(numBytes));
   }
 
   void
   ge_stack_free(void* data) {
-    return MemStack::deallocLast((uint8*)data);
+    return MemStack::deallocLast(reinterpret_cast<uint8*>(data));
   }
 }

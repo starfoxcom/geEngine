@@ -28,7 +28,7 @@ namespace geEngineSDK {
    *        Each thread gets its own frame allocator.
    * @note  Thread safe.
    */
-  GE_UTILITY_EXPORT inline FrameAlloc&
+  GE_UTILITY_EXPORT FrameAlloc&
   g_frameAlloc();
 
   /**
@@ -39,11 +39,26 @@ namespace geEngineSDK {
   ge_frame_alloc(SIZE_T numBytes);
 
   /**
+   * @brief Allocates the specified number of bytes aligned to the provided boundary,
+   *        using the global frame allocator. Boundary is in bytes and must be a power of two.
+   */
+  GE_UTILITY_EXPORT uint8*
+  ge_frame_alloc_aligned(SIZE_T count, SIZE_T align);
+
+
+  /**
    * @brief Deallocates memory allocated with the global frame allocator.
    * @note  Must be called on the same thread the memory was allocated on.
    */
   GE_UTILITY_EXPORT void
   ge_frame_free(void* data);
+
+  /**
+   * @brief Frees memory previously allocated with ge_frame_alloc_aligned().
+   * @note	Must be called on the same thread the memory was allocated on.
+   */
+  GE_UTILITY_EXPORT void
+  ge_frame_free_aligned(void* data);
 
   /**
    * @brief Allocates enough memory to hold the object of specified type using
@@ -87,13 +102,11 @@ namespace geEngineSDK {
    */
   template<class T, class... Args>
   T*
-  ge_frame_new(Args&&... args, SIZE_T count = 0) {
+  ge_frame_new(Args&& ...args, SIZE_T count = 0) {
     T* data = ge_frame_alloc<T>(count);
-
     for (SIZE_T i = 0; i<count; ++i) {
       new (reinterpret_cast<void*>(&data[i])) T(std::forward<Args>(args)...);
     }
-
     return data;
   }
 
@@ -151,6 +164,9 @@ namespace geEngineSDK {
   template<typename T, typename A = StdAlloc<T, FrameAlloc>>
   using FrameStack = std::stack<T, std::deque<T, A>>;
 
+  template <typename T, typename A = StdAlloc<T, FrameAlloc>>
+  using FrameQueue = std::queue<T, std::deque<T, A>>;
+
   template<typename T, typename P = std::less<T>, typename A = StdAlloc<T, FrameAlloc>>
   using FrameSet = std::set<T, P, A>;
 
@@ -183,24 +199,52 @@ namespace geEngineSDK {
   class MemoryAllocator<FrameAlloc> : public MemoryAllocatorBase
   {
    public:
+    /** @copydoc MemoryAllocator::allocate */
     static void*
     allocate(SIZE_T bytes) {
       return ge_frame_alloc(bytes);
     }
 
+    /** @copydoc MemoryAllocator::allocateAligned */
     static void*
-    allocateArray(SIZE_T bytes, SIZE_T count) {
-      return ge_frame_alloc(bytes * count);
+    allocateAligned(SIZE_T bytes, SIZE_T alignment) {
+#if GE_PROFILING_ENABLED
+      incrementAllocCount();
+#endif
+      return ge_frame_alloc_aligned(bytes, alignment);
     }
 
+    /** @copydoc MemoryAllocator::allocateAligned16 */
+    static void*
+    allocateAligned16(SIZE_T bytes) {
+#if GE_PROFILING_ENABLED
+      incrementAllocCount();
+#endif
+      return ge_frame_alloc_aligned(bytes, 16);
+    }
+
+    /** @copydoc MemoryAllocator::free */
     static void
     free(void* ptr) {
       ge_frame_free(ptr);
     }
 
+    /** @copydoc MemoryAllocator::freeAligned */
     static void
-    freeArray(void* ptr, SIZE_T) {
-      ge_frame_free(ptr);
+    freeAligned(void* ptr) {
+#if GE_PROFILING_ENABLED
+      incrementFreeCount();
+#endif
+      ge_frame_free_aligned(ptr);
+    }
+
+    /** @copydoc MemoryAllocator::freeAligned16 */
+    static void
+    freeAligned16(void* ptr) {
+#if GE_PROFILING_ENABLED
+      incrementFreeCount();
+#endif
+      ge_frame_free_aligned(ptr);
     }
   };
 }

@@ -90,6 +90,14 @@
 # pragma warning(disable : 4481)
 #endif
 
+#if GE_COMPILER == GE_COMPILER_CLANG
+  /** @ref scriptBindingMacro */
+# define GE_SCRIPT_EXPORT(...) __attribute__((annotate("se," #__VA_ARGS__)))
+#else
+  /** @ref scriptBindingMacro */
+# define GE_SCRIPT_EXPORT(...)
+#endif
+
 /*****************************************************************************/
 /**
  * Include of short-hand names for various built-in types
