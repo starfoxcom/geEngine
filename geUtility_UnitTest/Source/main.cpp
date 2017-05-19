@@ -8,12 +8,14 @@
 using namespace geEngineSDK;
 
 TEST(geUtility, DEFINED_TYPES_SIZES) {
+  ASSERT_TRUE(sizeof(unsigned char) == 1);
   ASSERT_TRUE(sizeof(uint8  ) == 1);
   ASSERT_TRUE(sizeof(uint16 ) == 2);
   ASSERT_TRUE(sizeof(uint32 ) == 4);
   ASSERT_TRUE(sizeof(uint64 ) == 8);
   ASSERT_TRUE(sizeof(uint128) == 16);
   
+  ASSERT_TRUE(sizeof(char  ) == 1);
   ASSERT_TRUE(sizeof(int8  ) == 1);
   ASSERT_TRUE(sizeof(int16 ) == 2);
   ASSERT_TRUE(sizeof(int32 ) == 4);
@@ -41,7 +43,7 @@ TEST(geUtility, Path) {
   Path testPath;
   WString lastDirectory;
   
-  testPath = FileSystem::GetWorkingDirectoryPath();
+  testPath = FileSystem::getWorkingDirectoryPath();
   ASSERT_TRUE(testPath.isDirectory());
   ASSERT_TRUE(testPath.getNumDirectories());
 
@@ -50,10 +52,10 @@ TEST(geUtility, Path) {
 }
 
 TEST(geUtility, Parser) {
-  DataStreamPtr fileData = FileSystem::OpenFile("Test/test.txt");
+  DataStreamPtr fileData = FileSystem::openFile("Test/test.txt");
   ASSERT_TRUE(fileData);
   if (fileData) {
-    String strParse = fileData->GetAsString();
+    String strParse = fileData->getAsString();
     Vector<String> lineList = StringUtil::split(strParse, "\n");
 
     for (auto& line : lineList) {

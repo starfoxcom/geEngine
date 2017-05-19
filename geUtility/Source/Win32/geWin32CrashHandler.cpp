@@ -522,12 +522,12 @@ namespace geEngineSDK
 		errorMessageStream << stackTrace;
 
 		String errorMessage = errorMessageStream.str();
-		g_Debug().LogError(errorMessage);
+		g_Debug().logError(errorMessage);
 
 		Path crashFolder = GetCrashFolder();
-		FileSystem::CreateDir(crashFolder);
+		FileSystem::createDir(crashFolder);
 
-		g_Debug().SaveLog(crashFolder + WString(CrashLogName));
+		g_Debug().saveLog(crashFolder + WString(CrashLogName));
 		Win32_WriteMiniDump(crashFolder + WString(g_MiniDumpName), nullptr);
 
 		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n " + crashFolder.toWString();
@@ -554,12 +554,12 @@ namespace geEngineSDK
 		errorMessageStream << stackTrace;
 
 		String errorMessage = errorMessageStream.str();
-		g_Debug().LogError(errorMessage);
+		g_Debug().logError(errorMessage);
 
 		Path crashFolder = GetCrashFolder();
-		FileSystem::CreateDir(crashFolder);
+		FileSystem::createDir(crashFolder);
 
-		g_Debug().SaveLog(crashFolder + WString(CrashLogName));
+		g_Debug().saveLog(crashFolder + WString(CrashLogName));
 		Win32_WriteMiniDump(crashFolder + WString(g_MiniDumpName), exceptionData);
 
 		WString simpleErrorMessage = L"Fatal error occurred. The program has to terminate! \n\nFor more info check the report at:\n" + crashFolder.toWString();
@@ -585,7 +585,7 @@ namespace geEngineSDK
 		//timeStamp = StringUtil::format(timeStamp, strYear, strMonth, strDay, strHour, strMinute);
 		WString folderName = StringUtil::format(CrashReportFolder, timeStamp);
 
-		return FileSystem::GetWorkingDirectoryPath() + folderName;
+		return FileSystem::getWorkingDirectoryPath() + folderName;
 	}
 
 	String CrashHandler::GetStackTrace()

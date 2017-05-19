@@ -1,141 +1,134 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geLog.cpp
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/09/19
- * @brief  Used for logging messages
+ * @file    geLog.cpp
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/09/19
+ * @brief   Used for logging messages
  *
  * Can categorize messages according to channels, save the log to a
  * file and send out callbacks when a new message is added
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/**
+* Includes
+*/
+/*****************************************************************************/
 #include "geLog.h"
 #include "geException.h"
 
-namespace geEngineSDK
-{
-	LogEntry::LogEntry(const String& msg, uint32 channel) : m_Msg(msg), m_Channel(channel)
-	{
-	}
+namespace geEngineSDK {
+  LogEntry::LogEntry(const String& msg, uint32 channel) : m_msg(msg), m_channel(channel) {}
 
-	Log::Log() : m_Hash(0)
-	{
-	}
+  Log::Log() : m_hash(0) {}
 
-	Log::~Log()
-	{
-		Clear();
-	}
+  Log::~Log() {
+    clear();
+  }
 
-	void Log::LogMsg(const String& message, uint32 channel)
-	{
-		RecursiveLock lock(m_Mutex);
-		m_UnreadEntries.push(LogEntry(message, channel));
-	}
+  void
+  Log::logMsg(const String& message, uint32 channel) {
+    RecursiveLock lock(m_mutex);
+    m_unreadEntries.push(LogEntry(message, channel));
+  }
 
-	void Log::Clear()
-	{
-    RecursiveLock lock(m_Mutex);
-		m_Entries.clear();
+  void
+  Log::clear() {
+    RecursiveLock lock(m_mutex);
+    m_entries.clear();
 
-		while( !m_UnreadEntries.empty() )
-		{
-			m_UnreadEntries.pop();
-		}
+    while (!m_unreadEntries.empty()) {
+      m_unreadEntries.pop();
+    }
 
-		m_Hash++;
-	}
+    m_hash++;
+  }
 
-	void Log::Clear(uint32 channel)
-	{
-    RecursiveLock lock(m_Mutex);
-		
-		Vector<LogEntry> newEntries;
-		for(auto& entry : m_Entries)
-		{
-			if( entry.GetLogChannel() == channel )
-			{
-				continue;
-			}
+  void
+  Log::clear(uint32 channel) {
+    RecursiveLock lock(m_mutex);
 
-			newEntries.push_back(entry);
-		}
+    Vector<LogEntry> newEntries;
+    for (auto& entry : m_entries) {
+      if (entry.getLogChannel() == channel) {
+        continue;
+      }
 
-		m_Entries = newEntries;
+      newEntries.push_back(entry);
+    }
 
-		Queue<LogEntry> newUnreadEntries;
-		while( !m_UnreadEntries.empty() )
-		{
-			LogEntry entry = m_UnreadEntries.front();
-			m_UnreadEntries.pop();
+    m_entries = newEntries;
 
-			if( entry.GetLogChannel() == channel )
-			{
-				continue;
-			}
+    Queue<LogEntry> newUnreadEntries;
+    while (!m_unreadEntries.empty()) {
+      LogEntry entry = m_unreadEntries.front();
+      m_unreadEntries.pop();
 
-			newUnreadEntries.push(entry);
-		}
+      if (entry.getLogChannel() == channel) {
+        continue;
+      }
 
-		m_UnreadEntries = newUnreadEntries;
-		m_Hash++;
-	}
+      newUnreadEntries.push(entry);
+    }
 
-	bool Log::GetUnreadEntry(LogEntry& entry)
-	{
-    RecursiveLock lock(m_Mutex);
+    m_unreadEntries = newUnreadEntries;
+    m_hash++;
+  }
 
-		if( m_UnreadEntries.empty() )
-		{
-			return false;
-		}
+  bool
+  Log::getUnreadEntry(LogEntry& entry) {
+    RecursiveLock lock(m_mutex);
 
-		entry = m_UnreadEntries.front();
-		m_UnreadEntries.pop();
-		m_Entries.push_back(entry);
-		m_Hash++;
+    if (m_unreadEntries.empty()) {
+      return false;
+    }
 
-		return true;
-	}
+    entry = m_unreadEntries.front();
+    m_unreadEntries.pop();
+    m_entries.push_back(entry);
+    m_hash++;
 
-	bool Log::GetLastEntry(LogEntry& entry)
-	{
-		if( m_Entries.size() == 0 )
-		{
-			return false;
-		}
+    return true;
+  }
 
-		entry = m_Entries.back();
-		
-		return true;
-	}
+  bool
+  Log::getLastEntry(LogEntry& entry) {
+    if (0 == m_entries.size()) {
+      return false;
+    }
 
-	Vector<LogEntry> Log::GetEntries() const
-	{
-    RecursiveLock lock(m_Mutex);
-		return m_Entries;
-	}
+    entry = m_entries.back();
 
-	Vector<LogEntry> Log::GetAllEntries() const
-	{
-		Vector<LogEntry> entries;
-		{
-      RecursiveLock lock(m_Mutex);
+    return true;
+  }
 
-			for(auto& entry : m_Entries)
-			{
-				entries.push_back(entry);
-			}
+  Vector<LogEntry>
+  Log::getEntries() const {
+    RecursiveLock lock(m_mutex);
+    return m_entries;
+  }
 
-			Queue<LogEntry> unreadEntries = m_UnreadEntries;
-			while( !unreadEntries.empty() )
-			{
-				entries.push_back(unreadEntries.front());
-				unreadEntries.pop();
-			}
-		}
-		return entries;
-	}
+  Vector<LogEntry>
+  Log::getAllEntries() const {
+    Vector<LogEntry> entries;
+    
+    {
+      RecursiveLock lock(m_mutex);
+
+      for (auto& entry : m_entries) {
+        entries.push_back(entry);
+      }
+
+      Queue<LogEntry> unreadEntries = m_unreadEntries;
+      while (!unreadEntries.empty()) {
+        entries.push_back(unreadEntries.front());
+        unreadEntries.pop();
+      }
+    }
+    
+    return entries;
+  }
 }

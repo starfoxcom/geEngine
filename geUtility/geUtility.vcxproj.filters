@@ -274,5 +274,8 @@
     <ClCompile Include="Source\geDynLib.cpp">
       <Filter>Source Files\General</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geFileSystem.cpp">
+      <Filter>Source Files\Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

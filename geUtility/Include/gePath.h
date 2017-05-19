@@ -51,7 +51,7 @@ namespace geEngineSDK {
      */
     Path(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
     Path(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
-    Path(UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    Path(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
     Path(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
 
     /**
@@ -164,6 +164,23 @@ namespace geEngineSDK {
      */
     WString
     toWString(PATH_TYPE::E type = PATH_TYPE::Default) const;
+
+    /**
+     * @brief Converts the path to either a string or a wstring, doing The
+     *        Right Thing for the current platform. This method is equivalent
+     *        to toWString() on Windows, and to toString() elsewhere.
+     */
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+    WString
+    toPlatformString() const {
+      return toWString();
+    }
+#else
+    String
+    toPlatformString() const {
+      return toString();
+    }
+#endif
 
     /**
      * @brief Checks is the path a directory (contains no file-name).
@@ -308,25 +325,6 @@ namespace geEngineSDK {
      */
     void
     setExtension(const String& extension);
-
-    void
-    setNode(const WString& node) {
-      m_node = node;
-    }
-
-    void
-    setNode(const String& node) {
-      m_node = geEngineSDK::toWString(node);
-    }
-
-    void
-    setDevice(const WString& device) {
-      m_device = device;
-    }
-
-    void setDevice(const String& device) {
-      m_device = geEngineSDK::toWString(device);
-    }
 
     /**
      * @brief Returns a filename in the path.
@@ -628,6 +626,25 @@ namespace geEngineSDK {
           idx++;
         }
       }
+    }
+
+    void
+    setNode(const WString& node) {
+      m_node = node;
+    }
+
+    void
+    setNode(const String& node) {
+      m_node = geEngineSDK::toWString(node);
+    }
+
+    void
+    setDevice(const WString& device) {
+      m_device = device;
+    }
+
+    void setDevice(const String& device) {
+      m_device = geEngineSDK::toWString(device);
     }
 
     /**

@@ -30,7 +30,7 @@ namespace geEngineSDK {
     assign(pathStr, type);
   }
 
-  Path::Path(UNICHAR* pathStr, PATH_TYPE::E type) {
+  Path::Path(const UNICHAR* pathStr, PATH_TYPE::E type) {
     assign(pathStr, type);
   }
 

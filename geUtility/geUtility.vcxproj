@@ -321,6 +321,7 @@
     <ClCompile Include="Source\geDegree.cpp" />
     <ClCompile Include="Source\geDynLib.cpp" />
     <ClCompile Include="Source\geException.cpp" />
+    <ClCompile Include="Source\geFileSystem.cpp" />
     <ClCompile Include="Source\geFrameAlloc.cpp" />
     <ClCompile Include="Source\geGlobalFrameAlloc.cpp" />
     <ClCompile Include="Source\geLog.cpp" />
