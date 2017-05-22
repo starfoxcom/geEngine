@@ -277,5 +277,8 @@
     <ClCompile Include="Source\geFileSystem.cpp">
       <Filter>Source Files\Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geCrashHandler.cpp">
+      <Filter>Source Files\General</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

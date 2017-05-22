@@ -137,7 +137,6 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -157,7 +156,6 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -200,7 +198,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -225,7 +222,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -316,6 +312,7 @@
     <ClCompile Include="Source\Externals\md5.cpp" />
     <ClCompile Include="Source\geBitmapWriter.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
+    <ClCompile Include="Source\geCrashHandler.cpp" />
     <ClCompile Include="Source\geDataStream.cpp" />
     <ClCompile Include="Source\geDebug.cpp" />
     <ClCompile Include="Source\geDegree.cpp" />

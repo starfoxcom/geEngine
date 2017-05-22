@@ -1,224 +1,212 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geWin32PlatformUtility.cpp
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/03/11
- * @brief  Provides access to Windows specific utility functions
+ * @file    geWin32PlatformUtility.cpp
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/11
+ * @brief   Provides access to Windows specific utility functions
  *
  * Provides access to various Windows specific utility functions
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 
-/************************************************************************************************************************/
-/* Includes																												*/
-/************************************************************************************************************************/
-#include "gePrerequisitesUtil.h"
-#include "Win32/geWin32PlatformUtility.h"
-#include "geColor.h"
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
 #include <windows.h>
 #include <iphlpapi.h>
 
-namespace geEngineSDK
-{
-	void PlatformUtility::Terminate(bool force)
-	{
-		if( !force )
-		{
-			PostQuitMessage(0);
-		}
-		else
-		{
-			TerminateProcess(GetCurrentProcess(), 0);
-		}
-	}
+#include "gePrerequisitesUtil.h"
+#include "Win32/geWin32PlatformUtility.h"
+#include "geColor.h"
 
-	double PlatformUtility::QueryPerformanceTimerMs()
-	{
-		LARGE_INTEGER counterValue;
-		QueryPerformanceCounter(&counterValue);
+namespace geEngineSDK {
+  void
+  PlatformUtility::terminate(bool force) {
+    if (!force) {
+      PostQuitMessage(0);
+    }
+    else {
+      TerminateProcess(GetCurrentProcess(), 0);
+    }
+  }
 
-		LARGE_INTEGER counterFreq;
-		QueryPerformanceFrequency(&counterFreq);
+  void
+  PlatformUtility::copyToClipboard(const WString& string) {
+    HANDLE hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
+                               (string.size() + 1) * sizeof(WString::value_type));
+    WString::value_type* buffer = static_cast<WString::value_type*>(GlobalLock(hData));
 
-		return (double)counterValue.QuadPart / (counterFreq.QuadPart * 0.001);
-	}
+    string.copy(buffer, string.size());
+    buffer[string.size()] = '\0';
 
-	void PlatformUtility::CopyToClipboard(const WString& string)
-	{
-		HANDLE hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, (string.size() + 1) * sizeof(WString::value_type));
-		WString::value_type* buffer = (WString::value_type*)GlobalLock(hData);
+    GlobalUnlock(hData);
 
-		string.copy(buffer, string.size());
-		buffer[string.size()] = '\0';
+    if (OpenClipboard(NULL)) {
+      EmptyClipboard();
+      SetClipboardData(CF_UNICODETEXT, hData);
+      CloseClipboard();
+    }
+    else {
+      GlobalFree(hData);
+    }
+  }
 
-		GlobalUnlock(hData);
+  WString
+  PlatformUtility::copyFromClipboard() {
+    if (OpenClipboard(NULL)) {
+      HANDLE hData = GetClipboardData(CF_UNICODETEXT);
 
-		if( OpenClipboard(NULL) )
-		{
-			EmptyClipboard();
-			SetClipboardData(CF_UNICODETEXT, hData);
-			CloseClipboard();
-		}
-		else
-		{
-			GlobalFree(hData);
-		}
-	}
+      if (hData != NULL) {
+        WString::value_type* buffer = static_cast<WString::value_type*>(GlobalLock(hData));
+        WString string(buffer);
+        GlobalUnlock(hData);
+        CloseClipboard();
+        return string;
+      }
+      
+      CloseClipboard();
+    }
 
-	WString PlatformUtility::CopyFromClipboard()
-	{
-		if( OpenClipboard(NULL) )
-		{
-			HANDLE hData = GetClipboardData(CF_UNICODETEXT);
+    return L"";
+  }
 
-			if( hData != NULL )
-			{
-				WString::value_type* buffer = (WString::value_type*)GlobalLock(hData);
-				WString string(buffer);
-				GlobalUnlock(hData);
-				CloseClipboard();
-				return string;
-			}
-			else
-			{
-				CloseClipboard();
-				return L"";
-			}
-		}
+  WString
+  PlatformUtility::keyCodeToUnicode(uint32 keyCode) {
+    static HKL keyboardLayout = GetKeyboardLayout(0);
+    static uint8 keyboarState[256];
 
-		return L"";
-	}
+    if (FALSE == GetKeyboardState(keyboarState)) {
+      return 0;
+    }
 
-	WString PlatformUtility::KeyCodeToUnicode(uint32 keyCode)
-	{
-		static HKL keyboardLayout = GetKeyboardLayout(0);
-		static uint8 keyboarState[256];
+    uint32 virtualKey = MapVirtualKeyExW(keyCode, 1, keyboardLayout);
 
-		if( GetKeyboardState(keyboarState) == FALSE )
-		{
-			return 0;
-		}
+    UNICHAR output[2];
+    int count = ToUnicodeEx(virtualKey,
+                            keyCode,
+                            keyboarState,
+                            output,
+                            2,
+                            0,
+                            keyboardLayout);
+    if (0 < count) {
+      return WString(output, count);
+    }
 
-		uint32 virtualKey = MapVirtualKeyExW(keyCode, 1, keyboardLayout);
+    return StringUtil::WBLANK;
+  }
 
-		UNICHAR output[2];
-		int count = ToUnicodeEx(virtualKey, keyCode, keyboarState, output, 2, 0, keyboardLayout);
-		if( count > 0 )
-		{
-			return WString(output, count);
-		}
+  bool
+  PlatformUtility::getMACAddress(MACAddress& address) {
+    std::memset(&address, 0, sizeof(address));
 
-		return StringUtil::WBLANK;
-	}
+    PIP_ADAPTER_INFO adapterInfo = ge_alloc<IP_ADAPTER_INFO>();
+    ULONG len = sizeof(IP_ADAPTER_INFO);
+    DWORD rc = GetAdaptersInfo(adapterInfo, &len);
 
-	bool PlatformUtility::GetMACAddress(MACAddress& address)
-	{
-		std::memset(&address, 0, sizeof(address));
+    if (ERROR_BUFFER_OVERFLOW == rc) {
+      ge_free(adapterInfo);
+      adapterInfo = reinterpret_cast<IP_ADAPTER_INFO*>(ge_alloc(len));
+    }
+    else if (ERROR_SUCCESS != rc) {
+      ge_free(adapterInfo);
+      return false;
+    }
 
-		PIP_ADAPTER_INFO adapterInfo = ge_alloc<IP_ADAPTER_INFO>();
-		ULONG len = sizeof(IP_ADAPTER_INFO);
-		DWORD rc = GetAdaptersInfo(adapterInfo, &len);
+    if (NO_ERROR == GetAdaptersInfo(adapterInfo, &len)) {
+      PIP_ADAPTER_INFO curAdapter = nullptr;
+      curAdapter = adapterInfo;
 
-		if( rc == ERROR_BUFFER_OVERFLOW )
-		{
-			ge_free(adapterInfo);
-			adapterInfo = reinterpret_cast<IP_ADAPTER_INFO*>(ge_alloc(len));
-		}
-		else if( rc != ERROR_SUCCESS )
-		{
-			ge_free(adapterInfo);
-			return false;
-		}
+      while (curAdapter) {
+        if (MIB_IF_TYPE_ETHERNET == curAdapter->Type && 
+            sizeof(address) == curAdapter->AddressLength) {
+          std::memcpy(&address, curAdapter->Address, curAdapter->AddressLength);
+          return true;
+        }
 
-		if( GetAdaptersInfo(adapterInfo, &len) == NO_ERROR )
-		{
-			PIP_ADAPTER_INFO curAdapter = nullptr;
-			curAdapter = adapterInfo;
+        curAdapter = curAdapter->Next;
+      }
+    }
 
-			while( curAdapter )
-			{
-				if( curAdapter->Type == MIB_IF_TYPE_ETHERNET && curAdapter->AddressLength == sizeof(address) )
-				{
-					std::memcpy(&address, curAdapter->Address, curAdapter->AddressLength);
-					return true;
-				}
+    ge_free(adapterInfo);
+    return false;
+  }
 
-				curAdapter = curAdapter->Next;
-			}
-		}
+  String
+  PlatformUtility::generateUUID() {
+    UUID uuid;
+    UuidCreate(&uuid);
 
-		ge_free(adapterInfo);
-		return false;
-	}
+    uint8* uuidStr;
+    UuidToStringA(&uuid, &uuidStr);
 
-	String PlatformUtility::GenerateUUID()
-	{
-		UUID uuid;
-		UuidCreate(&uuid);
+    String output((char*)uuidStr);
+    RpcStringFreeA(&uuidStr);
 
-		uint8* uuidStr;
-		UuidToStringA(&uuid, &uuidStr);
+    return output;
+  }
 
-		String output((char*)uuidStr);
-		RpcStringFreeA(&uuidStr);
+  void
+  PlatformUtility::open(const Path& path) {
+    ShellExecute(nullptr, "open", path.toString().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+  }
 
-		return output;
-	}
+  HBITMAP
+  Win32PlatformUtility::createBitmap(const Color* pixels,
+                                     uint32 width,
+                                     uint32 height,
+                                     bool premultiplyAlpha) {
+    BITMAPINFO bi;
 
-	void PlatformUtility::Open(const Path& path)
-	{
-		ShellExecute(nullptr, "open", path.toString().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
-	}
+    memset(&bi, 0, sizeof(BITMAPINFO));
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = width;
+    bi.bmiHeader.biHeight = height;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
 
-	HBITMAP Win32PlatformUtility::CreateBitmap(const Color* pixels, UINT32 width, UINT32 height, bool premultiplyAlpha)
-	{
-		BITMAPINFO bi;
+    HDC hDC = GetDC(nullptr);
 
-		ZeroMemory(&bi, sizeof(BITMAPINFO));
-		bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		bi.bmiHeader.biWidth = width;
-		bi.bmiHeader.biHeight = height;
-		bi.bmiHeader.biPlanes = 1;
-		bi.bmiHeader.biBitCount = 32;
-		bi.bmiHeader.biCompression = BI_RGB;
+    void* data = nullptr;
+    HBITMAP hBitmap = CreateDIBSection(hDC,
+                                       &bi,
+                                       DIB_RGB_COLORS,
+                                       reinterpret_cast<void**>(&data),
+                                       nullptr,
+                                       0);
+    HDC hBitmapDC = CreateCompatibleDC(hDC);
+    ReleaseDC(nullptr, hDC);
 
-		HDC hDC = GetDC(nullptr);
+    //Select the bitmaps to DC
+    HBITMAP hOldBitmap = static_cast<HBITMAP>(SelectObject(hBitmapDC, hBitmap));
 
-		void* data = nullptr;
-		HBITMAP hBitmap = CreateDIBSection(hDC, &bi, DIB_RGB_COLORS, (void**)&data, nullptr, 0);
-		HDC hBitmapDC = CreateCompatibleDC(hDC);
-		ReleaseDC(nullptr, hDC);
+    //Scan each pixel of the source bitmap and create the masks
+    Color pixel;
+    DWORD* dst = (DWORD*)data;
+    for (uint32 y = 0; y < height; ++y) {
+      for (uint32 x = 0; x < width; ++x) {
+        uint32 revY = height - y - 1;
+        pixel = pixels[revY*width + x];
 
-		//Select the bitmaps to DC
-		HBITMAP hOldBitmap = (HBITMAP)SelectObject(hBitmapDC, hBitmap);
+        if (premultiplyAlpha) {
+          pixel.R *= pixel.A;
+          pixel.G *= pixel.A;
+          pixel.B *= pixel.A;
+        }
 
-		//Scan each pixel of the source bitmap and create the masks
-		Color pixel;
-		DWORD* dst = (DWORD*)data;
-		for( uint32 y=0; y<height; ++y )
-		{
-			for( uint32 x=0; x<width; ++x )
-			{
-				uint32 revY = height - y - 1;
-				pixel = pixels[revY*width+x];
+        *dst = pixel.DWColor();
+        dst++;
+      }
+    }
 
-				if( premultiplyAlpha )
-				{
-					pixel.R *= pixel.A;
-					pixel.G *= pixel.A;
-					pixel.B *= pixel.A;
-				}
+    SelectObject(hBitmapDC, hOldBitmap);
+    DeleteDC(hBitmapDC);
 
-				*dst = pixel.DWColor();
-				dst++;
-			}
-		}
-
-		SelectObject(hBitmapDC, hOldBitmap);
-		DeleteDC(hBitmapDC);
-
-		return hBitmap;
-	}
+    return hBitmap;
+  }
 }

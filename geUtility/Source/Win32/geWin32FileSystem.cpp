@@ -264,10 +264,10 @@ namespace geEngineSDK {
       return nullptr;
     }
 
-    ACCESS_MODE::E accessMode = ACCESS_MODE::READ;
+    ACCESS_MODE::E accessMode = ACCESS_MODE::kREAD;
     if (!readOnly) {
       accessMode = static_cast<ACCESS_MODE::E>(accessMode | 
-                                               static_cast<uint32>(ACCESS_MODE::WRITE));
+                                               static_cast<uint32>(ACCESS_MODE::kWRITE));
     }
 
     return ge_shared_ptr_new<FileDataStream>(fullPath, accessMode, true);
@@ -275,7 +275,7 @@ namespace geEngineSDK {
 
   SPtr<DataStream>
   FileSystem::createAndOpenFile(const Path& fullPath) {
-    return ge_shared_ptr_new<FileDataStream>(fullPath, ACCESS_MODE::WRITE, true);
+    return ge_shared_ptr_new<FileDataStream>(fullPath, ACCESS_MODE::kWRITE, true);
   }
 
   uint64

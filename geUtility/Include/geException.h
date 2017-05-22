@@ -276,12 +276,12 @@ namespace geEngineSDK {
   static_assert((std::is_base_of<geEngineSDK::Exception, type>::value),       \
                 "Invalid exception type (" #type ") for GE_EXCEPT macro."     \
                 "It needs to derive from geEngineSDK::Exception.");           \
-  g_CrashHandler().ReportCrash(#type,                                         \
+  g_crashHandler().reportCrash(#type,                                         \
                                desc,                                          \
                                __PRETTY_FUNCTION__,                           \
                                __FILE__,                                      \
                                __LINE__);                                     \
-  PlatformUtility::Terminate(true);                                           \
+  PlatformUtility::terminate(true);                                           \
 }
 #endif
 

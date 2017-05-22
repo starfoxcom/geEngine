@@ -22,9 +22,9 @@
 namespace geEngineSDK {
   namespace PATH_TYPE {
     enum E {
-      Windows,
-      Unix,
-      Default
+      kWindows,
+      kUnix,
+      kDefault
     };
   }
 
@@ -49,10 +49,10 @@ namespace geEngineSDK {
      *                  rules of the platform the application is being compiled to.
      *                  Otherwise it will be parsed according to provided type.
      */
-    Path(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
-    Path(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
-    Path(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
-    Path(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    Path(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
+    Path(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
+    Path(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
+    Path(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @brief	Copy constructor
@@ -124,25 +124,25 @@ namespace geEngineSDK {
      *                  Otherwise it will be parsed according to provided type.
      */
     void
-    assign(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
      */
     void
-    assign(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
      */
     void
-    assign(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
      */
     void
-    assign(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
     
     /**
     * @brief Appends another path to the end of this path.
@@ -157,13 +157,13 @@ namespace geEngineSDK {
      *                  Otherwise it will be parsed according to provided type.
      */
     String
-    toString(PATH_TYPE::E type = PATH_TYPE::Default) const;
+    toString(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
 
     /**
      * @copydoc void Path::toString(PATH_TYPE::E)
      */
     WString
-    toWString(PATH_TYPE::E type = PATH_TYPE::Default) const;
+    toWString(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
 
     /**
      * @brief Converts the path to either a string or a wstring, doing The
@@ -413,7 +413,7 @@ namespace geEngineSDK {
      *                  will be used.
      */
     WString
-    getWTail(PATH_TYPE::E type = PATH_TYPE::Default) const;
+    getWTail(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
 
     /**
      * @brief Gets last element in the path, filename if it exists, otherwise
@@ -424,7 +424,7 @@ namespace geEngineSDK {
      *                  will be used.
      */
     String
-    getTail(PATH_TYPE::E type = PATH_TYPE::Default) const;
+    getTail(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
 
     /**
      * @brief	Clears the path to nothing.
@@ -476,13 +476,13 @@ namespace geEngineSDK {
      *                  Otherwise it will be parsed according to provided type.
      */
     void
-    assign(const UNICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const UNICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @copydoc Path::assign(const UNICHAR*, uint32, PATH_TYPE::E)
      */
     void
-    assign(const ANSICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::Default);
+    assign(const ANSICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
      * @brief Parses a Windows path and stores the parsed data internally.

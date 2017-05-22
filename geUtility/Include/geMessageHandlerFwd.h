@@ -1,86 +1,83 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geMessageHandlerFwd.h
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/03/06
- * @brief  Classes used for the global messaging system.
+ * @file    geMessageHandlerFwd.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/06
+ * @brief   Classes used for the global messaging system.
  *
- * Forward declaration of all the objects needed to send messages
- * with the global messaging system
+ * Forward declaration of all the objects needed to send messages with the
+ * global messaging system
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 #pragma once
 
-/************************************************************************************************************************/
-/* Includes																												*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
 
-namespace geEngineSDK
-{
-	/************************************************************************************************************************/
-	/**
-	* @brief	Identifier for message used with the global messaging system.
-	* @note		Primary purpose of this class is to avoid expensive string compare (i.e. button names), and instead use a
-	*			unique message identifier for compare. Generally you want to create one of these using the message name,
-	*			and then store it for later use.
-	* @note		This class is not thread safe and should only be used on the simulation thread.
-	*/
-	/************************************************************************************************************************/
-	class GE_UTILITY_EXPORT MessageId
-	{
-	private:
-		friend class MessageHandler;
+namespace geEngineSDK {
+  /**
+   * @brief Identifier for message used with the global messaging system.
+   * @note  Primary purpose of this class is to avoid expensive string compare
+   *        (i.e. button names), and instead use a unique message identifier
+   *        for compare. Generally you want to create one of these using the
+   *        message name, and then store it for later use.
+   * @note  This class is not thread safe and should only be used on the
+   *        simulation thread.
+   */
+  class GE_UTILITY_EXPORT MessageId
+  {
+   public:
+    MessageId();
+    MessageId(const String& name);
 
-		static Map<String, uint32> UniqueMessageIds;
-		static uint32 NextMessageId;
+    bool
+    operator==(const MessageId& rhs) const {
+      return (m_msgIdentifier == rhs.m_msgIdentifier);
+    }
 
-		uint32 m_MsgIdentifier;
+   private:
+    friend class MessageHandler;
 
-	public:
-		MessageId();
-		MessageId(const String& name);
+    static Map<String, uint32> m_uniqueMessageIds;
+    static uint32 m_nextMessageId;
 
-		bool operator== (const MessageId& rhs) const
-		{
-			return (m_MsgIdentifier == rhs.m_MsgIdentifier);
-		}
-	};
+    uint32 m_msgIdentifier;
+  };
 
-	/************************************************************************************************************************/
-	/**
-	* @brief	Handle to a subscription for a specific message in the global messaging system.
-	*/
-	/************************************************************************************************************************/
-	class GE_UTILITY_EXPORT HMessage
-	{
-	private:
-		friend class MessageHandler;
+  /**
+   * @brief Handle to a subscription for a specific message in the global messaging system.
+   */
+  class GE_UTILITY_EXPORT HMessage
+  {
+   public:
+    HMessage();
 
-		uint32 m_Id;
+    /**
+     * @brief	Disconnects the message listener so it will no longer receive
+     *        events from the messaging system.
+     */
+    void
+    disconnect();
 
-	public:
-		HMessage();
+   private:
+    friend class MessageHandler;
+    
+    HMessage(uint32 id);
 
-		/************************************************************************************************************************/
-		/**
-		* @brief	Disconnects the message listener so it will no longer receive events from the messaging system.
-		*/
-		/************************************************************************************************************************/
-		void Disconnect();
+    uint32 m_id;
+  };
 
-	private:
-		HMessage(uint32 id);
-	};
+  /**
+   * @brief Sends a message using the global messaging system.
+   * @note  Simulation thread only.
+   */
+  void GE_UTILITY_EXPORT
+  sendMessage(MessageId message);
 
-	/************************************************************************************************************************/
-	/**
-	* @brief	Sends a message using the global messaging system.
-	* @note		Simulation thread only.
-	*/
-	/************************************************************************************************************************/
-	void GE_UTILITY_EXPORT SendMessage(MessageId message);
-
-	class MessageHandler;
+  class MessageHandler;
 }

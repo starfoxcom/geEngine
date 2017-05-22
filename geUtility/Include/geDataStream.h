@@ -28,15 +28,15 @@ namespace geEngineSDK {
    */
   namespace STRING_ENCODING {
     enum E {
-      UTF8 = 1,
-      UTF16 = 2
+      kUTF8 = 1,
+      kUTF16 = 2
     };
   }
 
   namespace ACCESS_MODE {
     enum E {
-      READ = 1,
-      WRITE = 2
+      kREAD = 1,
+      kWRITE = 2
     };
   }
 
@@ -50,12 +50,12 @@ namespace geEngineSDK {
     /**
      * @brief Creates an unnamed stream.
      */
-    DataStream(uint16 accessMode = ACCESS_MODE::READ) : m_size(0), m_access(accessMode) {}
+    DataStream(uint16 accessMode = ACCESS_MODE::kREAD) : m_size(0), m_access(accessMode) {}
 
     /**
      * @brief Creates a named stream.
      */
-    DataStream(const String& name, uint16 accessMode = ACCESS_MODE::READ) 
+    DataStream(const String& name, uint16 accessMode = ACCESS_MODE::kREAD) 
       : m_name(name),
         m_size(0),
         m_access(accessMode) {}
@@ -74,12 +74,12 @@ namespace geEngineSDK {
 
     virtual bool
     isReadable() const {
-      return (m_access & ACCESS_MODE::READ) != 0;
+      return (m_access & ACCESS_MODE::kREAD) != 0;
     }
 
     virtual bool
     isWriteable() const {
-      return (m_access & ACCESS_MODE::WRITE) != 0;
+      return (m_access & ACCESS_MODE::kWRITE) != 0;
     }
 
     virtual bool
@@ -124,7 +124,7 @@ namespace geEngineSDK {
      * @param[in] encoding Encoding to convert the string to before writing.
      */
     virtual void
-    writeString(const String& string, STRING_ENCODING::E encoding = STRING_ENCODING::UTF8);
+    writeString(const String& string, STRING_ENCODING::E encoding = STRING_ENCODING::kUTF8);
 
     /**
      * @brief Writes the provided wide string to the steam. String is converted
@@ -134,7 +134,7 @@ namespace geEngineSDK {
      * @param[in]	encoding	Encoding to convert the string to before writing.
      */
     virtual void
-    writeString(const WString& string, STRING_ENCODING::E encoding = STRING_ENCODING::UTF16);
+    writeString(const WString& string, STRING_ENCODING::E encoding = STRING_ENCODING::kUTF16);
 
     /**
      * @brief Returns a string containing the entire stream.
@@ -335,7 +335,7 @@ namespace geEngineSDK {
                   once the data stream is closed or goes out of scope.
      */
     FileDataStream(const Path& filePath,
-                   ACCESS_MODE::E accessMode = ACCESS_MODE::READ,
+                   ACCESS_MODE::E accessMode = ACCESS_MODE::kREAD,
                    bool freeOnClose = true);
 
     ~FileDataStream();

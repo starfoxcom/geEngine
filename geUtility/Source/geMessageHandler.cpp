@@ -1,116 +1,101 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geMessageHandler.cpp
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2016/03/06
- * @brief  Allows to transparently pass messages between different
- *			systems
+ * @file    geMessageHandler.cpp
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/03/06
+ * @brief   Allows to transparently pass messages between different systems
  *
- * Message system that allows you to transparently pass messages
- * between different systems. Only usable in the Simulation thread
+ * Message system that allows you to transparently pass messages between
+ * different systems. Only usable in the Simulation thread
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 
-/************************************************************************************************************************/
-/* Includes																												*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+* Includes
+*/
+/*****************************************************************************/
 #include "geMessageHandler.h"
 
-namespace geEngineSDK
-{
-	Map<String, uint32> MessageId::UniqueMessageIds;
-	uint32 MessageId::NextMessageId = 0;
+namespace geEngineSDK {
+  Map<String, uint32> MessageId::m_uniqueMessageIds;
+  uint32 MessageId::m_nextMessageId = 0;
 
-	MessageId::MessageId() : m_MsgIdentifier(0)
-	{
-	
-	}
+  MessageId::MessageId() : m_msgIdentifier(0) {}
 
-	MessageId::MessageId(const String& name)
-	{
-		auto findIter = UniqueMessageIds.find(name);
+  MessageId::MessageId(const String& name) {
+    auto findIter = m_uniqueMessageIds.find(name);
 
-		if( findIter != UniqueMessageIds.end() )
-		{
-			m_MsgIdentifier = findIter->second;
-		}
-		else
-		{
-			m_MsgIdentifier = NextMessageId;
-			UniqueMessageIds[name] = NextMessageId++;
-		}
-	}
+    if (findIter != m_uniqueMessageIds.end()) {
+      m_msgIdentifier = findIter->second;
+    }
+    else {
+      m_msgIdentifier = m_nextMessageId;
+      m_uniqueMessageIds[name] = m_nextMessageId++;
+    }
+  }
 
-	HMessage::HMessage() : m_Id(0)
-	{
-	}
+  HMessage::HMessage() : m_id(0) {}
 
-	HMessage::HMessage(uint32 id) : m_Id(id)
-	{
-	}
+  HMessage::HMessage(uint32 id) : m_id(id) {}
 
-	void HMessage::Disconnect()
-	{
-		if( m_Id > 0 )
-		{
-			MessageHandler::Instance().Unsubscribe(m_Id);
-		}
-	}
+  void
+  HMessage::disconnect() {
+    if (0 < m_id) {
+      MessageHandler::instance().unsubscribe(m_id);
+    }
+  }
 
-	MessageHandler::MessageHandler() : m_NextCallbackId(1) //0 is reserved for not initialized
-	{
-	}
+  //0 is reserved for not initialized
+  MessageHandler::MessageHandler() : m_nextCallbackId(1) {}
 
-	void MessageHandler::Send(MessageId message)
-	{
-		auto iterFind = m_MessageHandlers.find(message.m_MsgIdentifier);
-		if( iterFind != m_MessageHandlers.end() )
-		{
-			for( auto& handlerData : iterFind->second )
-			{
-				handlerData.Callback();
-			}
-		}
-	}
+  void
+  MessageHandler::send(MessageId message) {
+    auto iterFind = m_messageHandlers.find(message.m_msgIdentifier);
+    if (iterFind != m_messageHandlers.end()) {
+      for (auto& handlerData : iterFind->second) {
+        handlerData.callback();
+      }
+    }
+  }
 
-	HMessage MessageHandler::Listen(MessageId message, std::function<void()> callback)
-	{
-		uint32 callbackId = m_NextCallbackId++;
+  HMessage
+  MessageHandler::listen(MessageId message, std::function<void()> callback) {
+    uint32 callbackId = m_nextCallbackId++;
 
-		MessageHandlerData data;
-		data.Id = callbackId;
-		data.Callback = callback;
+    MessageHandlerData data;
+    data.id = callbackId;
+    data.callback = callback;
 
-		m_MessageHandlers[message.m_MsgIdentifier].push_back(data);
-		m_HandlerIdToMessageMap[callbackId] = message.m_MsgIdentifier;
+    m_messageHandlers[message.m_msgIdentifier].push_back(data);
+    m_handlerIdToMessageMap[callbackId] = message.m_msgIdentifier;
 
-		return HMessage(callbackId);
-	}
+    return HMessage(callbackId);
+  }
 
-	void MessageHandler::Unsubscribe(uint32 handleId)
-	{
-		uint32 msgId = m_HandlerIdToMessageMap[handleId];
+  void
+  MessageHandler::unsubscribe(uint32 handleId) {
+    uint32 msgId = m_handlerIdToMessageMap[handleId];
 
-		auto iterFind = m_MessageHandlers.find(msgId);
-		if( iterFind != m_MessageHandlers.end() )
-		{
-			Vector<MessageHandlerData>& handlerData = iterFind->second;
+    auto iterFind = m_messageHandlers.find(msgId);
+    if (iterFind != m_messageHandlers.end()) {
+      Vector<MessageHandlerData>& handlerData = iterFind->second;
 
-			handlerData.erase(
-				std::remove_if(handlerData.begin(), handlerData.end(), [&](MessageHandlerData& x)
-				{
-					return x.Id == handleId;
-				})
-			);
-		}
+      handlerData.erase(std::remove_if(handlerData.begin(),
+                        handlerData.end(),
+                        [&](MessageHandlerData& x)
+      {
+        return x.id == handleId;
+      }));
+    }
 
-		m_HandlerIdToMessageMap.erase(handleId);
-	}
+    m_handlerIdToMessageMap.erase(handleId);
+  }
 
-	void SendMessage(MessageId message)
-	{
-		MessageHandler::Instance().Send(message);
-	}
+  void
+  sendMessage(MessageId message) {
+    MessageHandler::instance().send(message);
+  }
 }

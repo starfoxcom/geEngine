@@ -18,8 +18,8 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePrerequisitesUtil.h"
 #include <wchar.h>
+#include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
   /**

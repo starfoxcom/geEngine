@@ -126,13 +126,13 @@ namespace geEngineSDK {
   void
   Path::assign(const UNICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type) {
     switch (type) {
-    case PATH_TYPE::Windows:
+    case PATH_TYPE::kWindows:
       parseWindows(pathStr, numChars);
       break;
-    case PATH_TYPE::Unix:
+    case PATH_TYPE::kUnix:
       parseUnix(pathStr, numChars);
       break;
-    case PATH_TYPE::Default:
+    case PATH_TYPE::kDefault:
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       parseWindows(pathStr, numChars);
@@ -151,13 +151,13 @@ namespace geEngineSDK {
   void
   Path::assign(const ANSICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type) {
     switch (type) {
-    case PATH_TYPE::Windows:
+    case PATH_TYPE::kWindows:
       parseWindows(pathStr, numChars);
       break;
-    case PATH_TYPE::Unix:
+    case PATH_TYPE::kUnix:
       parseUnix(pathStr, numChars);
       break;
-    case PATH_TYPE::Default:
+    case PATH_TYPE::kDefault:
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       parseWindows(pathStr, numChars);
@@ -176,11 +176,11 @@ namespace geEngineSDK {
   String
   Path::toString(PATH_TYPE::E type) const {
     switch (type) {
-    case PATH_TYPE::Windows:
+    case PATH_TYPE::kWindows:
       return geEngineSDK::toString(buildWindows());
-    case PATH_TYPE::Unix:
+    case PATH_TYPE::kUnix:
       return geEngineSDK::toString(buildUnix());
-    case PATH_TYPE::Default:
+    case PATH_TYPE::kDefault:
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       return geEngineSDK::toString(buildWindows());
@@ -198,11 +198,11 @@ namespace geEngineSDK {
   WString
   Path::toWString(PATH_TYPE::E type) const {
     switch (type) {
-    case PATH_TYPE::Windows:
+    case PATH_TYPE::kWindows:
       return buildWindows();
-    case PATH_TYPE::Unix:
+    case PATH_TYPE::kUnix:
       return buildUnix();
-    case PATH_TYPE::Default:
+    case PATH_TYPE::kDefault:
     default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
       return buildWindows();

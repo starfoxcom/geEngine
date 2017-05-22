@@ -104,7 +104,7 @@ namespace geEngineSDK {
 
   void
   DataStream::writeString(const String& string, STRING_ENCODING::E encoding) {
-    if (STRING_ENCODING::UTF16 == encoding) {
+    if (STRING_ENCODING::kUTF16 == encoding) {
       const codecvt_mode convMode = static_cast<codecvt_mode>(generate_header);
       typedef codecvt_utf8_utf16<char, 1114111, convMode> UTF8ToUTF16Conv;
       wstring_convert<UTF8ToUTF16Conv, char> conversion("?");
@@ -119,7 +119,7 @@ namespace geEngineSDK {
 
   void
   DataStream::writeString(const WString& string, STRING_ENCODING::E encoding) {
-    if (STRING_ENCODING::UTF16 == encoding) {
+    if (STRING_ENCODING::kUTF16 == encoding) {
       const codecvt_mode convMde = 
         static_cast<codecvt_mode>(generate_header | little_endian);
       typedef codecvt_utf16<wchar_t, 1114111, convMde> WCharToUTF16Conv;
@@ -300,7 +300,7 @@ namespace geEngineSDK {
   }
 
   MemoryDataStream::MemoryDataStream(void* memory, SIZE_T inSize, bool freeOnClose)
-    : DataStream(ACCESS_MODE::READ | ACCESS_MODE::WRITE),
+    : DataStream(ACCESS_MODE::kREAD | ACCESS_MODE::kWRITE),
       m_data(nullptr),
       m_freeOnClose(freeOnClose) {
     m_data = m_pos = static_cast<uint8*>(memory);
@@ -311,7 +311,7 @@ namespace geEngineSDK {
   }
 
   MemoryDataStream::MemoryDataStream(DataStream& sourceStream)
-    : DataStream(ACCESS_MODE::READ | ACCESS_MODE::WRITE),
+    : DataStream(ACCESS_MODE::kREAD | ACCESS_MODE::kWRITE),
       m_data(nullptr) {
     //Copy data from incoming stream
     m_size = sourceStream.size();
@@ -325,7 +325,7 @@ namespace geEngineSDK {
   }
 
   MemoryDataStream::MemoryDataStream(const SPtr<DataStream>& sourceStream)
-    : DataStream(ACCESS_MODE::READ | ACCESS_MODE::WRITE),
+    : DataStream(ACCESS_MODE::kREAD | ACCESS_MODE::kWRITE),
       m_data(nullptr) {
     //Copy data from incoming stream
     m_size = sourceStream->size();
@@ -431,11 +431,11 @@ namespace geEngineSDK {
     //Always open in binary mode. Also, always include reading
     std::ios::openmode mode = std::ios::binary;
 
-    if ((accessMode & ACCESS_MODE::READ) != 0) {
+    if ((accessMode & ACCESS_MODE::kREAD) != 0) {
       mode |= std::ios::in;
     }
 
-    if (((accessMode & ACCESS_MODE::WRITE) != 0)) {
+    if (((accessMode & ACCESS_MODE::kWRITE) != 0)) {
       mode |= std::ios::out;
       m_pFStream = ge_shared_ptr_new<std::fstream>();
       m_pFStream->open(filePath.toPlatformString().c_str(), mode);
