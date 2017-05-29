@@ -33,7 +33,7 @@ namespace geEngineSDK {
   {
    public:
     MessageId();
-    MessageId(const String& name);
+    explicit MessageId(const String& name);
 
     bool
     operator==(const MessageId& rhs) const {
@@ -67,7 +67,7 @@ namespace geEngineSDK {
    private:
     friend class MessageHandler;
     
-    HMessage(uint32 id);
+    explicit HMessage(uint32 id);
 
     uint32 m_id;
   };

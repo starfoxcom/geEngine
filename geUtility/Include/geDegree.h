@@ -33,7 +33,10 @@ namespace geEngineSDK {
   {
    public:
     explicit Degree(float d = 0.0f) : m_degree(d) {}
-    Degree(const Radian& r);
+    explicit Degree(const Radian& r);
+    Degree(const Degree& d) {
+      m_degree = d.valueDegrees();
+    }
 
     Degree&
     operator=(const float& f) {

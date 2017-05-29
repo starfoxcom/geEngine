@@ -709,28 +709,30 @@ namespace geEngineSDK {
 
     static void
     toMemory(const Path& data, char* memory) {
+      char* pIntMemory = memory;
       uint64 size = getDynamicSize(data);
-      memcpy(memory, &size, sizeof(uint64));
-      memory += sizeof(uint64);
+      memcpy(pIntMemory, &size, sizeof(uint64));
+      pIntMemory += sizeof(uint64);
 
-      memory = rttiWriteElement(data.m_device, memory);
-      memory = rttiWriteElement(data.m_node, memory);
-      memory = rttiWriteElement(data.m_filename, memory);
-      memory = rttiWriteElement(data.m_isAbsolute, memory);
-      memory = rttiWriteElement(data.m_directories, memory);
+      pIntMemory = rttiWriteElement(data.m_device, pIntMemory);
+      pIntMemory = rttiWriteElement(data.m_node, pIntMemory);
+      pIntMemory = rttiWriteElement(data.m_filename, pIntMemory);
+      pIntMemory = rttiWriteElement(data.m_isAbsolute, pIntMemory);
+      pIntMemory = rttiWriteElement(data.m_directories, pIntMemory);
     }
 
     static uint64
     fromMemory(Path& data, char* memory) {
+      char* pIntMemory = memory;
       uint64 size;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      memcpy(&size, pIntMemory, sizeof(uint64));
+      pIntMemory += sizeof(uint64);
 
-      memory = rttiReadElement(data.m_device, memory);
-      memory = rttiReadElement(data.m_node, memory);
-      memory = rttiReadElement(data.m_filename, memory);
-      memory = rttiReadElement(data.m_isAbsolute, memory);
-      memory = rttiReadElement(data.m_directories, memory);
+      pIntMemory = rttiReadElement(data.m_device, pIntMemory);
+      pIntMemory = rttiReadElement(data.m_node, pIntMemory);
+      pIntMemory = rttiReadElement(data.m_filename, pIntMemory);
+      pIntMemory = rttiReadElement(data.m_isAbsolute, pIntMemory);
+      pIntMemory = rttiReadElement(data.m_directories, pIntMemory);
 
       return size;
     }

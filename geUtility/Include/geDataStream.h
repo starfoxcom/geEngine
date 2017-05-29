@@ -50,7 +50,9 @@ namespace geEngineSDK {
     /**
      * @brief Creates an unnamed stream.
      */
-    DataStream(uint16 accessMode = ACCESS_MODE::kREAD) : m_size(0), m_access(accessMode) {}
+    explicit DataStream(uint16 accessMode = ACCESS_MODE::kREAD)
+      : m_size(0),
+        m_access(accessMode) {}
 
     /**
      * @brief Creates a named stream.
@@ -231,7 +233,7 @@ namespace geEngineSDK {
      *        internal buffer.
      * @param[in] sourceStream  Stream to read data from.
      */
-    MemoryDataStream(DataStream& sourceStream);
+    explicit MemoryDataStream(DataStream& sourceStream);
 
     /**
      * @brief Create a stream which pre-buffers the contents of another stream.
@@ -239,7 +241,7 @@ namespace geEngineSDK {
      *        internal buffer.
      * @param[in]	sourceStream		Stream to read data from.
      */
-    MemoryDataStream(const SPtr<DataStream>& sourceStream);
+    explicit MemoryDataStream(const SPtr<DataStream>& sourceStream);
 
     ~MemoryDataStream();
 
@@ -330,9 +332,9 @@ namespace geEngineSDK {
      * @brief Construct a file stream.
      * @param[in] filePath  Path of the file to open.
      * @param[in] accessMode  Determines should the file be opened in read,
-                  write or read/write mode.
+     *            write or read/write mode.
      * @param[in] freeOnClose Determines should the internal stream be freed
-                  once the data stream is closed or goes out of scope.
+     *            once the data stream is closed or goes out of scope.
      */
     FileDataStream(const Path& filePath,
                    ACCESS_MODE::E accessMode = ACCESS_MODE::kREAD,

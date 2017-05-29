@@ -42,7 +42,7 @@ namespace geEngineSDK {
     class MemBlock
     {
      public:
-      MemBlock(SIZE_T size)
+      explicit MemBlock(SIZE_T size)
         : m_data(nullptr),
           m_freePtr(0),
           m_size(size),

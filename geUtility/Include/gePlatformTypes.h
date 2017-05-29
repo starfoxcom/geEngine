@@ -59,17 +59,17 @@ namespace geEngineSDK {
      */
    public:
     QWord() : m_lower(0), m_upper(0) {}
-    QWord(bool from)   : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(uint8 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(int8 from)   : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(uint16 from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(int16 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(uint32 from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(int32 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(uint64 from) : m_lower(from),                      m_upper(0) {}
-    QWord(int64 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(float from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
-    QWord(double from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(bool from)   : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(uint8 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(int8 from)   : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(uint16 from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(int16 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(uint32 from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(int32 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(uint64 from) : m_lower(from),                      m_upper(0) {}
+    explicit QWord(int64 from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(float from)  : m_lower(static_cast<uint64>(from)), m_upper(0) {}
+    explicit QWord(double from) : m_lower(static_cast<uint64>(from)), m_upper(0) {}
 
     /**
      * @brief   The cast operator for casting/truncating to 64 bits.

@@ -18,6 +18,7 @@
  */
 /*****************************************************************************/
 #include "geFloat16.h"
+#include "geColor.h"
 
 namespace geEngineSDK {
   class LinearColor;
@@ -29,19 +30,14 @@ namespace geEngineSDK {
   {
    public:
     Float16Color() {}
-    Float16Color(const Float16Color& Src) {
-      R = Src.R;
-      G = Src.G;
-      B = Src.B;
-      A = Src.A;
-    }
-
-    Float16Color(const LinearColor& Src);
+    Float16Color(const Float16Color& Src) : R(Src.R), G(Src.G), B(Src.B), A(Src.A) {}
+    explicit Float16Color(const LinearColor& Src) : R(Src.R), G(Src.G), B(Src.B), A(Src.A) {}
 
     /**
      * @brief	Assignment operator
      */
-    Float16Color& operator=(const Float16Color& Src) {
+    Float16Color&
+    operator=(const Float16Color& Src) {
       R = Src.R;
       G = Src.G;
       B = Src.B;
@@ -54,7 +50,8 @@ namespace geEngineSDK {
      * @param Src The other color.
      * @return true if the two colors are identical, otherwise false.
      */
-    bool operator==(const Float16Color& Src) {
+    bool
+    operator==(const Float16Color& Src) {
       return ((R == Src.R) && (G == Src.G) && (B == Src.B) && (A == Src.A));
     }
 

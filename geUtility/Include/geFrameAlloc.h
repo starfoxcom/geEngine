@@ -39,7 +39,7 @@ namespace geEngineSDK {
     class MemBlock
     {
      public:
-      MemBlock(SIZE_T size);
+      explicit MemBlock(SIZE_T size);
       ~MemBlock();
 
       /**
@@ -62,7 +62,7 @@ namespace geEngineSDK {
     };
 
    public:
-    FrameAlloc(SIZE_T blockSize = 1024 * 1024);
+    explicit FrameAlloc(SIZE_T blockSize = 1024 * 1024);
     ~FrameAlloc();
 
     /**
@@ -184,11 +184,20 @@ namespace geEngineSDK {
     typedef std::ptrdiff_t difference_type;
     
     StdFrameAlloc() _NOEXCEPT : m_FrameAlloc(nullptr) {}
-    StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
+    explicit StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
 
     template<class U>
     StdFrameAlloc(const StdFrameAlloc<U>& refAlloc) _NOEXCEPT
       : m_FrameAlloc(refAlloc.m_FrameAlloc) {
+    }
+
+    /**
+     * @brief Copy operator, added for completion, but probably should never be used.
+     */
+    template<class U>
+    const StdFrameAlloc<U>&
+    operator=(const StdFrameAlloc<U>& refAlloc) {
+      m_FrameAlloc = refAlloc.m_FrameAlloc
     }
 
     template<class U>
@@ -238,7 +247,7 @@ namespace geEngineSDK {
       m_FrameAlloc->dealloc(reinterpret_cast<uint8*>(p));
     }
 
-  public:
+   public:
     FrameAlloc* m_FrameAlloc;
 
     size_t

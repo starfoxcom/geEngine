@@ -84,7 +84,7 @@ namespace geEngineSDK {
       _instance() = ge_new<T>(std::forward<Args>(args)...);
       isShutDown() = false;
 
-      ((Module*)_instance())->onStartUp();
+      static_cast<Module*>(_instance())->onStartUp();
     }
 
     /**
@@ -104,7 +104,7 @@ namespace geEngineSDK {
       _instance() = ge_new<SubType>(std::forward<Args>(args)...);
       isShutDown() = false;
 
-      ((Module*)_instance())->onStartUp();
+      static_cast<Module*>(_instance())->onStartUp();
     }
 
     /**
@@ -117,7 +117,7 @@ namespace geEngineSDK {
                   "Trying to shut down an already shut down module.");
       }
 
-      ((Module*)_instance())->onShutDown();
+      static_cast<Module*>(_instance())->onShutDown();
 
       ge_delete(_instance());
       isShutDown() = true;

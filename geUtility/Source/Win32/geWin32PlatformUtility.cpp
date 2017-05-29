@@ -38,7 +38,8 @@ namespace geEngineSDK {
   PlatformUtility::copyToClipboard(const WString& string) {
     HANDLE hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
                                (string.size() + 1) * sizeof(WString::value_type));
-    WString::value_type* buffer = static_cast<WString::value_type*>(GlobalLock(hData));
+
+    WString::value_type* buffer = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
 
     string.copy(buffer, string.size());
     buffer[string.size()] = '\0';
@@ -50,9 +51,8 @@ namespace geEngineSDK {
       SetClipboardData(CF_UNICODETEXT, hData);
       CloseClipboard();
     }
-    else {
-      GlobalFree(hData);
-    }
+
+    GlobalFree(hData);
   }
 
   WString
@@ -61,8 +61,8 @@ namespace geEngineSDK {
       HANDLE hData = GetClipboardData(CF_UNICODETEXT);
 
       if (hData != NULL) {
-        WString::value_type* buffer = static_cast<WString::value_type*>(GlobalLock(hData));
-        WString string(buffer);
+        WString::value_type* buff = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
+        WString string(buff);
         GlobalUnlock(hData);
         CloseClipboard();
         return string;

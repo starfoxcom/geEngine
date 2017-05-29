@@ -176,9 +176,6 @@
     <ClInclude Include="Include\geFloat16.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geFloat16Color.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geFloat32.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
@@ -202,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="Include\geEnumClassHash.h">
       <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFloat16Color.h">
+      <Filter>Header Files\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

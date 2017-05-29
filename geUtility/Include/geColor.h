@@ -50,13 +50,13 @@ namespace geEngineSDK {
         B(InB),
         A(InA) {}
 
-    LinearColor(const Vector3& Vector);
-    LinearColor(const Vector4& Vector);
+    explicit LinearColor(const Vector3& Vector);
+    explicit LinearColor(const Vector4& Vector);
     
     /**
      * @brief Color->LinearColor conversion.
      */
-    LinearColor(const Color& refColor);
+    explicit LinearColor(const Color& refColor);
 
     /**
      * @brief Float16Color->LinearColor conversion.

@@ -206,6 +206,9 @@ namespace geEngineSDK {
   {
    public:
     HEvent() : m_connection(nullptr) {}
+    HEvent(const HEvent& e) {
+      this->operator=(e);
+    }
 
     explicit HEvent(const SPtr<EventInternalData>& eventData, BaseConnectionData* connection)
       : m_connection(connection),
@@ -295,7 +298,7 @@ namespace geEngineSDK {
      * @brief Register a new callback that will get notified once the event is triggered.
      */
     HEvent
-    connect(std::function<RetType(Args...)> func) {
+    connect(std::function<RetType(Args...)>& func) {
       RecursiveLock lock(m_internalData->m_Mutex);
 
       ConnectionData* connData = nullptr;

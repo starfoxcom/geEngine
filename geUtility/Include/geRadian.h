@@ -32,7 +32,10 @@ namespace geEngineSDK {
   {
    public:
     explicit Radian(float r = 0.0f) : m_radian(r) {}
-    Radian(const Degree& d);
+    explicit Radian(const Degree& d);
+    Radian(const Radian& r) {
+      m_radian = r.valueRadians();
+    }
 
     Radian&
     operator=(const float& f) {

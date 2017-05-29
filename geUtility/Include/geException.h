@@ -64,13 +64,14 @@ namespace geEngineSDK {
 
     ~Exception() throw() {}
 
-    void
+    Exception&
     operator=(const Exception& rhs) {
       m_description = rhs.m_description;
       m_source = rhs.m_source;
       m_file = rhs.m_file;
       m_line = rhs.m_line;
       m_typeName = rhs.m_typeName;
+      return *this;
     }
 
     /**

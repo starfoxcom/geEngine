@@ -42,7 +42,7 @@ namespace geEngineSDK {
       encoded = FP16Value.encoded;
     }
 
-    Float16(float FP32Value) {
+    explicit Float16(float FP32Value) {
       set(FP32Value);
     }
 

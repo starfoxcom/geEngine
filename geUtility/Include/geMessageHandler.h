@@ -53,7 +53,7 @@ namespace geEngineSDK {
      *          unsubscribe from listening.
      */
     HMessage
-    listen(MessageId message, std::function<void()> callback);
+    listen(MessageId message, std::function<void()>& callback);
 
    private:
     void

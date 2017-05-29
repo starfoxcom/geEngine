@@ -55,7 +55,7 @@ namespace geEngineSDK {
      * @brief Constructs the dynamic library object and loads the library with
      *        the specified name.
      */
-    DynLib(const String& name);
+    explicit DynLib(const String& name);
     ~DynLib();
 
     /**

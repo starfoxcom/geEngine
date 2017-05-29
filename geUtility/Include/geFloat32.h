@@ -33,7 +33,7 @@ namespace geEngineSDK {
      * @param InValue value of the float.
      * @return  What does this function returns.
      */
-    Float32(float InValue = 0.0f) : floatValue(InValue) {}
+    explicit Float32(float InValue = 0.0f) : floatValue(InValue) {}
 
     union {
       struct

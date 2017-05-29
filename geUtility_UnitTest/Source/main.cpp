@@ -76,8 +76,6 @@ TEST(geUtility, Parser) {
   }
 }
 
-#include <cstdio>
-
 TEST(geUtility, Math) {
   EXPECT_EQ(Math::abs(-1), 1);
   EXPECT_EQ(Math::abs(-1.000000000), 1.000000000);
@@ -85,8 +83,9 @@ TEST(geUtility, Math) {
   EXPECT_TRUE(Math::abs(Radian(-Math::PI)) == Radian(Math::PI));
   EXPECT_TRUE(Math::abs(Degree(-180.0f)) == Degree(180.0f));
   
-  EXPECT_NEAR(Math::sin(0.f), 0.0f, Math::KINDA_SMALL_NUMBER);
-  EXPECT_NEAR(Math::cos(0.f), 1.0f, Math::KINDA_SMALL_NUMBER);
+  EXPECT_FLOAT_EQ(Math::sin(0.f), 0.0f);
+  EXPECT_FLOAT_EQ(Math::cos(0.f), 1.0f);
+  EXPECT_FLOAT_EQ(Math::tan(Math::HALF_PI*0.5f), 1.0f);
 
   EXPECT_NEAR(Math::acos(0.f).valueRadians(), 1.57070000f, Math::KINDA_SMALL_NUMBER);
   EXPECT_NEAR(Math::acos(0.f).valueRadians(), 1.57079600f, Math::SMALL_NUMBER);
@@ -134,6 +133,14 @@ TEST(geUtility, Math) {
   EXPECT_EQ(Math::clamp01(18.0f),  1.0f);
   EXPECT_EQ(Math::clamp01(-9.0f),  0.0f);
 
-  
-  
+  EXPECT_NEAR(Math::fmod(18.5f, 4.2f), 1.7f, Math::SMALL_NUMBER);
+  EXPECT_NEAR(Math::exp(1), 2.718282f, Math::SMALL_NUMBER);
+
+}
+
+TEST(geUtility, Platform) {
+  PlatformUtility::copyToClipboard(L"Esta es una prueba del portapapeles!");
+  WString szClipboardContent = PlatformUtility::copyFromClipboard();
+  EXPECT_STRCASEEQ(toString(szClipboardContent).c_str(),
+                   "Esta es una prueba del portapapeles!");
 }

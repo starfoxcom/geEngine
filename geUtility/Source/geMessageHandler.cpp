@@ -62,7 +62,7 @@ namespace geEngineSDK {
   }
 
   HMessage
-  MessageHandler::listen(MessageId message, std::function<void()> callback) {
+  MessageHandler::listen(MessageId message, std::function<void()>& callback) {
     uint32 callbackId = m_nextCallbackId++;
 
     MessageHandlerData data;

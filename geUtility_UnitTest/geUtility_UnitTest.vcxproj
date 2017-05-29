@@ -111,6 +111,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>geUtilityd.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/Tools/unit_test_runner/Guitar.exe $(SolutionDir)bin/$(PlatformShortName)/$(TargetName).exe --close-timeout 5</Command>
+      <Message>Run Unit Tests</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,6 +135,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>geUtilityd.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/Tools/unit_test_runner/Guitar.exe $(SolutionDir)bin/$(PlatformShortName)/$(TargetName).exe --close-timeout 5</Command>
+      <Message>Run Unit Tests</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -154,6 +162,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>geUtility.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/Tools/unit_test_runner/Guitar.exe $(SolutionDir)bin/$(PlatformShortName)/$(TargetName).exe --close-timeout 5</Command>
+      <Message>Run Unit Tests</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -177,6 +189,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)GoogleTest/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>geUtility.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/Tools/unit_test_runner/Guitar.exe $(SolutionDir)bin/$(PlatformShortName)/$(TargetName).exe --close-timeout 5</Command>
+      <Message>Run Unit Tests</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp" />

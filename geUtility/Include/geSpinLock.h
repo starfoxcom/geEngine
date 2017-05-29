@@ -65,7 +65,7 @@ namespace geEngineSDK {
   class ScopedSpinLock
   {
    public:
-    ScopedSpinLock(SpinLock& spinLock) : m_spinLock(spinLock) {
+    explicit ScopedSpinLock(SpinLock& spinLock) : m_spinLock(spinLock) {
       m_spinLock.Lock();
     }
 
