@@ -14,11 +14,6 @@
 
 #define GE_AUTO_MUTEX_NAME mutex      /** Define the auto mutex name */
 
-/**
- * if GE_THREAD_SUPPORT set the defines to a valid configuration for the use of threads
- */
-#if GE_THREAD_SUPPORT
-
  /****************************************************************************/
  /**
   * Includes
@@ -59,7 +54,3 @@ using Lock = std::unique_lock<Mutex>;
 
 /** Wrapper for the C++ std::unique_lock<std::recursive_mutex>. */
 using RecursiveLock = std::unique_lock<RecursiveMutex>;
-
-#else
-# pragma error "This version of geEngine must support threads."  
-#endif

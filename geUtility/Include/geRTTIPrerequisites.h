@@ -12,6 +12,21 @@
 /*****************************************************************************/
 #pragma once
 
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
+#include <limits>
+#include <type_traits>
+#include <utility>
+#include <vector>
+
+#include "geMemoryAllocator.h"
+#include "geFwdDeclUtil.h"
+#include "gePlatformTypes.h"
+
+
 namespace geEngineSDK {
   /**
    * @brief Template that you may specialize with a class if you want to provide simple

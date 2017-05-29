@@ -20,8 +20,8 @@
 #define GE_PLATFORM_WIN32   1                 //Windows Platform
 #define GE_PLATFORM_LINUX   2                 //Linux Platform
 #define GE_PLATFORM_OSX     3                 //Apple Platform
-#define GE_PLATFORM_IOS     4                 //Apple Platform
-#define GE_PLATFORM_ANDROID 5                 //Apple Platform
+#define GE_PLATFORM_IOS     4                 //iPhone Platform
+#define GE_PLATFORM_ANDROID 5                 //Android Platform
 #define GE_PLATFORM_PS4     6                 //PlayStation 4 Platform
 
 #define GE_COMPILER_MSVC 1                    //Visual Studio Compiler

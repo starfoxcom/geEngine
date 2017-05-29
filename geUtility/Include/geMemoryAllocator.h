@@ -27,6 +27,11 @@
 #include <atomic>
 #include <limits>
 #include <utility>
+#if GE_PLATFORM == GE_PLATFORM_LINUX
+# include <malloc.h>
+#endif
+
+#include "gePlatformTypes.h"
 
 namespace geEngineSDK {
   class MemoryAllocatorBase;

@@ -199,7 +199,7 @@ namespace geEngineSDK {
           pixel.B *= pixel.A;
         }
 
-        *dst = pixel.DWColor();
+        *dst = pixel.dwColor();
         dst++;
       }
     }

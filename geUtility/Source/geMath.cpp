@@ -1,19 +1,24 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
- * @file   geMath.cpp
- * @author Samuel Prince (samuel.prince.quezada@gmail.com)
- * @date   2015/04/04
- * @brief  Utility class providing common scalar math operations.
+ * @file    geMath.cpp
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2015/04/04
+ * @brief   Utility class providing common scalar math operations.
  *
- * @bug	   No known bugs.
+ * @bug	    No known bugs.
  */
-/********************************************************************/
+/*****************************************************************************/
 
-/************************************************************************************************************************/
-/* Includes                                                                     										*/
-/************************************************************************************************************************/
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+# include <intrin.h>
+#endif
+
 #include "geMath.h"
-
 #include "geColor.h"
 //#include "geVector2.h"
 //#include "geVector3.h"
@@ -25,784 +30,839 @@
 //#include "geAABox.h"
 //#include "gePlane.h"
 
-namespace geEngineSDK
-{
-	const float Math::PI					= (float)( 4.0f * std::atan(1.0f) );			/*!< PI constant */
-	const float Math::INV_PI				= (float)( 1.0f / PI );							/*!< Inverse of PI */
-	const float Math::HALF_PI				= (float)( 0.5f * PI );							/*!< Half PI  */
-	const float Math::TWO_PI				= (float)( 2.0f * PI );							/*!< 2 Times PI */
-
-	const float Math::EULERS_NUMBER			= (2.71828182845904523536f);					/*!< Euler number or Napier constant (1+1/N)^N */
-
-	const uint8  Math::MIN_UINT8			= std::numeric_limits<uint8>::min();
-	const uint16 Math::MIN_UINT16			= std::numeric_limits<uint16>::min();
-	const uint32 Math::MIN_UINT32			= std::numeric_limits<uint32>::min();
-	const int8   Math::MIN_INT8				= std::numeric_limits<int8>::min();
-	const int16  Math::MIN_INT16			= std::numeric_limits<int16>::min();
-	const int32  Math::MIN_INT32			= std::numeric_limits<int32>::min();
-	const float	Math::MIN_FLOAT				= std::numeric_limits<float>::min();
-
-	const uint8  Math::MAX_UINT8			= std::numeric_limits<uint8>::max();
-	const uint16 Math::MAX_UINT16			= std::numeric_limits<uint16>::max();
-	const uint32 Math::MAX_UINT32			= std::numeric_limits<uint32>::max();
-	const int8   Math::MAX_INT8				= std::numeric_limits<int8>::max();
-	const int16  Math::MAX_INT16			= std::numeric_limits<int16>::max();
-	const int32  Math::MAX_INT32			= std::numeric_limits<int32>::max();
-	const float	Math::MAX_FLOAT				= std::numeric_limits<float>::max();
-	
-	const float Math::POS_INFINITY			=  std::numeric_limits<float>::infinity();		/*!< Positive limit of a float */
-	const float Math::NEG_INFINITY			= -std::numeric_limits<float>::infinity();		/*!< Negative limit of a float */
-
-	const float Math::SMALL_NUMBER			= (1.e-8f);
-	const float Math::FLOAT_SMALL_NUMBER	= (1.e-6f);
-	const float Math::KINDA_SMALL_NUMBER	= (1.e-4f);
-	const float Math::BIG_NUMBER			= (3.4e+38f);
-
-	const float Math::DEG2RAD				= (float)( PI / 180.0f );
-	const float Math::RAD2DEG				= (float)( 180.0f / PI );
-	const float Math::LOG2					= (float) std::log(2.0f);
-
-	const float Math::DELTA					= (0.00001f);
-	const float Math::FLOAT_EPSILON			= std::numeric_limits<float>::epsilon();
-	const double Math::DOUBLE_EPSILON		= std::numeric_limits<double>::epsilon();
-
-	const float Math::FLOAT_NORMAL_THRESH	= (0.0001f);
-
-	const float Math::THRESH_POINT_ON_PLANE			= (0.10f);
-	const float Math::THRESH_POINT_ON_SIDE			= (0.20f);
-	const float Math::THRESH_POINTS_ARE_SAME		= (0.00002f);
-	const float Math::THRESH_POINTS_ARE_NEAR		= (0.015f);
-	const float Math::THRESH_NORMALS_ARE_SAME		= (0.00002f);
-
-	const float Math::THRESH_VECTORS_ARE_NEAR		= (0.0004f);
-
-	const float Math::THRESH_SPLIT_POLY_WITH_PLANE	= (0.25f);
-	const float Math::THRESH_SPLIT_POLY_PRECISELY	= (0.01f);
-	const float Math::THRESH_ZERO_NORM_SQUARED		= (0.0001f);
-	const float Math::THRESH_NORMALS_ARE_PARALLEL	= (0.999845f);
-	const float Math::THRESH_NORMALS_ARE_ORTHOGONAL	= (0.017455f);
-
-	const float Math::THRESH_VECTOR_NORMALIZED		= (0.01f);
-	const float Math::THRESH_QUAT_NORMALIZED		= (0.01f);
-
-	Radian Math::Acos(float val)
-	{
-		if (-1.0f < val)
-		{
-			if (val < 1.0f)
-			{
-				return Radian( std::acos(val) );
-			}
-			else
-			{
-				return Radian( 0.0f );
-			}
-		}
-
-		return Radian( PI );
-	}
-
-	Radian Math::Asin(float val)
-	{
-		if (-1.0f < val)
-		{
-			if (val < 1.0f)
-			{
-				return Radian( std::asin(val) );
-			}
-			else
-			{
-				return Radian( HALF_PI );
-			}
-		}
-
-		return Radian( -HALF_PI );
-	}
-
-	float Math::FastSin0(float val)
-	{
-		float angleSqr = Square(val);
-		float result = 7.61e-03f;
-
-		result *= angleSqr;
-		result -= 1.6605e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-		result *= val;
-
-		return result;
-	}
-
-	float Math::FastSin1(float val)
-	{
-		float angleSqr = Square(val);
-		float result = -2.39e-08f;
-
-		result *= angleSqr;
-		result += 2.7526e-06f;
-		result *= angleSqr;
-		result -= 1.98409e-04f;
-		result *= angleSqr;
-		result += 8.3333315e-03f;
-		result *= angleSqr;
-		result -= 1.666666664e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-		result *= val;
-
-		return result;
-	}
-
-	float Math::FastCos0(float val)
-	{
-		float angleSqr = Square(val);
-		float result = 3.705e-02f;
-		result *= angleSqr;
-		result -= 4.967e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-
-		return result;
-	}
-
-	float Math::FastCos1(float val)
-	{
-		float angleSqr = Square(val);
-		float result = -2.605e-07f;
-
-		result *= angleSqr;
-		result += 2.47609e-05f;
-		result *= angleSqr;
-		result -= 1.3888397e-03f;
-		result *= angleSqr;
-		result += 4.16666418e-02f;
-		result *= angleSqr;
-		result -= 4.999999963e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-
-		return result;
-	}
-
-	float Math::FastTan0(float val)
-	{
-		float angleSqr = Square(val);
-		float result = 2.033e-01f;
-
-		result *= angleSqr;
-		result += 3.1755e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-		result *= val;
-
-		return result;
-	}
-
-	float Math::FastTan1(float val)
-	{
-		float angleSqr = Square(val);
-		float result = 9.5168091e-03f;
-
-		result *= angleSqr;
-		result += 2.900525e-03f;
-		result *= angleSqr;
-		result += 2.45650893e-02f;
-		result *= angleSqr;
-		result += 5.33740603e-02f;
-		result *= angleSqr;
-		result += 1.333923995e-01f;
-		result *= angleSqr;
-		result += 3.333314036e-01f;
-		result *= angleSqr;
-		result += 1.0f;
-		result *= val;
-
-		return result;
-	}
-
-	float Math::FastASin0(float val)
-	{
-		float root = Sqrt(Abs(1.0f - val));
-		float result = -0.0187293f;
-
-		result *= val;
-		result += 0.0742610f;
-		result *= val;
-		result -= 0.2121144f;
-		result *= val;
-		result += 1.5707288f;
-		result = HALF_PI - root*result;
-
-		return result;
-	}
-
-	float Math::FastASin1(float val)
-	{
-		float root = sqrt(abs(1.0f - val));
-		float result = -0.0012624911f;
-
-		result *= val;
-		result += 0.0066700901f;
-		result *= val;
-		result -= 0.0170881256f;
-		result *= val;
-		result += 0.0308918810f;
-		result *= val;
-		result -= 0.0501743046f;
-		result *= val;
-		result += 0.0889789874f;
-		result *= val;
-		result -= 0.2145988016f;
-		result *= val;
-		result += 1.5707963050f;
-		result = HALF_PI - root*result;
-
-		return result;
-	}
-
-	float Math::FastACos0(float val)
-	{
-		float root = Sqrt(Abs(1.0f - val));
-		float result = -0.0187293f;
-
-		result *= val;
-		result += 0.0742610f;
-		result *= val;
-		result -= 0.2121144f;
-		result *= val;
-		result += 1.5707288f;
-		result *= root;
-
-		return result;
-	}
-
-	float Math::FastACos1(float val)
-	{
-		float root = Sqrt(Abs(1.0f - val));
-		float result = -0.0012624911f;
-
-		result *= val;
-		result += 0.0066700901f;
-		result *= val;
-		result -= 0.0170881256f;
-		result *= val;
-		result += 0.0308918810f;
-		result *= val;
-		result -= 0.0501743046f;
-		result *= val;
-		result += 0.0889789874f;
-		result *= val;
-		result -= 0.2145988016f;
-		result *= val;
-		result += 1.5707963050f;
-		result *= root;
-
-		return result;
-	}
-
-	float Math::FastATan0(float val)
-	{
-		float valueSqr = Square(val);
-		float result = 0.0208351f;
-
-		result *= valueSqr;
-		result -= 0.085133f;
-		result *= valueSqr;
-		result += 0.180141f;
-		result *= valueSqr;
-		result -= 0.3302995f;
-		result *= valueSqr;
-		result += 0.999866f;
-		result *= val;
-
-		return result;
-	}
-
-	float Math::FastATan1(float val)
-	{
-		float valueSqr = Square(val);
-		float result = 0.0028662257f;
-
-		result *= valueSqr;
-		result -= 0.0161657367f;
-		result *= valueSqr;
-		result += 0.0429096138f;
-		result *= valueSqr;
-		result -= 0.0752896400f;
-		result *= valueSqr;
-		result += 0.1065626393f;
-		result *= valueSqr;
-		result -= 0.1420889944f;
-		result *= valueSqr;
-		result += 0.1999355085f;
-		result *= valueSqr;
-		result -= 0.3333314528f;
-		result *= valueSqr;
-		result += 1.0f;
-		result *= val;
-
-		return result;
-	}
-
-	/************************************************************************************************************************/
-	/* Math mixed functions																									*/
-	/************************************************************************************************************************/
-	/*
-	Vector3 Math::CalculateTriTangent(const Vector3& position1, const Vector3& position2, const Vector3& position3, float u1, float v1, float u2, float v2, float u3, float v3)
-	{
-		Vector3 side0 = position1 - position2;
-		Vector3 side1 = position3 - position1;
-
-		//Calculate face normal
-		Vector3 normal = side1 ^ side0;
-		normal.Normalize();
-
-		//Now we use a formula to calculate the tangent.
-		float deltaV0 = v1 - v2;
-		float deltaV1 = v3 - v1;
-		Vector3 tangent = deltaV1 * side0 - deltaV0 * side1;
-		tangent.Normalize();
-
-		//Calculate binormal
-		float deltaU0 = u1 - u2;
-		float deltaU1 = u3 - u1;
-		Vector3 binormal = deltaU1 * side0 - deltaU0 * side1;
-		binormal.Normalize();
-
-		//Now, we take the cross product of the tangents to get a vector which should point in the same direction as our normal calculated above.
-		//If it points in the opposite direction (the dot product between the normals is less than zero), then we need to reverse the s and t tangents.
-		//This is because the triangle has been mirrored when going from tangent space to object space.
-		Vector3 tangentCross = tangent ^ binormal;
-
-		//Reverse tangents if necessary.
-		if ((tangentCross | normal) < 0.0f)
-		{
-			tangent = -tangent;
-			binormal = -binormal;
-		}
-
-		return tangent;
-	}
-	*/
-	/************************************************************************************************************************/
-	/* Mixed math objects implementations																					*/
-	/************************************************************************************************************************/
-	/*
-	FORCEINLINE Vector2::Vector2(const Vector3& V)
-	{
-		X = V.X;
-		Y = V.Y;
-	}
-
-	FORCEINLINE Vector2::Vector2(const Vector4& V)
-	{
-		X = V.X;
-		Y = V.Y;
-	}
-
-	inline Vector3 Vector2::SphericalToUnitCartesian() const
-	{
-		const float SinTheta = Math::Sin(X);
-		return Vector3(Math::Cos(Y) * SinTheta, Math::Sin(Y) * SinTheta, Math::Cos(X));
-	}
-
-	FORCEINLINE Vector3::Vector3(const Vector2 V, float InZ) : X(V.X), Y(V.Y), Z(InZ)
-	{
-
-	}
-
-	FORCEINLINE Vector3::Vector3(const LinearColor& InColor) : X(InColor.R), Y(InColor.G), Z(InColor.B)
-	{
-
-	}
-
-	FORCEINLINE Vector3::Vector3(const Vector4& V) : X(V.X), Y(V.Y), Z(V.Z)
-	{
-
-	}
-
-	FORCEINLINE Vector2 Vector3::UnitCartesianToSpherical() const
-	{
-		GE_ASSERT(IsUnit());
-		const Radian Theta = Math::Acos(Z / Size());
-		const Radian Phi = Math::Atan2(Y, X);
-		return Vector2(Theta.ValueRadians(), Phi.ValueRadians());
-	}
-
-	inline Vector3 Vector3::MirrorByPlane(const Plane& Plane) const
-	{
-		return *this - Plane * (2.f * Plane.PlaneDot(*this));
-	}
-
-	inline Vector3 Vector3::PointPlaneProject(const Vector3& InPoint, const Vector3& A, const Vector3& B, const Vector3& C)
-	{
-		//Compute the plane normal from ABC
-		Plane MyPlane(A, B, C);
-
-		//Find the distance of X from the plane
-		//Add the distance back along the normal from the point
-		return InPoint - MyPlane.PlaneDot(InPoint) * MyPlane;
-	}
-
-	inline Vector3 Vector3::PointPlaneProject(const Vector3& InPoint, const Plane& InPlane)
-	{
-		//Find the distance of X from the plane
-		//Add the distance back along the normal from the point
-		return InPoint - InPlane.PlaneDot(InPoint) * InPlane;
-	}
-
-	FORCEINLINE Vector4::Vector4(const Vector3& InVector, float InW) : X(InVector.X), Y(InVector.Y), Z(InVector.Z), W(InW)
-	{
-		
-	}
-
-
-	FORCEINLINE Vector4::Vector4(const LinearColor& InColor) : X(InColor.R), Y(InColor.G), Z(InColor.B), W(InColor.A)
-	{
-		
-	}
-
-	FORCEINLINE Vector4::Vector4(Vector2 InXY, Vector2 InZW) : X(InXY.X), Y(InXY.Y), Z(InZW.X), W(InZW.Y)
-	{
-		
-	}
-	*/
-	/*
-	FORCEINLINE Plane TransformBy(const Matrix4& M) const
-	{
-		const Matrix4 tmpTA = M.TransposeAdjoint();
-		const float DetM = M.Determinant();
-		return this->TransformByUsingAdjointT(M, DetM, tmpTA);
-	}
-	*/
-
-	/*
-	Plane TransformByUsingAdjointT(const Matrix4& M, float DetM, const Matrix4& TA) const
-	{
-		Vector3 newNorm = TA.TransformVector(*this).GetSafeNormal();
-
-		if (DetM < 0.f)
-		{
-			newNorm *= -1.0f;
-		}
-
-		return Plane(M.TransformPosition(*this * W), newNorm);
-	}
-	*/
-	/*
-	inline Vector3 Math::LinePlaneIntersection(const Vector3& Point1, const Vector3& Point2, const Vector3& PlaneOrigin, const Vector3& PlaneNormal)
-	{
-		return Point1 + (Point2 - Point1) *	(((PlaneOrigin - Point1) | PlaneNormal) / ((Point2 - Point1) | PlaneNormal));
-	}
-
-	inline Vector3 Math::LinePlaneIntersection(const Vector3& Point1, const Vector3& Point2, const Plane& plane)
-	{
-		return Point1 + (Point2 - Point1) *	((plane.W - (Point1 | plane)) / ((Point2 - Point1) | plane));
-	}
-
-	bool Math::PlaneAABBIntersection(const Plane& InP, const AABox& AABB)
-	{
-		//Find diagonal most closely aligned with normal of plane
-		Vector3 Vmin, Vmax;
-
-		//Bypass the slow Vector3[] operator. Not RESTRICT because it won't update Vmin, Vmax
-		float* VminPtr = (float*)&Vmin;
-		float* VmaxPtr = (float*)&Vmax;
-
-		//Use restrict to get better instruction scheduling and to bypass the slow Vector3[] operator
-		const float* RESTRICT AABBMinPtr = (const float*)&AABB.Min;
-		const float* RESTRICT AABBMaxPtr = (const float*)&AABB.Max;
-		const float* RESTRICT PlanePtr = (const float*)&InP;
-
-		for( int32 Idx = 0; Idx < 3; ++Idx )
-		{
-			if (PlanePtr[Idx] >= 0.f)
-			{
-				VminPtr[Idx] = AABBMinPtr[Idx];
-				VmaxPtr[Idx] = AABBMaxPtr[Idx];
-			}
-			else
-			{
-				VminPtr[Idx] = AABBMaxPtr[Idx];
-				VmaxPtr[Idx] = AABBMinPtr[Idx];
-			}
-		}
-
-		//If either diagonal is right on the plane, or one is on either side we have an intersection
-		float dMax = InP.PlaneDot(Vmax);
-		float dMin = InP.PlaneDot(Vmin);
-
-		//If Max is below plane, or Min is above we know there is no intersection. Otherwise there must be one
-		return (dMax >= 0.f && dMin <= 0.f);
-	}
-
-	bool Math::PointBoxIntersection(const Vector3& Point, const AABox& Box)
-	{
-		return (Point.X >= Box.Min.X && Point.X <= Box.Max.X && Point.Y >= Box.Min.Y && Point.Y <= Box.Max.Y && Point.Z >= Box.Min.Z && Point.Z <= Box.Max.Z);
-	}
-
-	inline bool Math::LineBoxIntersection(const AABox& Box, const Vector3& Start, const Vector3& End, const Vector3& Direction)
-	{
-		return LineBoxIntersection(Box, Start, End, Direction, Direction.Reciprocal());
-	}
-
-	inline bool Math::LineBoxIntersection(const AABox& Box, const Vector3& Start, const Vector3& End, const Vector3& Direction, const Vector3& OneOverDirection)
-	{
-		Vector3 Time;
-		bool bStartIsOutside = false;
-
-		if(Start.X < Box.Min.X)
-		{
-			bStartIsOutside = true;
-			if(End.X >= Box.Min.X)
-			{
-				Time.X = (Box.Min.X - Start.X) * OneOverDirection.X;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(Start.X > Box.Max.X)
-		{
-			bStartIsOutside = true;
-			if(End.X <= Box.Max.X)
-			{
-				Time.X = (Box.Max.X - Start.X) * OneOverDirection.X;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			Time.X = 0.0f;
-		}
-
-		if(Start.Y < Box.Min.Y)
-		{
-			bStartIsOutside = true;
-			if(End.Y >= Box.Min.Y)
-			{
-				Time.Y = (Box.Min.Y - Start.Y) * OneOverDirection.Y;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(Start.Y > Box.Max.Y)
-		{
-			bStartIsOutside = true;
-			if(End.Y <= Box.Max.Y)
-			{
-				Time.Y = (Box.Max.Y - Start.Y) * OneOverDirection.Y;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			Time.Y = 0.0f;
-		}
-
-		if(Start.Z < Box.Min.Z)
-		{
-			bStartIsOutside = true;
-			if(End.Z >= Box.Min.Z)
-			{
-				Time.Z = (Box.Min.Z - Start.Z) * OneOverDirection.Z;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(Start.Z > Box.Max.Z)
-		{
-			bStartIsOutside = true;
-			if(End.Z <= Box.Max.Z)
-			{
-				Time.Z = (Box.Max.Z - Start.Z) * OneOverDirection.Z;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			Time.Z = 0.0f;
-		}
-
-		if(bStartIsOutside)
-		{
-			const float	MaxTime = Max3(Time.X, Time.Y, Time.Z);
-
-			if(MaxTime >= 0.0f && MaxTime <= 1.0f)
-			{
-				const Vector3 Hit = Start + Direction * MaxTime;
-				const float BOX_SIDE_THRESHOLD = 0.1f;
-
-				if(	Hit.X > Box.Min.X - BOX_SIDE_THRESHOLD && Hit.X < Box.Max.X + BOX_SIDE_THRESHOLD &&
-					Hit.Y > Box.Min.Y - BOX_SIDE_THRESHOLD && Hit.Y < Box.Max.Y + BOX_SIDE_THRESHOLD &&
-					Hit.Z > Box.Min.Z - BOX_SIDE_THRESHOLD && Hit.Z < Box.Max.Z + BOX_SIDE_THRESHOLD)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	inline bool Math::LineSphereIntersection(const Vector3& Start, const Vector3& Dir, float Length, const Vector3& Origin, float Radius)
-	{
-		const Vector3 EO = Start - Origin;
-		const float	  v = (Dir | (Origin - Start));
-		const float	  disc = Radius * Radius - ((EO | EO) - v * v);
-
-		if( disc >= 0.0f )
-		{
-			const float	Time = (v - Sqrt(disc)) / Length;
-
-			if( Time >= 0.0f && Time <= 1.0f )
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-		return false;
-	}
-
-	inline bool Math::IntersectPlanes2(Vector3& I, Vector3& D, const Plane& P1, const Plane& P2)
-	{
-		//Compute line direction, perpendicular to both plane normals.
-		D = P1 ^ P2;
-		const float DD = D.SizeSquared();
-
-		if( DD < Square(0.001f) )
-		{
-			//Parallel or nearly parallel planes.
-			D = I = Vector3::ZERO;
-
-			return false;
-		}
-		else
-		{
-			//Compute intersection.
-			I = (P1.W*(P2^D) + P2.W*(D^P1)) / DD;
-			D.Normalize();
-
-			return true;
-		}
-	}
-
-	inline bool Math::IntersectPlanes3(Vector3& I, const Plane& P1, const Plane& P2, const Plane& P3)
-	{
-		//Compute determinant, the triple product P1|(P2^P3)==(P1^P2)|P3.
-		const float Det = (P1 ^ P2) | P3;
-
-		if(Square(Det) < Square(0.001f))
-		{
-			//Degenerate.
-			I = Vector3::ZERO;
-			return false;
-		}
-		else
-		{
-			//Compute the intersection point, guaranteed valid if determinant is nonzero.
-			I = (P1.W*(P2^P3) + P2.W*(P3^P1) + P3.W*(P1^P2)) / Det;
-		}
-		return true;
-	}
-
-	FORCEINLINE float Math::GetRangePct(Vector2 const& Range, float Value)
-	{
-		return (Range.X != Range.Y) ? (Value - Range.X) / (Range.Y - Range.X) : Range.X;
-	}
-
-	FORCEINLINE float Math::GetRangeValue(Vector2 const& Range, float Pct)
-	{
-		return Lerp<float>(Range.X, Range.Y, Pct);
-	}
-	*/
-	/************************************************************************************************************************/
-	/**
-	* @brief	Performs a sphere vs box intersection test using Arvo's algorithm:
-	*
-	*	for each i in (x, y, z)
-	*		if (SphereCenter(i) < BoxMin(i)) d2 += (SphereCenter(i) - BoxMin(i)) ^ 2
-	*		else if (SphereCenter(i) > BoxMax(i)) d2 += (SphereCenter(i) - BoxMax(i)) ^ 2
-	*
-	* @param	Sphere the center of the sphere being tested against the AABB
-	* @param	RadiusSquared the size of the sphere being tested
-	* @param	AABB the box being tested against
-	* @return	Whether the sphere/box intersect or not.
-	*/
-	/************************************************************************************************************************/
-	/*
-	FORCEINLINE bool Math::SphereAABBIntersection(const Vector3& SphereCenter, const float RadiusSquared, const AABox& AABB)
-	{
-		//Accumulates the distance as we iterate axis
-		float DistSquared = 0.f;
-
-		//Check each axis for min/max and add the distance accordingly
-		//NOTE: Loop manually unrolled for > 2x speed up
-		if( SphereCenter.X < AABB.Min.X )
-		{
-			DistSquared += Math::Square(SphereCenter.X - AABB.Min.X);
-		}
-		else if( SphereCenter.X > AABB.Max.X )
-		{
-			DistSquared += Math::Square(SphereCenter.X - AABB.Max.X);
-		}
-
-		if( SphereCenter.Y < AABB.Min.Y )
-		{
-			DistSquared += Math::Square(SphereCenter.Y - AABB.Min.Y);
-		}
-		else if( SphereCenter.Y > AABB.Max.Y )
-		{
-			DistSquared += Math::Square(SphereCenter.Y - AABB.Max.Y);
-		}
-
-		if( SphereCenter.Z < AABB.Min.Z )
-		{
-			DistSquared += Math::Square(SphereCenter.Z - AABB.Min.Z);
-		}
-		else if( SphereCenter.Z > AABB.Max.Z )
-		{
-			DistSquared += Math::Square(SphereCenter.Z - AABB.Max.Z);
-		}
-
-		//If the distance is less than or equal to the radius, they intersect
-		return DistSquared <= RadiusSquared;
-	}
-	*/
-	/************************************************************************************************************************/
-	/**
-	* @brief	Converts a sphere into a point plus radius squared for the test above
-	*/
-	/************************************************************************************************************************/
-	/*
-	FORCEINLINE bool Math::SphereAABBIntersection(const Sphere& InSphere, const AABox& AABB)
-	{
-		float RadiusSquared = Math::Square(InSphere.W);
-		
-		//If the distance is less than or equal to the radius, they intersect
-		return SphereAABBIntersection(InSphere.Center, RadiusSquared, AABB);
-	}
-	*/
+namespace geEngineSDK {
+  /*!< PI constant */
+  const float Math::PI = static_cast<float>(4.0f * std::atan(1.0f));
+
+  /*!< Inverse of PI */
+  const float Math::INV_PI = static_cast<float>(1.0f / PI);
+  
+  /*!< Half PI  */
+  const float Math::HALF_PI = static_cast<float>(0.5f * PI);
+  
+  /*!< 2 Times PI */
+  const float Math::TWO_PI = static_cast<float>(2.0f * PI);	
+
+  /*!< Euler number or Napier constant (1+1/N)^N */
+  const float Math::EULERS_NUMBER = (2.71828182845904523536f);
+
+  /*!< Numeric limits constants */
+  const uint8  Math::MIN_UINT8  = std::numeric_limits<uint8 >::min();
+  const uint16 Math::MIN_UINT16 = std::numeric_limits<uint16>::min();
+  const uint32 Math::MIN_UINT32 = std::numeric_limits<uint32>::min();
+  const int8   Math::MIN_INT8   = std::numeric_limits<int8  >::min();
+  const int16  Math::MIN_INT16  = std::numeric_limits<int16 >::min();
+  const int32  Math::MIN_INT32  = std::numeric_limits<int32 >::min();
+  const float	 Math::MIN_FLOAT  = std::numeric_limits<float >::min();
+
+  const uint8  Math::MAX_UINT8  = std::numeric_limits<uint8 >::max();
+  const uint16 Math::MAX_UINT16 = std::numeric_limits<uint16>::max();
+  const uint32 Math::MAX_UINT32 = std::numeric_limits<uint32>::max();
+  const int8   Math::MAX_INT8   = std::numeric_limits<int8  >::max();
+  const int16  Math::MAX_INT16  = std::numeric_limits<int16 >::max();
+  const int32  Math::MAX_INT32  = std::numeric_limits<int32 >::max();
+  const float	 Math::MAX_FLOAT  = std::numeric_limits<float >::max();
+
+  /*!< Positive limit of a float */
+  const float Math::POS_INFINITY =  std::numeric_limits<float>::infinity();
+
+  /*!< Negative limit of a float */
+  const float Math::NEG_INFINITY = -std::numeric_limits<float>::infinity();
+
+  const float Math::SMALL_NUMBER        = (1.e-6f);
+  const float Math::KINDA_SMALL_NUMBER  = (1.e-4f);
+  const float Math::BIG_NUMBER          = (3.4e+38f);
+
+  const float Math::DEG2RAD = static_cast<float>(PI / 180.0f);
+  const float Math::RAD2DEG = static_cast<float>(180.0f / PI);
+  const float Math::LOG2 = static_cast<float>(std::log(2.0f));
+
+  const float  Math::DELTA = (0.00001f);
+  const float  Math::FLOAT_EPSILON  = std::numeric_limits<float >::epsilon();
+  const double Math::DOUBLE_EPSILON = std::numeric_limits<double>::epsilon();
+
+  const float Math::FLOAT_NORMAL_THRESH = (0.0001f);
+
+  const float Math::THRESH_POINT_ON_PLANE   = (0.10f);
+  const float Math::THRESH_POINT_ON_SIDE    = (0.20f);
+  const float Math::THRESH_POINTS_ARE_SAME  = (0.00002f);
+  const float Math::THRESH_POINTS_ARE_NEAR  = (0.015f);
+  const float Math::THRESH_NORMALS_ARE_SAME = (0.00002f);
+  const float Math::THRESH_VECTORS_ARE_NEAR = (0.0004f);
+
+  const float Math::THRESH_SPLIT_POLY_WITH_PLANE  = (0.25f);
+  const float Math::THRESH_SPLIT_POLY_PRECISELY   = (0.01f);
+  const float Math::THRESH_ZERO_NORM_SQUARED      = (0.0001f);
+  const float Math::THRESH_NORMALS_ARE_PARALLEL   = (0.999845f);
+  const float Math::THRESH_NORMALS_ARE_ORTHOGONAL = (0.017455f);
+
+  const float Math::THRESH_VECTOR_NORMALIZED = (0.01f);
+  const float Math::THRESH_QUAT_NORMALIZED   = (0.01f);
+
+  Radian
+  Math::acos(float val) {
+    if (-1.0f < val) {
+      if (1.0f > val) {
+        return Radian(std::acos(val));
+      }
+      else {
+        return Radian(0.0f);
+      }
+    }
+    return Radian(PI);
+  }
+
+  Radian
+  Math::asin(float val) {
+    if (-1.0f < val) {
+      if (1.0f > val) {
+        return Radian(std::asin(val));
+      }
+      else {
+        return Radian(HALF_PI);
+      }
+    }
+    return Radian(-HALF_PI);
+  }
+
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+  uint32
+  Math::floorLog2(uint32 Value) {
+    //Use BSR to return the log2 of the integer
+    unsigned long Log2;
+    if (_BitScanReverse(&Log2, Value) != 0) {
+      return static_cast<uint32>(Log2);
+    }
+
+    return 0;
+  }
+#else
+  uint32
+  Math::floorLog2(uint32 Value) {
+    uint32 pos = 0;
+    if (Value >= 1 << 16) { Value >>= 16; pos += 16; }
+    if (Value >= 1 << 8) { Value >>= 8; pos += 8; }
+    if (Value >= 1 << 4) { Value >>= 4; pos += 4; }
+    if (Value >= 1 << 2) { Value >>= 2; pos += 2; }
+    if (Value >= 1 << 1) { pos += 1; }
+    return (Value == 0) ? 0 : pos;
+  }
+#endif
+
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+  uint32
+  Math::countLeadingZeros(uint32 Value) {
+    //Use BSR to return the log2 of the integer
+    unsigned long Log2;
+    if (_BitScanReverse(&Log2, Value) != 0) {
+      return static_cast<uint32>(31 - Log2);
+    }
+    return 32;
+  }
+#else
+  uint32
+  Math::countLeadingZeros(uint32 Value) {
+    if (0 == Value) {
+      return 32;
+    }
+    return __builtin_clz(Value);
+  }
+#endif
+
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+  uint32
+  Math::countTrailingZeros(uint32 Value) {
+    if (0 == Value ) {
+      return 32;
+    }
+
+    unsigned long BitIndex; //0-based, where the LSB is 0 and MSB is 31
+    _BitScanForward(&BitIndex, Value);  //Scans from LSB to MSB
+    return BitIndex;
+  }
+#else
+  uint32
+  Math::countTrailingZeros(uint32 Value) {
+    if (0 == Value) {
+      return 32;
+    }
+    return __builtin_ctz(Value);
+  }
+#endif
+
+  float
+  Math::fastSin0(float val) {
+    float angleSqr = square(val);
+    float result = 7.61e-03f;
+    result *= angleSqr;
+    result -= 1.6605e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    result *= val;
+    return result;
+  }
+
+  float
+  Math::fastSin1(float val) {
+    float angleSqr = square(val);
+    float result = -2.39e-08f;
+    result *= angleSqr;
+    result += 2.7526e-06f;
+    result *= angleSqr;
+    result -= 1.98409e-04f;
+    result *= angleSqr;
+    result += 8.3333315e-03f;
+    result *= angleSqr;
+    result -= 1.666666664e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    result *= val;
+    return result;
+  }
+
+  float
+  Math::fastCos0(float val) {
+    float angleSqr = square(val);
+    float result = 3.705e-02f;
+    result *= angleSqr;
+    result -= 4.967e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    return result;
+  }
+
+  float
+  Math::fastCos1(float val) {
+    float angleSqr = square(val);
+    float result = -2.605e-07f;
+    result *= angleSqr;
+    result += 2.47609e-05f;
+    result *= angleSqr;
+    result -= 1.3888397e-03f;
+    result *= angleSqr;
+    result += 4.16666418e-02f;
+    result *= angleSqr;
+    result -= 4.999999963e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    return result;
+  }
+
+  float
+  Math::fastTan0(float val) {
+    float angleSqr = square(val);
+    float result = 2.033e-01f;
+    result *= angleSqr;
+    result += 3.1755e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    result *= val;
+    return result;
+  }
+
+  float
+  Math::fastTan1(float val) {
+    float angleSqr = square(val);
+    float result = 9.5168091e-03f;
+    result *= angleSqr;
+    result += 2.900525e-03f;
+    result *= angleSqr;
+    result += 2.45650893e-02f;
+    result *= angleSqr;
+    result += 5.33740603e-02f;
+    result *= angleSqr;
+    result += 1.333923995e-01f;
+    result *= angleSqr;
+    result += 3.333314036e-01f;
+    result *= angleSqr;
+    result += 1.0f;
+    result *= val;
+    return result;
+  }
+
+  float Math::fastASin0(float val) {
+    float root = sqrt(abs(1.0f - val));
+    float result = -0.0187293f;
+    result *= val;
+    result += 0.0742610f;
+    result *= val;
+    result -= 0.2121144f;
+    result *= val;
+    result += 1.5707288f;
+    result = HALF_PI - root*result;
+    return result;
+  }
+
+  float
+  Math::fastASin1(float val) {
+    float root = sqrt(abs(1.0f - val));
+    float result = -0.0012624911f;
+    result *= val;
+    result += 0.0066700901f;
+    result *= val;
+    result -= 0.0170881256f;
+    result *= val;
+    result += 0.0308918810f;
+    result *= val;
+    result -= 0.0501743046f;
+    result *= val;
+    result += 0.0889789874f;
+    result *= val;
+    result -= 0.2145988016f;
+    result *= val;
+    result += 1.5707963050f;
+    result = HALF_PI - root*result;
+    return result;
+  }
+
+  float
+  Math::fastACos0(float val) {
+    float root = sqrt(abs(1.0f - val));
+    float result = -0.0187293f;
+    result *= val;
+    result += 0.0742610f;
+    result *= val;
+    result -= 0.2121144f;
+    result *= val;
+    result += 1.5707288f;
+    result *= root;
+    return result;
+  }
+
+  float
+  Math::fastACos1(float val) {
+    float root = sqrt(abs(1.0f - val));
+    float result = -0.0012624911f;
+    result *= val;
+    result += 0.0066700901f;
+    result *= val;
+    result -= 0.0170881256f;
+    result *= val;
+    result += 0.0308918810f;
+    result *= val;
+    result -= 0.0501743046f;
+    result *= val;
+    result += 0.0889789874f;
+    result *= val;
+    result -= 0.2145988016f;
+    result *= val;
+    result += 1.5707963050f;
+    result *= root;
+    return result;
+  }
+
+  float
+  Math::fastATan0(float val) {
+    float valueSqr = square(val);
+    float result = 0.0208351f;
+    result *= valueSqr;
+    result -= 0.085133f;
+    result *= valueSqr;
+    result += 0.180141f;
+    result *= valueSqr;
+    result -= 0.3302995f;
+    result *= valueSqr;
+    result += 0.999866f;
+    result *= val;
+    return result;
+  }
+
+  float
+  Math::fastATan1(float val) {
+    float valueSqr = square(val);
+    float result = 0.0028662257f;
+    result *= valueSqr;
+    result -= 0.0161657367f;
+    result *= valueSqr;
+    result += 0.0429096138f;
+    result *= valueSqr;
+    result -= 0.0752896400f;
+    result *= valueSqr;
+    result += 0.1065626393f;
+    result *= valueSqr;
+    result -= 0.1420889944f;
+    result *= valueSqr;
+    result += 0.1999355085f;
+    result *= valueSqr;
+    result -= 0.3333314528f;
+    result *= valueSqr;
+    result += 1.0f;
+    result *= val;
+    return result;
+  }
+
+  /***************************************************************************/
+  /**
+   * Math mixed functions
+   */
+  /***************************************************************************/
+  /*
+  Vector3
+  Math::calculateTriTangent(const Vector3& position1,
+                            const Vector3& position2,
+                            const Vector3& position3,
+                            float u1,
+                            float v1,
+                            float u2,
+                            float v2,
+                            float u3,
+                            float v3)
+  {
+  Vector3 side0 = position1 - position2;
+  Vector3 side1 = position3 - position1;
+
+  //Calculate face normal
+  Vector3 normal = side1 ^ side0;
+  normal.Normalize();
+
+  //Now we use a formula to calculate the tangent.
+  float deltaV0 = v1 - v2;
+  float deltaV1 = v3 - v1;
+  Vector3 tangent = deltaV1 * side0 - deltaV0 * side1;
+  tangent.Normalize();
+
+  //Calculate binormal
+  float deltaU0 = u1 - u2;
+  float deltaU1 = u3 - u1;
+  Vector3 binormal = deltaU1 * side0 - deltaU0 * side1;
+  binormal.Normalize();
+
+  //Now, we take the cross product of the tangents to get a vector which should point in the same direction as our normal calculated above.
+  //If it points in the opposite direction (the dot product between the normals is less than zero), then we need to reverse the s and t tangents.
+  //This is because the triangle has been mirrored when going from tangent space to object space.
+  Vector3 tangentCross = tangent ^ binormal;
+
+  //Reverse tangents if necessary.
+  if ((tangentCross | normal) < 0.0f)
+  {
+  tangent = -tangent;
+  binormal = -binormal;
+  }
+
+  return tangent;
+  }
+  */
+  /***************************************************************************/
+  /**
+   * Mixed math objects implementations
+   */
+  /***************************************************************************/
+  /*
+  FORCEINLINE Vector2::Vector2(const Vector3& V)
+  {
+  X = V.X;
+  Y = V.Y;
+  }
+
+  FORCEINLINE Vector2::Vector2(const Vector4& V)
+  {
+  X = V.X;
+  Y = V.Y;
+  }
+
+  inline Vector3 Vector2::SphericalToUnitCartesian() const
+  {
+  const float SinTheta = Math::Sin(X);
+  return Vector3(Math::Cos(Y) * SinTheta, Math::Sin(Y) * SinTheta, Math::Cos(X));
+  }
+
+  FORCEINLINE Vector3::Vector3(const Vector2 V, float InZ) : X(V.X), Y(V.Y), Z(InZ)
+  {
+
+  }
+
+  FORCEINLINE Vector3::Vector3(const LinearColor& InColor) : X(InColor.R), Y(InColor.G), Z(InColor.B)
+  {
+
+  }
+
+  FORCEINLINE Vector3::Vector3(const Vector4& V) : X(V.X), Y(V.Y), Z(V.Z)
+  {
+
+  }
+
+  FORCEINLINE Vector2 Vector3::UnitCartesianToSpherical() const
+  {
+  GE_ASSERT(IsUnit());
+  const Radian Theta = Math::Acos(Z / Size());
+  const Radian Phi = Math::Atan2(Y, X);
+  return Vector2(Theta.ValueRadians(), Phi.ValueRadians());
+  }
+
+  inline Vector3 Vector3::MirrorByPlane(const Plane& Plane) const
+  {
+  return *this - Plane * (2.f * Plane.PlaneDot(*this));
+  }
+
+  inline Vector3 Vector3::PointPlaneProject(const Vector3& InPoint, const Vector3& A, const Vector3& B, const Vector3& C)
+  {
+  //Compute the plane normal from ABC
+  Plane MyPlane(A, B, C);
+
+  //Find the distance of X from the plane
+  //Add the distance back along the normal from the point
+  return InPoint - MyPlane.PlaneDot(InPoint) * MyPlane;
+  }
+
+  inline Vector3 Vector3::PointPlaneProject(const Vector3& InPoint, const Plane& InPlane)
+  {
+  //Find the distance of X from the plane
+  //Add the distance back along the normal from the point
+  return InPoint - InPlane.PlaneDot(InPoint) * InPlane;
+  }
+
+  FORCEINLINE Vector4::Vector4(const Vector3& InVector, float InW) : X(InVector.X), Y(InVector.Y), Z(InVector.Z), W(InW)
+  {
+
+  }
+
+
+  FORCEINLINE Vector4::Vector4(const LinearColor& InColor) : X(InColor.R), Y(InColor.G), Z(InColor.B), W(InColor.A)
+  {
+
+  }
+
+  FORCEINLINE Vector4::Vector4(Vector2 InXY, Vector2 InZW) : X(InXY.X), Y(InXY.Y), Z(InZW.X), W(InZW.Y)
+  {
+
+  }
+  */
+  /*
+  FORCEINLINE Plane TransformBy(const Matrix4& M) const
+  {
+  const Matrix4 tmpTA = M.TransposeAdjoint();
+  const float DetM = M.Determinant();
+  return this->TransformByUsingAdjointT(M, DetM, tmpTA);
+  }
+  */
+
+  /*
+  Plane TransformByUsingAdjointT(const Matrix4& M, float DetM, const Matrix4& TA) const
+  {
+  Vector3 newNorm = TA.TransformVector(*this).GetSafeNormal();
+
+  if (DetM < 0.f)
+  {
+  newNorm *= -1.0f;
+  }
+
+  return Plane(M.TransformPosition(*this * W), newNorm);
+  }
+  */
+  /*
+  inline Vector3 Math::LinePlaneIntersection(const Vector3& Point1, const Vector3& Point2, const Vector3& PlaneOrigin, const Vector3& PlaneNormal)
+  {
+  return Point1 + (Point2 - Point1) *	(((PlaneOrigin - Point1) | PlaneNormal) / ((Point2 - Point1) | PlaneNormal));
+  }
+
+  inline Vector3 Math::LinePlaneIntersection(const Vector3& Point1, const Vector3& Point2, const Plane& plane)
+  {
+  return Point1 + (Point2 - Point1) *	((plane.W - (Point1 | plane)) / ((Point2 - Point1) | plane));
+  }
+
+  bool Math::PlaneAABBIntersection(const Plane& InP, const AABox& AABB)
+  {
+  //Find diagonal most closely aligned with normal of plane
+  Vector3 Vmin, Vmax;
+
+  //Bypass the slow Vector3[] operator. Not RESTRICT because it won't update Vmin, Vmax
+  float* VminPtr = (float*)&Vmin;
+  float* VmaxPtr = (float*)&Vmax;
+
+  //Use restrict to get better instruction scheduling and to bypass the slow Vector3[] operator
+  const float* RESTRICT AABBMinPtr = (const float*)&AABB.Min;
+  const float* RESTRICT AABBMaxPtr = (const float*)&AABB.Max;
+  const float* RESTRICT PlanePtr = (const float*)&InP;
+
+  for( int32 Idx = 0; Idx < 3; ++Idx )
+  {
+  if (PlanePtr[Idx] >= 0.f)
+  {
+  VminPtr[Idx] = AABBMinPtr[Idx];
+  VmaxPtr[Idx] = AABBMaxPtr[Idx];
+  }
+  else
+  {
+  VminPtr[Idx] = AABBMaxPtr[Idx];
+  VmaxPtr[Idx] = AABBMinPtr[Idx];
+  }
+  }
+
+  //If either diagonal is right on the plane, or one is on either side we have an intersection
+  float dMax = InP.PlaneDot(Vmax);
+  float dMin = InP.PlaneDot(Vmin);
+
+  //If Max is below plane, or Min is above we know there is no intersection. Otherwise there must be one
+  return (dMax >= 0.f && dMin <= 0.f);
+  }
+
+  bool Math::PointBoxIntersection(const Vector3& Point, const AABox& Box)
+  {
+  return (Point.X >= Box.Min.X && Point.X <= Box.Max.X && Point.Y >= Box.Min.Y && Point.Y <= Box.Max.Y && Point.Z >= Box.Min.Z && Point.Z <= Box.Max.Z);
+  }
+
+  inline bool Math::LineBoxIntersection(const AABox& Box, const Vector3& Start, const Vector3& End, const Vector3& Direction)
+  {
+  return LineBoxIntersection(Box, Start, End, Direction, Direction.Reciprocal());
+  }
+
+  inline bool Math::LineBoxIntersection(const AABox& Box, const Vector3& Start, const Vector3& End, const Vector3& Direction, const Vector3& OneOverDirection)
+  {
+  Vector3 Time;
+  bool bStartIsOutside = false;
+
+  if(Start.X < Box.Min.X)
+  {
+  bStartIsOutside = true;
+  if(End.X >= Box.Min.X)
+  {
+  Time.X = (Box.Min.X - Start.X) * OneOverDirection.X;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else if(Start.X > Box.Max.X)
+  {
+  bStartIsOutside = true;
+  if(End.X <= Box.Max.X)
+  {
+  Time.X = (Box.Max.X - Start.X) * OneOverDirection.X;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else
+  {
+  Time.X = 0.0f;
+  }
+
+  if(Start.Y < Box.Min.Y)
+  {
+  bStartIsOutside = true;
+  if(End.Y >= Box.Min.Y)
+  {
+  Time.Y = (Box.Min.Y - Start.Y) * OneOverDirection.Y;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else if(Start.Y > Box.Max.Y)
+  {
+  bStartIsOutside = true;
+  if(End.Y <= Box.Max.Y)
+  {
+  Time.Y = (Box.Max.Y - Start.Y) * OneOverDirection.Y;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else
+  {
+  Time.Y = 0.0f;
+  }
+
+  if(Start.Z < Box.Min.Z)
+  {
+  bStartIsOutside = true;
+  if(End.Z >= Box.Min.Z)
+  {
+  Time.Z = (Box.Min.Z - Start.Z) * OneOverDirection.Z;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else if(Start.Z > Box.Max.Z)
+  {
+  bStartIsOutside = true;
+  if(End.Z <= Box.Max.Z)
+  {
+  Time.Z = (Box.Max.Z - Start.Z) * OneOverDirection.Z;
+  }
+  else
+  {
+  return false;
+  }
+  }
+  else
+  {
+  Time.Z = 0.0f;
+  }
+
+  if(bStartIsOutside)
+  {
+  const float	MaxTime = Max3(Time.X, Time.Y, Time.Z);
+
+  if(MaxTime >= 0.0f && MaxTime <= 1.0f)
+  {
+  const Vector3 Hit = Start + Direction * MaxTime;
+  const float BOX_SIDE_THRESHOLD = 0.1f;
+
+  if(	Hit.X > Box.Min.X - BOX_SIDE_THRESHOLD && Hit.X < Box.Max.X + BOX_SIDE_THRESHOLD &&
+  Hit.Y > Box.Min.Y - BOX_SIDE_THRESHOLD && Hit.Y < Box.Max.Y + BOX_SIDE_THRESHOLD &&
+  Hit.Z > Box.Min.Z - BOX_SIDE_THRESHOLD && Hit.Z < Box.Max.Z + BOX_SIDE_THRESHOLD)
+  {
+  return true;
+  }
+  }
+
+  return false;
+  }
+  else
+  {
+  return true;
+  }
+  }
+
+  inline bool Math::LineSphereIntersection(const Vector3& Start, const Vector3& Dir, float Length, const Vector3& Origin, float Radius)
+  {
+  const Vector3 EO = Start - Origin;
+  const float	  v = (Dir | (Origin - Start));
+  const float	  disc = Radius * Radius - ((EO | EO) - v * v);
+
+  if( disc >= 0.0f )
+  {
+  const float	Time = (v - Sqrt(disc)) / Length;
+
+  if( Time >= 0.0f && Time <= 1.0f )
+  {
+  return true;
+  }
+  else
+  {
+  return false;
+  }
+  }
+
+  return false;
+  }
+
+  inline bool Math::IntersectPlanes2(Vector3& I, Vector3& D, const Plane& P1, const Plane& P2)
+  {
+  //Compute line direction, perpendicular to both plane normals.
+  D = P1 ^ P2;
+  const float DD = D.SizeSquared();
+
+  if( DD < Square(0.001f) )
+  {
+  //Parallel or nearly parallel planes.
+  D = I = Vector3::ZERO;
+
+  return false;
+  }
+  else
+  {
+  //Compute intersection.
+  I = (P1.W*(P2^D) + P2.W*(D^P1)) / DD;
+  D.Normalize();
+
+  return true;
+  }
+  }
+
+  inline bool Math::IntersectPlanes3(Vector3& I, const Plane& P1, const Plane& P2, const Plane& P3)
+  {
+  //Compute determinant, the triple product P1|(P2^P3)==(P1^P2)|P3.
+  const float Det = (P1 ^ P2) | P3;
+
+  if(Square(Det) < Square(0.001f))
+  {
+  //Degenerate.
+  I = Vector3::ZERO;
+  return false;
+  }
+  else
+  {
+  //Compute the intersection point, guaranteed valid if determinant is nonzero.
+  I = (P1.W*(P2^P3) + P2.W*(P3^P1) + P3.W*(P1^P2)) / Det;
+  }
+  return true;
+  }
+
+  FORCEINLINE float Math::GetRangePct(Vector2 const& Range, float Value)
+  {
+  return (Range.X != Range.Y) ? (Value - Range.X) / (Range.Y - Range.X) : Range.X;
+  }
+
+  FORCEINLINE float Math::GetRangeValue(Vector2 const& Range, float Pct)
+  {
+  return Lerp<float>(Range.X, Range.Y, Pct);
+  }
+  */
+  /************************************************************************************************************************/
+  /**
+  * @brief	Performs a sphere vs box intersection test using Arvo's algorithm:
+  *
+  *	for each i in (x, y, z)
+  *		if (SphereCenter(i) < BoxMin(i)) d2 += (SphereCenter(i) - BoxMin(i)) ^ 2
+  *		else if (SphereCenter(i) > BoxMax(i)) d2 += (SphereCenter(i) - BoxMax(i)) ^ 2
+  *
+  * @param	Sphere the center of the sphere being tested against the AABB
+  * @param	RadiusSquared the size of the sphere being tested
+  * @param	AABB the box being tested against
+  * @return	Whether the sphere/box intersect or not.
+  */
+  /************************************************************************************************************************/
+  /*
+  FORCEINLINE bool Math::SphereAABBIntersection(const Vector3& SphereCenter, const float RadiusSquared, const AABox& AABB)
+  {
+  //Accumulates the distance as we iterate axis
+  float DistSquared = 0.f;
+
+  //Check each axis for min/max and add the distance accordingly
+  //NOTE: Loop manually unrolled for > 2x speed up
+  if( SphereCenter.X < AABB.Min.X )
+  {
+  DistSquared += Math::Square(SphereCenter.X - AABB.Min.X);
+  }
+  else if( SphereCenter.X > AABB.Max.X )
+  {
+  DistSquared += Math::Square(SphereCenter.X - AABB.Max.X);
+  }
+
+  if( SphereCenter.Y < AABB.Min.Y )
+  {
+  DistSquared += Math::Square(SphereCenter.Y - AABB.Min.Y);
+  }
+  else if( SphereCenter.Y > AABB.Max.Y )
+  {
+  DistSquared += Math::Square(SphereCenter.Y - AABB.Max.Y);
+  }
+
+  if( SphereCenter.Z < AABB.Min.Z )
+  {
+  DistSquared += Math::Square(SphereCenter.Z - AABB.Min.Z);
+  }
+  else if( SphereCenter.Z > AABB.Max.Z )
+  {
+  DistSquared += Math::Square(SphereCenter.Z - AABB.Max.Z);
+  }
+
+  //If the distance is less than or equal to the radius, they intersect
+  return DistSquared <= RadiusSquared;
+  }
+  */
+  /************************************************************************************************************************/
+  /**
+  * @brief	Converts a sphere into a point plus radius squared for the test above
+  */
+  /************************************************************************************************************************/
+  /*
+  FORCEINLINE bool Math::SphereAABBIntersection(const Sphere& InSphere, const AABox& AABB)
+  {
+  float RadiusSquared = Math::Square(InSphere.W);
+
+  //If the distance is less than or equal to the radius, they intersect
+  return SphereAABBIntersection(InSphere.Center, RadiusSquared, AABB);
+  }
+  */
 }

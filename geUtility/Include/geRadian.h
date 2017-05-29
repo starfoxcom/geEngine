@@ -1,96 +1,261 @@
-/********************************************************************/
+/*****************************************************************************/
 /**
-* @file   geRadian.h
-* @author Samuel Prince (samuel.prince.quezada@gmail.com)
-* @date   2015/04/04
-* @brief  Wrapper class which indicates a given angle value is in
-*		   Radians.
-*
-* Radian values are interchangeable with Degree values, and
-* conversions will be done automatically between them.
-*
-* @bug	   No known bugs.
-*/
-/********************************************************************/
+ * @file    geRadian.h
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2015/04/04
+ * @brief   Wrapper class which indicates a given angle value is in Radians.
+ *
+ * Radian values are interchangeable with Degree values, and conversions will
+ * be done automatically between them.
+ *
+ * @bug	    No known bugs.
+/*****************************************************************************/
 #pragma once
 
-/************************************************************************************************************************/
-/* Includes                                                                     										*/
-/************************************************************************************************************************/
-#include "gePrerequisitesUtil.h"
-#include "geDegree.h"
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
+#include "gePlatformDefines.h"
+#include "geRTTIPrerequisites.h"
 
-namespace geEngineSDK
-{
-	/************************************************************************************************************************/
-	/**
-	*	@brief	Wrapper class which indicates a given angle value is in Radians.
-	*	@note Radian values are interchangeable with Degree values, and conversions will be done automatically between them.
-	*/
-	/************************************************************************************************************************/
-	class GE_UTILITY_EXPORT Radian
-	{
-	private:
-		float m_Radian;
+namespace geEngineSDK {
+  class Degree;
 
-	public:
-		explicit Radian(float r = 0.0f) : m_Radian(r){}
-		Radian(const Degree& d);
+  /**
+   * @brief Wrapper class which indicates a given angle value is in Radians.
+   * @note  Radian values are interchangeable with Degree values, and
+   *        conversions will be done automatically between them.
+   */
+  class GE_UTILITY_EXPORT Radian
+  {
+   public:
+    explicit Radian(float r = 0.0f) : m_radian(r) {}
+    Radian(const Degree& d);
 
-		Radian& operator= (const float& f)	{ m_Radian = f; return *this; }
-		Radian& operator= (const Radian& r)	{ m_Radian = r.m_Radian; return *this; }
-		Radian& operator= (const Degree& d);
+    Radian&
+    operator=(const float& f) {
+      m_radian = f;
+      return *this;
+    }
 
-		inline float ValueDegrees() const;
-		inline float ValueRadians() const { return m_Radian; }
+    Radian&
+    operator=(const Radian& r) {
+      m_radian = r.m_radian;
+      return *this;
+    }
+    
+    Radian&
+    operator=(const Degree& d);
 
-		inline void UnwindRadians();		/** Given a heading which may be outside the +/- PI range, 'unwind' it back into that range. */
+    FORCEINLINE float
+    valueDegrees() const;
 
-		const Radian& operator+ () const { return *this; }
-		Radian operator+	(const Radian& r) const { return Radian(m_Radian + r.m_Radian); }
-		Radian operator+	(const Degree& d) const;
-		Radian& operator+=	(const Radian& r) { m_Radian += r.m_Radian; return *this; }
-		Radian& operator+=	(const Degree& d);
+    FORCEINLINE float
+    valueRadians() const {
+      return m_radian;
+    }
 
-		Radian operator-	() const { return Radian(-m_Radian); }
-		Radian operator-	(const Radian& r) const { return Radian(m_Radian - r.m_Radian); }
-		Radian operator-	(const Degree& d) const;
-		Radian& operator-=	(const Radian& r) { m_Radian -= r.m_Radian; return *this; }
-		Radian& operator-=	(const Degree& d);
+    /**
+    * @brief Utility to ensure angle is between +/- PI range by unwinding.
+    */
+    void
+    unwindRadians();
 
-		Radian operator*	(float f) const { return Radian(m_Radian * f); }
-		Radian operator*	(const Radian& f) const { return Radian(m_Radian * f.m_Radian); }
-		Radian& operator*=	(float f) { m_Radian *= f; return *this; }
+    const Radian&
+    operator+() const {
+      return *this;
+    }
 
-		Radian operator/	(float f) const { return Radian(m_Radian / f); }
-		Radian& operator/=	(float f) { m_Radian /= f; return *this; }
+    Radian
+    operator+(const Radian& r) const {
+      return Radian(m_radian + r.m_radian);
+    }
 
-		bool operator<  (const Radian& r) const { return m_Radian <  r.m_Radian; }
-		bool operator<= (const Radian& r) const { return m_Radian <= r.m_Radian; }
-		bool operator== (const Radian& r) const { return m_Radian == r.m_Radian; }
-		bool operator!= (const Radian& r) const { return m_Radian != r.m_Radian; }
-		bool operator>= (const Radian& r) const { return m_Radian >= r.m_Radian; }
-		bool operator>  (const Radian& r) const { return m_Radian >  r.m_Radian; }
+    Radian
+    operator+(const Degree& d) const;
 
-		bool operator<  (const float& v) const { return m_Radian <  v; }
-		bool operator<= (const float& v) const { return m_Radian <= v; }
-		bool operator== (const float& v) const { return m_Radian == v; }
-		bool operator!= (const float& v) const { return m_Radian != v; }
-		bool operator>= (const float& v) const { return m_Radian >= v; }
-		bool operator>  (const float& v) const { return m_Radian >  v; }
+    Radian&
+    operator+=(const Radian& r) {
+      m_radian += r.m_radian;
+      return *this;
+    }
+    
+    Radian&
+    operator+=(const Degree& d);
 
-		friend Radian operator* (float lhs, const Radian& rhs)			{ return Radian(lhs * rhs.m_Radian); }
-		friend Radian operator/ (float lhs, const Radian& rhs)			{ return Radian(lhs / rhs.m_Radian); }
-		friend Radian operator+ (Radian& lhs, float rhs)				{ return Radian(lhs.m_Radian + rhs); }
-		friend Radian operator+ (float lhs, const Radian& rhs)			{ return Radian(lhs + rhs.m_Radian); }
-		friend Radian operator- (const Radian& lhs, float rhs)			{ return Radian(lhs.m_Radian - rhs); }
-		friend Radian operator- (const float lhs, const Radian& rhs)	{ return Radian(lhs - rhs.m_Radian); }
+    Radian
+    operator-() const {
+      return Radian(-m_radian);
+    }
+    
+    Radian
+    operator-(const Radian& r) const {
+      return Radian(m_radian - r.m_radian);
+    }
+    
+    Radian
+    operator-(const Degree& d) const;
 
-		friend bool operator<  (float lhs, const Radian& rhs) { return lhs <  rhs.m_Radian; }
-		friend bool operator<= (float lhs, const Radian& rhs) { return lhs <= rhs.m_Radian; }
-		friend bool operator== (float lhs, const Radian& rhs) { return lhs == rhs.m_Radian; }
-		friend bool operator!= (float lhs, const Radian& rhs) { return lhs != rhs.m_Radian; }
-		friend bool operator>= (float lhs, const Radian& rhs) { return lhs >= rhs.m_Radian; }
-		friend bool operator>  (float lhs, const Radian& rhs) { return lhs >  rhs.m_Radian; }
-	};
+    Radian&
+    operator-=(const Radian& r) {
+      m_radian -= r.m_radian;
+      return *this;
+    }
+    
+    Radian&
+    operator-=(const Degree& d);
+
+    Radian
+    operator*(float f) const {
+      return Radian(m_radian * f);
+    }
+    
+    Radian
+    operator*(const Radian& f) const {
+      return Radian(m_radian * f.m_radian);
+    }
+    
+    Radian&
+    operator*=(float f) {
+      m_radian *= f;
+      return *this;
+    }
+
+    Radian
+    operator/(float f) const {
+      return Radian(m_radian / f);
+    }
+    
+    Radian&
+    operator/=(float f) {
+      m_radian /= f;
+      return *this;
+    }
+
+    bool
+    operator<(const Radian& r) const {
+      return m_radian <  r.m_radian;
+    }
+    
+    bool
+    operator<=(const Radian& r) const {
+      return m_radian <= r.m_radian;
+    }
+    
+    bool
+    operator==(const Radian& r) const {
+      return m_radian == r.m_radian;
+    }
+    
+    bool
+    operator!=(const Radian& r) const {
+      return m_radian != r.m_radian;
+    }
+    
+    bool
+    operator>=(const Radian& r) const {
+      return m_radian >= r.m_radian;
+    }
+    
+    bool
+    operator>(const Radian& r) const {
+      return m_radian >  r.m_radian;
+    }
+
+    bool
+    operator<(const float& v) const {
+      return m_radian <  v;
+    }
+    
+    bool
+    operator<=(const float& v) const {
+      return m_radian <= v;
+    }
+    
+    bool
+    operator==(const float& v) const {
+      return m_radian == v;
+    }
+    
+    bool
+    operator!=(const float& v) const {
+      return m_radian != v;
+    }
+    
+    bool
+    operator>=(const float& v) const {
+      return m_radian >= v;
+    }
+    
+    bool operator>(const float& v) const {
+      return m_radian >  v;
+    }
+
+    friend Radian
+    operator*(float lhs, const Radian& rhs) {
+      return Radian(lhs * rhs.m_radian);
+    }
+    
+    friend Radian
+    operator/(float lhs, const Radian& rhs) {
+      return Radian(lhs / rhs.m_radian);
+    }
+    
+    friend Radian
+    operator+(Radian& lhs, float rhs) {
+      return Radian(lhs.m_radian + rhs);
+    }
+    
+    friend Radian
+    operator+(float lhs, const Radian& rhs) {
+      return Radian(lhs + rhs.m_radian);
+    }
+    
+    friend Radian
+    operator-(const Radian& lhs, float rhs) {
+      return Radian(lhs.m_radian - rhs);
+    }
+    
+    friend Radian
+    operator-(const float lhs, const Radian& rhs) {
+      return Radian(lhs - rhs.m_radian);
+    }
+
+    friend bool
+    operator<(float lhs, const Radian& rhs) {
+      return lhs < rhs.m_radian;
+    }
+
+    friend bool
+    operator<=(float lhs, const Radian& rhs) {
+      return lhs <= rhs.m_radian;
+    }
+
+    friend bool
+    operator==(float lhs, const Radian& rhs) {
+      return lhs == rhs.m_radian;
+    }
+
+    friend bool
+    operator!=(float lhs, const Radian& rhs) {
+      return lhs != rhs.m_radian;
+    }
+
+    friend bool
+    operator>=(float lhs, const Radian& rhs) {
+      return lhs >= rhs.m_radian;
+    }
+
+    friend bool
+    operator>(float lhs, const Radian& rhs) {
+      return lhs > rhs.m_radian;
+    }
+
+   private:
+    float m_radian;
+  };
+
+  GE_ALLOW_MEMCPY_SERIALIZATION(Radian);
 }

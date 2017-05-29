@@ -18,6 +18,7 @@
  * Includes
  */
 /*****************************************************************************/
+#include <stdint.h>
 #include "gePlatformDefines.h"
 
 #if GE_PLATFORM == GE_PLATFORM_PS4
@@ -30,28 +31,20 @@ namespace geEngineSDK {
    * Basic unsigned types
    */
   /***************************************************************************/
-  typedef unsigned char     uint8;  //8-bit  unsigned.
-  typedef unsigned short    uint16; //16-bit unsigned.
-  typedef unsigned int      uint32; //32-bit unsigned.
-#if GE_COMPILER == GE_COMPILER_MSVC
-  typedef unsigned __int64  uint64; //64-bit unsigned (Visual Studio version).
-#else
-  typedef unsigned long     uint64; //64-bit unsigned (Generic Compiler version).
-#endif
+  typedef uint8_t   uint8;  //8-bit  unsigned.
+  typedef uint16_t  uint16; //16-bit unsigned.
+  typedef uint32_t  uint32; //32-bit unsigned.
+  typedef uint64_t  uint64; //64-bit unsigned.
 
 	/***************************************************************************/
   /**
    * Basic signed types
    */
   /***************************************************************************/
-  typedef signed char       int8;   //8-bit  signed.
-  typedef signed short      int16;  //16-bit signed.
-  typedef signed int        int32;  //32-bit signed.
-#if GE_COMPILER == GE_COMPILER_MSVC
-  typedef signed __int64    int64;  //64-bit signed (Visual Studio version).
-#else
-  typedef signed long       int64;  //64-bit signed (Generic Compiler version).
-#endif
+  typedef int8_t    int8;   //8-bit  signed.
+  typedef int16_t   int16;  //16-bit signed.
+  typedef int32_t   int32;  //32-bit signed.
+  typedef int64_t   int64;  //64-bit signed.
 
   /***************************************************************************/
   /**
@@ -117,7 +110,7 @@ namespace geEngineSDK {
    * SIZE_T is an architecture dependant data type
    */
   /***************************************************************************/
-#if ((GE_ARCH_TYPE == GE_ARCHITECTURE_x86_64) && (GE_COMPILER == GE_COMPILER_MSVC))
+#if GE_ARCH_TYPE == GE_ARCHITECTURE_x86_64 && GE_COMPILER == GE_COMPILER_MSVC
   typedef unsigned __int64 SIZE_T;
 #else
   typedef unsigned long SIZE_T;

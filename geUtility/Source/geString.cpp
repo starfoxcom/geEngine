@@ -91,22 +91,30 @@ namespace geEngineSDK {
 
   void
   StringUtil::toLowerCase(String& str) {
-    std::transform(str.begin(), str.end(), str.begin(), tolower);
+    std::transform(str.begin(), str.end(), str.begin(), [](char c) {
+      return static_cast<char>(::tolower(c));
+    });
   }
 
   void
   StringUtil::toLowerCase(WString& str) {
-    std::transform(str.begin(), str.end(), str.begin(), tolower);
+    std::transform(str.begin(), str.end(), str.begin(), [](wchar_t c) {
+      return static_cast<wchar_t>(::tolower(c));
+    });
   }
 
   void
   StringUtil::toUpperCase(String& str) {
-    std::transform(str.begin(), str.end(), str.begin(), toupper);
+    std::transform(str.begin(), str.end(), str.begin(), [](char c) {
+      return static_cast<char>(::toupper(c));
+    });
   }
 
   void
   StringUtil::toUpperCase(WString& str) {
-    std::transform(str.begin(), str.end(), str.begin(), toupper);
+    std::transform(str.begin(), str.end(), str.begin(), [](wchar_t c) {
+      return static_cast<wchar_t>(::toupper(c));
+    });
   }
 
   bool

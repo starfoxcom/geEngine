@@ -108,7 +108,7 @@ namespace geEngineSDK {
     uint64 rawStackTrace[GE_MAX_STACKTRACE_DEPTH];
     uint32 numEntries = win32_getRawStackTrace(context, rawStackTrace);
 
-    numEntries = Math::Min(static_cast<uint32>(GE_MAX_STACKTRACE_DEPTH), numEntries);
+    numEntries = Math::min(static_cast<uint32>(GE_MAX_STACKTRACE_DEPTH), numEntries);
 
     uint32 bufferSize = sizeof(PIMAGEHLP_SYMBOL64) + GE_MAX_STACKTRACE_NAME_BYTES;
     uint8* buffer = static_cast<uint8*>(ge_alloc(bufferSize));
@@ -204,16 +204,16 @@ namespace geEngineSDK {
 
     g_PSAPILib = ge_new<DynLib>("PSAPI.dll");
     g_enumProcessModules = static_cast<EnumProcessModulesType>
-                            (g_PSAPILib->GetSymbol("EnumProcessModules"));
+                            (g_PSAPILib->getSymbol("EnumProcessModules"));
 
     g_getModuleBaseName = static_cast<GetModuleBaseNameType>
-                            (g_PSAPILib->GetSymbol("GetModuleFileNameExA"));
+                            (g_PSAPILib->getSymbol("GetModuleFileNameExA"));
 
     g_getModuleFileNameEx = static_cast<GetModuleFileNameExType>
-                              (g_PSAPILib->GetSymbol("GetModuleBaseNameA"));
+                              (g_PSAPILib->getSymbol("GetModuleBaseNameA"));
 
     g_getModuleInformation = static_cast<GetModuleInformationType>
-                                (g_PSAPILib->GetSymbol("GetModuleInformation"));
+                                (g_PSAPILib->getSymbol("GetModuleInformation"));
   }
 
   /**
@@ -225,7 +225,7 @@ namespace geEngineSDK {
       return;
     }
 
-    g_PSAPILib->Unload();
+    g_PSAPILib->unload();
     ge_delete(g_PSAPILib);
     g_PSAPILib = nullptr;
   }
