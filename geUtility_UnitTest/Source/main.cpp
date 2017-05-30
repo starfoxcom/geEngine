@@ -7,7 +7,7 @@
 
 using namespace geEngineSDK;
 
-TEST(geUtility, DEFINED_TYPES_SIZES) {
+TEST(geUtility, Basic_Type_Size) {
   EXPECT_EQ(sizeof(unsigned char), 1);
   EXPECT_EQ(sizeof(uint8  ), 1);
   EXPECT_EQ(sizeof(uint16 ), 2);
@@ -28,7 +28,7 @@ TEST(geUtility, DEFINED_TYPES_SIZES) {
   EXPECT_EQ(static_cast<uint32>(-1), Math::MAX_UINT32);
 }
 
-TEST(geUtility, String) {
+TEST(geUtility, String_Basic) {
   String testString = "This is a test";
   EXPECT_EQ(testString.size(), 14);
 
@@ -49,7 +49,7 @@ TEST(geUtility, String) {
   ASSERT_EQ(testWString, L"THIS IS A TEST");
 }
 
-TEST(geUtility, Path) {
+TEST(geUtility, String_Path) {
   Path testPath;
   WString lastDirectory;
   
@@ -61,7 +61,7 @@ TEST(geUtility, Path) {
   EXPECT_TRUE(lastDirectory.compare(L"BIN"));
 }
 
-TEST(geUtility, Parser) {
+TEST(geUtility, String_Parser) {
   DataStreamPtr fileData = FileSystem::openFile("Test/test.txt");
   EXPECT_TRUE(fileData);
   if (fileData) {
@@ -76,13 +76,90 @@ TEST(geUtility, Parser) {
   }
 }
 
-TEST(geUtility, Math) {
+TEST(geUtility, Math_Basic) {
   EXPECT_EQ(Math::abs(-1), 1);
   EXPECT_EQ(Math::abs(-1.000000000), 1.000000000);
   EXPECT_FLOAT_EQ(Math::abs(-1.0f), 1.0f);
   EXPECT_TRUE(Math::abs(Radian(-Math::PI)) == Radian(Math::PI));
   EXPECT_TRUE(Math::abs(Degree(-180.0f)) == Degree(180.0f));
   
+  EXPECT_EQ(Math::ceil(1.000001f), 2);
+  EXPECT_EQ(Math::ceil(1.00000001f), 1);
+  EXPECT_EQ(Math::ceilFloat(1.000001f), 2.0f);
+  EXPECT_EQ(Math::ceilFloat(1.00000001f), 1.0f);
+  EXPECT_EQ(Math::ceilDouble(1.000000000000001), 2.0);
+  EXPECT_EQ(Math::ceilDouble(1.0000000000000001), 1.0);
+
+  EXPECT_EQ(Math::floor(1.9999999f), 1);
+  EXPECT_EQ(Math::floor(1.99999999f), 2);
+  EXPECT_EQ(Math::floorFloat(1.9999999f), 1.0f);
+  EXPECT_EQ(Math::floorFloat(1.99999999f), 2.0f);
+  EXPECT_EQ(Math::floorDouble(1.999999999999999), 1.0);
+  EXPECT_EQ(Math::floorDouble(1.9999999999999999), 2.0);
+
+  uint32 ceilTmp[] = {0, 0, 1, 2, 2, 3, 3, 3, 3, 4};
+  uint32 floorTmp[] = {0, 0, 1, 1, 2, 2, 2, 2, 3, 3};
+  for (uint32 i = 0; i < 10; ++i) {
+    EXPECT_EQ(Math::ceilLog2(i), ceilTmp[i]);
+    EXPECT_EQ(Math::floorLog2(i), floorTmp[i]);
+  }
+
+  EXPECT_EQ(Math::clamp(100.0, 1.0, 50.0), 50);
+  EXPECT_EQ(Math::clamp(18.0, 1.0, 50.0),18.0);
+  EXPECT_EQ(Math::clamp(-9.0, 1.0, 50.0), 1.0);
+
+  EXPECT_EQ(Math::clamp01(100.0f), 1.0f);
+  EXPECT_EQ(Math::clamp01(18.0f),  1.0f);
+  EXPECT_EQ(Math::clamp01(-9.0f),  0.0f);
+
+  EXPECT_NEAR(Math::fmod(18.5f, 4.2f), 1.7f, Math::SMALL_NUMBER);
+  EXPECT_NEAR(Math::exp(5), 148.413159f, Math::SMALL_NUMBER);
+  EXPECT_NEAR(Math::fractional(3.141592653f), 0.141592653f, Math::SMALL_NUMBER);
+
+  EXPECT_FLOAT_EQ(Math::sqrt(Math::square(5.f)), 5.f);
+  EXPECT_FLOAT_EQ(Math::invSqrt(5.f) * 5.f, Math::sqrt(5.f));
+  EXPECT_NEAR(Math::invSqrtEst(5.f) * 5.f, Math::sqrt(5.f), Math::DELTA);
+  
+  EXPECT_TRUE(Math::isPowerOfTwo(0));
+  EXPECT_TRUE(Math::isPowerOfTwo(1));
+  EXPECT_TRUE(Math::isPowerOfTwo(2));
+  EXPECT_TRUE(Math::isPowerOfTwo(4));
+  EXPECT_TRUE(Math::isPowerOfTwo(8));
+  EXPECT_TRUE(Math::isPowerOfTwo(16));
+  EXPECT_TRUE(Math::isPowerOfTwo(32));
+  EXPECT_TRUE(Math::isPowerOfTwo(64));
+  EXPECT_TRUE(Math::isPowerOfTwo(128));
+  EXPECT_TRUE(Math::isPowerOfTwo(256));
+
+  EXPECT_FALSE(Math::isPowerOfTwo(3));
+  EXPECT_FALSE(Math::isPowerOfTwo(5));
+  EXPECT_FALSE(Math::isPowerOfTwo(9));
+  EXPECT_FALSE(Math::isPowerOfTwo(33));
+  EXPECT_FALSE(Math::isPowerOfTwo(65));
+  EXPECT_FALSE(Math::isPowerOfTwo(129));
+  EXPECT_FALSE(Math::isPowerOfTwo(257));
+  EXPECT_FALSE(Math::isPowerOfTwo(513));
+}
+
+TEST(geUtility, Math_Float_Precision) {
+  EXPECT_FALSE(Math::isNaN(0.0f));
+  EXPECT_TRUE(Math::isNaN(Math::sqrt(-1.0)));
+
+  EXPECT_TRUE(Math::isFinite(0.0f));
+  EXPECT_FALSE(Math::isFinite(Math::sqrt(-1.0)));
+
+  EXPECT_TRUE(Math::isNearlyEqual(1.999999f, 2.0f));
+  EXPECT_FALSE(Math::isNearlyEqual(1.99999f, 2.0f));
+  EXPECT_TRUE(Math::isNearlyEqual(1.99991f, 2.0f, Math::KINDA_SMALL_NUMBER));
+  EXPECT_FALSE(Math::isNearlyEqual(1.9999f, 2.0f, Math::KINDA_SMALL_NUMBER));
+
+  EXPECT_FALSE(Math::isNearlyZero(0.000001));
+  EXPECT_TRUE(Math::isNearlyZero(0.000000000000001));
+  EXPECT_FALSE(Math::isNearlyZero(0.0001f, Math::KINDA_SMALL_NUMBER));
+  EXPECT_TRUE(Math::isNearlyZero(0.00001f, Math::KINDA_SMALL_NUMBER));
+}
+
+TEST(geUtility, Math_Trigonometric) {
   EXPECT_FLOAT_EQ(Math::sin(0.f), 0.0f);
   EXPECT_FLOAT_EQ(Math::cos(0.f), 1.0f);
   EXPECT_FLOAT_EQ(Math::tan(Math::HALF_PI*0.5f), 1.0f);
@@ -110,35 +187,49 @@ TEST(geUtility, Math) {
 
   EXPECT_FLOAT_EQ(Math::atan2(-1.f, -1.f).valueRadians(), -(Math::PI*0.75f));
   EXPECT_FLOAT_EQ(Degree(Math::atan2(-1.f, -1.f)).valueDegrees(), -135.0f);
-  
-  EXPECT_EQ(Math::ceil(1.000001f), 2);
-  EXPECT_EQ(Math::ceil(1.00000001f), 1);
-  EXPECT_EQ(Math::ceilFloat(1.000001f), 2.0f);
-  EXPECT_EQ(Math::ceilFloat(1.00000001f), 1.0f);
-  EXPECT_EQ(Math::ceilDouble(1.000000000000001), 2.0);
-  EXPECT_EQ(Math::ceilDouble(1.0000000000000001), 1.0);
-
-  uint32 ceilTmp[] = {0, 0, 1, 2, 2, 3, 3, 3, 3, 4};
-  uint32 floorTmp[] = {0, 0, 1, 1, 2, 2, 2, 2, 3, 3};
-  for (uint32 i = 0; i < 10; ++i) {
-    EXPECT_EQ(Math::ceilLog2(i), ceilTmp[i]);
-    EXPECT_EQ(Math::floorLog2(i), floorTmp[i]);
-  }
-
-  EXPECT_EQ(Math::clamp(100.0, 1.0, 50.0), 50);
-  EXPECT_EQ(Math::clamp(18.0, 1.0, 50.0),18.0);
-  EXPECT_EQ(Math::clamp(-9.0, 1.0, 50.0), 1.0);
-
-  EXPECT_EQ(Math::clamp01(100.0f), 1.0f);
-  EXPECT_EQ(Math::clamp01(18.0f),  1.0f);
-  EXPECT_EQ(Math::clamp01(-9.0f),  0.0f);
-
-  EXPECT_NEAR(Math::fmod(18.5f, 4.2f), 1.7f, Math::SMALL_NUMBER);
-  EXPECT_NEAR(Math::exp(1), 2.718282f, Math::SMALL_NUMBER);
-
 }
 
-TEST(geUtility, Platform) {
+TEST(geUtility, Math_Fast) {
+  float tstValR, tstVal0, tstVal1;
+
+  tstVal0 = Math::fastSin0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastSin1(Degree(45.0f).valueRadians());
+  tstValR = Math::sin(Degree(45.0f).valueRadians());
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+
+  tstVal0 = Math::fastCos0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastCos1(Degree(45.0f).valueRadians());
+  tstValR = Math::cos(Degree(45.0f).valueRadians());
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+
+  tstVal0 = Math::fastTan0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastTan1(Degree(45.0f).valueRadians());
+  tstValR = Math::tan(Degree(45.0f).valueRadians());
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+
+  tstVal0 = Math::fastASin0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastASin1(Degree(45.0f).valueRadians());
+  tstValR = Math::asin(Degree(45.0f).valueRadians()).valueRadians();
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+
+  tstVal0 = Math::fastACos0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastACos1(Degree(45.0f).valueRadians());
+  tstValR = Math::acos(Degree(45.0f).valueRadians()).valueRadians();
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+
+  tstVal0 = Math::fastATan0(Degree(45.0f).valueRadians());
+  tstVal1 = Math::fastATan1(Degree(45.0f).valueRadians());
+  tstValR = Math::atan(Degree(45.0f).valueRadians()).valueRadians();
+  EXPECT_NEAR(tstValR, tstVal0, 0.001f);
+  EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+}
+
+TEST(geUtility, Platform_Utilities) {
   PlatformUtility::copyToClipboard(L"Esta es una prueba del portapapeles!");
   WString szClipboardContent = PlatformUtility::copyFromClipboard();
   EXPECT_STRCASEEQ(toString(szClipboardContent).c_str(),
