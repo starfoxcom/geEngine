@@ -25,7 +25,7 @@ namespace geEngineSDK {
   /**
    * @brief 32 bit float components
    */
-  class GE_UTILITY_EXPORT Float32
+  class Float32
   {
    public:
     /**
@@ -49,6 +49,7 @@ namespace geEngineSDK {
 #endif
       } components;
       float	floatValue;
+      uint32 integerValue;
     };
   };
 }

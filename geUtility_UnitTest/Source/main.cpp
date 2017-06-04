@@ -4,6 +4,10 @@
 #include <geMath.h>
 #include <geFileSystem.h>
 #include <geDataStream.h>
+#include <geFloat10.h>
+#include <geFloat11.h>
+#include <geFloat16.h>
+#include <geFloat32.h>
 
 using namespace geEngineSDK;
 
@@ -119,7 +123,17 @@ TEST(geUtility, Math_Basic) {
   EXPECT_FLOAT_EQ(Math::sqrt(Math::square(5.f)), 5.f);
   EXPECT_FLOAT_EQ(Math::invSqrt(5.f) * 5.f, Math::sqrt(5.f));
   EXPECT_NEAR(Math::invSqrtEst(5.f) * 5.f, Math::sqrt(5.f), Math::DELTA);
-  
+
+  EXPECT_TRUE(Math::isWithin(0.1f, 0.0f, 10.0f));
+  EXPECT_TRUE(Math::isWithin(5.0f, 0.0f, 10.0f));
+  EXPECT_TRUE(Math::isWithin(9.9f, 0.0f, 10.0f));
+  EXPECT_TRUE(Math::isWithin(0.0f, 0.0f, 10.0f));
+  EXPECT_FALSE(Math::isWithin(-5.f, 0.0f, 10.0f));
+  EXPECT_FALSE(Math::isWithin(10.f, 0.0f, 10.0f));
+  EXPECT_TRUE(Math::isWithinInclusive(10.f, 0.0f, 10.0f));
+}
+
+TEST(geUtility, Math_Bit_Checks) {
   EXPECT_TRUE(Math::isPowerOfTwo(0));
   EXPECT_TRUE(Math::isPowerOfTwo(1));
   EXPECT_TRUE(Math::isPowerOfTwo(2));
@@ -142,11 +156,13 @@ TEST(geUtility, Math_Basic) {
 }
 
 TEST(geUtility, Math_Float_Precision) {
+  float negativeFloat = -1.0f;
+  
   EXPECT_FALSE(Math::isNaN(0.0f));
-  EXPECT_TRUE(Math::isNaN(Math::sqrt(-1.0)));
+  EXPECT_TRUE(Math::isNaN(Math::sqrt(negativeFloat)));
 
   EXPECT_TRUE(Math::isFinite(0.0f));
-  EXPECT_FALSE(Math::isFinite(Math::sqrt(-1.0)));
+  EXPECT_FALSE(Math::isFinite(Math::sqrt(negativeFloat)));
 
   EXPECT_TRUE(Math::isNearlyEqual(1.999999f, 2.0f));
   EXPECT_FALSE(Math::isNearlyEqual(1.99999f, 2.0f));
@@ -157,6 +173,20 @@ TEST(geUtility, Math_Float_Precision) {
   EXPECT_TRUE(Math::isNearlyZero(0.000000000000001));
   EXPECT_FALSE(Math::isNearlyZero(0.0001f, Math::KINDA_SMALL_NUMBER));
   EXPECT_TRUE(Math::isNearlyZero(0.00001f, Math::KINDA_SMALL_NUMBER));
+
+  Float32 floatTstValue32(152.0f);
+
+  Float16 floatTstValue16(floatTstValue32.floatValue);
+  Float11 floatTstValue11(floatTstValue16.getFloat());
+  Float10 floatTstValue10(floatTstValue16.getFloat());
+
+  Float32 floatOutValue16(floatTstValue16.getFloat());
+  Float32 floatOutValue11(floatTstValue11.getFloat());
+  Float32 floatOutValue10(floatTstValue10.getFloat());
+
+  EXPECT_FLOAT_EQ(floatOutValue16.floatValue, floatTstValue32.floatValue);
+  EXPECT_FLOAT_EQ(floatOutValue11.floatValue, floatTstValue32.floatValue);
+  EXPECT_FLOAT_EQ(floatOutValue10.floatValue, floatTstValue32.floatValue);
 }
 
 TEST(geUtility, Math_Trigonometric) {

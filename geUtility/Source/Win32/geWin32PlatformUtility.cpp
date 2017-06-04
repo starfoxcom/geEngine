@@ -40,10 +40,8 @@ namespace geEngineSDK {
                                (string.size() + 1) * sizeof(WString::value_type));
 
     WString::value_type* buffer = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
-
     string.copy(buffer, string.size());
     buffer[string.size()] = '\0';
-
     GlobalUnlock(hData);
 
     if (OpenClipboard(NULL)) {

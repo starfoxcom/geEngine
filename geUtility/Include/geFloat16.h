@@ -33,7 +33,7 @@ namespace geEngineSDK {
    * @brief Class to use 16 bits floats with elements access
    * @note 10 mantissa bits, 5 exponent bits and 1 sign bit.
    */
-  class GE_UTILITY_EXPORT Float16
+  class Float16
   {
    public:
     

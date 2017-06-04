@@ -203,6 +203,18 @@
     <ClInclude Include="Include\geFloat16Color.h">
       <Filter>Header Files\Image</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geAny.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBitwise.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFloat10.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFloat11.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">

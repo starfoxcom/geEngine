@@ -276,7 +276,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\Externals\md5.h" />
+    <ClInclude Include="Include\geAny.h" />
     <ClInclude Include="Include\geBitmapWriter.h" />
+    <ClInclude Include="Include\geBitwise.h" />
     <ClInclude Include="Include\geColor.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
     <ClInclude Include="Include\geDataStream.h" />
@@ -287,6 +289,8 @@
     <ClInclude Include="Include\geEvent.h" />
     <ClInclude Include="Include\geException.h" />
     <ClInclude Include="Include\geFileSystem.h" />
+    <ClInclude Include="Include\geFloat10.h" />
+    <ClInclude Include="Include\geFloat11.h" />
     <ClInclude Include="Include\geFloat16.h" />
     <ClInclude Include="Include\geFloat16Color.h" />
     <ClInclude Include="Include\geFloat32.h" />
