@@ -39,6 +39,7 @@ logToIDEConsole(const geEngineSDK::String& message) {
 void
 logToIDEConsole(const geEngineSDK::String& message) {
   // Do nothing
+  GE_UNREFERENCED_PARAMETER(message);
 }
 #endif
 

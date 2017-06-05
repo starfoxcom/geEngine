@@ -75,6 +75,12 @@
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{f85b5667-fe52-42bb-8e1e-9c8460a8370b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Threading">
+      <UniqueIdentifier>{8d2242e3-297a-494f-add2-9e0b58ad8bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ORBIS">
+      <UniqueIdentifier>{b1f6daa2-f5b5-41db-836a-1023f8b27152}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
@@ -215,6 +221,24 @@
     <ClInclude Include="Include\geFloat11.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geAsyncOp.h">
+      <Filter>Header Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geNonCopyable.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geServiceLocator.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDynLibManager.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTimer.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTime.h">
+      <Filter>Header Files\General</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -291,6 +315,27 @@
     </ClCompile>
     <ClCompile Include="Source\geCrashHandler.cpp">
       <Filter>Source Files\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geAsyncOp.cpp">
+      <Filter>Source Files\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geDynLibManager.cpp">
+      <Filter>Source Files\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTimer.cpp">
+      <Filter>Source Files\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTime.cpp">
+      <Filter>Source Files\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ORBIS\geORBISCrashHandler.cpp">
+      <Filter>Source Files\ORBIS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ORBIS\geORBISFileSystem.cpp">
+      <Filter>Source Files\ORBIS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ORBIS\geORBISPlatformUtility.cpp">
+      <Filter>Source Files\ORBIS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

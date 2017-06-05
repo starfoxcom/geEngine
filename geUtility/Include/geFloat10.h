@@ -31,6 +31,10 @@ namespace geEngineSDK {
    public:
     
     Float10() : encoded(0) {}
+    Float10(const Float10& FP10Value) {
+      encoded = FP10Value.encoded;
+    }
+
     explicit Float10(float FP32Value) {
       set(FP32Value);
     }

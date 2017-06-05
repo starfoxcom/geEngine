@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    geStringID.h
+ * @file    geStringID.cpp
  * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
  * @date    2016/03/07
  * @brief   A string identifier for very fast comparisons

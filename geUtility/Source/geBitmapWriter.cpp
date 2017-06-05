@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    geBitmapWriter.h
+ * @file    geBitmapWriter.cpp
  * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
  * @date    2016/09/21
  * @brief   Utility class for generating BMP images.

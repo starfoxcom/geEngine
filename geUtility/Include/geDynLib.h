@@ -39,8 +39,8 @@
 #elif GE_PLATFORM == GE_PLATFORM_PS4
 # define DYNLIB_HANDLE SceKernelModule
 # define DYNLIB_LOAD(a, b, c, d, e, f) sceKernelLoadStartModule(a, b, c, d, e, f)
-# define DYNLIB_GETSYM(a, b, c) sceKernelDlsym(a, b, c);
-# define DYNLIB_UNLOAD(a) sceKernelStopUnloadModule(a, b, c, d, e, f)
+# define DYNLIB_GETSYM(a, b, c) sceKernelDlsym(a, b, c)
+# define DYNLIB_UNLOAD(a, b, c, d, e, f) sceKernelStopUnloadModule(a, b, c, d, e, f)
 
 #endif
 

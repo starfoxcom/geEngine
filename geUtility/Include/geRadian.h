@@ -9,6 +9,7 @@
  * be done automatically between them.
  *
  * @bug	    No known bugs.
+ */
 /*****************************************************************************/
 #pragma once
 

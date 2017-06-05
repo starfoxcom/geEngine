@@ -14,10 +14,6 @@
  * Includes
  */
 /*****************************************************************************/
-#if GE_PLATFORM == GE_PLATFORM_WIN32
-# include <intrin.h>
-#endif
-
 #include "geMath.h"
 #include "geColor.h"
 //#include "geVector2.h"
@@ -29,6 +25,11 @@
 //#include "geSphere.h"
 //#include "geAABox.h"
 //#include "gePlane.h"
+
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+# include <intrin.h>
+#endif
+
 
 namespace geEngineSDK {
   /*!< PI constant */

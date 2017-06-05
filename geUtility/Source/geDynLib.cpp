@@ -47,7 +47,11 @@ namespace geEngineSDK {
 
   DynLib::DynLib(const String& name) {
     m_name = name;
+#if GE_PLATFORM == GE_PLATFORM_PS4
+    m_hInst = 0;
+#else
     m_hInst = nullptr;
+#endif
     load();
   }
 
@@ -59,7 +63,24 @@ namespace geEngineSDK {
       return;
     }
 
-    m_hInst = (DYNLIB_HANDLE)DYNLIB_LOAD(m_name.c_str());
+#if GE_PLATFORM == GE_PLATFORM_PS4
+    int startResult = 0;
+    m_hInst = static_cast<DYNLIB_HANDLE>(DYNLIB_LOAD( m_name.c_str(),
+                                                      0,
+                                                      NULL,
+                                                      0,
+                                                      NULL,
+                                                      &startResult));
+
+    if (m_hInst < 0) {
+      GE_EXCEPT(InternalErrorException,
+                "Could not load dynamic library " +
+                m_name +
+                ".  System Error: " +
+                dynlibError());
+  }
+#else
+    m_hInst = static_cast<DYNLIB_HANDLE>(DYNLIB_LOAD(m_name.c_str()));
 
     if (!m_hInst) {
       GE_EXCEPT(InternalErrorException,
@@ -68,6 +89,9 @@ namespace geEngineSDK {
                 ".  System Error: " +
                 dynlibError());
     }
+#endif
+
+    
   }
 
   void DynLib::unload() {
@@ -75,6 +99,15 @@ namespace geEngineSDK {
       return;
     }
 
+#if GE_PLATFORM == GE_PLATFORM_PS4
+    if (DYNLIB_UNLOAD(m_hInst, 0, NULL, 0, NULL, NULL) != SCE_OK) {
+      GE_EXCEPT(InternalErrorException,
+                "Could not unload dynamic library " +
+                m_name +
+                ".  System Error: " +
+                dynlibError());
+    }
+#else
     if (DYNLIB_UNLOAD(m_hInst)) {
       GE_EXCEPT(InternalErrorException,
                 "Could not unload dynamic library " +
@@ -82,14 +115,20 @@ namespace geEngineSDK {
                 ".  System Error: " +
                 dynlibError());
     }
+#endif
   }
 
   void* DynLib::getSymbol(const String& strName) const {
     if (!m_hInst) {
       return nullptr;
     }
-
+#if GE_PLATFORM == GE_PLATFORM_PS4
+    void* pAddressPtr = nullptr;
+    DYNLIB_GETSYM(m_hInst, strName.c_str(), &pAddressPtr);
+    return pAddressPtr;
+#else
     return (void*)DYNLIB_GETSYM(m_hInst, strName.c_str());
+#endif
   }
 
   String DynLib::dynlibError() {

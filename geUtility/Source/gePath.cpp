@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
-* @file   gePath.h
+* @file   gePath.cpp
 * @author Samuel Prince (samuel.prince.quezada@gmail.com)
 * @date   2016/03/06
 * @brief  Class for storing and manipulating file paths
@@ -187,7 +187,7 @@ namespace geEngineSDK {
 #elif GE_PLATFORM == GE_PLATFORM_OSX   || \
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
-      return geEngineSDK::toString(BuildUnix());
+      return geEngineSDK::toString(buildUnix());
 #else
       static_assert(false, "Unsupported platform for path.");
 #endif

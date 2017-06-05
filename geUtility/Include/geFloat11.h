@@ -30,6 +30,10 @@ namespace geEngineSDK {
   {
    public:
      Float11() : encoded(0) {}
+     Float11(const Float11& FP11Value) {
+       encoded = FP11Value.encoded;
+     }
+
     explicit Float11(float FP32Value) {
       set(FP32Value);
     }

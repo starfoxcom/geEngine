@@ -1,23 +1,23 @@
 /*****************************************************************************/
 /**
-* @file   geException.h
-* @author Samuel Prince (samuel.prince.quezada@gmail.com)
-* @date   2015/02/22
-* @brief  Exceptions Base Classes
-*
-* This file contains the basic declaration of Exception objects
-* and classes for the use on the library.
-*
-* @bug	   warning C4275: non dll-interface class 'std::exception'
-* used as base for dll-interface class 'geEngineSDK::Exception'
-*/
+ * @file   geException.h
+ * @author Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date   2015/02/22
+ * @brief  Exceptions Base Classes
+ *
+ * This file contains the basic declaration of Exception objects
+ * and classes for the use on the library.
+ *
+ * @bug	   warning C4275: non dll-interface class 'std::exception'
+ * used as base for dll-interface class 'geEngineSDK::Exception'
+ */
 /*****************************************************************************/
 #pragma once
 
 /*****************************************************************************/
 /**
-* Includes
-*/
+ * Includes
+ */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 
@@ -28,11 +28,11 @@
 
 namespace geEngineSDK {
   /**
-  * @brief	Base class for all geEngine exceptions.
-  */
+   * @brief Base class for all geEngine exceptions.
+   */
 #if GE_COMPILER == GE_COMPILER_MSVC
-#pragma warning( push )
-#pragma warning( disable : 4275 )
+# pragma warning( push )
+# pragma warning( disable : 4275 )
 #endif
 
   class Exception : public std::exception
@@ -156,9 +156,7 @@ namespace geEngineSDK {
                             const String& inSource,
                             const char* inFile,
                             long inLine)
-      : Exception("NotImplementedException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("NotImplementedException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -171,9 +169,7 @@ namespace geEngineSDK {
                           const String& inSource,
                           const char* inFile,
                           long inLine)
-      : Exception("FileNotFoundException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("FileNotFoundException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -187,9 +183,7 @@ namespace geEngineSDK {
                 const String& inSource,
                 const char* inFile,
                 long inLine)
-      : Exception("IOException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("IOException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -202,9 +196,7 @@ namespace geEngineSDK {
                           const String& inSource,
                           const char* inFile,
                           long inLine)
-      : Exception("InvalidStateException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("InvalidStateException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -217,9 +209,7 @@ namespace geEngineSDK {
                                const String& inSource,
                                const char* inFile,
                                long inLine)
-      : Exception("InvalidParametersException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("InvalidParametersException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -233,9 +223,7 @@ namespace geEngineSDK {
                            const String& inSource,
                            const char* inFile,
                            long inLine)
-      : Exception("InternalErrorException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("InternalErrorException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -248,9 +236,7 @@ namespace geEngineSDK {
                           const String& inSource,
                           const char* inFile,
                           long inLine)
-      : Exception("RenderingAPIException", inDescription, inSource, inFile, inLine) {
-
-    }
+      : Exception("RenderingAPIException", inDescription, inSource, inFile, inLine) {}
   };
 
   /**
@@ -287,6 +273,6 @@ namespace geEngineSDK {
 #endif
 
 #if GE_COMPILER == GE_COMPILER_MSVC
-#pragma warning( pop )
+# pragma warning( pop )
 #endif
 }

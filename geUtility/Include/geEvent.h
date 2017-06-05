@@ -299,7 +299,7 @@ namespace geEngineSDK {
      */
     HEvent
     connect(std::function<RetType(Args...)>& func) {
-      RecursiveLock lock(m_internalData->m_Mutex);
+      RecursiveLock lock(m_internalData->m_mutex);
 
       ConnectionData* connData = nullptr;
       if (nullptr != m_internalData->m_freeConnections) {

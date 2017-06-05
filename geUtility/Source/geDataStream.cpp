@@ -1,20 +1,20 @@
 /*****************************************************************************/
 /**
-* @file   geDataStream.cpp
-* @author Samuel Prince (samuel.prince.quezada@gmail.com)
-* @date   2016/09/19
-* @brief  General purpose class used for encapsulating the reading
-*			and writing of data
-*
-* General purpose class used for encapsulating the reading and writing
-* of data from and to various sources using a common interface.
-*
-* @bug	  -std::consume_header seems to be ignored so I manually
-*		  remove the header.
-*
-*		  -Regardless of not providing the std::little_endian flag it
-*		  seems that is how the data is read so I manually flip it.
-*/
+ * @file    geDataStream.cpp
+ * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
+ * @date    2016/09/19
+ * @brief   General purpose class used for encapsulating the reading and
+ *          writing of data
+ *
+ * General purpose class used for encapsulating the reading and writing of data
+ * from and to various sources using a common interface.
+ *
+ * @bug -std::consume_header seems to be ignored so I manually remove the
+ *      header.
+ *
+ *      -Regardless of not providing the std::little_endian flag it
+ *      seems that is how the data is read so I manually flip it.
+ */
 /*****************************************************************************/
 
 /*****************************************************************************/
@@ -24,7 +24,6 @@
 /*****************************************************************************/
 #include "geDataStream.h"
 #include "geDebug.h"
-//#include "geException.h"
 #include <codecvt>
 
 namespace geEngineSDK {
@@ -47,10 +46,10 @@ namespace geEngineSDK {
    */
   bool
   isUTF32LE(const char* buffer) {
-    return (buffer[0] == 0xFF &&
-            buffer[1] == 0xFE &&
-            buffer[2] == 0x00 &&
-            buffer[3] == 0x00);
+    return (0xFF == static_cast<uint8>(buffer[0]) &&
+            0xFE == static_cast<uint8>(buffer[1]) &&
+            0x00 == static_cast<uint8>(buffer[2]) &&
+            0x00 == static_cast<uint8>(buffer[3]));
   }
 
   /**
@@ -59,10 +58,10 @@ namespace geEngineSDK {
    */
   bool
   isUTF32BE(const char* buffer) {
-    return (buffer[0] == 0x00 &&
-            buffer[1] == 0x00 &&
-            buffer[2] == 0xFE &&
-            buffer[3] == 0xFF);
+    return (0x00 == static_cast<uint8>(buffer[0]) &&
+            0x00 == static_cast<uint8>(buffer[1]) &&
+            0xFE == static_cast<uint8>(buffer[2]) &&
+            0xFF == static_cast<uint8>(buffer[3]));
   }
 
   /**
@@ -71,8 +70,8 @@ namespace geEngineSDK {
    */
   bool
   isUTF16LE(const char* buffer) {
-    return (buffer[0] == 0xFF &&
-            buffer[1] == 0xFE);
+    return (0xFF == static_cast<uint8>(buffer[0]) &&
+            0xFE == static_cast<uint8>(buffer[1]));
   }
 
   /**
@@ -81,8 +80,8 @@ namespace geEngineSDK {
    */
   bool
   isUTF16BE(const char* buffer) {
-    return (buffer[0] == 0xFE &&
-            buffer[1] == 0xFF);
+    return (0xFE == static_cast<uint8>(buffer[0]) &&
+            0xFF == static_cast<uint8>(buffer[1]));
   }
 
   /**
@@ -90,9 +89,9 @@ namespace geEngineSDK {
    */
   bool
   isUTF8(const char* buffer) {
-    return (buffer[0] == 0xEF && 
-            buffer[1] == 0xBB && 
-            buffer[2] == 0xBF);
+    return (0xEF == static_cast<uint8>(buffer[0]) &&
+            0xBB == static_cast<uint8>(buffer[1]) &&
+            0xBF == static_cast<uint8>(buffer[2]));
   }
 
   template<typename T>

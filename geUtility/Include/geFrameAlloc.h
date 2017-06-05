@@ -197,7 +197,7 @@ namespace geEngineSDK {
     template<class U>
     const StdFrameAlloc<U>&
     operator=(const StdFrameAlloc<U>& refAlloc) {
-      m_FrameAlloc = refAlloc.m_FrameAlloc
+      m_FrameAlloc = refAlloc.m_FrameAlloc;
     }
 
     template<class U>

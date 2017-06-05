@@ -193,7 +193,7 @@ namespace geEngineSDK {
         (reinterpret_cast<uint16*>(dest))[0] = static_cast<uint16>(value);
         break;
       case 3:
-#if GE_ENDIAN == GE_ENDIAN_BIG      
+#if GE_ENDIAN == GE_ENDIAN_BIG
         (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>((value >> 16) & 0xFF);
         (reinterpret_cast<uint8*>(dest))[1] = static_cast<uint8>((value >> 8) & 0xFF);
         (reinterpret_cast<uint8*>(dest))[2] = static_cast<uint8>(value & 0xFF);
@@ -214,18 +214,21 @@ namespace geEngineSDK {
      */
     static uint32
     intRead(const void *src, int n) {
+      uint8* pData = nullptr;
+
       switch (n) {
       case 1:
         return (reinterpret_cast<uint8*>(const_cast<void*>(src)))[0];
       case 2:
         return (reinterpret_cast<uint16*>(const_cast<void*>(src)))[0];
       case 3:
-#if GE_ENDIAN == GE_ENDIAN_BIG      
-        return ((uint32)((UINT8*)src)[0] << 16) |
-          ((uint32)((UINT8*)src)[1] << 8) |
-          ((uint32)((UINT8*)src)[2]);
+#if GE_ENDIAN == GE_ENDIAN_BIG
+        pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
+        return (static_cast<uint32>(pData[0] << 16) |
+                static_cast<uint32>(pData[1] << 8) |
+                static_cast<uint32>(pData[2]));
 #else
-        uint8* pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
+        pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
         return (static_cast<uint32>(pData[0]) | 
                 static_cast<uint32>(pData[1] << 8) | 
                 static_cast<uint32>(pData[2] << 16));

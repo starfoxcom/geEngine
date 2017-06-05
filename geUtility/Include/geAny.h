@@ -44,7 +44,7 @@ namespace geEngineSDK {
     class Data : public DataBase
     {
      public:
-      Data(const ValueType& value) : m_value(value) {}
+      explicit Data(const ValueType& value) : m_value(value) {}
       virtual DataBase*
       clone() const override {
         return new Data(m_value);
@@ -57,8 +57,8 @@ namespace geEngineSDK {
     Any() : m_data(nullptr) {}
 
     template<typename ValueType>
-    Any(const ValueType& value) : m_data(ge_new<Data<ValueType>>(value)) {}
-    Any(std::nullptr_t) : m_data(nullptr) {}
+    explicit Any(const ValueType& value) : m_data(ge_new<Data<ValueType>>(value)) {}
+    explicit Any(std::nullptr_t) : m_data(nullptr) {}
     Any(const Any& other) 
       : m_data(nullptr != other.m_data ? other.m_data->clone() : nullptr) {}
 
@@ -100,10 +100,12 @@ namespace geEngineSDK {
 
    private:
     template<typename ValueType>
-    friend ValueType* any_cast(Any*);
+    friend ValueType*
+    any_cast(Any*);
 
     template<typename ValueType>
-    friend ValueType* any_cast_unsafe(Any*);
+    friend ValueType*
+    any_cast_unsafe(Any*);
 
    public:
     DataBase* m_data;
@@ -114,9 +116,10 @@ namespace geEngineSDK {
    * @note  Will return null if cast fails.
    */
   template<typename ValueType>
-  ValueType* any_cast(Any* operand) {
+  ValueType*
+  any_cast(Any* operand) {
     if (nullptr != operand) {
-      return &static_cast<Any::Data<ValueType>*>(operand->m_data)->value;
+      return &static_cast<Any::Data<ValueType>*>(operand->m_data)->m_value;
     }
     return nullptr;
   }
@@ -126,7 +129,8 @@ namespace geEngineSDK {
    * @note  Will return null if cast fails.
    */
   template<typename ValueType>
-  const ValueType* any_cast(const Any* operand) {
+  const ValueType*
+  any_cast(const Any* operand) {
     return any_cast<ValueType>(const_cast<Any*>(operand));
   }
 
@@ -135,7 +139,8 @@ namespace geEngineSDK {
    * @note  Throws an exception if cast fails.
    */
   template<typename ValueType>
-  ValueType any_cast(const Any& operand) {
+  ValueType
+  any_cast(const Any& operand) {
     return *any_cast<ValueType>(const_cast<Any*>(&operand));
   }
 
@@ -144,7 +149,8 @@ namespace geEngineSDK {
    * @note  Throws an exception if cast fails.
    */
   template<typename ValueType>
-  ValueType any_cast(Any& operand) {
+  ValueType
+  any_cast(Any& operand) {
     return *any_cast<ValueType>(&operand);
   }
 
@@ -153,7 +159,8 @@ namespace geEngineSDK {
    * @note  Throws an exception if cast fails.
    */
   template<typename ValueType>
-  const ValueType& any_cast_ref(const Any & operand) {
+  const ValueType&
+  any_cast_ref(const Any & operand) {
     return *any_cast<ValueType>(const_cast<Any*>(&operand));
   }
 
@@ -162,7 +169,8 @@ namespace geEngineSDK {
    * @note  Throws an exception if cast fails.
    */
   template<typename ValueType>
-  ValueType& any_cast_ref(Any& operand) {
+  ValueType&
+  any_cast_ref(Any& operand) {
     return *any_cast<ValueType>(&operand);
   }
 
@@ -170,15 +178,17 @@ namespace geEngineSDK {
    * @brief Casts a type without performing any kind of checks.
    */
   template<typename ValueType>
-  ValueType* any_cast_unsafe(Any* operand) {
-    return &static_cast<Any::Data<ValueType>*>(operand->m_data)->value;
+  ValueType*
+  any_cast_unsafe(Any* operand) {
+    return &static_cast<Any::Data<ValueType>*>(operand->m_data)->m_value;
   }
 
   /**
    * @brief Casts a type without performing any kind of checks.
    */
   template<typename ValueType>
-  const ValueType* any_cast_unsafe(const Any* operand) {
+  const ValueType*
+  any_cast_unsafe(const Any* operand) {
     return any_cast_unsafe<ValueType>(const_cast<Any*>(operand));
   }
 }
