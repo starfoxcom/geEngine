@@ -145,6 +145,9 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,6 +170,9 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -212,6 +218,9 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -238,6 +247,9 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -315,6 +327,7 @@
     <ClInclude Include="Include\gePlatformUtility.h" />
     <ClInclude Include="Include\gePrerequisitesUtil.h" />
     <ClInclude Include="Include\geRadian.h" />
+    <ClInclude Include="Include\geRTTIField.h" />
     <ClInclude Include="Include\geRTTIPrerequisites.h" />
     <ClInclude Include="Include\geServiceLocator.h" />
     <ClInclude Include="Include\geSpinLock.h" />
@@ -323,6 +336,7 @@
     <ClInclude Include="Include\geStringFormat.h" />
     <ClInclude Include="Include\geStringID.h" />
     <ClInclude Include="Include\geThreadDefines.h" />
+    <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
     <ClInclude Include="Include\geUtil.h" />
@@ -350,8 +364,10 @@
     <ClCompile Include="Source\geMessageHandler.cpp" />
     <ClCompile Include="Source\gePath.cpp" />
     <ClCompile Include="Source\geRadian.cpp" />
+    <ClCompile Include="Source\geRTTIField.cpp" />
     <ClCompile Include="Source\geString.cpp" />
     <ClCompile Include="Source\geStringID.cpp" />
+    <ClCompile Include="Source\geThreadPool.cpp" />
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />

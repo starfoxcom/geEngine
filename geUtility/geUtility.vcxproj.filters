@@ -81,6 +81,12 @@
     <Filter Include="Source Files\ORBIS">
       <UniqueIdentifier>{b1f6daa2-f5b5-41db-836a-1023f8b27152}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RTTI">
+      <UniqueIdentifier>{2db917d7-8307-448f-a613-840f540c2a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RTTI">
+      <UniqueIdentifier>{5aed3be7-df9c-4a00-95a0-c89f9426e4ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
@@ -239,6 +245,12 @@
     <ClInclude Include="Include\geTime.h">
       <Filter>Header Files\General</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geThreadPool.h">
+      <Filter>Header Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIField.h">
+      <Filter>Header Files\RTTI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -336,6 +348,12 @@
     </ClCompile>
     <ClCompile Include="Source\ORBIS\geORBISPlatformUtility.cpp">
       <Filter>Source Files\ORBIS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geThreadPool.cpp">
+      <Filter>Source Files\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRTTIField.cpp">
+      <Filter>Source Files\RTTI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

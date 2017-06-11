@@ -76,8 +76,8 @@ namespace geEngineSDK {
    */
   template<class T>
   T*
-  ge_frame_alloc(SIZE_T count) {
-    return reinterpret_cast<T*>(ge_frame_alloc(sizeof(T) * count));
+  ge_frame_alloc(SIZE_T numBytes) {
+    return reinterpret_cast<T*>(ge_frame_alloc(sizeof(T) * numBytes));
   }
 
   /**

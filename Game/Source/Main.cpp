@@ -16,7 +16,7 @@ using namespace geEngineSDK;
 int
 main() {
   CrashHandler::startUp();
-  /*
+
   __try {
     //EditorApplication::startUp(EditorRenderAPI::DX11);
     //EditorApplication::instance().runMainLoop();
@@ -25,17 +25,8 @@ main() {
   __except(g_crashHandler().reportCrash(GetExceptionInformation())) {
     PlatformUtility::terminate(true);
   }
-  */
-  String testString = "This is a test";
-  {
-    String testWString = geEngineSDK::toString(WString(L"What!"));
-  }
-
-  cout << StringUtil::format("{0}\n", true);
-  cout << testString << endl;
-  //cout << testWString;
-
-
+  
   CrashHandler::shutDown();
+
   return 0;
 }

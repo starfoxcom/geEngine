@@ -115,85 +115,61 @@ namespace geEngineSDK {
   void
   Debug::saveLog(const Path& path) const {
     static const char* style =
-      R"(<LINK REL="stylesheet" TYPE="text/css" HREF="System/Styles/Debug.css">)";
+      R"(<link rel="stylesheet" type="text/css" href="../css/debug.css">)";
 
-    static const char* htmlPreStyleHeader = R"(
-<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>
-<HTML>
-  <HEAD>
-    <TITLE>geEngine: Information Log</TITLE>
-      <LINK REL='SHORTCUT ICON' HREF=''>)";
+    static const char* htmlPreStyleHeader = 
+R"(<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>
+<html>
+  <head>
+    <title>geEngine: Information Log</title>
+      <link rel='shortcut icon' href=''>)";
 
     static const char* htmlPostStyleHeader = R"(
-    <TITLE>geEngine Log</TITLE>
-  </HEAD>
-  <BODY>
-    <H1>geEngine Log</H1>
-      <TABLE BORDER="1" cellpadding="1" cellspacing="1">
-        <THEAD>
-          <TR>
-            <TH SCOPE="col" STYLE="width:60px">Type</TH>
-            <TH SCOPE="col">Description</TH>
-          </TR>
-        </THEAD>
-      <TBODY>)";
+  </head>
+  <body>
+    <h1>geEngine Log</h1>
+    <div class="wrapper">
+      <div class="table">
+        <div class="row header blue">
+          <div class="cell"> Type </div>
+          <div class="cell"> Description </div>
+        </div>)";
 
     static const char* htmlFooter = R"(
-      </TBODY>
-      </TABLE>
-  </BODY>
-</HTML>)";
+        </div>
+      </div>
+    </body>
+</html>)";
 
     StringStream stream;
     stream << htmlPreStyleHeader;
     stream << style;
     stream << htmlPostStyleHeader;
 
-    bool alternate = false;
     Vector<LogEntry> entries = m_log.getAllEntries();
     for (auto& entry : entries) {
       String channelName;
       uint32 iLogChannel = entry.getLogChannel();
       if (iLogChannel == static_cast<uint32>(DEBUG_CHANNEL::kError) ||
           iLogChannel == static_cast<uint32>(DEBUG_CHANNEL::kCompilerError)) {
-        if (!alternate) {
-          stream << R"(<TR CLASS="error-row">)" << std::endl;
-        }
-        else {
-          stream << R"(<TR CLASS="error-alt-row">)" << std::endl;
-        }
-
-        stream << R"(<TD>Error</TD>)" << std::endl;
+        stream << R"(<div class="row red">)" << std::endl;
+        stream << R"(<div class="cell">Error</div>)" << std::endl;
       }
       else if (iLogChannel == static_cast<uint32>(DEBUG_CHANNEL::kWarning) ||
-               iLogChannel == static_cast<uint32>(DEBUG_CHANNEL::kCompilerWarning)) {
-        if (!alternate) {
-          stream << R"(<TR CLASS="warn-row">)" << std::endl;
-        }
-        else {
-          stream << R"(<TR CLASS="warn-alt-row">)" << std::endl;
-        }
-
-        stream << R"(<TD>Warning</TD>)" << std::endl;
+               iLogChannel == static_cast<uint32>(DEBUG_CHANNEL::kCompilerWarning)) {  
+        stream << R"(<div class="row yellow">)" << std::endl;
+        stream << R"(<div class="cell">Warning</div>)" << std::endl;
       }
       else
       {
-        if (!alternate) {
-          stream << R"(<TR CLASS="debug-row">)" << std::endl;
-        }
-        else {
-          stream << R"(<TR CLASS="debug-alt-row">)" << std::endl;
-        }
-
-        stream << R"(<TD>Debug</TD>)" << std::endl;
+        stream << R"(<div class="row green">)" << std::endl;
+        stream << R"(<div class="cell">Debug</div>)" << std::endl;
       }
 
       String parsedMessage = StringUtil::replaceAll(entry.getLogMessage(), "\n", "<BR>\n");
 
-      stream << R"(<TD>)" << parsedMessage << "</TD>" << std::endl;
-      stream << R"(</TR>)" << std::endl;
-
-      alternate = !alternate;
+      stream << R"(<div class="cell">)" << parsedMessage << "</div>" << std::endl;
+      stream << R"(</div>)" << std::endl;
     }
 
     stream << htmlFooter;

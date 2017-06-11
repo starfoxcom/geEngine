@@ -43,7 +43,6 @@ namespace geEngineSDK {
   void
   Time::_update() {
     uint64 currentFrameTime = m_timer->getMicroseconds();
-
     m_frameDelta = static_cast<float>((currentFrameTime - m_lastFrameTime) * MICROSEC_TO_SEC);
     m_timeSinceStartMs = static_cast<uint64>(currentFrameTime / 1000);
     m_timeSinceStart = m_timeSinceStartMs / 1000.0f;

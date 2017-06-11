@@ -296,8 +296,8 @@ namespace geEngineSDK {
    */
   template<class T>
   T*
-  ge_stack_alloc(SIZE_T count) {
-    return reinterpret_cast<T*>(MemStack::alloc(sizeof(T) * count));
+  ge_stack_alloc(SIZE_T numBytes) {
+    return reinterpret_cast<T*>(MemStack::alloc(sizeof(T) * numBytes));
   }
 
   /**

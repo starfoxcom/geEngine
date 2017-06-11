@@ -53,16 +53,18 @@ namespace geEngineSDK {
         m_typeName(type),
         m_description(description),
         m_source(source),
-        m_file(file) {}
+        m_file(file),
+        m_fullDesc("") {}
 
     Exception(const Exception& rhs)
       : m_line(rhs.m_line),
         m_typeName(rhs.m_typeName),
         m_description(rhs.m_description),
         m_source(rhs.m_source),
-        m_file(rhs.m_file) {}
+        m_file(rhs.m_file),
+        m_fullDesc(rhs.m_fullDesc) {}
 
-    ~Exception() throw() {}
+    ~Exception() _NOEXCEPT {}
 
     Exception&
     operator=(const Exception& rhs) {
@@ -71,6 +73,7 @@ namespace geEngineSDK {
       m_file = rhs.m_file;
       m_line = rhs.m_line;
       m_typeName = rhs.m_typeName;
+      m_fullDesc = rhs.m_fullDesc;
       return *this;
     }
 

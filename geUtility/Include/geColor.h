@@ -61,7 +61,7 @@ namespace geEngineSDK {
     /**
      * @brief Float16Color->LinearColor conversion.
      */
-    explicit LinearColor(const Float16Color& C);
+    explicit LinearColor(const Float16Color& refColor);
 
     /**
      * @brief Pointer accessor for direct copying.

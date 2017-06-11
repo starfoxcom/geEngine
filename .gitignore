@@ -3,3 +3,6 @@ Lib/
 .vs/
 *.iobj
 *.ipdb
+Bin/ORBIS/
+Bin/Reports/20*/*.*
+*.tmp

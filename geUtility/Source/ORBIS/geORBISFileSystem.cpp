@@ -74,8 +74,8 @@ namespace geEngineSDK {
 
   bool
   FileSystem::iterate(const Path& dirPath,
-                      std::function<bool(const Path&)> fileCallback,
-                      std::function<bool(const Path&)> dirCallback,
+                      const std::function<bool(const Path&)>& fileCallback,
+                      const std::function<bool(const Path&)>& dirCallback,
                       bool recursive) {
     GE_UNREFERENCED_PARAMETER(dirPath);
     GE_UNREFERENCED_PARAMETER(fileCallback);
