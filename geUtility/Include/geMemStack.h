@@ -22,6 +22,7 @@
 #include <assert.h>
 #include "geStdHeaders.h"
 #include "geThreadDefines.h"
+#include "geMacroUtil.h"
 
 namespace geEngineSDK {
   /**

@@ -17,7 +17,7 @@
  * Includes
  */
 /*****************************************************************************/
-#include <windows.h>
+#include "Win32/geMinWindows.h"
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {

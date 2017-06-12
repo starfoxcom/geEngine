@@ -20,7 +20,7 @@
 #include "geException.h"
 #include "geDataStream.h"
 #include "geDebug.h"
-#include <windows.h>
+#include "Win32/geMinWindows.h"
 
 namespace geEngineSDK {
   void

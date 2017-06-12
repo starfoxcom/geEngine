@@ -110,9 +110,5 @@ namespace geEngineSDK {
    * SIZE_T is an architecture dependant data type
    */
   /***************************************************************************/
-#if GE_ARCH_TYPE == GE_ARCHITECTURE_x86_64 && GE_COMPILER == GE_COMPILER_MSVC
-  typedef unsigned __int64 SIZE_T;
-#else
-  typedef unsigned long SIZE_T;
-#endif
+  typedef size_t SIZE_T;
 }

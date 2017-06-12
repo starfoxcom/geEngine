@@ -91,10 +91,12 @@ namespace geEngineSDK {
     /**
      * @brief Gets a directory name with the specified index from the path.
      */
+    /*
     const WString&
     operator[](uint32 idx) const {
       return getWDirectory(static_cast<SIZE_T>(idx));
     }
+    */
 
     /**
      * @brief Gets a directory name with the specified index from the path.

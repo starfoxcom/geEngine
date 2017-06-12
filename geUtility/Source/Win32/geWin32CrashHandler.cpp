@@ -16,7 +16,7 @@
  * Includes
  */
 /*****************************************************************************/
-#include <Windows.h>
+#include "Win32/geMinWindows.h"
 #include <psapi.h>
 
 //Disable warning in VS2015 that's not under my control

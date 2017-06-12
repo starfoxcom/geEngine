@@ -328,6 +328,7 @@
     <ClInclude Include="Include\gePrerequisitesUtil.h" />
     <ClInclude Include="Include\geRadian.h" />
     <ClInclude Include="Include\geRTTIField.h" />
+    <ClInclude Include="Include\geRTTIPlainField.h" />
     <ClInclude Include="Include\geRTTIPrerequisites.h" />
     <ClInclude Include="Include\geServiceLocator.h" />
     <ClInclude Include="Include\geSpinLock.h" />
@@ -340,6 +341,7 @@
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
     <ClInclude Include="Include\geUtil.h" />
+    <ClInclude Include="Include\Win32\geMinWindows.h" />
     <ClInclude Include="Include\Win32\geWin32PlatformUtility.h" />
   </ItemGroup>
   <ItemGroup>

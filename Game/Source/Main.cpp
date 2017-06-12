@@ -6,6 +6,7 @@
 #endif
 
 #include <gePrerequisitesUtil.h>
+#include <geRTTIPlainField.h>
 #include <geException.h>
 
 using std::cout;

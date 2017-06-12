@@ -16,12 +16,14 @@
  * Includes
  */
 /*****************************************************************************/
-#include <windows.h>
-#include <iphlpapi.h>
-
+#include "Win32/geMinWindows.h"
 #include "gePrerequisitesUtil.h"
 #include "Win32/geWin32PlatformUtility.h"
 #include "geColor.h"
+
+#include <shellapi.h>
+#include <iphlpapi.h>
+#include <rpc.h>
 
 namespace geEngineSDK {
   void
