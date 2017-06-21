@@ -47,11 +47,11 @@ namespace geEngineSDK {
   }
 
   void
-  CrashHandler::logErrorAndStackTrace(const String& errorMsg,
+  CrashHandler::logErrorAndStackTrace(const String& message,
                                       const String& stackTrace) const {
     StringStream errorMessage;
     errorMessage << s_fatalErrorMsg << std::endl;
-    errorMessage << errorMsg;
+    errorMessage << message;
     errorMessage << "\n\nStack trace: \n";
     errorMessage << stackTrace;
 

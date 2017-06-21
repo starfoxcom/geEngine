@@ -79,8 +79,8 @@ namespace geEngineSDK {
   }
 
   void
-  FileSystem::remove(const Path& path, bool recursively) {
-    if (!FileSystem::exists(path)) {
+  FileSystem::remove(const Path& fullPath, bool recursively) {
+    if (!FileSystem::exists(fullPath)) {
       return;
     }
 
@@ -88,7 +88,7 @@ namespace geEngineSDK {
       Vector<Path> files;
       Vector<Path> directories;
 
-      getChildren(path, files, directories);
+      getChildren(fullPath, files, directories);
 
       for (auto& file : files) {
         remove(file, false);
@@ -99,7 +99,7 @@ namespace geEngineSDK {
       }
     }
 
-    FileSystem::removeFile(path);
+    FileSystem::removeFile(fullPath);
   }
 
   void

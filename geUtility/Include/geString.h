@@ -130,7 +130,7 @@ namespace geEngineSDK {
      */
     static Vector<String>
     tokenise(const String& str,
-             const String& delims = "\t\n ",
+             const String& singleDelims = "\t\n ",
              const String& doubleDelims = "\"", 
              uint32 maxSplits = 0);
 
@@ -139,7 +139,7 @@ namespace geEngineSDK {
      */
     static Vector<WString>
     tokenise(const WString& str, 
-             const WString& delims = L"\t\n ", 
+             const WString& singleDelims = L"\t\n ",
              const WString& doubleDelims = L"\"", 
              uint32 maxSplits = 0);
 

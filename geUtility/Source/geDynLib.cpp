@@ -94,7 +94,8 @@ namespace geEngineSDK {
     
   }
 
-  void DynLib::unload() {
+  void
+  DynLib::unload() {
     if (!m_hInst) {
       return;
     }
@@ -118,7 +119,8 @@ namespace geEngineSDK {
 #endif
   }
 
-  void* DynLib::getSymbol(const String& strName) const {
+  void*
+  DynLib::getSymbol(const String& strName) const {
     if (!m_hInst) {
       return nullptr;
     }
@@ -127,11 +129,12 @@ namespace geEngineSDK {
     DYNLIB_GETSYM(m_hInst, strName.c_str(), &pAddressPtr);
     return pAddressPtr;
 #else
-    return (void*)DYNLIB_GETSYM(m_hInst, strName.c_str());
+    return static_cast<void*>(DYNLIB_GETSYM(m_hInst, strName.c_str()));
 #endif
   }
 
-  String DynLib::dynlibError() {
+  String
+  DynLib::dynlibError() {
 #if GE_PLATFORM == GE_PLATFORM_WIN32
     LPVOID lpMsgBuf;
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | 

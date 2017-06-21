@@ -498,13 +498,13 @@ namespace geEngineSDK {
   }
 
   void
-  Path::throwInvalidPathException(const WString& path) const {
+  Path::throwInvalidPathException(const WString& path) {
     GE_EXCEPT(InvalidParametersException, 
               "Incorrectly formatted path provided: " + geEngineSDK::toString(path));
   }
 
   void
-  Path::throwInvalidPathException(const String& path) const {
+  Path::throwInvalidPathException(const String& path) {
     GE_EXCEPT(InvalidParametersException, "Incorrectly formatted path provided: " + path);
   }
 

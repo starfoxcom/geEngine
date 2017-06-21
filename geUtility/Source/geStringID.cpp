@@ -86,7 +86,7 @@ namespace geEngineSDK {
 
   template<class T>
   uint32
-  StringID::calcHash(T const& input) {
+  StringID::calcHash(T const& input) const {
     uint32 size = StringIDUtil<T>::size(input);
 
     uint32 hash = 0;
@@ -179,8 +179,8 @@ namespace geEngineSDK {
   StringID::construct(String const&);
 
   template
-  GE_UTILITY_EXPORT uint32 StringID::calcHash(const ANSICHAR* const&);
+  GE_UTILITY_EXPORT uint32 StringID::calcHash(const ANSICHAR* const&) const;
   
   template
-  GE_UTILITY_EXPORT uint32 StringID::calcHash(String const&);
+  GE_UTILITY_EXPORT uint32 StringID::calcHash(String const&) const;
 }

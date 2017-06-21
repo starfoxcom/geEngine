@@ -118,9 +118,7 @@ namespace geEngineSDK {
     }
 
     if (NO_ERROR == GetAdaptersInfo(adapterInfo, &len)) {
-      PIP_ADAPTER_INFO curAdapter = nullptr;
-      curAdapter = adapterInfo;
-
+      PIP_ADAPTER_INFO curAdapter = adapterInfo;
       while (curAdapter) {
         if (MIB_IF_TYPE_ETHERNET == curAdapter->Type && 
             sizeof(address) == curAdapter->AddressLength) {

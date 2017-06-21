@@ -676,14 +676,14 @@ namespace geEngineSDK {
     /**
      * @brief Helper method that throws invalid path exception.
      */
-    void
-    throwInvalidPathException(const String& path) const;
+    static void
+    throwInvalidPathException(const String& path);
 
     /**
      * @copydoc Path::throwInvalidPathException(const String&)
      */
-    void
-    throwInvalidPathException(const WString& path) const;
+    static void
+    throwInvalidPathException(const WString& path);
 
    public:
     static const Path BLANK;

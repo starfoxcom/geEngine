@@ -93,7 +93,8 @@ namespace geEngineSDK {
     /**
      * @brief Gets the last loading error.
      */
-    String dynlibError();
+    static String
+    dynlibError();
 
    public:
     static const char* EXTENSION;

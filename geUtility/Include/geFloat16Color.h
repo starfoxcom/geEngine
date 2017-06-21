@@ -51,7 +51,7 @@ namespace geEngineSDK {
      * @return true if the two colors are identical, otherwise false.
      */
     bool
-    operator==(const Float16Color& Src) {
+    operator==(const Float16Color& Src) const {
       return ((R == Src.R) && (G == Src.G) && (B == Src.B) && (A == Src.A));
     }
 

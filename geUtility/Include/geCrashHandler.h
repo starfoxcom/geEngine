@@ -64,10 +64,10 @@ namespace geEngineSDK {
      */
     void
     reportCrash(const String& type,
-                const String& description,
-                const String& function = StringUtil::BLANK,
-                const String& file = StringUtil::BLANK,
-                uint32 line = 0) const;
+                const String& strDescription,
+                const String& strFunction = StringUtil::BLANK,
+                const String& strFile = StringUtil::BLANK,
+                uint32 nLine = 0) const;
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
     /**
@@ -100,10 +100,10 @@ namespace geEngineSDK {
      */
     void
     logErrorAndStackTrace(const String& type,
-                          const String& description,
-                          const String& function,
-                          const String& file,
-                          uint32 line) const;
+                          const String& strDescription,
+                          const String& strFunction,
+                          const String& strFile,
+                          uint32 nLine) const;
 
     /**
      * @brief Does what it says. Internal utility function used by reportCrash().

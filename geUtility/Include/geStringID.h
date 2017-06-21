@@ -148,7 +148,7 @@ namespace geEngineSDK {
      */
     template<class T>
     uint32
-    calcHash(T const& input);
+    calcHash(T const& input) const;
 
     /**
      * @brief Allocates a new string entry and assigns it a unique ID.

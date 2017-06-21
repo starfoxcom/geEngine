@@ -169,7 +169,7 @@ namespace geEngineSDK {
   class TPooledThread : public PooledThread
   {
    public:
-    TPooledThread(const String& name) : PooledThread(name) {}
+    explicit TPooledThread(const String& name) : PooledThread(name) {}
 
     /**
      * @copydoc PooledThread::onThreadStarted

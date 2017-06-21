@@ -257,6 +257,15 @@
     <ClInclude Include="Include\Win32\geMinWindows.h">
       <Filter>Header Files\Win32</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geRTTIManagedDataBlockField.h">
+      <Filter>Header Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Win32\geWin32Windows.h">
+      <Filter>Header Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geVector2I.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -360,6 +369,9 @@
     </ClCompile>
     <ClCompile Include="Source\geRTTIField.cpp">
       <Filter>Source Files\RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Win32\geWin32Windows.cpp">
+      <Filter>Source Files\Win32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

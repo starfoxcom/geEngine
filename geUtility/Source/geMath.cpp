@@ -101,10 +101,10 @@ namespace geEngineSDK {
   const float Math::THRESH_QUAT_NORMALIZED   = (0.01f);
 
   Radian
-  Math::acos(float val) {
-    if (-1.0f < val) {
-      if (1.0f > val) {
-        return Radian(std::acos(val));
+  Math::acos(float Value) {
+    if (-1.0f < Value) {
+      if (1.0f > Value) {
+        return Radian(std::acos(Value));
       }
       else {
         return Radian(0.0f);
@@ -114,10 +114,10 @@ namespace geEngineSDK {
   }
 
   Radian
-  Math::asin(float val) {
-    if (-1.0f < val) {
-      if (1.0f > val) {
-        return Radian(std::asin(val));
+  Math::asin(float Value) {
+    if (-1.0f < Value) {
+      if (1.0f > Value) {
+        return Radian(std::asin(Value));
       }
       else {
         return Radian(HALF_PI);
@@ -192,20 +192,20 @@ namespace geEngineSDK {
 #endif
 
   float
-  Math::fastSin0(float val) {
-    float angleSqr = square(val);
+  Math::fastSin0(float Value) {
+    float angleSqr = square(Value);
     float result = 7.61e-03f;
     result *= angleSqr;
     result -= 1.6605e-01f;
     result *= angleSqr;
     result += 1.0f;
-    result *= val;
+    result *= Value;
     return result;
   }
 
   float
-  Math::fastSin1(float val) {
-    float angleSqr = square(val);
+  Math::fastSin1(float Value) {
+    float angleSqr = square(Value);
     float result = -2.39e-08f;
     result *= angleSqr;
     result += 2.7526e-06f;
@@ -217,13 +217,13 @@ namespace geEngineSDK {
     result -= 1.666666664e-01f;
     result *= angleSqr;
     result += 1.0f;
-    result *= val;
+    result *= Value;
     return result;
   }
 
   float
-  Math::fastCos0(float val) {
-    float angleSqr = square(val);
+  Math::fastCos0(float Value) {
+    float angleSqr = square(Value);
     float result = 3.705e-02f;
     result *= angleSqr;
     result -= 4.967e-01f;
@@ -233,8 +233,8 @@ namespace geEngineSDK {
   }
 
   float
-  Math::fastCos1(float val) {
-    float angleSqr = square(val);
+  Math::fastCos1(float Value) {
+    float angleSqr = square(Value);
     float result = -2.605e-07f;
     result *= angleSqr;
     result += 2.47609e-05f;
@@ -250,20 +250,20 @@ namespace geEngineSDK {
   }
 
   float
-  Math::fastTan0(float val) {
-    float angleSqr = square(val);
+  Math::fastTan0(float Value) {
+    float angleSqr = square(Value);
     float result = 2.033e-01f;
     result *= angleSqr;
     result += 3.1755e-01f;
     result *= angleSqr;
     result += 1.0f;
-    result *= val;
+    result *= Value;
     return result;
   }
 
   float
-  Math::fastTan1(float val) {
-    float angleSqr = square(val);
+  Math::fastTan1(float Value) {
+    float angleSqr = square(Value);
     float result = 9.5168091e-03f;
     result *= angleSqr;
     result += 2.900525e-03f;
@@ -277,84 +277,84 @@ namespace geEngineSDK {
     result += 3.333314036e-01f;
     result *= angleSqr;
     result += 1.0f;
-    result *= val;
+    result *= Value;
     return result;
   }
 
-  float Math::fastASin0(float val) {
-    float root = sqrt(abs(1.0f - val));
+  float Math::fastASin0(float Value) {
+    float root = sqrt(abs(1.0f - Value));
     float result = -0.0187293f;
-    result *= val;
+    result *= Value;
     result += 0.0742610f;
-    result *= val;
+    result *= Value;
     result -= 0.2121144f;
-    result *= val;
+    result *= Value;
     result += 1.5707288f;
     result = HALF_PI - root*result;
     return result;
   }
 
   float
-  Math::fastASin1(float val) {
-    float root = sqrt(abs(1.0f - val));
+  Math::fastASin1(float Value) {
+    float root = sqrt(abs(1.0f - Value));
     float result = -0.0012624911f;
-    result *= val;
+    result *= Value;
     result += 0.0066700901f;
-    result *= val;
+    result *= Value;
     result -= 0.0170881256f;
-    result *= val;
+    result *= Value;
     result += 0.0308918810f;
-    result *= val;
+    result *= Value;
     result -= 0.0501743046f;
-    result *= val;
+    result *= Value;
     result += 0.0889789874f;
-    result *= val;
+    result *= Value;
     result -= 0.2145988016f;
-    result *= val;
+    result *= Value;
     result += 1.5707963050f;
     result = HALF_PI - root*result;
     return result;
   }
 
   float
-  Math::fastACos0(float val) {
-    float root = sqrt(abs(1.0f - val));
+  Math::fastACos0(float Value) {
+    float root = sqrt(abs(1.0f - Value));
     float result = -0.0187293f;
-    result *= val;
+    result *= Value;
     result += 0.0742610f;
-    result *= val;
+    result *= Value;
     result -= 0.2121144f;
-    result *= val;
+    result *= Value;
     result += 1.5707288f;
     result *= root;
     return result;
   }
 
   float
-  Math::fastACos1(float val) {
-    float root = sqrt(abs(1.0f - val));
+  Math::fastACos1(float Value) {
+    float root = sqrt(abs(1.0f - Value));
     float result = -0.0012624911f;
-    result *= val;
+    result *= Value;
     result += 0.0066700901f;
-    result *= val;
+    result *= Value;
     result -= 0.0170881256f;
-    result *= val;
+    result *= Value;
     result += 0.0308918810f;
-    result *= val;
+    result *= Value;
     result -= 0.0501743046f;
-    result *= val;
+    result *= Value;
     result += 0.0889789874f;
-    result *= val;
+    result *= Value;
     result -= 0.2145988016f;
-    result *= val;
+    result *= Value;
     result += 1.5707963050f;
     result *= root;
     return result;
   }
 
   float
-  Math::fastATan0(float val) {
-    float valueSqr = square(val);
+  Math::fastATan0(float Value) {
+    float valueSqr = square(Value);
     float result = 0.0208351f;
     result *= valueSqr;
     result -= 0.085133f;
@@ -364,13 +364,13 @@ namespace geEngineSDK {
     result -= 0.3302995f;
     result *= valueSqr;
     result += 0.999866f;
-    result *= val;
+    result *= Value;
     return result;
   }
 
   float
-  Math::fastATan1(float val) {
-    float valueSqr = square(val);
+  Math::fastATan1(float Value) {
+    float valueSqr = square(Value);
     float result = 0.0028662257f;
     result *= valueSqr;
     result -= 0.0161657367f;
@@ -388,7 +388,7 @@ namespace geEngineSDK {
     result -= 0.3333314528f;
     result *= valueSqr;
     result += 1.0f;
-    result *= val;
+    result *= Value;
     return result;
   }
 

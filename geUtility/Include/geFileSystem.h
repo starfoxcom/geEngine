@@ -162,7 +162,7 @@ namespace geEngineSDK {
      * @brief Copy a single file. Internal function used by copy().
      */
     static void
-    copyFile(const Path& oldPath, const Path& newPath);
+    copyFile(const Path& from, const Path& to);
     
     /**
      * @brief Remove a single file. Internal function used by remove().

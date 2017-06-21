@@ -328,6 +328,7 @@
     <ClInclude Include="Include\gePrerequisitesUtil.h" />
     <ClInclude Include="Include\geRadian.h" />
     <ClInclude Include="Include\geRTTIField.h" />
+    <ClInclude Include="Include\geRTTIManagedDataBlockField.h" />
     <ClInclude Include="Include\geRTTIPlainField.h" />
     <ClInclude Include="Include\geRTTIPrerequisites.h" />
     <ClInclude Include="Include\geServiceLocator.h" />
@@ -341,8 +342,10 @@
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
     <ClInclude Include="Include\geUtil.h" />
+    <ClInclude Include="Include\geVector2I.h" />
     <ClInclude Include="Include\Win32\geMinWindows.h" />
     <ClInclude Include="Include\Win32\geWin32PlatformUtility.h" />
+    <ClInclude Include="Include\Win32\geWin32Windows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Externals\md5.cpp" />
@@ -403,6 +406,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Source\Win32\geWin32Windows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

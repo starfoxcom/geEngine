@@ -22,8 +22,7 @@
 #include "geMath.h"
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-# define WIN32_LEAN_AND_MEAN
-# include "windows.h"
+# include "Win32/geMinWindows.h"
 # if GE_COMPILER == GE_COMPILER_MSVC
   //disable: nonstandard extension used: 'X' uses SEH and 'Y' has destructor
   //We don't care about this as any exception is meant to crash the program.
@@ -72,7 +71,8 @@ namespace geEngineSDK {
       m_idle(true),
       m_threadStarted(false),
       m_threadReady(false),
-      m_idleTime(0) {}
+      m_idleTime(0),
+      m_thread(nullptr) {}
 
   PooledThread::~PooledThread() {}
 
@@ -304,16 +304,14 @@ namespace geEngineSDK {
       }
     }
 
-    if (nullptr == newThread) {
-      if (m_threads.size() >= m_maxCapacity) {
-        GE_EXCEPT(InvalidStateException,
-                  "Unable to create a new thread in the pool because "        \
-                  "maximum capacity has been reached.");
-      }
-
-      newThread = createThread(name);
-      m_threads.push_back(newThread);
+    if (m_threads.size() >= m_maxCapacity) {
+      GE_EXCEPT(InvalidStateException,
+                "Unable to create a new thread in the pool because "          \
+                "maximum capacity has been reached.");
     }
+
+    newThread = createThread(name);
+    m_threads.push_back(newThread);
 
     return newThread;
   }
