@@ -237,11 +237,21 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief	Divide two integers and rounds the result
+     * @brief Divide two integers and rounds the result
      */
-    static FORCEINLINE uint32
-    divideAndRoundUp(uint32 Dividend, uint32 Divisor) {
+    template<class T>
+    static FORCEINLINE T
+    divideAndRoundUp(T Dividend, T Divisor) {
       return (Dividend + Divisor - 1) / Divisor;
+    }
+
+    /**
+     * @brief Divide two integers and rounds the result
+     */
+    template <class T>
+    static FORCEINLINE T
+    divideAndRoundDown(T Dividend, T Divisor) {
+      return Dividend / Divisor;
     }
 
     /**

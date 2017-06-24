@@ -1,6 +1,6 @@
 /*****************************************************************************/
 /**
- * @file    Vector2I.h
+ * @file    geVector2I.h
  * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
  * @date    2015/04/14
  * @brief   Structure for integer points in 2-d space.
@@ -12,18 +12,23 @@
 /*****************************************************************************/
 #pragma once
 
+#ifndef _INC_VECTOR2I_H_
+# define _INC_VECTOR2I_H_
+#endif
+
 /*****************************************************************************/
 /**
  * Includes
  */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
+#include "geMath.h"
 
 namespace geEngineSDK {
   /**
    * @brief Structure for integer points in 2-d space.
    */
-  struct Vector2I
+  class GE_UTILITY_EXPORT Vector2I
   {
    public:
     /**
@@ -40,18 +45,19 @@ namespace geEngineSDK {
 
     /**
      * @brief Create and initialize a new instance to zero.
-     *
-     * @param EForceInit Force init enum
+     * @param fie Force init enum
      */
-    explicit FORCEINLINE Vector2I(FORCE_INIT::E);
+    explicit FORCEINLINE Vector2I(FORCE_INIT::E fie);
+
+    explicit FORCEINLINE Vector2I(int32 val) : x(val), y(val) {}
 
     /**
      * @brief Get specific component of a point.
-     * @param PointIndex Index of point component.
+     * @param Index Index of vector component.
      * @return const reference to component.
      */
     const int32&
-    operator()(int32 PointIndex) const;
+    operator()(uint32 Index) const;
 
     /**
      * @brief Get specific component of a point.
@@ -59,240 +65,248 @@ namespace geEngineSDK {
      * @return reference to component.
      */
     int32&
-    operator()(int32 PointIndex);
+    operator()(uint32 Index);
 
     /**
-    * Compare two points for equality.
-    *
-    * @param Other The other int point being compared.
-    * @return true if the points are equal, false otherwise.
-    */
-    bool operator==(const Vector2I& Other) const;
+     * @brief Compare two vectors for equality.
+     * @param Other The other vector being compared.
+     * @return true if the vectors are equal, false otherwise.
+     */
+    bool
+    operator==(const Vector2I& Other) const;
 
     /**
-    * Compare two points for inequality.
-    *
-    * @param Other The other int point being compared.
-    * @return true if the points are not equal, false otherwise.
-    */
-    bool operator!=(const Vector2I& Other) const;
+     * @brief Compare two vectors for inequality.
+     * @param Other The other vector being compared.
+     * @return true if the vectors are not equal, false otherwise.
+     */
+    bool
+    operator!=(const Vector2I& Other) const;
 
     /**
-    * Scale this point.
-    *
-    * @param Scale What to multiply the point by.
-    * @return Reference to this point after multiplication.
-    */
-    Vector2I& operator*=(int32 Scale);
+     * @brief Add another vector component-wise to this vector.
+     * @param Other The vector to add to this vector.
+     * @return Reference to this vector after addition.
+     */
+    Vector2I&
+    operator+=(const Vector2I& Other);
 
     /**
-    * Divide this point by a scalar.
-    *
-    * @param Divisor What to divide the point by.
-    * @return Reference to this point after division.
-    */
-    Vector2I& operator/=(int32 Divisor);
+     * @brief Subtract another vector component-wise from this vector.
+     * @param Other The vector to subtract from this vector.
+     * @return Reference to this vector after subtraction.
+     */
+    Vector2I&
+    operator-=(const Vector2I& Other);
 
     /**
-    * Add another point component-wise to this point.
-    *
-    * @param Other The point to add to this point.
-    * @return Reference to this point after addition.
-    */
-    Vector2I& operator+=(const Vector2I& Other);
+     * @brief Scale this vector.
+     * @param Scale What to multiply the vector by.
+     * @return Reference to this vector after multiplication.
+     */
+    Vector2I&
+    operator*=(int32 Scale);
 
     /**
-    * Subtract another point component-wise from this point.
-    *
-    * @param Other The point to subtract from this point.
-    * @return Reference to this point after subtraction.
-    */
-    Vector2I& operator-=(const Vector2I& Other);
+     * @brief Divide this vector by a scalar.
+     * @param Divisor What to divide the vector by.
+     * @return Reference to this vector after division.
+     */
+    Vector2I&
+    operator/=(int32 Divisor);
 
     /**
-    * Divide this point component-wise by another point.
-    *
-    * @param Other The point to divide with.
-    * @return Reference to this point after division.
-    */
-    Vector2I& operator/=(const Vector2I& Other);
+     * @brief Divide this vector component-wise by another vector.
+     * @param Other The vector to divide with.
+     * @return Reference to this vector after division.
+     */
+    Vector2I&
+    operator/=(const Vector2I& Other);
 
     /**
-    * Assign another point to this one.
-    *
-    * @param Other The point to assign this point from.
-    * @return Reference to this point after assignment.
-    */
-    Vector2I& operator=(const Vector2I& Other);
+     * @brief Assign another vector to this one.
+     * @param Other The vector to assign this vector from.
+     * @return Reference to this vector after assignment.
+     */
+    Vector2I&
+    operator=(const Vector2I& Other);
 
     /**
-    * Get the result of scaling on this point.
-    *
-    * @param Scale What to multiply the point by.
-    * @return A new scaled int point.
-    */
-    Vector2I operator*(int32 Scale) const;
+     * @brief Get the result of scaling on this vector.
+     * @param Scale What to multiply the vector by.
+     * @return A new scaled vector.
+     */
+    Vector2I
+    operator*(int32 Scale) const;
 
     /**
-    * Get the result of division on this point.
-    *
-    * @param Divisor What to divide the point by.
-    * @return A new divided int point.
-    */
-    Vector2I operator/(int32 Divisor) const;
+     * @brief Get the result of division on this vector.
+     * @param Divisor What to divide the vector by.
+     * @return A new divided vector.
+     */
+    Vector2I
+    operator/(int32 Divisor) const;
 
     /**
-    * Get the result of addition on this point.
-    *
-    * @param Other The other point to add to this.
-    * @return A new combined int point.
-    */
-    Vector2I operator+(const Vector2I& Other) const;
+     * @brief Get the result of addition on this vector.
+     * @param Other The other vector to add to this.
+     * @return A new combined vector.
+     */
+    Vector2I
+    operator+(const Vector2I& Other) const;
 
     /**
-    * Get the result of subtraction from this point.
-    *
-    * @param Other The other point to subtract from this.
-    * @return A new subtracted int point.
-    */
-    Vector2I operator-(const Vector2I& Other) const;
+     * @brief Get the result of subtraction from this vector.
+     * @param Other The other vector to subtract from this.
+     * @return A new subtracted vector.
+     */
+    Vector2I
+    operator-(const Vector2I& Other) const;
 
     /**
-    * Get the result of division on this point.
-    *
-    * @param Other The other point to subtract from this.
-    * @return A new subtracted int point.
-    */
-    Vector2I operator/(const Vector2I& Other) const;
+     * @brief Get the result of division on this vector.
+     * @param Other The other vector to subtract from this.
+     * @return A new subtracted vector.
+     */
+    Vector2I
+    operator/(const Vector2I& Other) const;
 
     /**
-    * Get specific component of the point.
-    *
-    * @param Index the index of point component
-    * @return reference to component.
-    */
-    int32& operator[](int32 Index);
+     * @brief Positive operator
+     * @return A reference to the real value of the vector
+     */
+    const Vector2I&
+    operator+() const;
 
     /**
-    * Get specific component of the point.
-    *
-    * @param Index the index of point component
-    * @return copy of component value.
-    */
-    int32 operator[](int32 Index) const;
-
-  public:
+     * @brief Negative operator
+     * @return A new vector negative of this one
+     */
+    Vector2I
+    operator-() const;
 
     /**
-    * Get the component-wise min of two points.
-    *
-    * @see ComponentMax, GetMax
+    * @brief Dot product operator
+    * @return Scalar dot product of this vector
     */
-    FORCEINLINE Vector2I ComponentMin(const Vector2I& Other) const;
+    FORCEINLINE int32
+    operator|(const Vector2I& V) const;
 
     /**
-    * Get the component-wise max of two points.
-    *
-    * @see ComponentMin, GetMin
-    */
-    FORCEINLINE Vector2I ComponentMax(const Vector2I& Other) const;
+     * @brief Get specific component of the vector.
+     * @param Index the index of vector component
+     * @return reference to component.
+     */
+    int32&
+    operator[](uint32 Index);
 
     /**
-    * Get the larger of the point's two components.
-    *
-    * @return The maximum component of the point.
-    * @see GetMin, Size, SizeSquared
-    */
-    int32 GetMax() const;
+     * @brief Get specific component of the vector.
+     * @param Index the index of vector component
+     * @return copy of component value.
+     */
+    int32
+    operator[](uint32 Index) const;
+
+   public:
+     /**
+      * @brief Exchange the contents of this vector with another.
+      */
+     FORCEINLINE void
+     swap(Vector2I& other);
+
+     /**
+      * @brief  Returns the Manhattan distance between this and another point.
+      */
+     FORCEINLINE uint32
+     manhattanDist(const Vector2I& other) const;
 
     /**
-    * Get the smaller of the point's two components.
-    *
-    * @return The minimum component of the point.
-    * @see GetMax, Size, SizeSquared
-    */
-    int32 GetMin() const;
+     * @brief Get the component-wise min of two vectors.
+     * @see componentMax, getMax
+     */
+    FORCEINLINE Vector2I
+    componentMin(const Vector2I& Other) const;
 
     /**
-    * Get the distance of this point from (0,0).
-    *
-    * @return The distance of this point from (0,0).
-    * @see GetMax, GetMin, SizeSquared
-    */
-    int32 Size() const;
+     * @brief Get the component-wise max of two vectors.
+     * @see componentMin, getMin
+     */
+    FORCEINLINE Vector2I
+    componentMax(const Vector2I& Other) const;
 
     /**
-    * Get the squared distance of this point from (0,0).
-    *
-    * @return The squared distance of this point from (0,0).
-    * @see GetMax, GetMin, Size
-    */
-    int32 SizeSquared() const;
+     * @brief Get the larger of the vector's two components.
+     * @return The maximum component of the vector.
+     * @see getMin, size, sizeSquared
+     */
+    int32
+    getMax() const;
 
     /**
-    * Get a textual representation of this point.
-    *
-    * @return A string describing the point.
-    */
-    FString ToString() const;
-
-  public:
-
-    /**
-    * Divide an int point and round up the result.
-    *
-    * @param lhs The int point being divided.
-    * @param Divisor What to divide the int point by.
-    * @return A new divided int point.
-    * @see DivideAndRoundDown
-    */
-    static Vector2I DivideAndRoundUp(Vector2I lhs, int32 Divisor);
-    static Vector2I DivideAndRoundUp(Vector2I lhs, Vector2I Divisor);
+     * @brief Get the smaller of the vector's two components.
+     * @return The minimum component of the vector.
+     * @see getMax, size, sizeSquared
+     */
+    int32
+    getMin() const;
 
     /**
-    * Divide an int point and round down the result.
-    *
-    * @param lhs The int point being divided.
-    * @param Divisor What to divide the int point by.
-    * @return A new divided int point.
-    * @see DivideAndRoundUp
-    */
-    static Vector2I DivideAndRoundDown(Vector2I lhs, int32 Divisor);
+     * @brief Get the distance of this vector from (0,0).
+     * @return The distance of this vector from (0,0).
+     * @see getMax, getMin, sizeSquared
+     */
+    int32
+    size() const;
 
     /**
-    * Get number of components point has.
-    *
-    * @return number of components point has.
-    */
-    static int32 Num();
-
-  public:
-
-    /**
-    * Serialize the point.
-    *
-    * @param Ar The archive to serialize into.
-    * @param Point The point to serialize.
-    * @return Reference to the Archive after serialization.
-    */
-    friend FArchive& operator<<(FArchive& Ar, Vector2I& Point) {
-      return Ar << Point.x << Point.y;
-    }
+     * @brief Get the squared distance of this point from (0,0).
+     * @return The squared distance of this point from (0,0).
+     * @see GetMax, GetMin, Size
+     */
+    int32
+    sizeSquared() const;
 
     /**
-    * Serialize the point.
-    *
-    * @param Ar The archive to serialize into.
-    * @return true on success, false otherwise.
-    */
-    bool Serialize(FArchive& Ar) {
-      Ar << *this;
-      return true;
-    }
+     * @brief Calculates the dot (scalar) product of this vector with another.
+     */
+    int32
+    dot(const Vector2I& vec) const;
+
+   public:
+    /**
+     * @brief Divide an int vector and round up the result.
+     * @param lhs The int vector being divided.
+     * @param Divisor What to divide the int vector by.
+     * @return A new divided int vector.
+     * @see divideAndRoundDown
+     */
+    static Vector2I
+    divideAndRoundUp(Vector2I lhs, int32 Divisor);
+
+    static Vector2I
+    divideAndRoundUp(Vector2I lhs, Vector2I Divisor);
 
     /**
-    * @brief Holds the point's x-coordinate.
-    */
+     * @brief Divide an int vector and round down the result.
+     * @param lhs The int vector being divided.
+     * @param Divisor What to divide the int vector by.
+     * @return A new divided int vector.
+     * @see divideAndRoundUp
+     */
+    static Vector2I
+    divideAndRoundDown(Vector2I lhs, int32 Divisor);
+
+    /**
+     * @brief Get number of components vector has.
+     * @return number of components vector has.
+     */
+    static int32
+    num();
+
+    /**
+     * @brief Holds the point's x-coordinate.
+     */
     int32 x;
 
     /**
@@ -301,187 +315,211 @@ namespace geEngineSDK {
     int32 y;
 
     /**
-    * @brief An integer point with zeroed values.
-    */
+     * @brief An integer point with zeroed values.
+     */
     static const Vector2I ZERO;
   };
 
-
-  /* Vector2I inline functions
-  *****************************************************************************/
+  /***************************************************************************/
+  /**
+   * Vector2I inline functions
+   */
+  /***************************************************************************/
 
   FORCEINLINE Vector2I::Vector2I() {}
 
+  FORCEINLINE Vector2I::Vector2I(int32 InX, int32 InY) : x(InX), y(InY) {}
 
-  FORCEINLINE Vector2I::Vector2I(int32 InX, int32 InY)
-    : x(InX)
-    , y(InY) {}
+  FORCEINLINE Vector2I::Vector2I(FORCE_INIT::E) : x(0), y(0) {}
 
-
-  FORCEINLINE Vector2I::Vector2I(EForceInit)
-    : x(0)
-    , y(0) {}
-
-
-  FORCEINLINE const int32& Vector2I::operator()(int32 PointIndex) const {
-    return (&x)[PointIndex];
+  FORCEINLINE const int32&
+  Vector2I::operator()(uint32 Index) const {
+    GE_ASSERT(Index < 2);
+    return (&x)[Index];
   }
 
-
-  FORCEINLINE int32& Vector2I::operator()(int32 PointIndex) {
-    return (&x)[PointIndex];
+  FORCEINLINE int32&
+  Vector2I::operator()(uint32 Index) {
+    return (&x)[Index];
   }
 
-
-  FORCEINLINE int32 Vector2I::Num() {
+  FORCEINLINE int32
+  Vector2I::num() {
     return 2;
   }
 
-
-  FORCEINLINE bool Vector2I::operator==(const Vector2I& Other) const {
+  FORCEINLINE bool
+  Vector2I::operator==(const Vector2I& Other) const {
     return x == Other.x && y == Other.y;
   }
 
-
-  FORCEINLINE bool Vector2I::operator!=(const Vector2I& Other) const {
-    return (x != Other.x) || (y != Other.y);
+  FORCEINLINE bool
+  Vector2I::operator!=(const Vector2I& Other) const {
+    return (x != Other.x || y != Other.y);
   }
 
-
-  FORCEINLINE Vector2I& Vector2I::operator*=(int32 Scale) {
-    x *= Scale;
-    y *= Scale;
-
-    return *this;
-  }
-
-
-  FORCEINLINE Vector2I& Vector2I::operator/=(int32 Divisor) {
-    x /= Divisor;
-    y /= Divisor;
-
-    return *this;
-  }
-
-
-  FORCEINLINE Vector2I& Vector2I::operator+=(const Vector2I& Other) {
+  FORCEINLINE Vector2I&
+    Vector2I::operator+=(const Vector2I& Other) {
     x += Other.x;
     y += Other.y;
-
     return *this;
   }
 
-
-  FORCEINLINE Vector2I& Vector2I::operator-=(const Vector2I& Other) {
+  FORCEINLINE Vector2I&
+    Vector2I::operator-=(const Vector2I& Other) {
     x -= Other.x;
     y -= Other.y;
-
     return *this;
   }
 
+  FORCEINLINE Vector2I&
+  Vector2I::operator*=(int32 Scale) {
+    x *= Scale;
+    y *= Scale;
+    return *this;
+  }
 
-  FORCEINLINE Vector2I& Vector2I::operator/=(const Vector2I& Other) {
+  FORCEINLINE Vector2I&
+  Vector2I::operator/=(int32 Divisor) {
+    GE_ASSERT(Divisor);
+    x /= Divisor;
+    y /= Divisor;
+    return *this;
+  }
+
+  FORCEINLINE Vector2I&
+    Vector2I::operator/=(const Vector2I& Other) {
     x /= Other.x;
     y /= Other.y;
-
     return *this;
   }
 
-
-  FORCEINLINE Vector2I& Vector2I::operator=(const Vector2I& Other) {
+  FORCEINLINE Vector2I&
+  Vector2I::operator=(const Vector2I& Other) {
     x = Other.x;
     y = Other.y;
-
     return *this;
   }
 
-
-  FORCEINLINE Vector2I Vector2I::operator*(int32 Scale) const {
+  FORCEINLINE Vector2I
+  Vector2I::operator*(int32 Scale) const {
     return Vector2I(*this) *= Scale;
   }
 
-
-  FORCEINLINE Vector2I Vector2I::operator/(int32 Divisor) const {
+  FORCEINLINE Vector2I
+  Vector2I::operator/(int32 Divisor) const {
+    GE_ASSERT(Divisor);
     return Vector2I(*this) /= Divisor;
   }
 
-
-  FORCEINLINE int32& Vector2I::operator[](int32 Index) {
-    check(Index >= 0 && Index < 2);
-    return ((Index == 0) ? x : y);
+  FORCEINLINE const Vector2I&
+  Vector2I::operator+() const {
+    return *this;
   }
 
-
-  FORCEINLINE int32 Vector2I::operator[](int32 Index) const {
-    check(Index >= 0 && Index < 2);
-    return ((Index == 0) ? x : y);
+  FORCEINLINE Vector2I
+  Vector2I::operator-() const {
+    return Vector2I(-x, -y);
   }
 
-
-  FORCEINLINE Vector2I Vector2I::ComponentMin(const Vector2I& Other) const {
-    return Vector2I(FMath::Min(x, Other.x), FMath::Min(y, Other.y));
+  FORCEINLINE int32&
+  Vector2I::operator[](uint32 Index) {
+    GE_ASSERT(Index < 2);
+    return ((0 == Index) ? x : y);
   }
 
-
-  FORCEINLINE Vector2I Vector2I::ComponentMax(const Vector2I& Other) const {
-    return Vector2I(FMath::Max(x, Other.x), FMath::Max(y, Other.y));
+  FORCEINLINE int32
+  Vector2I::operator[](uint32 Index) const {
+    GE_ASSERT(Index < 2);
+    return ((0 == Index) ? x : y);
   }
 
-  FORCEINLINE Vector2I Vector2I::DivideAndRoundUp(Vector2I lhs, int32 Divisor) {
-    return Vector2I(FMath::DivideAndRoundUp(lhs.x, Divisor), FMath::DivideAndRoundUp(lhs.y, Divisor));
+  FORCEINLINE void
+    Vector2I::swap(Vector2I& other) {
+    std::swap(x, other.x);
+    std::swap(y, other.y);
   }
 
-  FORCEINLINE Vector2I Vector2I::DivideAndRoundUp(Vector2I lhs, Vector2I Divisor) {
-    return Vector2I(FMath::DivideAndRoundUp(lhs.x, Divisor.x), FMath::DivideAndRoundUp(lhs.y, Divisor.y));
+  FORCEINLINE uint32
+  Vector2I::manhattanDist(const Vector2I& other) const {
+    return  static_cast<uint32>(Math::abs(float(other.x - x))) +
+            static_cast<uint32>(Math::abs(float(other.y - y)));
   }
 
-  FORCEINLINE Vector2I Vector2I::DivideAndRoundDown(Vector2I lhs, int32 Divisor) {
-    return Vector2I(FMath::DivideAndRoundDown(lhs.x, Divisor), FMath::DivideAndRoundDown(lhs.y, Divisor));
+  FORCEINLINE Vector2I
+  Vector2I::componentMin(const Vector2I& Other) const {
+    return Vector2I(Math::min(x, Other.x), Math::min(y, Other.y));
   }
 
+  FORCEINLINE Vector2I
+  Vector2I::componentMax(const Vector2I& Other) const {
+    return Vector2I(Math::max(x, Other.x), Math::max(y, Other.y));
+  }
 
-  FORCEINLINE Vector2I Vector2I::operator+(const Vector2I& Other) const {
+  FORCEINLINE Vector2I
+  Vector2I::divideAndRoundUp(Vector2I lhs, int32 Divisor) {
+    return Vector2I(Math::divideAndRoundUp(lhs.x, Divisor),
+                    Math::divideAndRoundUp(lhs.y, Divisor));
+  }
+
+  FORCEINLINE Vector2I
+  Vector2I::divideAndRoundUp(Vector2I lhs, Vector2I Divisor) {
+    return Vector2I(Math::divideAndRoundUp(lhs.x, Divisor.x),
+                    Math::divideAndRoundUp(lhs.y, Divisor.y));
+  }
+
+  FORCEINLINE Vector2I
+  Vector2I::divideAndRoundDown(Vector2I lhs, int32 Divisor) {
+    return Vector2I(Math::divideAndRoundDown(lhs.x, Divisor),
+                    Math::divideAndRoundDown(lhs.y, Divisor));
+  }
+
+  FORCEINLINE Vector2I
+  Vector2I::operator+(const Vector2I& Other) const {
     return Vector2I(*this) += Other;
   }
 
-
-  FORCEINLINE Vector2I Vector2I::operator-(const Vector2I& Other) const {
+  FORCEINLINE Vector2I
+  Vector2I::operator-(const Vector2I& Other) const {
     return Vector2I(*this) -= Other;
   }
 
-
-  FORCEINLINE Vector2I Vector2I::operator/(const Vector2I& Other) const {
+  FORCEINLINE Vector2I
+  Vector2I::operator/(const Vector2I& Other) const {
     return Vector2I(*this) /= Other;
   }
 
-
-  FORCEINLINE int32 Vector2I::GetMax() const {
-    return FMath::Max(x, y);
+  FORCEINLINE int32
+  Vector2I::getMax() const {
+    return Math::max(x, y);
   }
 
-
-  FORCEINLINE int32 Vector2I::GetMin() const {
-    return FMath::Min(x, y);
+  FORCEINLINE int32
+  Vector2I::getMin() const {
+    return Math::min(x, y);
   }
 
-  FORCEINLINE uint32 GetTypeHash(const Vector2I& InPoint) {
-    return HashCombine(GetTypeHash(InPoint.x), GetTypeHash(InPoint.y));
+  FORCEINLINE int32
+  Vector2I::size() const {
+    int64 X64 = static_cast<int64>(x);
+    int64 Y64 = static_cast<int64>(y);
+    return int32(Math::sqrt(float(X64 * X64 + Y64 * Y64)));
   }
 
-
-  FORCEINLINE int32 Vector2I::Size() const {
-    int64 X64 = (int64)x;
-    int64 Y64 = (int64)y;
-    return int32(FMath::Sqrt(float(X64 * X64 + Y64 * Y64)));
+  FORCEINLINE int32
+  Vector2I::sizeSquared() const {
+    return Math::square(x) + Math::square(y);
   }
 
-  FORCEINLINE int32 Vector2I::SizeSquared() const {
-    return x*x + y*y;
+  FORCEINLINE int32
+  Vector2I::operator|(const Vector2I& V) const {
+    return x * V.x + y * V.y;
   }
 
-  FORCEINLINE FString Vector2I::ToString() const {
-    return FString::Printf(TEXT("X=%d Y=%d"), x, y);
+  FORCEINLINE int32
+  Vector2I::dot(const Vector2I& vec) const {
+    return *this | vec;
   }
 
-  template <> struct TIsPODType<Vector2I> { enum { Value = true }; };
+  GE_ALLOW_MEMCPY_SERIALIZATION(Vector2I);
 }

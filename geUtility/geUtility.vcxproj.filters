@@ -373,5 +373,8 @@
     <ClCompile Include="Source\Win32\geWin32Windows.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geVector2I.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

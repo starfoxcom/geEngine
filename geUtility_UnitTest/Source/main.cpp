@@ -8,6 +8,7 @@
 #include <geFloat11.h>
 #include <geFloat16.h>
 #include <geFloat32.h>
+#include <geVector2I.h>
 
 using namespace geEngineSDK;
 
@@ -257,6 +258,15 @@ TEST(geUtility, Math_Fast) {
   tstValR = Math::atan(Degree(45.0f).valueRadians()).valueRadians();
   EXPECT_NEAR(tstValR, tstVal0, 0.001f);
   EXPECT_NEAR(tstValR, tstVal1, 0.00001f);
+}
+
+TEST(geUtility, Math_Vector2I) {
+  Vector2I tmpVector0(5);
+  Vector2I tmpVector1(3);
+  Vector2I tmpVector2(3, 4);
+
+  int32 value = tmpVector2 | tmpVector0;
+  EXPECT_TRUE(35 == value);
 }
 
 TEST(geUtility, Platform_Utilities) {

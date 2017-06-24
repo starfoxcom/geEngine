@@ -189,7 +189,7 @@
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <CppExceptions>true</CppExceptions>
       <ExtraWarnings>true</ExtraWarnings>
@@ -270,7 +270,7 @@
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <OptimizationLevel>Level2</OptimizationLevel>
       <CppExceptions>true</CppExceptions>
@@ -376,6 +376,7 @@
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />
+    <ClCompile Include="Source\geVector2I.cpp" />
     <ClCompile Include="Source\ORBIS\geORBISCrashHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -406,7 +407,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Source\Win32\geWin32Windows.cpp" />
+    <ClCompile Include="Source\Win32\geWin32Windows.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

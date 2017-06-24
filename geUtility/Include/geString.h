@@ -792,6 +792,13 @@ namespace geEngineSDK {
   toString(const Vector2& val);
 
   /**
+   * @brief Converts a 2 dimensional int vector to a string.
+   * @note  Format is "x y".
+   */
+  GE_UTILITY_EXPORT String
+  toString(const Vector2I& val);
+
+  /**
    * @brief Converts a 3 dimensional vector to a string.
    * @note  Format is "x y z".
    */

@@ -82,7 +82,7 @@ namespace geEngineSDK {
   class Vector2;
   class Vector3;
   class Vector4;
-  struct Vector2I;
+  class Vector2I;
   class Rect2I;
   class Rect2;
   class Rect3;
