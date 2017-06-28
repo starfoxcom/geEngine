@@ -566,11 +566,11 @@ namespace geEngineSDK {
                             const String& strDescription,
                             const String& strFunction,
                             const String& strFile,
-                            uint32 nline) const {
+                            uint32 nLine) const {
     //Win32 debug methods are not thread safe
     Lock(m_crashData->mutex);
 
-    logErrorAndStackTrace(type, strDescription, strFunction, strFile, nline);
+    logErrorAndStackTrace(type, strDescription, strFunction, strFile, nLine);
     saveCrashLog();
 
     win32_writeMiniDump(getCrashFolder() + String(s_MiniDumpName), nullptr);

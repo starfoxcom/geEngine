@@ -631,6 +631,13 @@ namespace geEngineSDK {
   toWString(bool val, bool yesNo = false);
 
   /**
+   * @brief Converts a 2 dimensional int vector to a wide string.
+   * @note  Format is "x y".
+   */
+  GE_UTILITY_EXPORT WString
+  toWString(const Vector2& val);
+
+  /**
    * @brief Converts a 2 dimensional vector to a wide string.
    * @note  Format is "x y".
    */

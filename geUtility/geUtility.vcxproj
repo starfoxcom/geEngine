@@ -189,7 +189,7 @@
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <CppExceptions>true</CppExceptions>
       <ExtraWarnings>true</ExtraWarnings>
@@ -270,7 +270,7 @@
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <OptimizationLevel>Level2</OptimizationLevel>
       <CppExceptions>true</CppExceptions>
@@ -342,7 +342,9 @@
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
     <ClInclude Include="Include\geUtil.h" />
+    <ClInclude Include="Include\geVector2.h" />
     <ClInclude Include="Include\geVector2I.h" />
+    <ClInclude Include="Include\geVectorNI.h" />
     <ClInclude Include="Include\Win32\geMinWindows.h" />
     <ClInclude Include="Include\Win32\geWin32PlatformUtility.h" />
     <ClInclude Include="Include\Win32\geWin32Windows.h" />
@@ -376,6 +378,7 @@
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />
+    <ClCompile Include="Source\geVector2.cpp" />
     <ClCompile Include="Source\geVector2I.cpp" />
     <ClCompile Include="Source\ORBIS\geORBISCrashHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

@@ -30,8 +30,8 @@ namespace geEngineSDK {
                             const String& strDescription,
                             const String& strFunction,
                             const String& strFile,
-                            uint32 nline) const {
-    logErrorAndStackTrace(type, strDescription, strFunction, strFile, nline);
+                            uint32 nLine) const {
+    logErrorAndStackTrace(type, strDescription, strFunction, strFile, nLine);
     saveCrashLog();
   }
 

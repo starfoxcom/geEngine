@@ -37,6 +37,11 @@ namespace geEngineSDK {
     Vector2I();
 
     /**
+     * @brief Copy constructor.
+     */
+    Vector2I(const Vector2I& Other) : x(Other.x), y(Other.y) {}
+
+    /**
      * @brief Create and initialize a new instance with the specified coordinates.
      * @param InX The x-coordinate.
      * @param InY The y-coordinate.

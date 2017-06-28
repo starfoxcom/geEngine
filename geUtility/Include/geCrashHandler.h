@@ -77,7 +77,7 @@ namespace geEngineSDK {
      * @note Available in Windows builds only.
      */
     int
-    reportCrash(void* exceptionData) const;
+    reportCrash(void* exceptionDataPtr) const;
 #endif
 
     /**

@@ -83,6 +83,8 @@ namespace geEngineSDK {
   class Vector3;
   class Vector4;
   class Vector2I;
+  class Vector3I;
+  class Vector4I;
   class Rect2I;
   class Rect2;
   class Rect3;

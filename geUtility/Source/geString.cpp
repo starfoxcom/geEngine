@@ -22,7 +22,7 @@
 //#include "geMatrix3.h"
 //#include "geMatrix4.h"
 //#include "geQuaternion.h"
-//#include "geVector2.h"
+#include "geVector2.h"
 #include "geVector2I.h"
 //#include "geVector3.h"
 //#include "geVector4.h"
@@ -330,19 +330,26 @@ namespace geEngineSDK {
   WString
   toWString(const Vector2& val) {
     WStringStream stream;
-    stream << val.X << L" " << val.Y;
+    stream << L"X=" << val.x << L" Y=" << val.y;
     return stream.str();
   }
 
   String
   toString(const Vector2& val) {
     StringStream stream;
-    stream << val.X << " " << val.Y;
+    stream << "X=" << val.x << " Y=" << val.y;
     return stream.str();
   }
 #endif // _INC_VECTOR2_H_
 
 #ifdef _INC_VECTOR2I_H_
+  WString
+  toWString(const Vector2I& val) {
+    WStringStream stream;
+    stream << L"X=" << val.x << L" Y=" << val.y;
+    return stream.str();
+  }
+
   String
   toString(const Vector2I & val) {
     StringStream stream;
