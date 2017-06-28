@@ -18,6 +18,7 @@
 /*****************************************************************************/
 #include "Win32/geWin32Windows.h"
 #include "Win32/geWin32PlatformUtility.h"
+#include "geVector2I.h"
 
 namespace geEngineSDK {
   Vector<Win32Window*> Win32Window::s_allWindows;

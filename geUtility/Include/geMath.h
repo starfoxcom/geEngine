@@ -1108,10 +1108,10 @@ namespace geEngineSDK {
     static bool
     intersectPlanes3(Vector3& I, const Plane& P1, const Plane& P2, const Plane& P3);
 
-    FORCEINLINE float
+    static float
     getRangePct(Vector2 const& Range, float Value);
 
-    FORCEINLINE float
+    static float
     getRangeValue(Vector2 const& Range, float Pct);
 
     static bool

@@ -8,7 +8,9 @@
 #include <geFloat11.h>
 #include <geFloat16.h>
 #include <geFloat32.h>
+#include <geVector2.h>
 #include <geVector2I.h>
+#include <geVector2Half.h>
 
 using namespace geEngineSDK;
 
@@ -267,6 +269,18 @@ TEST(geUtility, Math_Vector2I) {
 
   int32 value = tmpVector2 | tmpVector0;
   EXPECT_TRUE(35 == value);
+}
+
+TEST(geUtility, Math_Vector2Half) {
+  Vector2 tmpVector0(15.f, 15.f);
+  Vector2 tmpVector1;
+  Vector2Half tmpHalf;
+  
+  tmpHalf = tmpVector0;
+  tmpVector1 = tmpHalf;
+
+  EXPECT_FLOAT_EQ(tmpVector1.x, 15.f);
+  EXPECT_FLOAT_EQ(tmpVector1.y, 15.f);
 }
 
 TEST(geUtility, Platform_Utilities) {

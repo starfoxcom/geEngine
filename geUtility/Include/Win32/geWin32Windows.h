@@ -18,7 +18,6 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
-#include "geVector2I.h"
 #include "Win32/geMinWindows.h"
 
 namespace geEngineSDK {

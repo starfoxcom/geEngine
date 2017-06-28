@@ -343,6 +343,7 @@
     <ClInclude Include="Include\geTimer.h" />
     <ClInclude Include="Include\geUtil.h" />
     <ClInclude Include="Include\geVector2.h" />
+    <ClInclude Include="Include\geVector2Half.h" />
     <ClInclude Include="Include\geVector2I.h" />
     <ClInclude Include="Include\geVectorNI.h" />
     <ClInclude Include="Include\Win32\geMinWindows.h" />

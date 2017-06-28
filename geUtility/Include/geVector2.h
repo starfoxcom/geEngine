@@ -49,7 +49,7 @@ namespace geEngineSDK {
      * @brief Constructs a vector from a Vector2I.
      * @param InPos Integer point used to set this vector.
      */
-    FORCEINLINE Vector2(Vector2I InPos);
+    explicit FORCEINLINE Vector2(Vector2I InPos);
 
     /**
      * @brief Constructor which initializes all components to zero.
@@ -362,14 +362,14 @@ namespace geEngineSDK {
      *        ones of the passed in vector.
      */
     void
-    floor(const Vector2& cmp);
+    floor(const Vector2& V);
 
     /**
      * @brief Sets this vector's components to the maximum of its own and the
      *        ones of the passed in vector.
      */
     void
-    ceil(const Vector2& cmp);
+    ceil(const Vector2& V);
 
     /**
      * @brief Get the maximum value of the vector's components.
@@ -788,7 +788,7 @@ namespace geEngineSDK {
 
     float S = Math::sin(radAngle);
     float C = Math::cos(radAngle);
-    const float OMC = 1.0f - C;
+    //const float OMC = 1.0f - C;
 
     return Vector2(C * x - S * y, S * x + C * y);
   }
