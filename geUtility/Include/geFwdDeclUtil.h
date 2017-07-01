@@ -80,6 +80,7 @@ namespace geEngineSDK {
   class Ray;
   class Sphere;
   class Vector2;
+  class Vector2Half;
   class Vector3;
   class Vector4;
   class Vector2I;

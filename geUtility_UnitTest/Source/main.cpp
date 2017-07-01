@@ -283,6 +283,21 @@ TEST(geUtility, Math_Vector2Half) {
   EXPECT_FLOAT_EQ(tmpVector1.y, 15.f);
 }
 
+TEST(geUtility, Math_Intersections) {
+  EXPECT_TRUE(Math::lineLineIntersection( Vector2(0.f, 5.f),
+                                          Vector2(15.f, 5.f),
+                                          Vector2(10.f, 0.f),
+                                          Vector2(10.f, 10.f)));
+
+  Vector2 intersectPoint = Math::getLineLineIntersect(Vector2(0.f, 5.f),
+                                                      Vector2(15.f, 5.f),
+                                                      Vector2(10.f, 0.f),
+                                                      Vector2(10.f, 10.f));
+
+  EXPECT_FLOAT_EQ(intersectPoint.x, 10.f);
+  EXPECT_FLOAT_EQ(intersectPoint.y, 5.f);
+}
+
 TEST(geUtility, Platform_Utilities) {
   PlatformUtility::copyToClipboard(L"Esta es una prueba del portapapeles!");
   WString szClipboardContent = PlatformUtility::copyFromClipboard();

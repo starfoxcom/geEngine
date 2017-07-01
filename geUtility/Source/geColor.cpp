@@ -58,10 +58,10 @@ namespace geEngineSDK {
   static const float OneOver255 = 1.0f / 255.0f;
 
   LinearColor::LinearColor(const Color& refColor) {
-    R = s_pow22OneOver255Table[refColor.R];
-    G = s_pow22OneOver255Table[refColor.G];
-    B = s_pow22OneOver255Table[refColor.B];
-    A = float(refColor.A) * OneOver255;
+    r = s_pow22OneOver255Table[refColor.r];
+    g = s_pow22OneOver255Table[refColor.g];
+    b = s_pow22OneOver255Table[refColor.b];
+    a = float(refColor.a) * OneOver255;
   }
   
   /*
@@ -70,26 +70,26 @@ namespace geEngineSDK {
   */
 
   LinearColor::LinearColor(const Float16Color& refColor) {
-    R = refColor.R.getFloat();
-    G = refColor.G.getFloat();
-    B = refColor.B.getFloat();
-    A = refColor.A.getFloat();
+    r = refColor.r.getFloat();
+    g = refColor.g.getFloat();
+    b = refColor.b.getFloat();
+    a = refColor.a.getFloat();
   }
 
   Color
   LinearColor::quantize() const {
-    return Color(static_cast<uint8>(Math::clamp<int32>(Math::trunc(R*255.f), 0, 255)),
-                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(G*255.f), 0, 255)),
-                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(B*255.f), 0, 255)),
-                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(A*255.f), 0, 255)));
+    return Color(static_cast<uint8>(Math::clamp<int32>(Math::trunc(r*255.f), 0, 255)),
+                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(g*255.f), 0, 255)),
+                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(b*255.f), 0, 255)),
+                 static_cast<uint8>(Math::clamp<int32>(Math::trunc(a*255.f), 0, 255)));
   }
 
   Color
   LinearColor::toColor(const bool bSRGB) const {
-    float FloatR = Math::clamp(R, 0.0f, 1.0f);
-    float FloatG = Math::clamp(G, 0.0f, 1.0f);
-    float FloatB = Math::clamp(B, 0.0f, 1.0f);
-    float FloatA = Math::clamp(A, 0.0f, 1.0f);
+    float FloatR = Math::clamp(r, 0.0f, 1.0f);
+    float FloatG = Math::clamp(g, 0.0f, 1.0f);
+    float FloatB = Math::clamp(b, 0.0f, 1.0f);
+    float FloatA = Math::clamp(a, 0.0f, 1.0f);
 
     if (bSRGB) {
       FloatR = FloatR <= 0.0031308f ? FloatR * 12.92f : 
@@ -101,17 +101,17 @@ namespace geEngineSDK {
     }
 
     Color ret;
-    ret.A = static_cast<uint8>(Math::floor(FloatA * 255.999f));
-    ret.R = static_cast<uint8>(Math::floor(FloatR * 255.999f));
-    ret.G = static_cast<uint8>(Math::floor(FloatG * 255.999f));
-    ret.B = static_cast<uint8>(Math::floor(FloatB * 255.999f));
+    ret.a = static_cast<uint8>(Math::floor(FloatA * 255.999f));
+    ret.r = static_cast<uint8>(Math::floor(FloatR * 255.999f));
+    ret.g = static_cast<uint8>(Math::floor(FloatG * 255.999f));
+    ret.b = static_cast<uint8>(Math::floor(FloatB * 255.999f));
 
     return ret;
   }
 
   Color
   LinearColor::toRGBE() const {
-    const float	Primary = Math::max3(R, G, B);
+    const float	Primary = Math::max3(r, g, b);
     Color rColor;
 
     if (Primary < 1E-32) {
@@ -121,10 +121,10 @@ namespace geEngineSDK {
       int32 Exponent;
       const float Scale = frexp(Primary, &Exponent) / Primary * 255.f;
 
-      rColor.R = static_cast<uint8>(Math::clamp(Math::trunc(R * Scale), 0, 255));
-      rColor.G = static_cast<uint8>(Math::clamp(Math::trunc(G * Scale), 0, 255));
-      rColor.B = static_cast<uint8>(Math::clamp(Math::trunc(B * Scale), 0, 255));
-      rColor.A = static_cast<uint8>(Math::clamp(Math::trunc(static_cast<float>(Exponent)),
+      rColor.r = static_cast<uint8>(Math::clamp(Math::trunc(r * Scale), 0, 255));
+      rColor.g = static_cast<uint8>(Math::clamp(Math::trunc(g * Scale), 0, 255));
+      rColor.b = static_cast<uint8>(Math::clamp(Math::trunc(b * Scale), 0, 255));
+      rColor.a = static_cast<uint8>(Math::clamp(Math::trunc(static_cast<float>(Exponent)),
                                                 -128,
                                                 127)) + 128;
     }
@@ -135,20 +135,20 @@ namespace geEngineSDK {
   LinearColor
   LinearColor::fromSRGBColor(const Color & color) {
     LinearColor LinearColor;
-    LinearColor.R = s_sRGBToLinearTable[color.R];
-    LinearColor.G = s_sRGBToLinearTable[color.G];
-    LinearColor.B = s_sRGBToLinearTable[color.B];
-    LinearColor.A = float(color.A) * OneOver255;
+    LinearColor.r = s_sRGBToLinearTable[color.r];
+    LinearColor.g = s_sRGBToLinearTable[color.g];
+    LinearColor.b = s_sRGBToLinearTable[color.b];
+    LinearColor.a = float(color.a) * OneOver255;
     return LinearColor;
   }
 
   LinearColor
   LinearColor::fromPow22Color(const Color & color) {
     LinearColor LinearColor;
-    LinearColor.R = s_pow22OneOver255Table[color.R];
-    LinearColor.G = s_pow22OneOver255Table[color.G];
-    LinearColor.B = s_pow22OneOver255Table[color.B];
-    LinearColor.A = float(color.A) * OneOver255;
+    LinearColor.r = s_pow22OneOver255Table[color.r];
+    LinearColor.g = s_pow22OneOver255Table[color.g];
+    LinearColor.b = s_pow22OneOver255Table[color.b];
+    LinearColor.a = float(color.a) * OneOver255;
     return LinearColor;
   }
 
@@ -160,7 +160,7 @@ namespace geEngineSDK {
 
   float
   LinearColor::computeLuminance() const {
-    return R * 0.3f + G * 0.59f + B * 0.11f;
+    return r * 0.3f + g * 0.59f + b * 0.11f;
   }
 
   LinearColor
@@ -215,29 +215,29 @@ namespace geEngineSDK {
 
   LinearColor
   LinearColor::linearRGBToHSV() const {
-    const float RGBMin = Math::min3(R, G, B);
-    const float RGBMax = Math::max3(R, G, B);
+    const float RGBMin = Math::min3(r, g, b);
+    const float RGBMax = Math::max3(r, g, b);
     const float RGBRange = RGBMax - RGBMin;
 
     const float Hue = (RGBMax == RGBMin ? 0.0f :
-                       RGBMax == R ? fmod((((G - B) / RGBRange) * 60.0f) + 360.0f, 360.0f) :
-                       RGBMax == G ? (((B - R) / RGBRange) * 60.0f) + 120.0f :
-                       RGBMax == B ? (((R - G) / RGBRange) * 60.0f) + 240.0f :
+                       RGBMax == r ? fmod((((g - b) / RGBRange) * 60.0f) + 360.0f, 360.0f) :
+                       RGBMax == g ? (((b - r) / RGBRange) * 60.0f) + 120.0f :
+                       RGBMax == b ? (((r - g) / RGBRange) * 60.0f) + 240.0f :
                        0.0f);
 
     const float Saturation = (RGBMax == 0.0f ? 0.0f : RGBRange / RGBMax);
     const float Value = RGBMax;
 
     //In the new color, R = H, G = S, B = V, A = A
-    return LinearColor(Hue, Saturation, Value, A);
+    return LinearColor(Hue, Saturation, Value, a);
   }
 
   LinearColor
   LinearColor::hsvToLinearRGB() const {
     //In this color, R = H, G = S, B = V
-    const float Hue = R;
-    const float Saturation = G;
-    const float Value = B;
+    const float Hue = r;
+    const float Saturation = g;
+    const float Value = b;
 
     const float HDiv60 = Hue / 60.0f;
     const float HDiv60_Floor = floorf(HDiv60);
@@ -263,7 +263,7 @@ namespace geEngineSDK {
     return LinearColor(RGBValues[RGBSwizzle[SwizzleIndex][0]],
                        RGBValues[RGBSwizzle[SwizzleIndex][1]],
                        RGBValues[RGBSwizzle[SwizzleIndex][2]],
-                       A);
+                       a);
   }
 
   LinearColor
@@ -271,8 +271,8 @@ namespace geEngineSDK {
     const LinearColor FromHSV = From.linearRGBToHSV();
     const LinearColor ToHSV = To.linearRGBToHSV();
 
-    float FromHue = FromHSV.R;
-    float ToHue = ToHSV.R;
+    float FromHue = FromHSV.r;
+    float ToHue = ToHSV.r;
 
     //Take the shortest path to the new hue
     if (Math::abs(FromHue - ToHue) > 180.0f) {
@@ -290,12 +290,12 @@ namespace geEngineSDK {
       NewHue += 360.0f;
     }
 
-    const float NewSaturation = Math::lerp(FromHSV.G, ToHSV.G, Progress);
-    const float NewValue = Math::lerp(FromHSV.B, ToHSV.B, Progress);
+    const float NewSaturation = Math::lerp(FromHSV.g, ToHSV.g, Progress);
+    const float NewValue = Math::lerp(FromHSV.b, ToHSV.b, Progress);
     LinearColor Interpolated = LinearColor(NewHue, NewSaturation, NewValue).hsvToLinearRGB();
 
-    const float NewAlpha = Math::lerp(From.A, To.A, Progress);
-    Interpolated.A = NewAlpha;
+    const float NewAlpha = Math::lerp(From.a, To.a, Progress);
+    Interpolated.a = NewAlpha;
 
     return Interpolated;
   }
@@ -306,12 +306,12 @@ namespace geEngineSDK {
    */
   LinearColor
   Color::fromRGBE() const {
-    if (0 == A) {
+    if (0 == a) {
       return LinearColor::Black;
     }
 
-    const float Scale = static_cast<float>(ldexp(1 / 255.0, A - 128));
-    return LinearColor(R * Scale, G * Scale, B * Scale, 1.0f);
+    const float Scale = static_cast<float>(ldexp(1 / 255.0, a - 128));
+    return LinearColor(r * Scale, g * Scale, b * Scale, 1.0f);
   }
 
   Color
@@ -338,9 +338,9 @@ namespace geEngineSDK {
   computeAndFixedColorAndIntensity(const LinearColor& InLinearColor,
                                    Color& OutColor,
                                    float& OutIntensity) {
-    float MaxComponent = Math::max(Math::DELTA, Math::max3( InLinearColor.R,
-                                                            InLinearColor.G,
-                                                            InLinearColor.B));
+    float MaxComponent = Math::max(Math::DELTA, Math::max3( InLinearColor.r,
+                                                            InLinearColor.g,
+                                                            InLinearColor.b));
     OutColor = (InLinearColor / MaxComponent).toColor(true);
     OutIntensity = MaxComponent;
   }

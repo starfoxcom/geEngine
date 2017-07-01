@@ -16,8 +16,8 @@
 /*****************************************************************************/
 #include "geMath.h"
 #include "geColor.h"
-//#include "geVector2.h"
-//#include "geVector3.h"
+#include "geVector2.h"
+#include "geVector3.h"
 //#include "geVector4.h"
 //#include "geRotator.h"
 //#include "geQuaternion.h"
@@ -397,7 +397,38 @@ namespace geEngineSDK {
    * Math mixed functions
    */
   /***************************************************************************/
-  /*
+
+  bool
+  Math::lineLineIntersection(const Vector2& aa,
+                             const Vector2& ab,
+                             const Vector2& ba,
+                             const Vector2& bb) {
+    Vector2 r = ab - aa;
+    Vector2 s = bb - ba;
+    Vector2 diff = ba - aa;
+    float rCs = 1.0f / (r ^ s);
+
+    float t = diff^s * rCs;
+    float u = diff^r * rCs;
+
+    return (0.f <= t && 1.f >= t) && (0.f <= u && 1.f >= u);
+  }
+
+  Vector2
+  Math::getLineLineIntersect(const Vector2& aa,
+                             const Vector2& ab,
+                             const Vector2& ba,
+                             const Vector2& bb) {
+    float aaCab = aa ^ ab;
+    float baCbb = ba ^ bb;
+
+    float pX = aaCab * (ba.x - bb.x) - baCbb * (aa.x - ab.x);
+    float pY = aaCab * (ba.y - bb.y) - baCbb * (aa.y - ab.y);
+    float invDenom = 1.0f / ((aa.x - ab.x) * (ba.y - bb.y) - (aa.y - ab.y) * (ba.x - bb.x));
+
+    return Vector2(pX * invDenom, pY * invDenom);
+  }
+
   Vector3
   Math::calculateTriTangent(const Vector3& position1,
                             const Vector3& position2,
@@ -407,76 +438,67 @@ namespace geEngineSDK {
                             float u2,
                             float v2,
                             float u3,
-                            float v3)
-  {
-  Vector3 side0 = position1 - position2;
-  Vector3 side1 = position3 - position1;
+                            float v3) {
+    Vector3 side0 = position1 - position2;
+    Vector3 side1 = position3 - position1;
 
-  //Calculate face normal
-  Vector3 normal = side1 ^ side0;
-  normal.Normalize();
+    //Calculate face normal
+    Vector3 normal = side1 ^ side0;
+    normal.normalize();
 
-  //Now we use a formula to calculate the tangent.
-  float deltaV0 = v1 - v2;
-  float deltaV1 = v3 - v1;
-  Vector3 tangent = deltaV1 * side0 - deltaV0 * side1;
-  tangent.Normalize();
+    //Now we use a formula to calculate the tangent.
+    float deltaV0 = v1 - v2;
+    float deltaV1 = v3 - v1;
+    Vector3 tangent = deltaV1 * side0 - deltaV0 * side1;
+    tangent.normalize();
 
-  //Calculate binormal
-  float deltaU0 = u1 - u2;
-  float deltaU1 = u3 - u1;
-  Vector3 binormal = deltaU1 * side0 - deltaU0 * side1;
-  binormal.Normalize();
+    //Calculate binormal
+    float deltaU0 = u1 - u2;
+    float deltaU1 = u3 - u1;
+    Vector3 binormal = deltaU1 * side0 - deltaU0 * side1;
+    binormal.normalize();
 
-  //Now, we take the cross product of the tangents to get a vector which should point in the same direction as our normal calculated above.
-  //If it points in the opposite direction (the dot product between the normals is less than zero), then we need to reverse the s and t tangents.
-  //This is because the triangle has been mirrored when going from tangent space to object space.
-  Vector3 tangentCross = tangent ^ binormal;
+    //Now, we take the cross product of the tangents to get a vector which should point in the same direction as our normal calculated above.
+    //If it points in the opposite direction (the dot product between the normals is less than zero), then we need to reverse the s and t tangents.
+    //This is because the triangle has been mirrored when going from tangent space to object space.
+    Vector3 tangentCross = tangent ^ binormal;
 
-  //Reverse tangents if necessary.
-  if ((tangentCross | normal) < 0.0f)
-  {
-  tangent = -tangent;
-  binormal = -binormal;
+    //Reverse tangents if necessary.
+    if (0.f > (tangentCross | normal)) {
+      tangent = -tangent;
+      binormal = -binormal;
+    }
+
+    return tangent;
   }
 
-  return tangent;
-  }
-  */
   /***************************************************************************/
   /**
    * Mixed math objects implementations
    */
   /***************************************************************************/
-  /*
-  FORCEINLINE Vector2::Vector2(const Vector3& V)
-  {
-  X = V.X;
-  Y = V.Y;
+  FORCEINLINE Vector2::Vector2(const Vector3& V) {
+    x = V.y;
+    y = V.y;
   }
 
+  /*
   FORCEINLINE Vector2::Vector2(const Vector4& V)
   {
   X = V.X;
   Y = V.Y;
   }
+  */
 
-  inline Vector3 Vector2::SphericalToUnitCartesian() const
-  {
-  const float SinTheta = Math::Sin(X);
-  return Vector3(Math::Cos(Y) * SinTheta, Math::Sin(Y) * SinTheta, Math::Cos(X));
+  inline Vector3
+  Vector2::sphericalToUnitCartesian() const {
+    const float SinTheta = Math::sin(x);
+    return Vector3(Math::cos(y) * SinTheta,
+                   Math::sin(y) * SinTheta,
+                   Math::cos(x));
   }
 
-  FORCEINLINE Vector3::Vector3(const Vector2 V, float InZ) : X(V.X), Y(V.Y), Z(InZ)
-  {
-
-  }
-
-  FORCEINLINE Vector3::Vector3(const LinearColor& InColor) : X(InColor.R), Y(InColor.G), Z(InColor.B)
-  {
-
-  }
-
+  /*
   FORCEINLINE Vector3::Vector3(const Vector4& V) : X(V.X), Y(V.Y), Z(V.Z)
   {
 

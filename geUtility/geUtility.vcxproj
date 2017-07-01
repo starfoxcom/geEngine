@@ -345,6 +345,7 @@
     <ClInclude Include="Include\geVector2.h" />
     <ClInclude Include="Include\geVector2Half.h" />
     <ClInclude Include="Include\geVector2I.h" />
+    <ClInclude Include="Include\geVector3.h" />
     <ClInclude Include="Include\geVectorNI.h" />
     <ClInclude Include="Include\Win32\geMinWindows.h" />
     <ClInclude Include="Include\Win32\geWin32PlatformUtility.h" />

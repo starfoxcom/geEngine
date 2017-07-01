@@ -1,4 +1,4 @@
-//#include <vld.h>
+#include <vld.h>
 #include <iostream>
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
@@ -14,14 +14,21 @@ using std::endl;
 
 using namespace geEngineSDK;
 
+void testDump() {
+  GE_EXCEPT(UnitTestException, "This was a test");
+}
+
 int
 main() {
   CrashHandler::startUp();
 
   __try {
+    
+    //testDump();
     //EditorApplication::startUp(EditorRenderAPI::DX11);
     //EditorApplication::instance().runMainLoop();
     //EditorApplication::shutDown();
+    
   }
   __except(g_crashHandler().reportCrash(GetExceptionInformation())) {
     PlatformUtility::terminate(true);

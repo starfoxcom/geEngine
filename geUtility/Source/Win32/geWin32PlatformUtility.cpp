@@ -192,9 +192,9 @@ namespace geEngineSDK {
         pixel = pixels[revY*width + x];
 
         if (premultiplyAlpha) {
-          pixel.R *= pixel.A;
-          pixel.G *= pixel.A;
-          pixel.B *= pixel.A;
+          pixel.r *= pixel.a;
+          pixel.g *= pixel.a;
+          pixel.b *= pixel.a;
         }
 
         *dst = pixel.dwColor();

@@ -1018,6 +1018,26 @@ namespace geEngineSDK {
     }
 
     /**
+     * @brief Checks if two 2D lines intersect
+     * @return true if the lines intersect, false otherwise
+     */
+    static bool
+    lineLineIntersection(const Vector2& aa,
+                         const Vector2& ab,
+                         const Vector2& ba,
+                         const Vector2& bb);
+
+    /**
+     * @brief Get the point where two 2D lines intersect
+     * @return Vector2 describing the point of intersection
+     */
+    static Vector2
+    getLineLineIntersect(const Vector2& aa,
+                         const Vector2& ab,
+                         const Vector2& ba,
+                         const Vector2& bb);
+
+    /**
      * @brief Find the intersection of a line and an offset plane. Assumes that
      *        the line and plane do indeed intersect; you must make sure they're
      *        not parallel before calling.

@@ -13,6 +13,10 @@
 /*****************************************************************************/
 #pragma once
 
+#ifndef _INC_COLOR_H_
+# define _INC_COLOR_H_
+#endif // !_INC_COLOR_H_
+
 /*****************************************************************************/
 /**
 * Includes
@@ -43,12 +47,12 @@ namespace geEngineSDK {
   {
    public:
     LinearColor() {}
-    explicit LinearColor(FORCE_INIT::E) : R(0), G(0), B(0), A(0) {}
+    explicit LinearColor(FORCE_INIT::E) : r(0), g(0), b(0), a(0) {}
     LinearColor(float InR, float InG, float InB, float InA = 1.0f) 
-      : R(InR),
-        G(InG),
-        B(InB),
-        A(InA) {}
+      : r(InR),
+        g(InG),
+        b(InB),
+        a(InA) {}
 
     explicit LinearColor(const Vector3& Vector);
     explicit LinearColor(const Vector4& Vector);
@@ -68,7 +72,7 @@ namespace geEngineSDK {
      */
     float*
     ptr() {
-      return &R;
+      return &r;
     }
 
     /**
@@ -76,7 +80,7 @@ namespace geEngineSDK {
      */
     const float*
     ptr() const {
-      return &R;
+      return &r;
     }
 
     /**
@@ -84,93 +88,93 @@ namespace geEngineSDK {
      */
     bool
     equals(const LinearColor& ColorB, float Tolerance = Math::KINDA_SMALL_NUMBER) const {
-      return  Math::isNearlyEqual(R, ColorB.R, Tolerance) && 
-              Math::isNearlyEqual(G, ColorB.G, Tolerance) && 
-              Math::isNearlyEqual(B, ColorB.B, Tolerance) && 
-              Math::isNearlyEqual(A, ColorB.A, Tolerance);
+      return  Math::isNearlyEqual(r, ColorB.r, Tolerance) && 
+              Math::isNearlyEqual(g, ColorB.g, Tolerance) && 
+              Math::isNearlyEqual(b, ColorB.b, Tolerance) && 
+              Math::isNearlyEqual(a, ColorB.a, Tolerance);
     }
 
     bool
     operator==(const LinearColor& rhs) const {
-      return  R == rhs.R && 
-              G == rhs.G && 
-              B == rhs.B &&
-              A == rhs.A;
+      return  r == rhs.r && 
+              g == rhs.g && 
+              b == rhs.b &&
+              a == rhs.a;
     }
 
     bool
     operator!=(const LinearColor& rhs) const {
-      return  R != rhs.R ||
-              G != rhs.G ||
-              B != rhs.B ||
-              A != rhs.A;
+      return  r != rhs.r ||
+              g != rhs.g ||
+              b != rhs.b ||
+              a != rhs.a;
     }
 
     const float&
     operator[](const int32 Index) const {
       GE_ASSERT(Index >= 0 && Index < 4);
-      return (&R)[Index];
+      return (&r)[Index];
     }
 
     float&
     operator[](const int32 Index) {
       GE_ASSERT(Index >= 0 && Index < 4);
-      return (&R)[Index];
+      return (&r)[Index];
     }
 
     LinearColor
     operator+(const LinearColor& rhs) const {
-      return LinearColor(R + rhs.R, G + rhs.G, B + rhs.B, A + rhs.A);
+      return LinearColor(r + rhs.r, g + rhs.g, b + rhs.b, a + rhs.a);
     }
 
     LinearColor&
     operator+=(const LinearColor& rhs) {
-      R += rhs.R;
-      G += rhs.G;
-      B += rhs.B;
-      A += rhs.A;
+      r += rhs.r;
+      g += rhs.g;
+      b += rhs.b;
+      a += rhs.a;
       return *this;
     }
 
     LinearColor
     operator-(const LinearColor& rhs) const {
-      return LinearColor(R - rhs.R, G - rhs.G, B - rhs.B, A - rhs.A);
+      return LinearColor(r - rhs.r, g - rhs.g, b - rhs.b, a - rhs.a);
     }
 
     LinearColor&
     operator-=(const LinearColor& rhs) {
-      R -= rhs.R;
-      G -= rhs.G;
-      B -= rhs.B;
-      A -= rhs.A;
+      r -= rhs.r;
+      g -= rhs.g;
+      b -= rhs.b;
+      a -= rhs.a;
       return *this;
     }
 
     LinearColor
     operator*(const float rhs) const {
-      return LinearColor(R * rhs, G * rhs, B * rhs, A * rhs);
+      return LinearColor(r * rhs, g * rhs, b * rhs, a * rhs);
     }
 
     LinearColor&
     operator*=(const float rhs) {
-      R *= rhs;
-      G *= rhs;
-      B *= rhs;
-      A *= rhs;
+      r *= rhs;
+      g *= rhs;
+      b *= rhs;
+      a *= rhs;
       return *this;
     }
 
     LinearColor
     operator*(const LinearColor& rhs) const {
-      return LinearColor(R * rhs.R, G * rhs.G, B * rhs.B, A * rhs.A);
+      return LinearColor(r * rhs.r, g * rhs.g, b * rhs.b, a * rhs.a);
     }
 
     LinearColor&
     operator*=(const LinearColor& rhs) {
-      R *= rhs.R;
-      G *= rhs.G;
-      B *= rhs.B;
-      A *= rhs.A;
+      r *= rhs.r;
+      g *= rhs.g;
+      b *= rhs.b;
+      a *= rhs.a;
       return *this;
     }
 
@@ -178,33 +182,33 @@ namespace geEngineSDK {
     operator/(const float rhs) const {
       //To avoids possible zero division (it's also faster)
       const float	InvScalar = 1.0f / rhs;
-      return LinearColor(R * InvScalar,
-                         G * InvScalar,
-                         B * InvScalar,
-                         A * InvScalar);
+      return LinearColor(r * InvScalar,
+                         g * InvScalar,
+                         b * InvScalar,
+                         a * InvScalar);
     }
 
     LinearColor&
     operator/=(const float rhs) {
       const float	InvScalar = 1.0f / rhs;
-      R *= InvScalar;
-      G *= InvScalar;
-      B *= InvScalar;
-      A *= InvScalar;
+      r *= InvScalar;
+      g *= InvScalar;
+      b *= InvScalar;
+      a *= InvScalar;
       return *this;
     }
 
     LinearColor
     operator/(const LinearColor& rhs) const {
-      return LinearColor(R / rhs.R, G / rhs.G, B / rhs.B, A / rhs.A);
+      return LinearColor(r / rhs.r, g / rhs.g, b / rhs.b, a / rhs.a);
     }
 
     LinearColor&
     operator/=(const LinearColor& rhs) {
-      R /= rhs.R;
-      G /= rhs.G;
-      B /= rhs.B;
-      A /= rhs.A;
+      r /= rhs.r;
+      g /= rhs.g;
+      b /= rhs.b;
+      a /= rhs.a;
       return *this;
     }
 
@@ -248,10 +252,10 @@ namespace geEngineSDK {
      */
     void
     saturate() {
-      R = Math::clamp(R, 0.0f, 1.0f);
-      G = Math::clamp(G, 0.0f, 1.0f);
-      B = Math::clamp(B, 0.0f, 1.0f);
-      A = Math::clamp(A, 0.0f, 1.0f);
+      r = Math::clamp(r, 0.0f, 1.0f);
+      g = Math::clamp(g, 0.0f, 1.0f);
+      b = Math::clamp(b, 0.0f, 1.0f);
+      a = Math::clamp(a, 0.0f, 1.0f);
     }
 
     /**
@@ -285,17 +289,17 @@ namespace geEngineSDK {
     LinearColor
     getClamped(float InMin = 0.0f, float InMax = 1.0f) const {
       LinearColor Ret;
-      Ret.R = Math::clamp(R, InMin, InMax);
-      Ret.G = Math::clamp(G, InMin, InMax);
-      Ret.B = Math::clamp(B, InMin, InMax);
-      Ret.A = Math::clamp(A, InMin, InMax);
+      Ret.r = Math::clamp(r, InMin, InMax);
+      Ret.g = Math::clamp(g, InMin, InMax);
+      Ret.b = Math::clamp(b, InMin, InMax);
+      Ret.a = Math::clamp(a, InMin, InMax);
       return Ret;
     }
 
     LinearColor
     copyWithNewOpacity(float NewOpacicty) const {
       LinearColor NewCopy = *this;
-      NewCopy.A = NewOpacicty;
+      NewCopy.a = NewOpacicty;
       return NewCopy;
     }
 
@@ -350,10 +354,10 @@ namespace geEngineSDK {
      */
     static FORCEINLINE float
     dist(const LinearColor &V1, const LinearColor &V2) {
-      return Math::sqrt(Math::square(V2.R - V1.R) +
-                        Math::square(V2.G - V1.G) +
-                        Math::square(V2.B - V1.B) +
-                        Math::square(V2.A - V1.A));
+      return Math::sqrt(Math::square(V2.r - V1.r) +
+                        Math::square(V2.g - V1.g) +
+                        Math::square(V2.b - V1.b) +
+                        Math::square(V2.a - V1.a));
     }
 
     /**
@@ -362,7 +366,7 @@ namespace geEngineSDK {
      */
     FORCEINLINE float
     getMax() const {
-      return Math::max(Math::max3(R, G, B), A);
+      return Math::max(Math::max3(r, g, b), a);
     }
 
     /**
@@ -371,7 +375,7 @@ namespace geEngineSDK {
      */
     FORCEINLINE float
     getMin() const {
-      return Math::min(Math::min3(R, G, B), A);
+      return Math::min(Math::min3(r, g, b), a);
     }
 
     /**
@@ -379,14 +383,14 @@ namespace geEngineSDK {
      */
     bool
     isAlmostBlack() const {
-      return Math::square(R) < Math::DELTA &&
-             Math::square(G) < Math::DELTA &&
-             Math::square(B) < Math::DELTA;
+      return Math::square(r) < Math::DELTA &&
+             Math::square(g) < Math::DELTA &&
+             Math::square(b) < Math::DELTA;
     }
 
     FORCEINLINE float
     getLuminance() const {
-      return R * 0.3f + G * 0.59f + B * 0.11f;
+      return r * 0.3f + g * 0.59f + b * 0.11f;
     }
 
    public:
@@ -407,7 +411,7 @@ namespace geEngineSDK {
      /** Static lookup table used for Color -> LinearColor conversion. sRGB */
      static float s_sRGBToLinearTable[256];
    public:
-    float R, G, B, A;
+    float r, g, b, a;
   };
 
   FORCEINLINE LinearColor
@@ -433,16 +437,16 @@ namespace geEngineSDK {
     explicit Color(FORCE_INIT::E) {
       //Put these into the body for proper ordering with
       //INTEL vs non-INTEL_BYTE_ORDER
-      R = G = B = A = 0;
+      r = g = b = a = 0;
     }
 
     Color(uint8 InR, uint8 InG, uint8 InB, uint8 InA = 255) {
       //Put these into the body for proper ordering with
       //INTEL vs non-INTEL_BYTE_ORDER
-      R = InR;
-      G = InG;
-      B = InB;
-      A = InA;
+      r = InR;
+      g = InG;
+      b = InB;
+      a = InA;
     }
 
     explicit Color(uint32 InColor) {
@@ -482,10 +486,10 @@ namespace geEngineSDK {
 
     void
     operator+=(const Color& C) {
-      R = static_cast<int8>(Math::min(static_cast<int32>(R) + static_cast<int32>(C.R), 255));
-      G = static_cast<int8>(Math::min(static_cast<int32>(G) + static_cast<int32>(C.G), 255));
-      B = static_cast<int8>(Math::min(static_cast<int32>(B) + static_cast<int32>(C.B), 255));
-      A = static_cast<int8>(Math::min(static_cast<int32>(A) + static_cast<int32>(C.A), 255));
+      r = static_cast<int8>(Math::min(static_cast<int32>(r) + static_cast<int32>(C.r), 255));
+      g = static_cast<int8>(Math::min(static_cast<int32>(g) + static_cast<int32>(C.g), 255));
+      b = static_cast<int8>(Math::min(static_cast<int32>(b) + static_cast<int32>(C.b), 255));
+      a = static_cast<int8>(Math::min(static_cast<int32>(a) + static_cast<int32>(C.a), 255));
     }
 
     /**
@@ -501,7 +505,7 @@ namespace geEngineSDK {
      */
     Color
     withAlpha(uint8 Alpha) const {
-      return Color(R, G, B, Alpha);
+      return Color(r, g, b, Alpha);
     }
 
     /**
@@ -510,7 +514,7 @@ namespace geEngineSDK {
      */
     LinearColor
     reinterpretAsLinear() const {
-      return LinearColor(R / 255.f, G / 255.f, B / 255.f, A / 255.f);
+      return LinearColor(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
     }
 
     static Color
@@ -527,14 +531,14 @@ namespace geEngineSDK {
      */
     FORCEINLINE ARGB
     toPackedARGB() const {
-      return (A << 24) | (R << 16) | (G << 8) | (B << 0);
+      return (a << 24) | (r << 16) | (g << 8) | (b << 0);
     }
 
     /**
      * @brief Gets the color in a packed uint32 format packed in the order ABGR.
      */
     FORCEINLINE ABGR toPackedABGR() const {
-      return (A << 24) | (B << 16) | (G << 8) | (R << 0);
+      return (a << 24) | (b << 16) | (g << 8) | (r << 0);
     }
 
     /**
@@ -542,7 +546,7 @@ namespace geEngineSDK {
      */
     FORCEINLINE RGBA
     toPackedRGBA() const {
-      return (R << 24) | (G << 16) | (B << 8) | (A << 0);
+      return (r << 24) | (g << 16) | (b << 8) | (a << 0);
     }
 
     /**
@@ -550,7 +554,7 @@ namespace geEngineSDK {
      */
     FORCEINLINE BGRA
     toPackedBGRA() const {
-      return (B << 24) | (G << 16) | (R << 8) | (A << 0);
+      return (b << 24) | (g << 16) | (r << 8) | (a << 0);
     }
 
    public:
@@ -578,23 +582,23 @@ namespace geEngineSDK {
     union {
       struct
       {
-        uint8 B, G, R, A;
+        uint8 b, g, r, a;
       };
-      uint32 AlignmentDummy;
+      uint32 alignmentDummy;
     };
 #   pragma warning( pop )
 # else
     //Linux x86, etc
-    uint8 B GCC_ALIGN(4);
-    uint8 G, R, A;
+    uint8 b GCC_ALIGN(4);
+    uint8 g, r, a;
 # endif
 #else
     union {
       struct
       {
-        uint8 A, R, G, B;
+        uint8 a, r, g, b;
       };
-      uint32 AlignmentDummy;
+      uint32 alignmentDummy;
     };
 #endif
   };
@@ -616,10 +620,10 @@ namespace std {
   {
     size_t operator()(const geEngineSDK::Color& color) const {
       size_t hash = 0;
-      geEngineSDK::hash_combine(hash, color.R);
-      geEngineSDK::hash_combine(hash, color.G);
-      geEngineSDK::hash_combine(hash, color.B);
-      geEngineSDK::hash_combine(hash, color.A);
+      geEngineSDK::hash_combine(hash, color.r);
+      geEngineSDK::hash_combine(hash, color.g);
+      geEngineSDK::hash_combine(hash, color.b);
+      geEngineSDK::hash_combine(hash, color.a);
 
       return hash;
     }

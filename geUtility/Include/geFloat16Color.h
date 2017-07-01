@@ -30,18 +30,18 @@ namespace geEngineSDK {
   {
    public:
     Float16Color() {}
-    Float16Color(const Float16Color& Src) : R(Src.R), G(Src.G), B(Src.B), A(Src.A) {}
-    explicit Float16Color(const LinearColor& Src) : R(Src.R), G(Src.G), B(Src.B), A(Src.A) {}
+    Float16Color(const Float16Color& Src) : r(Src.r), g(Src.g), b(Src.b), a(Src.a) {}
+    explicit Float16Color(const LinearColor& Src) : r(Src.r), g(Src.g), b(Src.b), a(Src.a) {}
 
     /**
      * @brief	Assignment operator
      */
     Float16Color&
     operator=(const Float16Color& Src) {
-      R = Src.R;
-      G = Src.G;
-      B = Src.B;
-      A = Src.A;
+      r = Src.r;
+      g = Src.g;
+      b = Src.b;
+      a = Src.a;
       return *this;
     }
 
@@ -52,13 +52,13 @@ namespace geEngineSDK {
      */
     bool
     operator==(const Float16Color& Src) const {
-      return ((R == Src.R) && (G == Src.G) && (B == Src.B) && (A == Src.A));
+      return ((r == Src.r) && (g == Src.g) && (b == Src.b) && (a == Src.a));
     }
 
    public:
-    Float16 R;
-    Float16 G;
-    Float16 B;
-    Float16 A;
+    Float16 r;
+    Float16 g;
+    Float16 b;
+    Float16 a;
   };
 }

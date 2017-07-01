@@ -17,15 +17,15 @@
 * Includes
 */
 /*****************************************************************************/
-//#include "geColor.h"
 //#include "geMath.h"
-//#include "geMatrix3.h"
-//#include "geMatrix4.h"
-//#include "geQuaternion.h"
+#include "geColor.h"
 #include "geVector2.h"
 #include "geVector2I.h"
 //#include "geVector3.h"
 //#include "geVector4.h"
+//#include "geQuaternion.h"
+//#include "geMatrix3.h"
+//#include "geMatrix4.h"
 #include "geException.h"
 
 namespace geEngineSDK {
@@ -488,28 +488,28 @@ namespace geEngineSDK {
   WString
   toWString(const LinearColor& val) {
     WStringStream stream;
-    stream << val.R << L" " << val.G << L" " << val.B << L" " << val.A;
+    stream << L"R=" << val.r << L" G=" << val.g << L" B=" << val.b << L" A=" << val.a;
     return stream.str();
   }
 
   WString
   toWString(const Color& val) {
     WStringStream stream;
-    stream << val.R << L" " << val.G << L" " << val.B << L" " << val.A;
+    stream << L"R=" << val.r << L" G=" << val.g << L" B=" << val.b << L" A=" << val.a;
     return stream.str();
   }
 
   String
   toString(const LinearColor& val) {
     StringStream stream;
-    stream << val.R << " " << val.G << " " << val.B << " " << val.A;
+    stream << L"R=" << val.r << L" G=" << val.g << L" B=" << val.b << L" A=" << val.a;
     return stream.str();
   }
 
   String
   toString(const Color& val) {
     StringStream stream;
-    stream << val.R << " " << val.G << " " << val.B << " " << val.A;
+    stream << L"R=" << val.r << L" G=" << val.g << L" B=" << val.b << L" A=" << val.a;
     return stream.str();
   }
 #endif // _INC_COLOR_H_
