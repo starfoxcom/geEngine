@@ -54,6 +54,8 @@ TEST(geUtility, String_Basic) {
   ASSERT_EQ(testWString, L"this is a test");
   StringUtil::toUpperCase(testWString);
   ASSERT_EQ(testWString, L"THIS IS A TEST");
+
+  EXPECT_TRUE(StringUtil::match(testString, "is"));
 }
 
 TEST(geUtility, String_Path) {
