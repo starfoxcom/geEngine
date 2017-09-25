@@ -391,5 +391,8 @@
     <ClCompile Include="Source\geVector2.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geVector3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

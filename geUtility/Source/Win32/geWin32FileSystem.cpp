@@ -213,7 +213,6 @@ namespace geEngineSDK {
     return false;
   }
 
-
   bool
   win32_createDirectory(const WString& path) {
     if (win32_pathExists(path) && win32_isDirectory(path)) {

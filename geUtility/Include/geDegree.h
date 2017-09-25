@@ -73,7 +73,7 @@ namespace geEngineSDK {
     }
 
     Degree
-    operator+(const Degree& d) const {
+    operator+(const Degree& d) const {                                                        
       return Degree(m_degree + d.m_degree);
     }
 

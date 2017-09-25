@@ -24,7 +24,7 @@ main() {
 
   __try {
     
-    //testDump();
+    testDump();
     //EditorApplication::startUp(EditorRenderAPI::DX11);
     //EditorApplication::instance().runMainLoop();
     //EditorApplication::shutDown();
