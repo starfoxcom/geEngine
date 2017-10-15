@@ -20,11 +20,7 @@
 #include "geException.h"
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-#	define WIN32_LEAN_AND_MEAN
-#	if !defined(NOMINMAX) && defined(_MSC_VER)
-#		define NOMINMAX // required to stop windows.h messing up std::min
-#	endif
-#	include <Windows.h>
+#	include <Win32/geMinWindows.h>
 #endif
 
 #if GE_PLATFORM == GE_PLATFORM_OSX
@@ -35,12 +31,16 @@ namespace geEngineSDK {
 
 #if GE_PLATFORM == GE_PLATFORM_LINUX
   const char* DynLib::EXTENSION = "so";
+  const char* DynLib::PREFIX = "lib";
 #elif GE_PLATFORM == GE_PLATFORM_OSX
   const char* DynLib::EXTENSION = "dylib";
+  const char* DynLib::PREFIX = "lib";
 #elif GE_PLATFORM == GE_PLATFORM_WIN32
   const char* DynLib::EXTENSION = "dll";
+  const char* DynLib::PREFIX = nullptr;
 #elif GE_PLATFORM == GE_PLATFORM_PS4
   const char* DynLib::EXTENSION = "prx";
+  const char* DynLib::PREFIX = "a";
 #else
 #  error Unhandled platform
 #endif

@@ -20,6 +20,9 @@
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
+  using std::function;
+  using std::forward;
+
   /**
    * @brief Data common to all event connections.
    */
@@ -284,7 +287,7 @@ namespace geEngineSDK {
         BaseConnectionData::deactivate();
       }
       
-      std::function<RetType(Args...)> m_func;
+      function<RetType(Args...)> m_func;
     };
 
    public:
@@ -298,7 +301,7 @@ namespace geEngineSDK {
      * @brief Register a new callback that will get notified once the event is triggered.
      */
     HEvent
-    connect(std::function<RetType(Args...)>& func) {
+    connect(function<RetType(Args...)>& func) {
       RecursiveLock lock(m_internalData->m_mutex);
 
       ConnectionData* connData = nullptr;
@@ -356,7 +359,7 @@ namespace geEngineSDK {
         ConnectionData* next = static_cast<ConnectionData*>(conn->m_next);
 
         if (nullptr != conn->m_func) {
-          conn->m_func(std::forward<Args>(args)...);
+          conn->m_func(forward<Args>(args)...);
         }
 
         conn = next;

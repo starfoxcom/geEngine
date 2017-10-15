@@ -98,6 +98,7 @@ namespace geEngineSDK {
 
    public:
     static const char* EXTENSION;
+    static const char* PREFIX;
 
    protected:
     String m_name;

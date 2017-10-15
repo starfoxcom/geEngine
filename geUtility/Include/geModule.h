@@ -38,7 +38,7 @@ namespace geEngineSDK {
      */
     static T&
     instance() {
-      if (isShutDown()) {
+      if (!isStartedUp()) {
         GE_EXCEPT(InternalErrorException,
                   "Trying to access a module but it hasn't been started.");
       }
@@ -57,7 +57,7 @@ namespace geEngineSDK {
      */
     static T*
     instancePtr() {
-      if (isShutDown()) {
+      if (!isStartedUp()) {
         GE_EXCEPT(InternalErrorException,
                   "Trying to access a module but it hasn't been started.");
       }
@@ -76,13 +76,13 @@ namespace geEngineSDK {
     template<class... Args>
     static void
     startUp(Args&& ...args) {
-      if (!isShutDown()) {
+      if (isStartedUp()) {
         GE_EXCEPT(InternalErrorException,
                   "Trying to start an already started module.");
       }
 
       _instance() = ge_new<T>(std::forward<Args>(args)...);
-      isShutDown() = false;
+      isStartedUp() = true;
 
       static_cast<Module*>(_instance())->onStartUp();
     }
@@ -97,12 +97,12 @@ namespace geEngineSDK {
       static_assert(std::is_base_of<T, SubType>::value,
                     "Provided type isn't derived from type the Module is initialized with.");
 
-      if (!isShutDown()) {
+      if (isStartedUp()) {
         GE_EXCEPT(InternalErrorException, "Trying to start an already started module.");
       }
 
       _instance() = ge_new<SubType>(std::forward<Args>(args)...);
-      isShutDown() = false;
+      isStartedUp() = true;
 
       static_cast<Module*>(_instance())->onStartUp();
     }
@@ -112,15 +112,20 @@ namespace geEngineSDK {
      */
     static void
     shutDown() {
-      if (isShutDown() || isDestroyed()) {
+      if (isDestroyed()) {
         GE_EXCEPT(InternalErrorException,
                   "Trying to shut down an already shut down module.");
+      }
+
+      if (!isStartedUp()) {
+        GE_EXCEPT(InternalErrorException,
+                  "Trying to shut down a module which was never started.");
       }
 
       static_cast<Module*>(_instance())->onShutDown();
 
       ge_delete(_instance());
-      isShutDown() = true;
+      isDestroyed() = true;
     }
 
     /**
@@ -128,7 +133,7 @@ namespace geEngineSDK {
      */
     static bool
     isStarted() {
-      return !isShutDown() && !isDestroyed();
+      return isStartedUp() && !isDestroyed();
     }
 
    protected:
@@ -187,8 +192,8 @@ namespace geEngineSDK {
      * @brief Checks has the Module been started up.
      */
     static bool&
-    isShutDown() {
-      static bool inst = true;
+    isStartedUp() {
+      static bool inst = false;
       return inst;
     }
   };

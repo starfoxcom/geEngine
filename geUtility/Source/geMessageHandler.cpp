@@ -20,6 +20,8 @@
 #include "geMessageHandler.h"
 
 namespace geEngineSDK {
+  using std::remove_if;
+
   Map<String, uint32> MessageId::m_uniqueMessageIds;
   uint32 MessageId::m_nextMessageId = 0;
 
@@ -62,7 +64,7 @@ namespace geEngineSDK {
   }
 
   HMessage
-  MessageHandler::listen(MessageId message, std::function<void()>& callback) {
+  MessageHandler::listen(MessageId message, function<void()>& callback) {
     uint32 callbackId = m_nextCallbackId++;
 
     MessageHandlerData data;
@@ -83,12 +85,12 @@ namespace geEngineSDK {
     if (iterFind != m_messageHandlers.end()) {
       Vector<MessageHandlerData>& handlerData = iterFind->second;
 
-      handlerData.erase(std::remove_if(handlerData.begin(),
+      handlerData.erase(remove_if(handlerData.begin(),
                         handlerData.end(),
                         [&](MessageHandlerData& x)
-      {
-        return x.id == handleId;
-      }));
+                        {
+                          return x.id == handleId;
+                        }));
     }
 
     m_handlerIdToMessageMap.erase(handleId);

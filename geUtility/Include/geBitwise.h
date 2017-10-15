@@ -320,5 +320,21 @@ namespace geEngineSDK {
       float11.encoded = v;
       return float11.getFloat();
     }
+
+    /**
+     * @brief Converts a float in range [-1,1] into an unsigned 8-bit integer.
+     */
+    static uint8
+    quantize8BitSigned(float v) {
+      return quantize8BitUnsigned(v * 0.5f + 0.5f);
+    }
+
+    /**
+     * @brief Converts a float in range [0,1] into an unsigned 8-bit integer.
+     */
+    static uint8
+    quantize8BitUnsigned(float v) {
+      return static_cast<uint8>(v * 255.999f);
+    }
   };
 }

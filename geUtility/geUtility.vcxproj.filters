@@ -14,9 +14,6 @@
     <Filter Include="Source Files\String">
       <UniqueIdentifier>{826b222c-ebc1-4d64-83fe-35f7fb92d3dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\General">
-      <UniqueIdentifier>{012e5f14-096a-4aac-8b5c-d83f87b0a23c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Externals">
       <UniqueIdentifier>{a2366f7f-796e-4db9-aad3-2a8d81cd5571}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,9 @@
     </Filter>
     <Filter Include="Source Files\Prerequisites">
       <UniqueIdentifier>{d6aed97f-635a-46b1-9ad8-2c1f4a17f788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{8e54fd18-f7a4-4af8-b12e-7b274ef2b463}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -114,48 +114,6 @@
     </ClInclude>
     <ClInclude Include="Include\gePath.h">
       <Filter>Source Files\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geAny.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geBitwise.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDynLib.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDynLibManager.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geEvent.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMessageHandler.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMessageHandlerFwd.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geModule.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geNonCopyable.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\gePlatformUtility.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geServiceLocator.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geTime.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geTimer.h">
-      <Filter>Source Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geUtil.h">
-      <Filter>Source Files\General</Filter>
     </ClInclude>
     <ClInclude Include="Include\geColor.h">
       <Filter>Source Files\Image</Filter>
@@ -244,6 +202,51 @@
     <ClInclude Include="Include\geUnicode.h">
       <Filter>Source Files\String</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geTaskScheduler.h">
+      <Filter>Source Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geAny.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBitwise.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDynLib.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDynLibManager.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geEvent.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMessageHandler.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMessageHandlerFwd.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geModule.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geNonCopyable.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\gePlatformUtility.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geServiceLocator.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTime.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTimer.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geUtil.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -264,14 +267,8 @@
     <ClCompile Include="Source\geFrameAlloc.cpp">
       <Filter>Source Files\Allocators</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geMessageHandler.cpp">
-      <Filter>Source Files\General</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Externals\md5.cpp">
       <Filter>Source Files\Externals</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geUtil.cpp">
-      <Filter>Source Files\General</Filter>
     </ClCompile>
     <ClCompile Include="Source\gePath.cpp">
       <Filter>Source Files\Filesystem</Filter>
@@ -312,23 +309,11 @@
     <ClCompile Include="Source\Win32\geWin32CrashHandler.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geDynLib.cpp">
-      <Filter>Source Files\General</Filter>
-    </ClCompile>
     <ClCompile Include="Source\geFileSystem.cpp">
       <Filter>Source Files\Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\geAsyncOp.cpp">
       <Filter>Source Files\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geDynLibManager.cpp">
-      <Filter>Source Files\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geTimer.cpp">
-      <Filter>Source Files\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geTime.cpp">
-      <Filter>Source Files\General</Filter>
     </ClCompile>
     <ClCompile Include="Source\ORBIS\geORBISCrashHandler.cpp">
       <Filter>Source Files\ORBIS</Filter>
@@ -362,6 +347,27 @@
     </ClCompile>
     <ClCompile Include="Source\geUnicode.cpp">
       <Filter>Source Files\String</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTaskScheduler.cpp">
+      <Filter>Source Files\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geDynLib.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geDynLibManager.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geMessageHandler.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTime.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTimer.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geUtil.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

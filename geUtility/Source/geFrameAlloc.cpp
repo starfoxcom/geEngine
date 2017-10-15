@@ -152,7 +152,7 @@ namespace geEngineSDK {
 
   void
   FrameAlloc::markFrame() {
-    uint32** framePtr = (uint32**)alloc(sizeof(uint32*));
+    uint32** framePtr = reinterpret_cast<uint32**>(alloc(sizeof(uint32*)));
     *framePtr = m_lastFrame;
     m_lastFrame = reinterpret_cast<uint32*>(framePtr);
   }

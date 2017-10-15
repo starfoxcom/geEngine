@@ -26,21 +26,12 @@ testDump() {
   GE_EXCEPT(UnitTestException, "This was a test");
 }
 
-void
-createWindow() {
-  WINDOW_DESC wndDesc;
-  wndDesc.wndProc = WndProc;
-  m_Wnd = ge_new<Win32Window>(wndDesc);
-  ge_delete(m_Wnd);
-}
-
 int
 main() {
   CrashHandler::startUp();
 
   __try {
-    createWindow();
-    //testDump();
+    testDump();
     //EditorApplication::startUp(EditorRenderAPI::DX11);
     //EditorApplication::instance().runMainLoop();
     //EditorApplication::shutDown();

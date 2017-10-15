@@ -338,6 +338,7 @@
     <ClInclude Include="Include\geString.h" />
     <ClInclude Include="Include\geStringFormat.h" />
     <ClInclude Include="Include\geStringID.h" />
+    <ClInclude Include="Include\geTaskScheduler.h" />
     <ClInclude Include="Include\geThreadDefines.h" />
     <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
@@ -378,6 +379,7 @@
     <ClCompile Include="Source\geRTTIField.cpp" />
     <ClCompile Include="Source\geString.cpp" />
     <ClCompile Include="Source\geStringID.cpp" />
+    <ClCompile Include="Source\geTaskScheduler.cpp" />
     <ClCompile Include="Source\geThreadPool.cpp" />
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />

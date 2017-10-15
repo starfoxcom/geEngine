@@ -22,6 +22,8 @@
 #include "geModule.h"
 
 namespace geEngineSDK {
+  using std::function;
+
   /**
    * @brief Allows you to transparently pass messages between different systems.
    * @note  Sim thread only.
@@ -34,7 +36,7 @@ namespace geEngineSDK {
     struct MessageHandlerData
     {
       uint32 id;
-      std::function<void()> callback;
+      function<void()> callback;
     };
 
    public:
@@ -53,7 +55,7 @@ namespace geEngineSDK {
      *          unsubscribe from listening.
      */
     HMessage
-    listen(MessageId message, std::function<void()>& callback);
+    listen(MessageId message, function<void()>& callback);
 
    private:
     void

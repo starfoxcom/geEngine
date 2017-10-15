@@ -21,6 +21,8 @@
 #include "geModule.h"
 
 namespace geEngineSDK {
+  using std::atomic;
+
   /**
    * @brief Manages all time related functionality.
    * @note  Sim thread only unless where specified otherwise.
@@ -103,7 +105,7 @@ namespace geEngineSDK {
     uint64 m_timeSinceStartMs;
     uint64 m_appStartTime;      /**< Time the application started, in microseconds */
     uint64 m_lastFrameTime;     /**< Time since last runOneFrame call, In microseconds */
-    std::atomic<uint32> m_currentFrame;
+    atomic<uint32> m_currentFrame;
     Timer* m_timer;
   };
 
