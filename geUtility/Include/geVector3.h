@@ -13,6 +13,10 @@
 /*****************************************************************************/
 #pragma once
 
+#ifndef _INC_VECTOR3_H_
+# define _INC_VECTOR3_H_
+#endif
+
 /*****************************************************************************/
 /**
  * Includes
@@ -105,7 +109,7 @@ namespace geEngineSDK {
      * @param b The second vector.
      * @return The cross product.
      */
-    FORCEINLINE static Vector3
+    static FORCEINLINE Vector3
     crossProduct(const Vector3& a, const Vector3& b);
 
     /**
@@ -122,7 +126,7 @@ namespace geEngineSDK {
      * @param b The second vector.
      * @return The dot product.
      */
-    FORCEINLINE static float
+    static FORCEINLINE float
     dot(const Vector3& a, const Vector3& b);
 
     /**
@@ -1068,7 +1072,9 @@ namespace geEngineSDK {
   }
 
   inline bool
-  Vector3::parallel(const Vector3& normal1, const Vector3& normal2, float parallelCosineThreshold) {
+  Vector3::parallel(const Vector3& normal1,
+                    const Vector3& normal2,
+                    float parallelCosineThreshold) {
     const float NormalDot = normal1 | normal2;
     return Math::abs(NormalDot) >= parallelCosineThreshold;
   }
@@ -1624,8 +1630,6 @@ namespace geEngineSDK {
 
     return angle.valueRadians();
   }
-
-
 
   FORCEINLINE float
   Vector3::distance(const Vector3& v1, const Vector3& v2) {

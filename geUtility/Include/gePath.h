@@ -757,23 +757,25 @@ namespace geEngineSDK {
   };
 }
 
-/**
-* @brief	Hash value generator for Path.
-*/
-template<>
-struct std::hash<geEngineSDK::Path>
-{
-  size_t
-  operator()(const geEngineSDK::Path& path) const {
-    size_t hash = 0;
-    geEngineSDK::hash_combine(hash, path.m_filename);
-    geEngineSDK::hash_combine(hash, path.m_device);
-    geEngineSDK::hash_combine(hash, path.m_node);
+namespace std {
+  /**
+  * @brief	Hash value generator for Path.
+  */
+  template<>
+  struct hash<geEngineSDK::Path>
+  {
+    size_t
+      operator()(const geEngineSDK::Path& path) const {
+      size_t hash = 0;
+      geEngineSDK::hash_combine(hash, path.m_filename);
+      geEngineSDK::hash_combine(hash, path.m_device);
+      geEngineSDK::hash_combine(hash, path.m_node);
 
-    for (auto& dir : path.m_directories) {
-      geEngineSDK::hash_combine(hash, dir);
+      for (auto& dir : path.m_directories) {
+        geEngineSDK::hash_combine(hash, dir);
+      }
+
+      return hash;
     }
-
-    return hash;
-  }
-};
+  };
+}

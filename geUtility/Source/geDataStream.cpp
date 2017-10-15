@@ -24,19 +24,10 @@
 /*****************************************************************************/
 #include "geDataStream.h"
 #include "geDebug.h"
-#include <codecvt>
+#include "geUnicode.h"
 
 namespace geEngineSDK {
-  using std::codecvt_mode;
-  using std::codecvt_utf8;
-  using std::codecvt_utf16;
-  using std::codecvt_utf8_utf16;
-  using std::wstring_convert;
   using std::stringstream;
-
-  using std::generate_header;
-  using std::consume_header;
-  using std::little_endian;
 
   const uint32 DataStream::streamTempSize = 128;
 
@@ -104,14 +95,17 @@ namespace geEngineSDK {
   void
   DataStream::writeString(const String& string, STRING_ENCODING::E encoding) {
     if (STRING_ENCODING::kUTF16 == encoding) {
-      const codecvt_mode convMode = static_cast<codecvt_mode>(generate_header);
-      typedef codecvt_utf8_utf16<char, 1114111, convMode> UTF8ToUTF16Conv;
-      wstring_convert<UTF8ToUTF16Conv, char> conversion("?");
+      //Write BOM
+      uint8 bom[2] = { 0xFF, 0xFE };
+      write(bom, sizeof(bom));
 
-      std::string encodedString = conversion.from_bytes(string.c_str());
-      write(encodedString.data(), encodedString.length());
+      U16String u16string = UTF8::toUTF16(string);
+      write(u16string.data(), u16string.length() * sizeof(char16_t));
     }
     else {
+      // Write BOM
+      uint8 bom[3] = { 0xEF, 0xBB, 0xBF };
+      write(bom, sizeof(bom));
       write(string.data(), string.length());
     }
   }
@@ -119,21 +113,21 @@ namespace geEngineSDK {
   void
   DataStream::writeString(const WString& string, STRING_ENCODING::E encoding) {
     if (STRING_ENCODING::kUTF16 == encoding) {
-      const codecvt_mode convMde = 
-        static_cast<codecvt_mode>(generate_header | little_endian);
-      typedef codecvt_utf16<wchar_t, 1114111, convMde> WCharToUTF16Conv;
-      wstring_convert<WCharToUTF16Conv, wchar_t> conversion("?");
+      //Write BOM
+      uint8 bom[2] = { 0xFF, 0xFE };
+      write(bom, sizeof(bom));
 
-      std::string encodedString = conversion.to_bytes(string.c_str());
-      write(encodedString.data(), encodedString.length());
+      String u8string = UTF8::fromWide(string);
+      U16String u16string = UTF8::toUTF16(u8string);
+      write(u16string.data(), u16string.length() * sizeof(char16_t));
     }
     else {
-      const codecvt_mode convMode = static_cast<codecvt_mode>(generate_header);
-      typedef std::codecvt_utf8<wchar_t, 1114111, convMode> WCharToUTF8Conv;
-      wstring_convert<WCharToUTF8Conv, wchar_t> conversion("?");
+      // Write BOM
+      uint8 bom[3] = { 0xEF, 0xBB, 0xBF };
+      write(bom, sizeof(bom));
 
-      std::string encodedString = conversion.to_bytes(string.c_str());
-      write(encodedString.data(), encodedString.length());
+      String u8string = UTF8::fromWide(string);
+      write(u8string.data(), u8string.length());
     }
   }
 
@@ -148,6 +142,39 @@ namespace geEngineSDK {
     //Ensure read from begin of stream
     seek(0);
 
+    //Try reading header
+    uint8 headerBytes[4];
+    SIZE_T numHeaderBytes = read(headerBytes, 4);
+
+    SIZE_T dataOffset = 0;
+    if (4 <= numHeaderBytes) {
+      if (isUTF32LE(reinterpret_cast<char*>(headerBytes))) {
+        dataOffset = 4;
+      }
+      else if (isUTF32BE(reinterpret_cast<char*>(headerBytes))) {
+        LOGWRN("UTF-32 big endian decoding not supported");
+        return u8"";
+      }
+    }
+
+    if (0 == dataOffset && 3 <= numHeaderBytes) {
+      if (isUTF8(reinterpret_cast<char*>(headerBytes))) {
+        dataOffset = 3;
+      }
+    }
+
+    if (0 == dataOffset && 2 <= numHeaderBytes) {
+      if (isUTF16LE(reinterpret_cast<char*>(headerBytes))) {
+        dataOffset = 2;
+      }
+      else if (isUTF16BE(reinterpret_cast<char*>(headerBytes))) {
+        LOGWRN("UTF-16 big endian decoding not supported");
+        return u8"";
+      }
+    }
+
+    seek(dataOffset);
+
     stringstream result;
     while (!isEOF()) {
       SIZE_T numReadBytes = read(tempBuffer, bufSize);
@@ -157,145 +184,44 @@ namespace geEngineSDK {
     free(tempBuffer);
     std::string string = result.str();
 
-    SIZE_T readBytes = string.size();
-    if (4 <= readBytes) {
-      if (isUTF32LE(string.data())) {
-        //Little Endian 32 bits
-        const codecvt_mode convMode = 
-          static_cast<codecvt_mode>(consume_header | little_endian);
-        typedef codecvt_utf8<uint32, 1114111, convMode> utf8utf32;
-
-        wstring_convert<utf8utf32, uint32> conversion("?");
-        uint32* start = (uint32*)string.data();
-        uint32* end = (start + (string.size() - 1) / 4);
-
-        return conversion.to_bytes(start, end).c_str();
+    switch (dataOffset)
+    {
+    default:
+    case 0: //No BOM = assumed UTF-8
+    case 3: //UTF-8
+      return String(string.data(), string.length());
+    case 2: //UTF-16
+      {
+        SIZE_T numElems = string.length() / 2;
+        return UTF8::fromUTF16(U16String(reinterpret_cast<char16_t*>(
+                                          const_cast<char*>(string.data())),
+                                         numElems));
       }
-      else if (isUTF32BE(string.data())) {
-        //Big Endian 32 bits
-        const codecvt_mode convMode = static_cast<codecvt_mode>(consume_header);
-        typedef codecvt_utf8<uint32, 1114111, convMode> utf8utf32;
-
-        wstring_convert<utf8utf32, uint32> conversion("?");
-        uint32* start = (uint32*)string.data();
-        uint32* end = (start + (string.size() - 1) / 4);
-
-        return conversion.to_bytes(start, end).c_str();
+    case 4: //UTF-32
+      {
+        SIZE_T numElems = string.length() / 4;
+        return UTF8::fromUTF32(U32String(reinterpret_cast<char32_t*>(
+                                          const_cast<char*>(string.data())),
+                                         numElems));
       }
     }
-
-    if (3 <= readBytes) {
-      if (isUTF8(string.data())) {
-        return string.c_str() + 3;
-      }
-    }
-
-    if (2 <= readBytes) {
-      if (isUTF16LE(string.data())) {
-        //Little Endian 16 bits
-        const codecvt_mode convMode = static_cast<codecvt_mode>(little_endian);
-        typedef codecvt_utf8_utf16<uint16, 1114111, convMode> utf8utf16;
-
-        wstring_convert<utf8utf16, uint16> conversion("?");
-
-        //Bug?: std::consume_header seems to be ignored so I manually remove the header
-        uint16* start = (uint16*)(string.c_str() + 2);
-
-        return conversion.to_bytes(start).c_str();
-      }
-      else if (isUTF16BE(string.data())) {
-        //Big Endian 16 bits
-        const codecvt_mode convMode = static_cast<codecvt_mode>(0);
-        typedef codecvt_utf8_utf16<uint16, 1114111, convMode> utf8utf16;
-
-        //Bug?: Regardless of not providing the std::little_endian flag it seems
-        //that is how the data is read so I manually flip it
-        SIZE_T numChars = (string.size() - 2) / 2;
-        for (SIZE_T i = 0; i<numChars; ++i) {
-          std::swap(string[i * 2 + 0], string[i * 2 + 1]);
-        }
-
-        wstring_convert<utf8utf16, uint16> conversion("?");
-
-        //Bug?: std::consume_header seems to be ignored so I manually remove the header
-        uint16* start = (uint16*)(string.c_str() + 2);
-
-        return conversion.to_bytes(start).c_str();
-      }
-    }
-
-    return string.c_str();
   }
 
   WString
   DataStream::getAsWString() {
-    //Read the entire buffer - ideally in one read, but if the size of the
-    //buffer is unknown, do multiple fixed size reads.
-    SIZE_T bufSize = (m_size > 0 ? m_size : 4096);
-    stringstream::char_type* tempBuffer = 
-      static_cast<stringstream::char_type*>(ge_alloc(bufSize));
+    String u8string = getAsString();
+    return UTF8::toWide(u8string);
+  }
 
-    //Ensure read from begin of stream
-    seek(0);
+  MemoryDataStream::MemoryDataStream(SIZE_T size)
+    : DataStream(ACCESS_MODE::kREAD | ACCESS_MODE::kWRITE),
+      m_data(nullptr),
+      m_freeOnClose(true) {
+    m_data = m_pos = reinterpret_cast<uint8*>(ge_alloc(size));
+    m_size = size;
+    m_end = m_data + m_size;
 
-    stringstream result;
-    while (!isEOF()) {
-      SIZE_T numReadBytes = read(tempBuffer, bufSize);
-      result.write(tempBuffer, numReadBytes);
-    }
-
-    free(tempBuffer);
-    std::string string = result.str();
-
-    uint32 readBytes = (uint32)string.size();
-    if (4 <= readBytes) {
-      if (isUTF32LE(string.data())) {
-        //Little Endian 32 bits
-        //Not supported, maybe throw an exception?
-      }
-      else if (isUTF32BE(string.data())) {
-        //Big Endian 32 bits
-        //Not supported, maybe throw an exception?
-      }
-    }
-
-    if (3 <= readBytes) {
-      if (isUTF8(string.data())) {
-        const codecvt_mode convMode = static_cast<codecvt_mode>(consume_header);
-        typedef codecvt_utf8<wchar_t, 1114111, convMode> wcharutf8;
-
-        wstring_convert<wcharutf8> conversion("?");
-        return conversion.from_bytes(string).c_str();
-      }
-    }
-
-    if (2 <= readBytes) {
-      if (isUTF16LE(string.data())) {
-        //Little Endian 16 bits
-        const codecvt_mode convMode = 
-          static_cast<codecvt_mode>(consume_header | little_endian);
-        typedef std::codecvt_utf16<wchar_t, 1114111, convMode> wcharutf16;
-
-        wstring_convert<wcharutf16> conversion("?");
-        return conversion.from_bytes(string).c_str();
-      }
-      else if (isUTF16BE(string.data())) {
-        //Big Endian 32 bits
-        const codecvt_mode convMode = static_cast<codecvt_mode>(consume_header);
-        typedef codecvt_utf16<wchar_t, 1114111, convMode> wcharutf16;
-
-        wstring_convert<wcharutf16> conversion("?");
-        return conversion.from_bytes(string).c_str();
-      }
-    }
-
-    {
-      const codecvt_mode convMode = static_cast<codecvt_mode>(consume_header);
-      typedef codecvt_utf8<wchar_t, 1114111, convMode> wcharutf8;
-
-      wstring_convert<wcharutf8> conversion("?");
-      return conversion.from_bytes(string).c_str();
-    }
+    GE_ASSERT(m_end >= m_pos);
   }
 
   MemoryDataStream::MemoryDataStream(void* memory, SIZE_T inSize, bool freeOnClose)

@@ -152,9 +152,9 @@ namespace geEngineSDK {
 
   void
   FrameAlloc::markFrame() {
-    uint32** framePtr = reinterpret_cast<uint32**>(alloc(sizeof(uint32*)));
+    uint32** framePtr = (uint32**)alloc(sizeof(uint32*));
     *framePtr = m_lastFrame;
-    m_lastFrame = *(uint32**)framePtr;
+    m_lastFrame = reinterpret_cast<uint32*>(framePtr);
   }
 
   void
@@ -165,10 +165,11 @@ namespace geEngineSDK {
 #endif
     if (nullptr != m_lastFrame) {
       GE_ASSERT(m_blocks.size() > 0 && 0 < m_nextBlockIdx);
-      dealloc(m_lastFrame);	//HACK: Test if this casting is working correctly on PS4
+      //HACK: Test if this casting is working correctly on PS4
+      dealloc(reinterpret_cast<uint8*>(m_lastFrame));
 
-      uint8* framePtr = (uint8*)m_lastFrame;
-      m_lastFrame = *(uint32**)m_lastFrame;
+      uint8* framePtr = reinterpret_cast<uint8*>(m_lastFrame);
+      m_lastFrame = *reinterpret_cast<uint32**>(m_lastFrame);
 
 #if GE_DEBUG_MODE
       framePtr -= sizeof(uint32);

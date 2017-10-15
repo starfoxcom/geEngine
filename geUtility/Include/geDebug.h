@@ -43,6 +43,8 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Debug
   {
    public:
+     Debug() : m_logHash(0) {}
+
     /**
      * @brief Adds a log entry in the "Debug" channel.
      */
@@ -115,8 +117,6 @@ namespace geEngineSDK {
     void
     _triggerCallbacks();
 
-    Debug() : m_logHash(0) {}
-
    private:
     uint64 m_logHash;
     Log m_log;
@@ -131,17 +131,32 @@ namespace geEngineSDK {
   /**
    * @brief Shortcut for logging a message in the debug channel.
    */
-#define LOGDBG(x) geEngineSDK::g_Debug().logDebug((x));
+#define LOGDBG(x) geEngineSDK::g_Debug().logDebug((x) +                       \
+                                                  String("\n\t\t in ") +      \
+                                                  __PRETTY_FUNCTION__ +       \
+                                                  " [" + __FILE__ + ":" +     \
+                                                  toString(__LINE__) +\
+                                                  "]\n");
 
   /**
    * @brief Shortcut for logging a message in the warning channel.
    */
-#define LOGWRN(x) geEngineSDK::g_Debug().logWarning((x));
+#define LOGWRN(x) geEngineSDK::g_Debug().logWarning((x) +                     \
+                                                  String("\n\t\t in ") +      \
+                                                  __PRETTY_FUNCTION__ +       \
+                                                  " [" + __FILE__ + ":" +     \
+                                                  toString(__LINE__) +\
+                                                  "]\n");
 
   /**
    * @brief Shortcut for logging a message in the error channel.
    */
-#define LOGERR(x) geEngineSDK::g_Debug().logError((x));
+#define LOGERR(x) geEngineSDK::g_Debug().logError((x) +                       \
+                                                  String("\n\t\t in ") +      \
+                                                  __PRETTY_FUNCTION__ +       \
+                                                  " [" + __FILE__ + ":" +     \
+                                                  toString(__LINE__) +\
+                                                  "]\n");
 
   /**
    * @brief Shortcut for logging a verbose message in the debug channel.

@@ -114,18 +114,25 @@ namespace geEngineSDK {
         }
 
         if (!desc.parent || desc.toolWindow) {
-          if (WINDOW_BORDER::kNone == desc.border) {
-            m_windowData->style |= WS_POPUP;
-          }
-          else if (WINDOW_BORDER::kFixed == desc.border) {
-            m_windowData->style |=  WS_OVERLAPPED |
-                                    WS_BORDER |
-                                    WS_CAPTION |
-                                    WS_SYSMENU |
-                                    WS_MINIMIZEBOX;
+          if (desc.showTitleBar) {
+            if (desc.showBorder || desc.allowResize) {
+              m_windowData->style |= WS_OVERLAPPEDWINDOW;
+            }
+            else {
+              m_windowData->style |= WS_OVERLAPPED
+                                  | WS_CAPTION
+                                  | WS_SYSMENU
+                                  | WS_MINIMIZEBOX
+                                  | WS_MAXIMIZEBOX;
+            }
           }
           else {
-            m_windowData->style |= WS_OVERLAPPEDWINDOW;
+            if (desc.showBorder || desc.allowResize) {
+              m_windowData->style |= WS_POPUP | WS_BORDER;
+            }
+            else {
+              m_windowData->style |= WS_POPUP;
+            }
           }
         }
 

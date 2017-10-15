@@ -296,7 +296,7 @@ namespace geEngineSDK {
      * @param B The second vector.
      * @return The dot product.
      */
-    FORCEINLINE static float
+    static FORCEINLINE float
     dot(const Vector2& A, const Vector2& B);
 
     /**
@@ -305,7 +305,7 @@ namespace geEngineSDK {
      * @param V2 The second point.
      * @return The squared distance between two 2D points.
      */
-    FORCEINLINE static float
+    static FORCEINLINE float
     distSquared(const Vector2& V1, const Vector2& V2);
 
     /**
@@ -314,7 +314,7 @@ namespace geEngineSDK {
      * @param V2 The second point.
      * @return The distance between two 2D points.
      */
-    FORCEINLINE static float
+    static FORCEINLINE float
     distance(const Vector2& V1, const Vector2& V2);
 
     /**
@@ -329,7 +329,7 @@ namespace geEngineSDK {
      * @param B The second vector.
      * @return The cross product.
      */
-    FORCEINLINE static float
+    static FORCEINLINE float
     crossProduct(const Vector2& A, const Vector2& B);
 
     /**
@@ -337,7 +337,7 @@ namespace geEngineSDK {
      * @param u The first vector.
      * @param v The second vector.
      */
-    FORCEINLINE static void
+    static FORCEINLINE void
     orthonormalize(Vector2& u, Vector2& v);
 
     /**

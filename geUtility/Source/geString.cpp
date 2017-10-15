@@ -21,7 +21,7 @@
 #include "geColor.h"
 #include "geVector2.h"
 #include "geVector2I.h"
-//#include "geVector3.h"
+#include "geVector3.h"
 //#include "geVector4.h"
 //#include "geQuaternion.h"
 //#include "geMatrix3.h"
@@ -362,14 +362,14 @@ namespace geEngineSDK {
   WString
   toWString(const Vector3& val) {
     WStringStream stream;
-    stream << val.X << L" " << val.Y << L" " << val.Z;
+    stream << val.x << L" " << val.y << L" " << val.z;
     return stream.str();
   }
 
   String
   toString(const Vector3& val) {
     StringStream stream;
-    stream << val.X << " " << val.Y << " " << val.Z;
+    stream << val.x << " " << val.y << " " << val.z;
     return stream.str();
   }
 #endif // _INC_VECTOR3_H_

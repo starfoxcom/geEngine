@@ -34,7 +34,9 @@ namespace geEngineSDK {
      */
     static void
     startUp() {
-      _instance() = ge_new<CrashHandler>();
+      if (nullptr == _instance()) {
+        _instance() = ge_new<CrashHandler>();
+      }
     }
 
     /**
@@ -42,7 +44,10 @@ namespace geEngineSDK {
      */
     static void
     shutDown() {
-      ge_delete(_instance());
+      if (nullptr != _instance()) {
+        ge_delete(_instance());
+        _instance() = nullptr;
+      }
     }
 
     /**

@@ -370,24 +370,54 @@ namespace geEngineSDK {
       }
     }
 
-    if (m_directories.size() != other.m_directories.size()) {
-      return false;
+    SIZE_T myNumElements = m_directories.size();
+    SIZE_T otherNumElements = other.m_directories.size();
+
+    if (!m_filename.empty()) {
+      ++myNumElements;
     }
 
-    if (!comparePathElem(m_filename, other.m_filename)) {
-      return false;
+    if (!other.m_filename.empty()) {
+      ++otherNumElements;
     }
 
-    if (!comparePathElem(m_node, other.m_node)) {
+    if (myNumElements != otherNumElements) {
       return false;
     }
+    
+    if (0 < myNumElements) {
+      auto iterMe = m_directories.begin();
+      auto iterOther = other.m_directories.begin();
 
-    auto iterMe = m_directories.begin();
-    auto iterOther = other.m_directories.begin();
+      for (SIZE_T i = 0; i < (myNumElements - 1); ++i, ++iterMe, ++iterOther) {
+        if (!comparePathElem(*iterMe, *iterOther)) {
+          return false;
+        }
+      }
 
-    for (; iterMe != m_directories.end(); ++iterMe, ++iterOther) {
-      if (!comparePathElem(*iterMe, *iterOther)) {
-        return false;
+      if (!m_filename.empty()) {
+        if (!other.m_filename.empty()) {
+          if (!comparePathElem(m_filename, other.m_filename)) {
+            return false;
+          }
+        }
+        else {
+          if (!comparePathElem(m_filename, *iterOther)) {
+            return false;
+          }
+        }
+      }
+      else {
+        if (!other.m_filename.empty()) {
+          if (!comparePathElem(*iterMe, other.m_filename)) {
+            return false;
+          }
+        }
+        else {
+          if (!comparePathElem(*iterMe, *iterOther)) {
+            return false;
+          }
+        }
       }
     }
 

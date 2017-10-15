@@ -15,90 +15,6 @@
 namespace geEngineSDK {
   /***************************************************************************/
   /**
-   * String conversion templates
-   */
-  /***************************************************************************/
-  template<class T>
-  inline std::string
-  toString(const T& param) {
-    return std::to_string(param);
-  }
-
-  template<class T>
-  inline std::string
-  toString(T*) {
-    GE_ASSERT("Invalid pointer type.");
-    return std::string("");
-  }
-
-  template<class T>
-  inline std::wstring
-  toWString(const T& param) {
-    return std::to_wstring(param);
-  }
-
-  template<class T>
-  inline std::wstring
-  toWString(T*) {
-    GE_ASSERT("Invalid pointer type.");
-    return std::wstring(L"");
-  }
-
-  /***************************************************************************/
-  /**
-  * String template function specializations
-  */
-  /***************************************************************************/
-  template<>
-  inline std::string
-  toString(const std::string& param) {
-    return param;
-  }
-  
-  template<>
-  inline std::string
-  toString(const String& param) {
-    return std::string(param.c_str());
-  }
-
-  template<>
-  inline std::string
-  toString<const ANSICHAR>(const ANSICHAR* param) {
-    return std::string(param);
-  }
-
-  template<>
-  inline std::string
-  toString<ANSICHAR>(ANSICHAR* param) {
-    return std::string(param);
-  }
-
-  template<>
-  inline std::wstring
-  toWString<std::wstring>(const std::wstring& param) {
-    return param;
-  }
-
-  template<>
-  inline std::wstring
-  toWString<WString>(const WString& param) {
-    return std::wstring(param.c_str());
-  }
-
-  template<>
-  inline std::wstring
-  toWString<const UNICHAR>(const UNICHAR* param) {
-    return std::wstring(param);
-  }
-
-  template<>
-  inline std::wstring
-  toWString<UNICHAR>(UNICHAR* param) {
-    return std::wstring(param);
-  }
-
-  /***************************************************************************/
-  /**
    * @class StringFormat
    * @brief Helper class used for string formatting operations
    */
@@ -307,7 +223,24 @@ namespace geEngineSDK {
     template<class T>
     static std::string
     toString(const T& param) {
-      return geEngineSDK::toString<T>(param);
+      return std::to_string(param);
+    }
+
+    /**
+     * @brief Helper method that "converts" a narrow string to a narrow string
+     *        (simply a pass through).
+     */
+    static std::string
+    toString(const std::string& param) {
+      return param;
+    }
+
+    /**
+     * @brief Helper method that converts a geEngine narrow string to a narrow string.
+     */
+    static std::string
+    toString(const String& param) {
+      return std::string(param.c_str());
     }
 
     /**
@@ -316,7 +249,30 @@ namespace geEngineSDK {
     template<class T>
     static std::string
     toString(T* param) {
-      return geEngineSDK::toString<T>(param);
+      static_assert(!std::is_same<T, T>::value, "Invalid pointer type.");
+      return "";
+    }
+
+    /**
+     * @brief Helper method that converts a narrow character array to a narrow string.
+     */
+    static std::string
+    toString(const char* param) {
+      if (nullptr == param) {
+        return std::string();
+      }
+      return std::string(param);
+    }
+
+    /**
+     * @brief Helper method that converts a narrow character array to a narrow string.
+     */
+    static std::string
+    toString(char* param) {
+      if (nullptr == param) {
+        return std::string();
+      }
+      return std::string(param);
     }
 
     /**
@@ -325,7 +281,24 @@ namespace geEngineSDK {
     template<class T>
     static std::wstring
     toWString(const T& param) {
-      return geEngineSDK::toWString<T>(param);
+      return std::to_wstring(param);
+    }
+
+    /**
+     * @brief Helper method that "converts" a wide string to a wide string
+     *        (simply a pass through).
+     */
+    static std::wstring
+    toWString(const std::wstring& param) {
+      return param;
+    }
+
+    /**
+     * @brief Helper method that converts a geEngine wide string to a wide string.
+     */
+    static std::wstring
+    toWString(const WString& param) {
+      return std::wstring(param.c_str());
     }
 
     /**
@@ -333,7 +306,30 @@ namespace geEngineSDK {
      */
     template<class T>
     static std::wstring toWString(T* param) {
-      return geEngineSDK::toWString<T>(param);
+      static_assert(!std::is_same<T, T>::value, "Invalid pointer type.");
+      return L"";
+    }
+
+    /**
+     * @brief Helper method that converts a wide character array to a wide string.
+     */
+    static std::wstring
+    toWString(const wchar_t* param) {
+      if (nullptr == param) {
+        return std::wstring();
+      }
+      return std::wstring(param);
+    }
+
+    /**
+     * @brief Helper method that converts a wide character array to a wide string.
+     */
+    static std::wstring
+    toWString(wchar_t* param) {
+      if (nullptr == param) {
+        return std::wstring();
+      }
+      return std::wstring(param);
     }
 
     /**

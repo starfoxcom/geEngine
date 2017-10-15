@@ -168,6 +168,7 @@ namespace geEngineSDK {
        * Only type ID that may be used by more than one class.
        */
       kID_Abstract              = 50,
+      kID_Flags                 = 51,
       
       kID_StringID              = 60,
       kID_String                = 61,
@@ -188,6 +189,9 @@ namespace geEngineSDK {
       kID_SerializedEntry       = 84,
       kID_SerializedArrayEntry  = 85,
       kID_SerializedSubObject   = 86,
+      kID_SerializedDataBlock   = 87,
+
+      kID_IReflectable          = 90
     };
   }
 }

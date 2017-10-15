@@ -55,7 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -68,7 +68,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -333,6 +333,7 @@
     <ClInclude Include="Include\geRTTIPrerequisites.h" />
     <ClInclude Include="Include\geServiceLocator.h" />
     <ClInclude Include="Include\geSpinLock.h" />
+    <ClInclude Include="Include\geStaticAlloc.h" />
     <ClInclude Include="Include\geStdHeaders.h" />
     <ClInclude Include="Include\geString.h" />
     <ClInclude Include="Include\geStringFormat.h" />
@@ -341,6 +342,7 @@
     <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
+    <ClInclude Include="Include\geUnicode.h" />
     <ClInclude Include="Include\geUtil.h" />
     <ClInclude Include="Include\geVector2.h" />
     <ClInclude Include="Include\geVector2Half.h" />
@@ -379,6 +381,7 @@
     <ClCompile Include="Source\geThreadPool.cpp" />
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
+    <ClCompile Include="Source\geUnicode.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />
     <ClCompile Include="Source\geVector2.cpp" />
     <ClCompile Include="Source\geVector2I.cpp" />

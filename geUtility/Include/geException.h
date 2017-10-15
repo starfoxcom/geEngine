@@ -21,11 +21,6 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 
-#if GE_COMPILER == GE_COMPILER_MSVC
-#undef __PRETTY_FUNCTION__
-#define __PRETTY_FUNCTION__ __FUNCSIG__
-#endif
-
 namespace geEngineSDK {
   /**
    * @brief Base class for all geEngine exceptions.

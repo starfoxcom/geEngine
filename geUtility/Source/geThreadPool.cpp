@@ -103,6 +103,7 @@ namespace geEngineSDK {
   void
   PooledThread::run() {
     onThreadStarted(m_name);
+    
     {
       Lock lock(m_mutex);
       m_threadStarted = true;
@@ -112,6 +113,7 @@ namespace geEngineSDK {
 
     while (true) {
       function<void()> worker = nullptr;
+      
       {
         {
           Lock lock(m_mutex);

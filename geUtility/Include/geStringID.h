@@ -91,12 +91,10 @@ namespace geEngineSDK {
       construct(name);
     }
 
-    /*
     template<int N>
     StringID(const ANSICHAR name[N]) : m_Data(nullptr) {
-      construct((const ANSICHAR*)name);
+      construct(static_cast<const ANSICHAR*>(name));
     }
-    */
 
     /**
      * @brief Compare to string ids for equality. Uses fast integer comparison.
@@ -127,11 +125,17 @@ namespace geEngineSDK {
      */
     const ANSICHAR*
     c_str() const {
-      if (m_data == nullptr) {
+      if (nullptr == m_data) {
         return nullptr;
       }
 
       return m_data->m_chars;
+    }
+
+    /** Returns the unique identifier of the string. */
+    uint32
+    id() const {
+      return m_data ? m_data->m_id : -1;
     }
 
    private:
@@ -224,6 +228,19 @@ namespace geEngineSDK {
       }
 
       return dataSize;
+    }
+  };
+}
+
+namespace std {
+  /**
+   * Hash value generator for StringID.
+   */
+  template<>
+  struct hash<geEngineSDK::StringID>
+  {
+    size_t operator()(const geEngineSDK::StringID& value) const {
+      return (size_t)value.id();
     }
   };
 }

@@ -38,8 +38,7 @@ logToIDEConsole(const geEngineSDK::String& message) {
 #else
 void
 logToIDEConsole(const geEngineSDK::String& message) {
-  // Do nothing
-  GE_UNREFERENCED_PARAMETER(message);
+  std::cout << message << std::endl;
 }
 #endif
 
@@ -126,8 +125,9 @@ R"(<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>
 
     static const char* htmlPostStyleHeader = R"(
   </head>
-  <body>
-    <h1>geEngine Log</h1>
+  <body>)";
+
+    static const char* htmlEntriesTableHeader = R"(
     <div class="wrapper">
       <div class="table">
         <div class="row header blue">
@@ -145,6 +145,36 @@ R"(<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>
     stream << htmlPreStyleHeader;
     stream << style;
     stream << htmlPostStyleHeader;
+    stream << "<h1>geEngine Log</h1>\n";
+    stream << "<h2>System information</h2>\n";
+
+    //Write header information
+    stream << "<p>geEngine version: ";
+    stream << GE_VERSION_MAJOR << "." << GE_VERSION_MINOR << "." << GE_VERSION_PATCH;
+    stream << "<br>\n";
+
+    SystemInfo systemInfo = PlatformUtility::getSystemInfo();
+    stream << "OS version: " << systemInfo.osName << " ";
+    stream << (systemInfo.osIs64Bit ? "64-bit" : "32-bit") << "<br>\n";
+    stream << "CPU vendor: " << systemInfo.cpuManufacturer << "<br>\n";
+    stream << "CPU name: " << systemInfo.cpuModel << "<br>\n";
+    stream << "CPU clock speed: " << systemInfo.cpuClockSpeedMhz << "MHz <br>\n";
+    stream << "CPU core count: " << systemInfo.cpuNumCores << "<br>\n";
+    stream << "Memory amount: " << systemInfo.memoryAmountMb << " MB" << "</p>\n";
+
+    if (systemInfo.gpuInfo.numGPUs == 1) {
+      stream << "<p>GPU: " << systemInfo.gpuInfo.names[0] << "<br>\n";
+    }
+    else {
+      for (uint32 i = 0; i < systemInfo.gpuInfo.numGPUs; ++i) {
+        stream << "GPU #" << i << ": " << systemInfo.gpuInfo.names[i] << "<br>\n";
+      }
+    }
+    stream << "</p>\n";
+
+    //Write log entries
+    stream << "<h2>Log entries</h2>\n";
+    stream << htmlEntriesTableHeader;
 
     Vector<LogEntry> entries = m_log.getAllEntries();
     for (auto& entry : entries) {

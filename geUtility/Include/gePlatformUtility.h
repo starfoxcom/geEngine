@@ -20,7 +20,31 @@ namespace geEngineSDK {
    */
   struct MACAddress
   {
-    uint8 Value[6];
+    uint8 value[6];
+  };
+
+  /**
+   * @brief Contains information about available GPUs on the system.
+   */
+  struct GPUInfo
+  {
+    String names[5];
+    uint32 numGPUs;
+  };
+
+  /**
+   * @brief Contains information about the system hardware and operating system.
+   */
+  struct SystemInfo
+  {
+    String cpuManufacturer;
+    String cpuModel;
+    uint32 cpuClockSpeedMhz;
+    uint32 cpuNumCores;
+    uint32 memoryAmountMb;
+    String osName;
+    bool osIs64Bit;
+    GPUInfo gpuInfo;
   };
 
   /**
@@ -95,5 +119,24 @@ namespace geEngineSDK {
      */
     static void
     open(const Path& path);
+
+    /**
+     * @brief Returns information about the underlying hardware.
+     */
+    static SystemInfo
+    getSystemInfo();
+
+    /**
+     * @brief Assigns information about GPU hardware.
+     *        This data will be returned by getSystemInfo() when requested.
+     *        This is expeced to be called by the render API backend when initialized.
+     */
+    static void
+    _setGPUInfo(GPUInfo gpuInfo) {
+      s_gpuInfo = gpuInfo;
+    }
+
+   private:
+    static GPUInfo s_gpuInfo;
   };
 }

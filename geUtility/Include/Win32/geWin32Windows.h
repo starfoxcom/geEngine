@@ -39,7 +39,9 @@ namespace geEngineSDK {
         left(-1),
         top(-1),
         title(""),
-        border(WINDOW_BORDER::kNormal),
+        showTitleBar(true),
+        showBorder(true),
+        allowResize(true),
         outerDimensions(false),
         enableDoubleClick(true),
         toolWindow(false),
@@ -114,9 +116,19 @@ namespace geEngineSDK {
     String title;
 
     /**
-     * @brief Type of border to create the window with.
+     * @brief Determines if the title-bar should be shown or not.
      */
-    WINDOW_BORDER::E border;
+    bool showTitleBar;
+
+    /**
+     * @brief Determines if the window border should be shown or not.
+     */
+    bool showBorder;
+
+    /**
+     * @brief Determines if the user can resize the window by dragging on the window edges.
+     */
+    bool allowResize;
 
     /**
      * @brief Do our dimensions include space for things like title-bar and border.

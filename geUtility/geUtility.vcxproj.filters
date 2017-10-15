@@ -5,36 +5,14 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Header Files\Prerequisites">
-      <UniqueIdentifier>{d6aed97f-635a-46b1-9ad8-2c1f4a17f788}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Allocators">
-      <UniqueIdentifier>{aa086f50-96cf-4369-adc3-366f92773edf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Allocators">
       <UniqueIdentifier>{2035c8fd-3e25-4734-8b44-c3f2fc562d72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Threading">
-      <UniqueIdentifier>{732e74fb-b1e0-483a-9dcc-e8dbc29235fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Error">
-      <UniqueIdentifier>{e71415b7-deed-4e1c-bf43-4d3f6d5aad30}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Error">
       <UniqueIdentifier>{34971f15-35b5-418c-9952-50cc3b1f11bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\String">
-      <UniqueIdentifier>{771eea5b-bc9b-44d3-9d4f-911bf1dc7d32}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\String">
       <UniqueIdentifier>{826b222c-ebc1-4d64-83fe-35f7fb92d3dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\General">
-      <UniqueIdentifier>{1d38d7a2-6af4-42fa-8944-5794d3f70bbf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\General">
       <UniqueIdentifier>{012e5f14-096a-4aac-8b5c-d83f87b0a23c}</UniqueIdentifier>
@@ -42,35 +20,17 @@
     <Filter Include="Source Files\Externals">
       <UniqueIdentifier>{a2366f7f-796e-4db9-aad3-2a8d81cd5571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Externals">
-      <UniqueIdentifier>{16f78da6-f3ad-409e-95c2-f2cd4135f244}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Filesystem">
-      <UniqueIdentifier>{fd7b075e-d27d-4250-b3b9-5bb770dac688}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Filesystem">
       <UniqueIdentifier>{01902af1-4f15-40bb-a484-fd235b626cbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Win32">
-      <UniqueIdentifier>{848f1dac-4768-4ecb-baa2-9f99fe2b1893}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Win32">
       <UniqueIdentifier>{a68fa962-e73c-4ce7-bd8f-7079d03b0bcf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Image">
-      <UniqueIdentifier>{82d3f0cd-d14d-453a-9b99-ea07bfb4fdc2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Image">
       <UniqueIdentifier>{794da55a-d9ad-427c-991e-cb8a0ba13aaa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Math">
-      <UniqueIdentifier>{acf22101-4095-4104-9f1a-4f7848de08cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{ec80c088-f4cf-4d24-8ebe-eb2d67a9c76f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Debug">
-      <UniqueIdentifier>{8f0cf3ea-c744-4f71-92f2-bc195728fd86}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{f85b5667-fe52-42bb-8e1e-9c8460a8370b}</UniqueIdentifier>
@@ -81,202 +41,208 @@
     <Filter Include="Source Files\ORBIS">
       <UniqueIdentifier>{b1f6daa2-f5b5-41db-836a-1023f8b27152}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\RTTI">
-      <UniqueIdentifier>{2db917d7-8307-448f-a613-840f540c2a66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\RTTI">
       <UniqueIdentifier>{5aed3be7-df9c-4a00-95a0-c89f9426e4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Prerequisites">
+      <UniqueIdentifier>{d6aed97f-635a-46b1-9ad8-2c1f4a17f788}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\gePlatformTypes.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\geFwdDeclUtil.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\gePrerequisitesUtil.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\geMacroUtil.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\geRTTIPrerequisites.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\geStdHeaders.h">
-      <Filter>Header Files\Prerequisites</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMemoryAllocator.h">
-      <Filter>Header Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMemStack.h">
-      <Filter>Header Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geThreadDefines.h">
-      <Filter>Header Files\Threading</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geSpinLock.h">
-      <Filter>Header Files\Threading</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geGlobalFrameAlloc.h">
-      <Filter>Header Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geException.h">
-      <Filter>Header Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geString.h">
-      <Filter>Header Files\String</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geStringFormat.h">
-      <Filter>Header Files\String</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geFrameAlloc.h">
-      <Filter>Header Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMemAllocProfiler.h">
-      <Filter>Header Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMessageHandlerFwd.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geModule.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMessageHandler.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Externals\md5.h">
-      <Filter>Header Files\Externals</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geUtil.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\gePath.h">
-      <Filter>Header Files\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geStringID.h">
-      <Filter>Header Files\String</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geEvent.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\gePlatformUtility.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geCrashHandler.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Win32\geWin32PlatformUtility.h">
-      <Filter>Header Files\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geColor.h">
-      <Filter>Header Files\Image</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDegree.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMath.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRadian.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geFloat16.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geFloat32.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geLog.h">
-      <Filter>Header Files\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geFileSystem.h">
-      <Filter>Header Files\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDataStream.h">
-      <Filter>Header Files\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDebug.h">
-      <Filter>Header Files\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geBitmapWriter.h">
-      <Filter>Header Files\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geDynLib.h">
-      <Filter>Header Files\General</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="Include\geEnumClassHash.h">
-      <Filter>Header Files\Prerequisites</Filter>
+      <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geFloat16Color.h">
-      <Filter>Header Files\Image</Filter>
+    <ClInclude Include="Include\geFrameAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGlobalFrameAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMemAllocProfiler.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMemoryAllocator.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMemStack.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geStaticAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBitmapWriter.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDebug.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geLog.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geException.h">
+      <Filter>Source Files\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Externals\md5.h">
+      <Filter>Source Files\Externals</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDataStream.h">
+      <Filter>Source Files\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFileSystem.h">
+      <Filter>Source Files\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\gePath.h">
+      <Filter>Source Files\Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="Include\geAny.h">
-      <Filter>Header Files\General</Filter>
+      <Filter>Source Files\General</Filter>
     </ClInclude>
     <ClInclude Include="Include\geBitwise.h">
-      <Filter>Header Files\General</Filter>
+      <Filter>Source Files\General</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geFloat10.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geFloat11.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geAsyncOp.h">
-      <Filter>Header Files\Threading</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geNonCopyable.h">
-      <Filter>Header Files\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geServiceLocator.h">
-      <Filter>Header Files\General</Filter>
+    <ClInclude Include="Include\geDynLib.h">
+      <Filter>Source Files\General</Filter>
     </ClInclude>
     <ClInclude Include="Include\geDynLibManager.h">
-      <Filter>Header Files\General</Filter>
+      <Filter>Source Files\General</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geTimer.h">
-      <Filter>Header Files\General</Filter>
+    <ClInclude Include="Include\geEvent.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMessageHandler.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMessageHandlerFwd.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geModule.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geNonCopyable.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\gePlatformUtility.h">
+      <Filter>Source Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geServiceLocator.h">
+      <Filter>Source Files\General</Filter>
     </ClInclude>
     <ClInclude Include="Include\geTime.h">
-      <Filter>Header Files\General</Filter>
+      <Filter>Source Files\General</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geThreadPool.h">
-      <Filter>Header Files\Threading</Filter>
+    <ClInclude Include="Include\geTimer.h">
+      <Filter>Source Files\General</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geRTTIField.h">
-      <Filter>Header Files\RTTI</Filter>
+    <ClInclude Include="Include\geUtil.h">
+      <Filter>Source Files\General</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geRTTIPlainField.h">
-      <Filter>Header Files\RTTI</Filter>
+    <ClInclude Include="Include\geColor.h">
+      <Filter>Source Files\Image</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Win32\geMinWindows.h">
-      <Filter>Header Files\Win32</Filter>
+    <ClInclude Include="Include\geFloat16Color.h">
+      <Filter>Source Files\Image</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geRTTIManagedDataBlockField.h">
-      <Filter>Header Files\RTTI</Filter>
+    <ClInclude Include="Include\geDegree.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Win32\geWin32Windows.h">
-      <Filter>Header Files\Win32</Filter>
+    <ClInclude Include="Include\geFloat10.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geVector2I.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="Include\geFloat11.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geVectorNI.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="Include\geFloat16.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFloat32.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMath.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRadian.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Include\geVector2.h">
-      <Filter>Header Files\Math</Filter>
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Include\geVector2Half.h">
-      <Filter>Header Files\Math</Filter>
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geVector2I.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Include\geVector3.h">
-      <Filter>Header Files\Math</Filter>
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geVectorNI.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIField.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIManagedDataBlockField.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIPlainField.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geString.h">
+      <Filter>Source Files\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geStringFormat.h">
+      <Filter>Source Files\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geStringID.h">
+      <Filter>Source Files\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geAsyncOp.h">
+      <Filter>Source Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSpinLock.h">
+      <Filter>Source Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geThreadDefines.h">
+      <Filter>Source Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geThreadPool.h">
+      <Filter>Source Files\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Win32\geMinWindows.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Win32\geWin32PlatformUtility.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Win32\geWin32Windows.h">
+      <Filter>Source Files\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCrashHandler.h">
+      <Filter>Source Files\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geUnicode.h">
+      <Filter>Source Files\String</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -352,9 +318,6 @@
     <ClCompile Include="Source\geFileSystem.cpp">
       <Filter>Source Files\Filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geCrashHandler.cpp">
-      <Filter>Source Files\General</Filter>
-    </ClCompile>
     <ClCompile Include="Source\geAsyncOp.cpp">
       <Filter>Source Files\Threading</Filter>
     </ClCompile>
@@ -393,6 +356,12 @@
     </ClCompile>
     <ClCompile Include="Source\geVector3.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCrashHandler.cpp">
+      <Filter>Source Files\Error</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geUnicode.cpp">
+      <Filter>Source Files\String</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

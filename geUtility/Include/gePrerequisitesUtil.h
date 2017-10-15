@@ -113,11 +113,11 @@
 #include "geRTTIPrerequisites.h"    //Run-time type information Prerequisites
 
 #include "geString.h"               //String objects
+#include "geStringID.h"             //String IDs for string fast comparison
 
 #include "geMessageHandlerFwd.h"    //Forward declarations of the message objects
 #include "geUtil.h"                 //Hashing utilities
 #include "gePath.h"                 //Paths to files
-#include "geStringID.h"             //For string fast comparison
 #include "geEvent.h"                //Event objects and handlers
 #include "gePlatformUtility.h"      //Utilities for the specific operating system
 #include "geCrashHandler.h"         //Crash handling functions

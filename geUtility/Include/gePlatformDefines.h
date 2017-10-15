@@ -38,6 +38,9 @@
 //Define the actual endian type (little endian for Windows, Linux, Apple and PS4)
 #define GE_ENDIAN GE_ENDIAN_LITTLE
 
+#define GE_VERSION_MAJOR 0                    //Engine version mayor value
+#define GE_VERSION_MINOR 4                    //Engine version minor value
+#define GE_VERSION_PATCH 0                    //Engine version patch value
 #define GE_EDITOR_BUILD 1                     //This is an Editor Build
 
 //Define if on a crash we want to report warnings on unknown symbols
@@ -48,29 +51,40 @@
  *Compiler type and version.
  */
 /*****************************************************************************/
-#if defined( _MSC_VER )                       //Visual Studio
-# define GE_COMPILER GE_COMPILER_MSVC         //Set as Actual Compiler
-# define GE_COMP_VER _MSC_VER                 //Compiler version
-# define GE_THREADLOCAL __declspec(thread)    //Local Thread type
-#elif defined( __GNUC__ )                     //GCC Compiler
-# define GE_COMPILER GE_COMPILER_GNUC					//Set as Actual Compiler
-//Compiler version (computed from integrated defines)
-# define GE_COMP_VER (((__GNUC__)*100) + (__GNUC_MINOR__*10) + __GNUC_PATCHLEVEL__)
-# define GE_THREADLOCAL __thread              //Local Thread type
-#elif defined ( __INTEL_COMPILER )            //Intel compiler
-# define GE_COMPILER GE_COMPILER_INTEL        //Set as Actual Compiler
-# define GE_COMP_VER __INTEL_COMPILER         //Compiler version
+#if defined(__clang__)
+#   define GE_COMPILER GE_COMPILER_CLANG
+#   define GE_COMP_VER __clang_version__
+#   define GE_THREADLOCAL __thread
+#   define GE_STDCALL __attribute__((stdcall))
+#   define GE_CDECL __attribute__((cdecl))
+#elif defined(__GNUC__) //Check after Clang, as Clang defines this too
+#   define GE_COMPILER GE_COMPILER_GNUC
+#   define GE_COMP_VER (((__GNUC__)*100) + (__GNUC_MINOR__*10) + __GNUC_PATCHLEVEL__)
+#   define GE_THREADLOCAL __thread
+#   define GE_STDCALL __attribute__((stdcall))
+#   define GE_CDECL __attribute__((cdecl))
+#elif defined (__INTEL_COMPILER)
+#   define GE_COMPILER GE_COMPILER_INTEL
+#   define GE_COMP_VER __INTEL_COMPILER
+#   define GE_STDCALL __stdcall
+#   define GE_CDECL __cdecl
 /** 
  * GE_THREADLOCAL define is down below because Intel compiler defines it
  * differently based on platform
  */
-#elif defined ( __clang__ )                   //Clang compiler
-# define GE_COMPILER GE_COMPILER_CLANG        //Set as Actual Compiler
-# define GE_COMP_VER __clang_version__        //Compiler version
-# define GE_THREADLOCAL __thread              //Local Thread type
+
+//Check after Clang and Intel, we could be building with either with VS
+#elif defined(_MSC_VER)
+#   define GE_COMPILER GE_COMPILER_MSVC
+#   define GE_COMP_VER _MSC_VER
+#   define GE_THREADLOCAL __declspec(thread)
+#   define GE_STDCALL __stdcall
+#   define GE_CDECL __cdecl
+#   undef __PRETTY_FUNCTION__
+#   define __PRETTY_FUNCTION__ __FUNCSIG__
 #else
 //No know compiler found, send the error to the output (if any)
-# pragma error "No known compiler. "
+#   pragma error "No known compiler. "
 #endif
 
 /*****************************************************************************/
@@ -165,31 +179,61 @@
 
 /*****************************************************************************/
 /**
- * Windows specific Settings
+ * Library export specifics
  */
 /*****************************************************************************/
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-# if defined( GE_STATIC_LIB )
-#   define GE_UTILITY_EXPORT
-# else
-# if defined(GE_UTILITY_EXPORTS)
-#   define GE_UTILITY_EXPORT __declspec( dllexport )
+# if GE_COMPILER == GE_COMPILER_MSVC
+#   if defined( GE_STATIC_LIB )
+#     define GE_UTILITY_EXPORT
 #   else
-#     if defined( __MINGW32__ )
-#       define GE_UTILITY_EXPORT              //Linux systems don't need this
+#     if defined( GE_UTILITY_EXPORTS )
+#       define GE_UTILITY_EXPORT __declspec( dllexport )
 #     else
 #       define GE_UTILITY_EXPORT __declspec( dllimport )
 #     endif
 #   endif
+# else  //Any other Compiler
+#   if defined( GE_STATIC_LIB )
+#     define GE_UTILITY_EXPORT
+#   else
+#     if defined( GE_UTILITY_EXPORTS )
+#       define GE_UTILITY_EXPORT __attribute__ ((dllexport))
+#     else
+#       define GE_UTILITY_EXPORT __attribute__ ((dllimport))
+#     endif
+#   endif
 # endif
+# define GE_UTILITY_HIDDEN
+#else //Linux/Mac settings
+# define GE_UTILITY_EXPORT __attribute__ ((visibility ("default")))
+# define GE_UTILITY_HIDDEN __attribute__ ((visibility ("hidden")))
+#endif
 
+//DLL export for plugins
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+# if GE_COMPILER == GE_COMPILER_MSVC
+#   define GE_PLUGIN_EXPORT __declspec(dllexport)
+# else
+#   define GE_PLUGIN_EXPORT __attribute__ ((dllexport))
+# endif
+# define GE_UTILITY_HIDDEN
+#else //Linux/Mac settings
+# define GE_PLUGIN_EXPORT __attribute__ ((visibility ("default")))
+#endif
+
+/*****************************************************************************/
+/**
+* Windows specific Settings
+*/
+/*****************************************************************************/
 //Win32 compilers use _DEBUG for specifying debug builds. For MinGW, we set DEBUG
+#if GE_PLATFORM == GE_PLATFORM_WIN32
 # if defined(_DEBUG) || defined(DEBUG)
 #   define GE_DEBUG_MODE 1                    //Specifies that we are on a DEBUG build
 # else
 #   define GE_DEBUG_MODE 0                    //We are not on a DEBUG build
 # endif
-
 # if GE_COMPILER == GE_COMPILER_INTEL
 #   define GE_THREADLOCAL __declspec(thread)  //Set the local thread for the Intel compiler
 # endif
@@ -201,13 +245,6 @@
  */
 /*****************************************************************************/
 #if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_OSX
-//Enable GCC symbol visibility
-# if defined( GE_GCC_VISIBILITY )
-#   define GE_UTILITY_EXPORT  __attribute__ ((visibility("default")))
-# else
-#   define GE_UTILITY_EXPORT
-# endif
-
 # define stricmp strcasecmp
 
 //If we are on a DEBUG build
@@ -216,7 +253,6 @@
 # else
 #   define GE_DEBUG_MODE 0                  //We are not on a DEBUG build
 # endif
-
 # if GE_COMPILER == GE_COMPILER_INTEL
 #   define GE_THREADLOCAL __thread          //Set the local thread for the Intel compiler
 # endif
@@ -228,20 +264,6 @@
  */
 /*****************************************************************************/
 #if GE_PLATFORM == GE_PLATFORM_PS4
-# if defined( GE_STATIC_LIB )
-#   define GE_UTILITY_EXPORT
-# else
-#   if defined(GE_UTILITY_EXPORTS)
-#     define GE_UTILITY_EXPORT __declspec( dllexport )
-#   else
-#     if defined( __MINGW32__ )
-#       define GE_UTILITY_EXPORT
-#     else
-#       define GE_UTILITY_EXPORT __declspec( dllimport )
-#     endif
-#   endif
-# endif
-
 //If we are on a DEBUG build
 # if defined(_DEBUG) || defined(DEBUG)
 #   define GE_DEBUG_MODE 1                  //Specifies that we are on a DEBUG build

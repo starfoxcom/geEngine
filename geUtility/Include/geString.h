@@ -18,8 +18,10 @@
  * Includes
  */
 /*****************************************************************************/
-#include <wchar.h>
-#include "gePrerequisitesUtil.h"
+#include "geMemoryAllocator.h"
+#include "geRadian.h"
+
+#include <string>
 
 namespace geEngineSDK {
   /**
@@ -45,6 +47,16 @@ namespace geEngineSDK {
   typedef BasicString<ANSICHAR> String;
 
   /**
+   * @brief Wide string used UTF-16 encoded strings.
+   */
+  typedef BasicString<char16_t> U16String;
+
+  /**
+   * @brief Wide string used UTF-32 encoded strings.
+   */
+  typedef BasicString<char32_t> U32String;
+
+  /**
    * @brief Wide string stream used for primarily for constructing strings
    *        consisting of Unicode text.
    */
@@ -55,6 +67,24 @@ namespace geEngineSDK {
    *        consisting of ASCII text.
    */
   typedef BasicStringStream<ANSICHAR> StringStream;
+
+  /**
+   * @brief Wide string stream used primarily for constructing UTF-16 strings.
+   */
+  typedef BasicStringStream<char16_t> U16StringStream;
+
+  /**
+   * @brief Wide string stream used primarily for constructing UTF-32 strings.
+   */
+  typedef BasicStringStream<char32_t> U32StringStream;
+
+  /**
+   * @brief Equivalent to String, except it avoids any dynamic allocations
+   *        until the number of elements exceeds @p Count.
+   */
+  //TODO: Currently equivalent to String, need to implement the allocator
+  template <int Count>
+  using SmallString = std::basic_string<char, std::char_traits<char>, StdAlloc<char>>;
 }
 
 #include "geStringFormat.h"
@@ -477,7 +507,7 @@ namespace geEngineSDK {
               lastWildCardIt = tmpPattern.end();
             }
             else {
-              //No wildwards left
+              //No wildcards left
               return false;
             }
           }
@@ -1050,33 +1080,35 @@ namespace geEngineSDK {
   };
 }
 
-/**
- * @brief Hash value generator for SString.
- */
-template<>
-struct std::hash<geEngineSDK::String>
-{
-  size_t operator()(const geEngineSDK::String& string) const {
-    size_t hash = 0;
-    for (size_t i = 0; i < string.size(); ++i) {
-      hash = 65599 * hash + string[i];
-    }
+namespace std {
+  /**
+   * @brief Hash value generator for SString.
+   */
+  template<>
+  struct hash<geEngineSDK::String>
+  {
+    size_t operator()(const geEngineSDK::String& string) const {
+      size_t hash = 0;
+      for (size_t i = 0; i < string.size(); ++i) {
+        hash = 65599 * hash + string[i];
+      }
 
-    return hash ^ (hash >> 16);
-  }
-};
-
-/**
- * @brief Hash value generator for WString.
- */
-template<>
-struct std::hash<geEngineSDK::WString>
-{
-  size_t operator()(const geEngineSDK::WString& string) const {
-    size_t hash = 0;
-    for (size_t i = 0; i < string.size(); ++i) {
-      hash = 65599 * hash + string[i];
+      return hash ^ (hash >> 16);
     }
-    return hash ^ (hash >> 16);
-  }
-};
+  };
+
+  /**
+   * @brief Hash value generator for WString.
+   */
+  template<>
+  struct hash<geEngineSDK::WString>
+  {
+    size_t operator()(const geEngineSDK::WString& string) const {
+      size_t hash = 0;
+      for (size_t i = 0; i < string.size(); ++i) {
+        hash = 65599 * hash + string[i];
+      }
+      return hash ^ (hash >> 16);
+    }
+  };
+}
