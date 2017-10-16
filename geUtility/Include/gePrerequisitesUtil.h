@@ -120,4 +120,5 @@
 #include "gePath.h"                 //Paths to files
 #include "geEvent.h"                //Event objects and handlers
 #include "gePlatformUtility.h"      //Utilities for the specific operating system
+#include "geNonCopyable.h"          //Interface for Non-copyable objects
 #include "geCrashHandler.h"         //Crash handling functions

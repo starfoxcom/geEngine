@@ -12,6 +12,7 @@
 #include <geVector2I.h>
 #include <geVector2Half.h>
 #include <geVector3.h>
+#include <geTriangulation.h>
 
 #include <geDebug.h>
 
@@ -308,4 +309,16 @@ TEST(geUtility, Platform_Utilities) {
   WString szClipboardContent = PlatformUtility::copyFromClipboard();
   EXPECT_STRCASEEQ(toString(szClipboardContent).c_str(),
                    "Esta es una prueba del portapapeles!");
+}
+
+TEST(geUtility, Tetrahedron_Utilities) {
+  Vector<Vector3> pointList;
+  pointList.push_back(Vector3(-5.0f, 0.0f, 5.0f));
+  pointList.push_back(Vector3( 5.0f, 0.0f, 5.0f));
+  pointList.push_back(Vector3( 0.0f, 0.0f, 0.0f));
+  pointList.push_back(Vector3( 0.0f, 5.0f, 0.0f));
+
+  TetrahedronVolume newVolume = Triangulation::tetrahedralize(pointList);
+  EXPECT_TRUE(newVolume.tetrahedra.size() == 1);
+  EXPECT_TRUE(newVolume.outerFaces.size() == 4);
 }

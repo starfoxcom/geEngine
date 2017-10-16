@@ -47,6 +47,9 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{8e54fd18-f7a4-4af8-b12e-7b274ef2b463}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Externals\TetGen">
+      <UniqueIdentifier>{b31325f8-8b5d-4096-a0a8-f408c4dec8eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
@@ -247,6 +250,21 @@
     <ClInclude Include="Include\geUtil.h">
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geFlags.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGroupAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Externals\TetGen\tetgen.h">
+      <Filter>Source Files\Externals\TetGen</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Externals\json.hpp">
+      <Filter>Source Files\Externals</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTriangulation.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -367,6 +385,15 @@
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Source\geUtil.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Externals\TetGen\predicates.cxx">
+      <Filter>Source Files\Externals\TetGen</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Externals\TetGen\tetgen.cxx">
+      <Filter>Source Files\Externals\TetGen</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTriangulation.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>

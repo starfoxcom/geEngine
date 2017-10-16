@@ -287,7 +287,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Externals\json.hpp" />
     <ClInclude Include="Include\Externals\md5.h" />
+    <ClInclude Include="Include\Externals\TetGen\tetgen.h" />
     <ClInclude Include="Include\geAny.h" />
     <ClInclude Include="Include\geAsyncOp.h" />
     <ClInclude Include="Include\geBitmapWriter.h" />
@@ -303,6 +305,7 @@
     <ClInclude Include="Include\geEvent.h" />
     <ClInclude Include="Include\geException.h" />
     <ClInclude Include="Include\geFileSystem.h" />
+    <ClInclude Include="Include\geFlags.h" />
     <ClInclude Include="Include\geFloat10.h" />
     <ClInclude Include="Include\geFloat11.h" />
     <ClInclude Include="Include\geFloat16.h" />
@@ -311,6 +314,7 @@
     <ClInclude Include="Include\geFrameAlloc.h" />
     <ClInclude Include="Include\geFwdDeclUtil.h" />
     <ClInclude Include="Include\geGlobalFrameAlloc.h" />
+    <ClInclude Include="Include\geGroupAlloc.h" />
     <ClInclude Include="Include\geLog.h" />
     <ClInclude Include="Include\geMacroUtil.h" />
     <ClInclude Include="Include\geMath.h" />
@@ -343,6 +347,7 @@
     <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
+    <ClInclude Include="Include\geTriangulation.h" />
     <ClInclude Include="Include\geUnicode.h" />
     <ClInclude Include="Include\geUtil.h" />
     <ClInclude Include="Include\geVector2.h" />
@@ -356,6 +361,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Externals\md5.cpp" />
+    <ClCompile Include="Source\Externals\TetGen\predicates.cxx" />
+    <ClCompile Include="Source\Externals\TetGen\tetgen.cxx" />
     <ClCompile Include="Source\geAsyncOp.cpp" />
     <ClCompile Include="Source\geBitmapWriter.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
@@ -383,6 +390,7 @@
     <ClCompile Include="Source\geThreadPool.cpp" />
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
+    <ClCompile Include="Source\geTriangulation.cpp" />
     <ClCompile Include="Source\geUnicode.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />
     <ClCompile Include="Source\geVector2.cpp" />
