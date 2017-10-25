@@ -19,6 +19,7 @@
 #include "geFileSystem.h"
 #include "geDataStream.h"
 
+#if GE_PLATFORM == GE_PLATFORM_PS4
 
 namespace geEngineSDK {
   SPtr<DataStream>
@@ -117,3 +118,7 @@ namespace geEngineSDK {
     GE_UNREFERENCED_PARAMETER(newPath);
   }
 }
+
+#else
+#   pragma error "Trying to compile ORBIS Code on Non-PS enviroment."
+#endif // #if GE_PLATFORM == GE_PLATFORM_PS4

@@ -37,7 +37,7 @@ namespace geEngineSDK {
 
     /**
      * @brief Opens a file and returns a data stream capable of reading and
-     *        writing to that file. If the file doesn't exist a one will be created.
+     *        writing to that file. If the file doesn't exist one will be created.
      * @param[in] fullPath  Full path to a file.
      */
     static SPtr<DataStream>

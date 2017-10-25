@@ -139,13 +139,13 @@ namespace geEngineSDK {
   /**
    * @copydoc FrameAlloc::markFrame
    */
-  GE_UTILITY_EXPORT inline void
+  GE_UTILITY_EXPORT void
   ge_frame_mark();
 
   /**
    * @copydoc FrameAlloc::clear
    */
-  GE_UTILITY_EXPORT inline void
+  GE_UTILITY_EXPORT void
   ge_frame_clear();
 
   typedef std::basic_string<ANSICHAR,

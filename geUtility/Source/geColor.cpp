@@ -20,8 +20,8 @@
 
 #include "geColor.h"
 #include "geFloat16Color.h"
-//#include "geVector3.h"
-//#include "geVector4.h"
+#include "geVector3.h"
+#include "geVector4.h"
 
 namespace geEngineSDK {
   const LinearColor LinearColor::Transparent(0.0f, 0.0f, 0.0f, 0.0f);
@@ -56,6 +56,20 @@ namespace geEngineSDK {
   * as unlike pow, multiplication is fast.
   */
   static const float OneOver255 = 1.0f / 255.0f;
+
+  LinearColor::LinearColor(const Vector3& V) {
+    r = V.x;
+    g = V.y;
+    b = V.z;
+    a = 1.0f;
+  }
+
+  LinearColor::LinearColor(const Vector4& V) {
+    r = V.x;
+    g = V.y;
+    b = V.z;
+    a = V.w;
+  }
 
   LinearColor::LinearColor(const Color& refColor) {
     r = s_pow22OneOver255Table[refColor.r];
@@ -211,6 +225,58 @@ namespace geEngineSDK {
     float B = 0.0556434f * X + -0.2040259f * Y + 1.0572252f * Z;
 
     return LinearColor(R, G, B);
+  }
+
+  float
+  LinearColor::evaluateBezier(const LinearColor* ControlPoints,
+                              int32 NumPoints,
+                              Vector<LinearColor>& OutPoints) {
+    GE_ASSERT(ControlPoints);
+    GE_ASSERT(NumPoints > 1);
+
+    //var q is the change in t between successive evaluations.
+    const float q = 1.f / (NumPoints - 1); //q is dependent on the number of GAPS = POINTS-1
+
+    //Recreate the names used in the derivation
+    const LinearColor& P0 = ControlPoints[0];
+    const LinearColor& P1 = ControlPoints[1];
+    const LinearColor& P2 = ControlPoints[2];
+    const LinearColor& P3 = ControlPoints[3];
+
+    //Coefficients of the cubic polynomial that we're FDing -
+    const LinearColor a = P0;
+    const LinearColor b = 3 * (P1 - P0);
+    const LinearColor c = 3 * (P2 - 2 * P1 + P0);
+    const LinearColor d = P3 - 3 * P2 + 3 * P1 - P0;
+
+    //Initial values of the poly and the 3 diffs -
+    LinearColor S = a;						            //The poly value
+    LinearColor U = b*q + c*q*q + d*q*q*q;	  //1st order diff (quadratic)
+    LinearColor V = 2 * c*q*q + 6 * d*q*q*q;  //2nd order diff (linear)
+    LinearColor W = 6 * d*q*q*q;				      //3rd order diff (constant)
+
+    //Path length.
+    float Length = 0.f;
+
+    LinearColor OldPos = P0;
+    OutPoints.push_back(P0);  //First point on the curve is always P0.
+
+    for (int32 i = 1; i < NumPoints; ++i) {
+      //Calculate the next value and update the deltas
+      S += U;     // update poly value
+      U += V;     // update 1st order diff value
+      V += W;     // update 2st order diff value
+                  // 3rd order diff is constant => no update needed.
+
+      //Update Length.
+      Length += LinearColor::dist(S, OldPos);
+      OldPos = S;
+
+      OutPoints.push_back(S);
+    }
+
+    //Return path length as experienced in sequence (linear interpolation between points).
+    return Length;
   }
 
   LinearColor

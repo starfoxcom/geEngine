@@ -92,7 +92,7 @@ namespace geEngineSDK {
     }
 
     template<int N>
-    StringID(const ANSICHAR name[N]) : m_Data(nullptr) {
+    explicit StringID(const ANSICHAR name[N]) : m_Data(nullptr) {
       construct(static_cast<const ANSICHAR*>(name));
     }
 

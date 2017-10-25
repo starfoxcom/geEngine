@@ -54,8 +54,8 @@ namespace geEngineSDK {
         b(InB),
         a(InA) {}
 
-    explicit LinearColor(const Vector3& Vector);
-    explicit LinearColor(const Vector4& Vector);
+    explicit LinearColor(const Vector3& V);
+    explicit LinearColor(const Vector4& V);
     
     /**
      * @brief Color->LinearColor conversion.
@@ -320,6 +320,19 @@ namespace geEngineSDK {
      */
     static LinearColor
     makeFromColorTemperature(float Temp);
+
+    /**
+    * Generates a list of sample points on a Bezier curve defined by 2 points.
+    *
+    * @param	ControlPoints	Array of 4 Linear Colors (vert1, controlpoint1, controlpoint2, vert2).
+    * @param	NumPoints		Number of samples.
+    * @param	OutPoints		Receives the output samples.
+    * @return					Path length.
+    */
+    static float
+    evaluateBezier(const LinearColor* ControlPoints,
+                   int32 NumPoints,
+                   Vector<LinearColor>& OutPoints);
 
     /**
      * @brief Converts a linear space RGB color to an HSV color

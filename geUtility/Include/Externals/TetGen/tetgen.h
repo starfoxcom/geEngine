@@ -446,7 +446,7 @@ public:
   //   memory was allocated by the "new" operator (C++).
   void deinitialize()
   {
-    int i, j;
+    int i;
 
     if (pointlist != (REAL *) NULL) {
       delete [] pointlist;
@@ -508,7 +508,7 @@ public:
       polygon *p;
       for (i = 0; i < numberoffacets; i++) {
         f = &facetlist[i];
-        for (j = 0; j < f->numberofpolygons; j++) {
+        for (int j = 0; j < f->numberofpolygons; j++) {
           p = &f->polygonlist[j];
           delete [] p->vertexlist;
         }
@@ -940,12 +940,19 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
   class triface {
-  public:
+   public:
     tetrahedron *tet;
     int ver; // Range from 0 to 11.
+    
     triface() : tet(0), ver(0) {}
-    triface& operator=(const triface& t) {
-      tet = t.tet; ver = t.ver;
+
+    triface(const triface& other) : tet(other.tet), ver(other.ver) {}
+   
+    inline triface&
+    operator=(const triface& other){
+      tet = other.tet;
+      ver = other.ver;
+
       return *this;
     }
   };

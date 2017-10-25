@@ -18,14 +18,16 @@
 */
 /*****************************************************************************/
 //#include "geMath.h"
+#include "geDegree.h"
+#include "geRadian.h"
 #include "geColor.h"
 #include "geVector2.h"
 #include "geVector2I.h"
 #include "geVector3.h"
-//#include "geVector4.h"
-//#include "geQuaternion.h"
+#include "geVector4.h"
+#include "geQuaternion.h"
 //#include "geMatrix3.h"
-//#include "geMatrix4.h"
+#include "geMatrix4.h"
 #include "geException.h"
 
 namespace geEngineSDK {
@@ -378,14 +380,14 @@ namespace geEngineSDK {
   WString
   toWString(const Vector4& val) {
     WStringStream stream;
-    stream << val.X << L" " << val.Y << L" " << val.Z << L" " << val.W;
+    stream << val.x << L" " << val.y << L" " << val.z << L" " << val.w;
     return stream.str();
   }
 
   String
   toString(const Vector4& val) {
     StringStream stream;
-    stream << val.X << " " << val.Y << " " << val.Z << " " << val.W;
+    stream << val.x << " " << val.y << " " << val.z << " " << val.w;
     return stream.str();
   }
 #endif // _INC_VECTOR4_H_
@@ -426,44 +428,44 @@ namespace geEngineSDK {
   WString
   toWString(const Matrix4& val) {
     WStringStream stream;
-    stream << val[0][0] << L" "
-      << val[0][1] << L" "
-      << val[0][2] << L" "
-      << val[0][3] << L" "
-      << val[1][0] << L" "
-      << val[1][1] << L" "
-      << val[1][2] << L" "
-      << val[1][3] << L" "
-      << val[2][0] << L" "
-      << val[2][1] << L" "
-      << val[2][2] << L" "
-      << val[2][3] << L" "
-      << val[3][0] << L" "
-      << val[3][1] << L" "
-      << val[3][2] << L" "
-      << val[3][3];
+    stream << val.m[0][0] << L" "
+      << val.m[0][1] << L" "
+      << val.m[0][2] << L" "
+      << val.m[0][3] << L" "
+      << val.m[1][0] << L" "
+      << val.m[1][1] << L" "
+      << val.m[1][2] << L" "
+      << val.m[1][3] << L" "
+      << val.m[2][0] << L" "
+      << val.m[2][1] << L" "
+      << val.m[2][2] << L" "
+      << val.m[2][3] << L" "
+      << val.m[3][0] << L" "
+      << val.m[3][1] << L" "
+      << val.m[3][2] << L" "
+      << val.m[3][3];
     return stream.str();
   }
 
   String
   toString(const Matrix4& val) {
     StringStream stream;
-    stream << val[0][0] << " "
-      << val[0][1] << " "
-      << val[0][2] << " "
-      << val[0][3] << " "
-      << val[1][0] << " "
-      << val[1][1] << " "
-      << val[1][2] << " "
-      << val[1][3] << " "
-      << val[2][0] << " "
-      << val[2][1] << " "
-      << val[2][2] << " "
-      << val[2][3] << " "
-      << val[3][0] << " "
-      << val[3][1] << " "
-      << val[3][2] << " "
-      << val[3][3];
+    stream << val.m[0][0] << " "
+      << val.m[0][1] << " "
+      << val.m[0][2] << " "
+      << val.m[0][3] << " "
+      << val.m[1][0] << " "
+      << val.m[1][1] << " "
+      << val.m[1][2] << " "
+      << val.m[1][3] << " "
+      << val.m[2][0] << " "
+      << val.m[2][1] << " "
+      << val.m[2][2] << " "
+      << val.m[2][3] << " "
+      << val.m[3][0] << " "
+      << val.m[3][1] << " "
+      << val.m[3][2] << " "
+      << val.m[3][3];
     return stream.str();
   }
 #endif // _INC_MATRIX4_H_
@@ -472,14 +474,14 @@ namespace geEngineSDK {
   WString
   toWString(const Quaternion& val) {
     WStringStream stream;
-    stream << val.W << L" " << val.X << L" " << val.Y << L" " << val.Z;
+    stream << val.w << L" " << val.x << L" " << val.y << L" " << val.z;
     return stream.str();
   }
 
   String
   toString(const Quaternion& val) {
     StringStream stream;
-    stream << val.W << " " << val.X << " " << val.Y << " " << val.Z;
+    stream << val.w << " " << val.x << " " << val.y << " " << val.z;
     return stream.str();
   }
 #endif // _INC_QUATERNION_H_

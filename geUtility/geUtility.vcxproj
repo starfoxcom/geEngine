@@ -137,7 +137,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
@@ -153,7 +153,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>snappyd.lib;DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEVLIBS)Snappy/lib/$(PlatformShortName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -162,7 +163,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
@@ -178,7 +179,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>snappyd.lib;DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEVLIBS)Snappy/lib/$(PlatformShortName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
@@ -188,7 +190,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <CppExceptions>true</CppExceptions>
@@ -210,7 +212,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -228,7 +230,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>snappy.lib;DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEVLIBS)Snappy/lib/$(PlatformShortName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -239,7 +242,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -257,7 +260,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>snappy.lib;DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEVLIBS)Snappy/lib/$(PlatformShortName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
@@ -269,7 +273,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GE_UTILITY_EXPORTS;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <OptimizationLevel>Level2</OptimizationLevel>
@@ -295,6 +299,7 @@
     <ClInclude Include="Include\geBitmapWriter.h" />
     <ClInclude Include="Include\geBitwise.h" />
     <ClInclude Include="Include\geColor.h" />
+    <ClInclude Include="Include\geCompression.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
     <ClInclude Include="Include\geDataStream.h" />
     <ClInclude Include="Include\geDebug.h" />
@@ -318,6 +323,7 @@
     <ClInclude Include="Include\geLog.h" />
     <ClInclude Include="Include\geMacroUtil.h" />
     <ClInclude Include="Include\geMath.h" />
+    <ClInclude Include="Include\geMatrix4.h" />
     <ClInclude Include="Include\geMemAllocProfiler.h" />
     <ClInclude Include="Include\geMemoryAllocator.h" />
     <ClInclude Include="Include\geMemStack.h" />
@@ -326,11 +332,14 @@
     <ClInclude Include="Include\geModule.h" />
     <ClInclude Include="Include\geNonCopyable.h" />
     <ClInclude Include="Include\gePath.h" />
+    <ClInclude Include="Include\gePlane.h" />
     <ClInclude Include="Include\gePlatformDefines.h" />
     <ClInclude Include="Include\gePlatformTypes.h" />
     <ClInclude Include="Include\gePlatformUtility.h" />
     <ClInclude Include="Include\gePrerequisitesUtil.h" />
+    <ClInclude Include="Include\geQuaternion.h" />
     <ClInclude Include="Include\geRadian.h" />
+    <ClInclude Include="Include\geRotator.h" />
     <ClInclude Include="Include\geRTTIField.h" />
     <ClInclude Include="Include\geRTTIManagedDataBlockField.h" />
     <ClInclude Include="Include\geRTTIPlainField.h" />
@@ -354,6 +363,7 @@
     <ClInclude Include="Include\geVector2Half.h" />
     <ClInclude Include="Include\geVector2I.h" />
     <ClInclude Include="Include\geVector3.h" />
+    <ClInclude Include="Include\geVector4.h" />
     <ClInclude Include="Include\geVectorNI.h" />
     <ClInclude Include="Include\Win32\geMinWindows.h" />
     <ClInclude Include="Include\Win32\geWin32PlatformUtility.h" />
@@ -366,6 +376,7 @@
     <ClCompile Include="Source\geAsyncOp.cpp" />
     <ClCompile Include="Source\geBitmapWriter.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
+    <ClCompile Include="Source\geCompression.cpp" />
     <ClCompile Include="Source\geCrashHandler.cpp" />
     <ClCompile Include="Source\geDataStream.cpp" />
     <ClCompile Include="Source\geDebug.cpp" />
@@ -378,11 +389,14 @@
     <ClCompile Include="Source\geGlobalFrameAlloc.cpp" />
     <ClCompile Include="Source\geLog.cpp" />
     <ClCompile Include="Source\geMath.cpp" />
+    <ClCompile Include="Source\geMatrix4.cpp" />
     <ClCompile Include="Source\geMemoryAllocator.cpp" />
     <ClCompile Include="Source\geMemStack.cpp" />
     <ClCompile Include="Source\geMessageHandler.cpp" />
     <ClCompile Include="Source\gePath.cpp" />
+    <ClCompile Include="Source\geQuaternion.cpp" />
     <ClCompile Include="Source\geRadian.cpp" />
+    <ClCompile Include="Source\geRotator.cpp" />
     <ClCompile Include="Source\geRTTIField.cpp" />
     <ClCompile Include="Source\geString.cpp" />
     <ClCompile Include="Source\geStringID.cpp" />
@@ -396,6 +410,7 @@
     <ClCompile Include="Source\geVector2.cpp" />
     <ClCompile Include="Source\geVector2I.cpp" />
     <ClCompile Include="Source\geVector3.cpp" />
+    <ClCompile Include="Source\geVector4.cpp" />
     <ClCompile Include="Source\ORBIS\geORBISCrashHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

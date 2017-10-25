@@ -8144,7 +8144,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
   triface fliptets[3], spintet, flipedge;
   triface *tmpabtets, *parytet;
   point pa, pb, pc, pd, pe, pf;
-  REAL ori;
+  REAL ori=-1;
   int hullflag, hulledgeflag;
   int reducflag, rejflag;
   int reflexlinkedgecount;
@@ -9800,7 +9800,7 @@ int tetgenmesh::insertpoint(point insertpt, triface *searchtet, face *splitsh,
     }
 
     int rejptflag = (ivf->rejflag & 4);
-    REAL rd;
+    REAL rd=0;
     pts = NULL;
 
     for (i = 0; i < cavetetvertlist->objects; i++) {
@@ -15302,7 +15302,7 @@ enum tetgenmesh::interresult
       enextself(*searchtet);
       // It is possible a PLC self-intersection problem.
       terminatetetgen(this, 3);
-      return TOUCHEDGE;
+      //return TOUCHEDGE;
     }
     // The edge exists. Check if the face exists.
     pc = sapex(*searchsh);
@@ -15330,7 +15330,7 @@ enum tetgenmesh::interresult
           terminatetetgen(this, 5);
           // unifysubfaces(&checksh, searchsh);
           *searchtet = spintet;
-          return COLLISIONFACE;
+          //return COLLISIONFACE;
         }
       }
       fnextself(spintet);
@@ -16117,7 +16117,7 @@ bool tetgenmesh::fillcavity(arraypool* topshells, arraypool* botshells,
   arraypool *cavshells;
   triface bdrytet, neightet, *parytet;
   triface searchtet, spintet;
-  face *parysh;
+  face *parysh=nullptr;
   face checkseg;
   point pa, pb, pc;
   bool mflag;
@@ -20342,7 +20342,7 @@ int tetgenmesh::removevertexbyflips(point steinerpt)
   point lpt = NULL, rpt = NULL, apexpt; //, *parypt;
   flipconstraints fc;
   enum verttype vt;
-  enum locateresult loc;
+  enum locateresult loc = UNKNOWN;
   int valence, removeflag;
   int slawson;
   int t1ver;
@@ -24949,7 +24949,7 @@ int tetgenmesh::checktet4split(triface *chktet, int &qflag, REAL *ccent)
   REAL maxcosd, vol, volbnd, smlen = 0, rd;
   REAL A[4][4], rhs[4], D;
   int indx[4];
-  int i, j;
+  int i, j=0;
 
   if (b->convex) { // -c
     // Skip this tet if it lies in the exterior.
@@ -27894,7 +27894,7 @@ void tetgenmesh::qualitystatistics()
   REAL shortlen, longlen;
   REAL tetaspect, tetradius;
   REAL smalldiangle, bigdiangle;
-  REAL smallfaangle, bigfaangle;
+  REAL smallfaangle=0, bigfaangle=0;
   unsigned long radiustable[12];
   unsigned long aspecttable[16];
   unsigned long dihedangletable[18];
@@ -28665,7 +28665,7 @@ void tetgenmesh::outnodes(tetgenio* out)
   face parentsh;
   point pointloop;
   int nextras, bmark, marker = 0, weightDT = 0; 
-  int coordindex, attribindex;
+  int coordindex=0, attribindex=0;
   int pointnumber, firstindex;
   int index, i;
 
@@ -28861,7 +28861,7 @@ void tetgenmesh::outmetrics(tetgenio* out)
   FILE *outfile = NULL;
   char outmtrfilename[FILENAMESIZE];
   point ptloop;
-  int mtrindex;
+  int mtrindex=0;
 
   if (out == (tetgenio *) NULL) {
     strcpy(outmtrfilename, b->outfilename);
@@ -28940,7 +28940,7 @@ void tetgenmesh::outelements(tetgenio* out)
   int *tlist = NULL;
   long ntets;
   int firstindex, shift;
-  int pointindex, attribindex;
+  int pointindex=0, attribindex=0;
   int highorderindex = 11; 
   int elementnumber;
   int eextras;
@@ -29270,7 +29270,7 @@ void tetgenmesh::outhullfaces(tetgenio* out)
   int *elist = NULL;
   int firstindex, shift;
   int facenumber;
-  int index;
+  int index=0;
 
   if (out == (tetgenio *) NULL) {
     strcpy(facefilename, b->outfilename);

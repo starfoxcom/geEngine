@@ -106,7 +106,8 @@ namespace geEngineSDK {
     SIZE_T freePtr = m_freeBlock->m_freePtr;
 #endif
 
-    SIZE_T alignOffset = alignment - freePtr & (alignment - 1);
+    SIZE_T alignOffset = alignment - (freePtr & (alignment - 1));
+
     SIZE_T freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
     if ((amount + alignOffset) > freeMem) {
       /** New blocks are allocated on a 16 byte boundary, ensure we enough
@@ -272,9 +273,13 @@ namespace geEngineSDK {
     }
 
     if (nullptr == newBlock) {
-      uint8* data = (uint8*)reinterpret_cast<uint8*>(ge_alloc(blockSize + sizeof(MemBlock)));
+      SIZE_T alignOffset = 16 - (sizeof(MemBlock) & (16 - 1));
+
+      uint8* data = reinterpret_cast<uint8*>(ge_alloc(blockSize +
+                                                      sizeof(MemBlock) +
+                                                      alignOffset));
       newBlock = new (data) MemBlock(blockSize);
-      data += sizeof(MemBlock);
+      data += sizeof(MemBlock) + alignOffset;
       newBlock->m_data = data;
 
       m_blocks.push_back(newBlock);

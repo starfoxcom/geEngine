@@ -218,11 +218,11 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT MemoryDataStream : public DataStream
   {
    public:
-     /**
-      * @brief Allocates a new chunk of memory and wraps it in a stream.
-      * @param[in]  size  Size of the memory chunk in bytes.
-      */
-     MemoryDataStream(SIZE_T size);
+    /**
+     * @brief Allocates a new chunk of memory and wraps it in a stream.
+     * @param[in]  size  Size of the memory chunk in bytes.
+     */
+    explicit MemoryDataStream(SIZE_T size);
 
     /**
      * @brief Wrap an existing memory chunk in a stream.

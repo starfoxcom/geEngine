@@ -18,6 +18,8 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 
+#if GE_PLATFORM == GE_PLATFORM_PS4
+
 namespace geEngineSDK {
   //static const char* s_MiniDumpName = "MiniDump.dmp";
 
@@ -45,3 +47,7 @@ namespace geEngineSDK {
     return StringUtil::BLANK;
   }
 }
+
+#else
+#   pragma error "Trying to compile ORBIS Code on Non-PS enviroment."
+#endif // #if GE_PLATFORM == GE_PLATFORM_PS4

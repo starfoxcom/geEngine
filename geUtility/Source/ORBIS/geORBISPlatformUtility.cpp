@@ -20,6 +20,8 @@
 #include "gePrerequisitesUtil.h"
 #include "geColor.h"
 
+#if GE_PLATFORM == GE_PLATFORM_PS4
+
 namespace geEngineSDK {
   void
   PlatformUtility::terminate(bool force) {
@@ -58,3 +60,7 @@ namespace geEngineSDK {
     GE_UNREFERENCED_PARAMETER(path);
   }
 }
+
+#else
+#   pragma error "Trying to compile ORBIS Code on Non-PS enviroment."
+#endif // #if GE_PLATFORM == GE_PLATFORM_PS4

@@ -10,6 +10,10 @@
 /*****************************************************************************/
 #pragma once
 
+#ifndef _INC_MATRIX4_H_
+# define _INC_MATRIX4_H_
+#endif
+
 /*****************************************************************************/
 /**
  * Includes
@@ -237,6 +241,56 @@ namespace geEngineSDK {
     }
 
     /**
+     * @brief Performs a cubic interpolation
+     * @param  P - end points
+     * @param  T - tangent directions at end points
+     * @param  Alpha - distance along spline
+     * @return Interpolated value
+     */
+    template< class T, class U >
+    static T
+    cubicInterp(const T& P0, const T& T0, const T& P1, const T& T1, const U& A) {
+      const float A2 = A  * A;
+      const float A3 = A2 * A;
+      return static_cast<T>(((2 * A3) - (3 * A2) + 1) * P0) +
+                            ((A3 - (2 * A2) + A) * T0) +
+                            ((A3 - A2) * T1) + (((-2 * A3) + (3 * A2)) * P1);
+    }
+
+    template<class U>
+    static Rotator
+    lerp(const Rotator& A, const Rotator& B, const U& Alpha);
+
+    template<class U>
+    static Rotator
+    lerpRange(const Rotator& A, const Rotator& B, const U& Alpha);
+
+    template<class U>
+    static Quaternion
+    lerp(const Quaternion& A, const Quaternion& B, const U& Alpha);
+
+    template<class U>
+    static Quaternion
+    biLerp(const Quaternion& P00,
+           const Quaternion& P10,
+           const Quaternion& P01,
+           const Quaternion& P11,
+           float FracX,
+           float FracY);
+
+    /**
+     * @brief In the case of quaternions, we use a bezier like approach.
+     * T - Actual 'control' orientations.
+     */
+    template<class U>
+    static Quaternion
+    cubicInterp(const Quaternion& P0,
+                const Quaternion& T0,
+                const Quaternion& P1,
+                const Quaternion& T1,
+                const U& A);
+
+    /**
      * @brief Divide two integers and rounds the result
      */
     template<class T>
@@ -436,6 +490,90 @@ namespace geEngineSDK {
     }
 
     /**
+     * @brief Spreads bits to every other.
+     */
+    static FORCEINLINE uint32
+    mortonCode2(uint32 x) {
+      x &= 0x0000ffff;
+      x = (x ^ (x << 8)) & 0x00ff00ff;
+      x = (x ^ (x << 4)) & 0x0f0f0f0f;
+      x = (x ^ (x << 2)) & 0x33333333;
+      x = (x ^ (x << 1)) & 0x55555555;
+      return x;
+    }
+
+    /**
+     * @brief Reverses mortonCode2. Compacts every other bit to the right.
+     */
+    static FORCEINLINE uint32
+    reverseMortonCode2(uint32 x) {
+      x &= 0x55555555;
+      x = (x ^ (x >> 1)) & 0x33333333;
+      x = (x ^ (x >> 2)) & 0x0f0f0f0f;
+      x = (x ^ (x >> 4)) & 0x00ff00ff;
+      x = (x ^ (x >> 8)) & 0x0000ffff;
+      return x;
+    }
+
+    /**
+     * @brief Spreads bits to every 3rd.
+     */
+    static FORCEINLINE uint32
+    mortonCode3(uint32 x) {
+      x &= 0x000003ff;
+      x = (x ^ (x << 16)) & 0xff0000ff;
+      x = (x ^ (x << 8)) & 0x0300f00f;
+      x = (x ^ (x << 4)) & 0x030c30c3;
+      x = (x ^ (x << 2)) & 0x09249249;
+      return x;
+    }
+
+    /**
+     * @brief Reverses mortonCode3. Compacts every 3rd bit to the right.
+     */
+    static FORCEINLINE uint32
+    reverseMortonCode3(uint32 x) {
+      x &= 0x09249249;
+      x = (x ^ (x >> 2)) & 0x030c30c3;
+      x = (x ^ (x >> 4)) & 0x0300f00f;
+      x = (x ^ (x >> 8)) & 0xff0000ff;
+      x = (x ^ (x >> 16)) & 0x000003ff;
+      return x;
+    }
+
+    /**
+     * @brief Returns value based on comparand. The main purpose of this function is to avoid
+     * branching based on floating point comparison which can be avoided via compiler
+     * intrinsics.
+     * Please note that we don't define what happens in the case of NaNs as there might
+     * be platform specific differences.
+     * @param Comparand     Comparand the results are based on
+     * @param ValueGEZero   Return value if Comparand >= 0
+     * @param ValueLTZero   Return value if Comparand < 0
+     * @return  ValueGEZero if Comparand >= 0, ValueLTZero otherwise
+     */
+    static constexpr FORCEINLINE float
+    floatSelect(float Comparand, float ValueGEZero, float ValueLTZero) {
+      return Comparand >= 0.f ? ValueGEZero : ValueLTZero;
+    }
+
+    /**
+     * @brief Returns value based on comparand. The main purpose of this function is to avoid
+     * branching based on floating point comparison which can be avoided via compiler
+     * intrinsics.
+     * Please note that we don't define what happens in the case of NaNs as there might
+     * be platform specific differences.
+     * @param	Comparand     Comparand the results are based on
+     * @param	ValueGEZero   Return value if Comparand >= 0
+     * @param ValueLTZero   Return value if Comparand < 0
+     * @return  ValueGEZero if Comparand >= 0, ValueLTZero otherwise
+     */
+    static constexpr FORCEINLINE double
+    floatSelect(double Comparand, double ValueGEZero, double ValueLTZero) {
+      return Comparand >= 0.f ? ValueGEZero : ValueLTZero;
+    }
+
+    /**
      * @brief Checks if the value is between the range. (MaxValue Exclusive)
      */
     template<class U>
@@ -519,20 +657,49 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief Compares the value of Comparand and return the "Greater" or
-     *        "Lower" value accordingly
+     * @brief Computes the sine and cosine of a scalar float.
+     * @param ScalarSin	Pointer to where the sin result should be stored
+     * @param ScalarCos	Pointer to where the cos result should be stored
+     * @param Value input angles
      */
-    static FORCEINLINE float
-    floatSelect(float Comparand, float ValueGEZero, float ValueLTZero) {
-      return Comparand >= 0.f ? ValueGEZero : ValueLTZero;
-    }
+    static FORCEINLINE void
+    sin_cos(float* ScalarSin, float* ScalarCos, float Value) {
+      //Map Value to y in [-pi, pi], x = 2*pi*quotient + remainder.
+      float quotient = (INV_PI * 0.5f) * Value;
+      if (0.0f <= Value) {
+        quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
+      }
+      else {
+        quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
+      }
+      
+      float y = Value - TWO_PI * quotient;
 
-    /**
-     * @copydoc Math::floatSelect
-     */
-    static FORCEINLINE double
-    floatSelect(double Comparand, double ValueGEZero, double ValueLTZero) {
-      return Comparand >= 0.f ? ValueGEZero : ValueLTZero;
+      //Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
+      float fSign;
+      if (HALF_PI < y) {
+        y = PI - y;
+        fSign = -1.0f;
+      }
+      else if (-HALF_PI > y) {
+        y = -PI - y;
+        fSign = -1.0f;
+      }
+      else {
+        fSign = +1.0f;
+      }
+
+      float y2 = y * y;
+
+      //11-degree minimax approximation
+      *ScalarSin = ((( ((-2.3889859e-08f * y2 + 2.7525562e-06f) * y2 - 0.00019840874f)
+                   * y2 + 0.0083333310f) * y2 - 0.16666667f) * y2 + 1.0f) * y;
+
+      //10-degree minimax approximation
+      float p = (( ((-2.6051615e-07f * y2 + 2.4760495e-05f) * y2 - 0.0013888378f)
+                * y2 + 0.041666638f) * y2 - 0.5f) * y2 + 1.0f;
+      
+      *ScalarCos = fSign * p;
     }
 
     /**
@@ -1066,6 +1233,15 @@ namespace geEngineSDK {
     linePlaneIntersection(const Vector3& Point1,
                           const Vector3& Point2,
                           const Plane& plane);
+
+    /**
+     * @brief Find the point on the line segment from LineStart to LineEnd
+     *        which is closest to Point
+     */
+    static Vector3
+    closestPointOnLine(const Vector3& LineStart,
+                       const Vector3& LineEnd,
+                       const Vector3& Point);
 
     /**
      * @brief Determine if a plane and an AABB intersect

@@ -74,7 +74,9 @@ namespace geEngineSDK {
   class Math;
   class Matrix3;
   class Matrix4;
+  class RotationTranslationMatrix;
   class Plane;
+  class Rotator;
   class Quaternion;
   class Radian;
   class Ray;

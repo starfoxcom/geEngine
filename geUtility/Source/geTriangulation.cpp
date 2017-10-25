@@ -1,6 +1,6 @@
 #/*****************************************************************************/
 /**
- * @file    geTriangulation.h
+ * @file    geTriangulation.cpp
  * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
  * @date    2017/10/15
  * @brief   Contains helper methods that triangulate point data.

@@ -28,19 +28,22 @@
 #include "geVector2.h"
 
 namespace geEngineSDK {
-  class Rotator;
-  
   /**
-   * @brief A vector in 3-D space composed of components (X, Y, Z) with
+   * @brief A vector in 3-D space composed of components (x, y, z) with
    *        floating point precision.
    */
   class Vector3
   {
    public:
-     /**
-      * @brief Default constructor (no initialization).
-      */
+    /**
+     * @brief Default constructor (no initialization).
+     */
     FORCEINLINE Vector3();
+	
+    /**
+     * @brief Copy constructor.
+     */
+    FORCEINLINE Vector3(const Vector3&);
 
     /**
      * @brief Constructor initializing all components to a single float value.
@@ -57,7 +60,7 @@ namespace geEngineSDK {
     FORCEINLINE Vector3(float inX, float inY, float inZ);
 
     /**
-     * @brief Constructs a vector from an FVector2D and Z value.
+     * @brief Constructs a vector from an Vector32D and Z value.
      * @param v Vector to copy from.
      * @param inZ Z Coordinate.
      */
@@ -601,6 +604,32 @@ namespace geEngineSDK {
     projectOnToNormal(const Vector3& Normal) const;
 
     /**
+     * @brief Return the Rotator orientation corresponding to the direction in
+     *        which the vector points. Sets Yaw and Pitch to the proper numbers
+     *        and sets Roll to zero because the roll can't be determined from a
+     *        vector.
+     * @return Rotator from the Vector's direction, without any roll.
+     * @see toOrientationQuat()
+     */
+    GE_UTILITY_EXPORT Rotator
+    toOrientationRotator() const;
+
+    /**
+     * @brief Return the Quaternion orientation corresponding to the direction
+     *        in which the vector points. Similar to the Rotator version, returns
+     *        a result without roll such that it preserves the up vector.
+     *
+     * @note If you don't care about preserving the up vector and just want the
+     *       most direct rotation, you can use the faster:
+     *       'Quaternion::findBetweenVectors(FVector::ForwardVector, YourVector)' or
+     *       'Quaternion::findBetweenNormals(...)' if you know the vector is of unit length.
+     * @return Quaternion from the Vector's direction, without any roll.
+     * @see toOrientationRotator(), Quaternion::findBetweenVectors()
+     */
+    GE_UTILITY_EXPORT Quaternion
+    toOrientationQuat() const;
+
+    /**
      * @brief Return the Rotator corresponding to the direction that the vector
      *        is pointing in. Sets Yaw and Pitch to the proper numbers, and sets
      *        roll to zero because the roll can't be determined from a vector.
@@ -849,7 +878,7 @@ namespace geEngineSDK {
 
     /**
      * @brief Generates a list of sample points on a Bezier curve defined by 2 points.
-     * @param controlPoints	Array of 4 FVectors (vert1, controlpoint1, controlpoint2, vert2).
+     * @param controlPoints	Array of 4 Vector3s (vert1, controlpoint1, controlpoint2, vert2).
      * @param numPoints Number of samples.
      * @param outPoints Receives the output samples.
      * @return The path length.
@@ -909,22 +938,27 @@ namespace geEngineSDK {
     /**
      * @brief A zero vector (0,0,0)
      */
-    static const Vector3 ZERO;
+    static GE_UTILITY_EXPORT const Vector3 ZERO;
 
     /**
      * @brief A unit vector (1,1,1)
      */
-    static const Vector3 UNIT;
+    static GE_UTILITY_EXPORT const Vector3 UNIT;
 
     /**
      * @brief World up vector (0,0,1)
      */
-    static const Vector3 UP;
+    static GE_UTILITY_EXPORT const Vector3 UP;
 
     /**
      * @brief Forward vector (1,0,0)
      */
-    static const Vector3 FORWARD;
+    static GE_UTILITY_EXPORT const Vector3 FORWARD;
+
+    /**
+    * @brief Right vector (0,1,0)
+    */
+    static GE_UTILITY_EXPORT const Vector3 RIGHT;
   };
 
   /***************************************************************************/
@@ -988,8 +1022,8 @@ namespace geEngineSDK {
 
   inline Vector3
   Vector3::rotateAngleAxis(const float angleDeg, const Vector3& axis) const {
-    const float S = Math::sin(angleDeg * Math::DEG2RAD);
-    const float C = Math::cos(angleDeg * Math::DEG2RAD);
+    float S, C;
+    Math::sin_cos(&S, &C, angleDeg * Math::DEG2RAD);
 
     const float XX = axis.x * axis.x;
     const float YY = axis.y * axis.y;
@@ -1129,6 +1163,12 @@ namespace geEngineSDK {
   }
 
   FORCEINLINE Vector3::Vector3() {}
+  
+  FORCEINLINE Vector3::Vector3(const Vector3& other) {
+    x = other.x;
+    y = other.y;
+    z = other.z;
+  }
 
   FORCEINLINE Vector3::Vector3(float InF) : x(InF), y(InF), z(InF) {}
 
@@ -1658,4 +1698,6 @@ namespace geEngineSDK {
                    Math::clamp(v.y, Min.y, Max.y),
                    Math::clamp(v.z, Min.z, Max.z));
   }
+
+  GE_ALLOW_MEMCPY_SERIALIZATION(Vector3);
 }
