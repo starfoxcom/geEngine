@@ -90,7 +90,7 @@ namespace geEngineSDK {
      * @param Axis assumed to be a normalized vector
      * @param Angle angle to rotate above the given axis (in radians)
      */
-    Quaternion(Vector3 Axis, float AngleRad);
+    Quaternion(const Vector3& Axis, float AngleRad);
 
    public:
     /**
@@ -677,15 +677,15 @@ namespace geEngineSDK {
     return *this;
   }
 
-  FORCEINLINE Quaternion::Quaternion(Vector3 Axis, float AngleRad) {
+  FORCEINLINE Quaternion::Quaternion(const Vector3& Axis, float AngleRad) {
     const float half_a = 0.5f * AngleRad;
     float s, c;
     Math::sin_cos(&s, &c, half_a);
 
-    x = s * Axis.x;
-    y = s * Axis.y;
-    z = s * Axis.z;
-    w = c;
+    this->x = s * Axis.x;
+    this->y = s * Axis.y;
+    this->z = s * Axis.z;
+    this->w = c;
 
     diagnosticCheckNaN();
   }

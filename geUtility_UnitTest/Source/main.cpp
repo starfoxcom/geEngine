@@ -64,14 +64,14 @@ TEST(geUtility, String_Basic) {
 
 TEST(geUtility, String_Path) {
   Path testPath;
-  WString lastDirectory;
+  String lastDirectory;
   
   testPath = FileSystem::getWorkingDirectoryPath();
   EXPECT_TRUE(testPath.isDirectory());
   EXPECT_TRUE(testPath.getNumDirectories());
 
   lastDirectory.append(testPath[testPath.getNumDirectories() - 1]);
-  EXPECT_TRUE(lastDirectory.compare(L"BIN"));
+  EXPECT_TRUE(lastDirectory.compare("BIN"));
 }
 
 TEST(geUtility, String_Parser) {

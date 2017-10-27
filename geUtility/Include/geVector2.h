@@ -62,7 +62,7 @@ namespace geEngineSDK {
      * Copies the X and Y components from the Vector3.
      * @param V Vector to copy from.
      */
-    explicit FORCEINLINE Vector2(const Vector3& V);
+    explicit inline Vector2(const Vector3& V);
 
    public:
     /**

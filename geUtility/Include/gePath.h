@@ -91,19 +91,9 @@ namespace geEngineSDK {
     /**
      * @brief Gets a directory name with the specified index from the path.
      */
-    /*
-    const WString&
-    operator[](uint32 idx) const {
-      return getWDirectory(static_cast<SIZE_T>(idx));
-    }
-    */
-
-    /**
-     * @brief Gets a directory name with the specified index from the path.
-     */
-    const WString&
+    const String&
     operator[](SIZE_T idx) const {
-      return getWDirectory(idx);
+      return getDirectory(idx);
     }
 
     /**
@@ -288,16 +278,14 @@ namespace geEngineSDK {
      * @brief Change or set the filename in the path.
      */
     void
-    setFilename(const WString& filename) {
-      m_filename = filename;
-    }
+    setFilename(const WString& filename);
 
     /**
      * @brief Change or set the filename in the path.
      */
     void
     setFilename(const String& filename) {
-      m_filename = geEngineSDK::toWString(filename);
+      m_filename = filename;
     }
 
     /**
@@ -365,68 +353,56 @@ namespace geEngineSDK {
     /**
      * @brief Gets a directory name with the specified index from the path.
      */
-    const WString&
+    WString
     getWDirectory(SIZE_T idx) const;
 
     /**
      * @brief Gets a directory name with the specified index from the path.
      */
-    String
+    const String&
     getDirectory(SIZE_T idx) const;
 
     /**
      * @brief Returns path device (e.g. drive, volume, etc.) if one exists in the path.
      */
-    const WString&
-    getWDevice() const {
-      return m_device;
-    }
+    WString
+    getWDevice() const;
 
     /**
      * @brief Returns path device (e.g. drive, volume, etc.) if one exists in the path.
      */
-    String
+    const String&
     getDevice() const {
-      return geEngineSDK::toString(m_device);
+      return m_device;
     }
 
     /**
      * @brief Returns path node (e.g. network name) if one exists in the path.
      */
-    const WString&
-    getWNode() const {
+    WString
+    getWNode() const;
+
+    /**
+     * @brief Returns path node (e.g. network name) if one exists in the path.
+     */
+    const String&
+    getNode() const {
       return m_node;
     }
 
     /**
-     * @brief Returns path node (e.g. network name) if one exists in the path.
-     */
-    String
-    getNode() const {
-      return geEngineSDK::toString(m_node);
-    }
-
-    /**
      * @brief Gets last element in the path, filename if it exists, otherwise
      *        the last directory. If no directories exist returns device or node.
-     * @param[in] type  Determines format of node or device, in case they are
-     *                  returned. When default, format for the active platform
-     *                  will be used, otherwise the format defined by the parameter
-     *                  will be used.
      */
     WString
-    getWTail(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
+    getWTail() const;
 
     /**
      * @brief Gets last element in the path, filename if it exists, otherwise
      *        the last directory. If no directories exist returns device or node.
-     * @param[in] type  Determines format of node or device, in case they are
-     *                  returned. When default, format for the active platform
-     *                  will be used, otherwise the format defined by the parameter
-     *                  will be used.
      */
-    String
-    getTail(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
+    const String&
+    getTail() const;
 
     /**
      * @brief	Clears the path to nothing.
@@ -461,7 +437,7 @@ namespace geEngineSDK {
      * @brief Compares two path elements (i.e. filenames, directory names, etc.)
      */
     static bool
-    comparePathElem(const WString& left, const WString& right);
+    comparePathElem(const String& left, const String& right);
 
     /**
      * @brief Combines two paths and returns the result. Right path should be relative.
@@ -631,34 +607,30 @@ namespace geEngineSDK {
     }
 
     void
-    setNode(const WString& node) {
+    setNode(const WString& node);
+
+    void
+    setNode(const String& node) {
       m_node = node;
     }
 
     void
-    setNode(const String& node) {
-      m_node = geEngineSDK::toWString(node);
-    }
-
-    void
-    setDevice(const WString& device) {
-      m_device = device;
-    }
+    setDevice(const WString& device);
 
     void setDevice(const String& device) {
-      m_device = geEngineSDK::toWString(device);
+      m_device = device;
     }
 
     /**
      * @brief Build a Windows path string from internal path data.
      */
-    WString
+    String
     buildWindows() const;
 
     /**
      * @brief Build a Unix path string from internal path data.
      */
-    WString
+    String
     buildUnix() const;
 
     /**
@@ -692,10 +664,10 @@ namespace geEngineSDK {
     friend struct RTTIPlainType<Path>;
     friend struct ::std::hash<geEngineSDK::Path>;
 
-    Vector<WString> m_directories;
-    WString m_device;
-    WString m_filename;
-    WString m_node;
+    Vector<String> m_directories;
+    String m_device;
+    String m_filename;
+    String m_node;
     bool m_isAbsolute;
   };
 

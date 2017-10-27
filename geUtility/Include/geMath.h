@@ -1310,11 +1310,24 @@ namespace geEngineSDK {
     static float
     getRangeValue(Vector2 const& Range, float Pct);
 
+    /**
+     * @brief Performs a sphere vs box intersection test using Arvo's algorithm:
+     *  for each i in (x, y, z)
+     *    if(SphereCenter(i) < BoxMin(i)) d2+=(SphereCenter(i)-BoxMin(i))^2
+     *		elif(SphereCenter(i) > BoxMax(i)) d2+=(SphereCenter(i)-BoxMax(i))^2
+     * @param Sphere the center of the sphere being tested against the AABB
+     * @param RadiusSquared the size of the sphere being tested
+     * @param AABB the box being tested against
+     * @return Whether the sphere/box intersect or not.
+     */
     static bool
     sphereAABBIntersection(const Vector3& SphereCenter,
                            const float RadiusSquared,
                            const AABox& AABB);
 
+    /**
+     * @brief Converts a sphere into a point plus radius squared for the test above
+     */
     static bool
     sphereAABBIntersection(const Sphere& InSphere, const AABox& AABB);
 

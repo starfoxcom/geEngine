@@ -261,6 +261,9 @@ namespace geEngineSDK {
     bool
     equals(const Vector4& V, float Tolerance = Math::KINDA_SMALL_NUMBER) const;
 
+    Vector4
+    vectorAbs();
+
     /**
      * @brief Check if the vector is of unit length, with specified tolerance.
      * @param LengthSquaredTolerance Tolerance against squared length.
@@ -540,6 +543,11 @@ namespace geEngineSDK {
            Math::abs(y - V.y) <= Tolerance &&
            Math::abs(z - V.z) <= Tolerance &&
            Math::abs(w - V.w) <= Tolerance;
+  }
+
+  FORCEINLINE Vector4
+  Vector4::vectorAbs() {
+    return Vector4(Math::abs(x), Math::abs(y), Math::abs(z), Math::abs(w));
   }
 
   FORCEINLINE Vector4

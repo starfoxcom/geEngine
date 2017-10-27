@@ -57,14 +57,14 @@ namespace geEngineSDK {
      * @param InNormal Plane Normal Vector.
      * @param InW Plane W-coefficient.
      */
-    FORCEINLINE Plane(Vector3 InNormal, float InW);
+    FORCEINLINE Plane(const Vector3& InNormal, float InW);
 
     /**
      * @brief Constructor.
      * @param InBase Base point in plane.
      * @param InNormal Plane Normal Vector.
      */
-    FORCEINLINE Plane(Vector3 InBase, const Vector3 &InNormal);
+    FORCEINLINE Plane(const Vector3& InBase, const Vector3 &InNormal);
 
     /**
      * @brief Constructor.
@@ -72,7 +72,7 @@ namespace geEngineSDK {
      * @param B Second point in the plane.
      * @param C Third point in the plane.
      */
-    Plane(Vector3 A, Vector3 B, Vector3 C);
+    Plane(const Vector3& A, const Vector3& B, const Vector3& C);
 
     /**
      * @brief Constructor
@@ -340,17 +340,17 @@ namespace geEngineSDK {
       w(InW)
   {}
 
-  FORCEINLINE Plane::Plane(Vector3 InNormal, float InW)
+  FORCEINLINE Plane::Plane(const Vector3& InNormal, float InW)
     : Vector3(InNormal),
       w(InW)
   {}
 
-  FORCEINLINE Plane::Plane(Vector3 InBase, const Vector3 &InNormal)
+  FORCEINLINE Plane::Plane(const Vector3& InBase, const Vector3& InNormal)
     : Vector3(InNormal),
       w(InBase | InNormal)
   {}
 
-  FORCEINLINE Plane::Plane(Vector3 A, Vector3 B, Vector3 C)
+  FORCEINLINE Plane::Plane(const Vector3& A, const Vector3& B, const Vector3& C)
     : Vector3(((B - A) ^ (C - A)).getSafeNormal()) {
     w = A | (Vector3)(*this);
   }
