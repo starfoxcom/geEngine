@@ -310,6 +310,9 @@
     <ClInclude Include="Include\geOrientedBox.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geBox2D.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -467,6 +470,9 @@
     </ClCompile>
     <ClCompile Include="Source\Externals\md5.cpp">
       <Filter>Source Files\Externals\MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBox2D.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
