@@ -13,6 +13,11 @@
 /*****************************************************************************/
 #pragma once
 
+#include "gePlatformDefines.h"
+#include "geString.h"
+#include "gePlatformTypes.h"
+#include "geUUID.h"
+
 namespace geEngineSDK {
 
   /**
@@ -107,9 +112,9 @@ namespace geEngineSDK {
     getMACAddress(MACAddress& address);
 
     /**
-     * @brief Creates a new universally unique identifier and returns it as a string.
+     * @brief Creates a new universally unique identifier and returns it as a UUID.
      */
-    static String
+    static UUID
     generateUUID();
 
     /**

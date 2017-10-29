@@ -20,6 +20,7 @@
 #include "gePrerequisitesUtil.h"
 #include "Win32/geWin32PlatformUtility.h"
 #include "geColor.h"
+#include "geUUID.h"
 
 #include <shellapi.h>
 #include <iphlpapi.h>
@@ -240,19 +241,22 @@ namespace geEngineSDK {
     ge_free(adapterInfo);
     return false;
   }
-
-  String
+  
+  UUID
   PlatformUtility::generateUUID() {
-    UUID uuid;
+    ::UUID uuid;
     UuidCreate(&uuid);
 
-    uint8* uuidStr;
-    UuidToStringA(&uuid, &uuidStr);
+    //Endianess might not be correct, but it shouldn't matter
+    uint32 data1 = uuid.Data1;
+    uint32 data2 = uuid.Data2 | (uuid.Data3 << 16);
+    uint32 data3 = uuid.Data3 | (uuid.Data4[0] << 16) | (uuid.Data4[1] << 24);
+    uint32 data4 = uuid.Data4[2] |
+                  (uuid.Data4[3] << 8) |
+                  (uuid.Data4[4] << 16) |
+                  (uuid.Data4[5] << 24);
 
-    String output((char*)uuidStr);
-    RpcStringFreeA(&uuidStr);
-
-    return output;
+    return UUID(data1, data2, data3, data4);
   }
 
   void

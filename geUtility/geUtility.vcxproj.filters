@@ -289,6 +289,9 @@
     <ClInclude Include="Include\geSphere.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geUUID.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -440,6 +443,9 @@
     </ClCompile>
     <ClCompile Include="Source\geBox.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geUUID.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -361,6 +361,7 @@
     <ClInclude Include="Include\geTriangulation.h" />
     <ClInclude Include="Include\geUnicode.h" />
     <ClInclude Include="Include\geUtil.h" />
+    <ClInclude Include="Include\geUUID.h" />
     <ClInclude Include="Include\geVector2.h" />
     <ClInclude Include="Include\geVector2Half.h" />
     <ClInclude Include="Include\geVector2I.h" />
@@ -411,6 +412,7 @@
     <ClCompile Include="Source\geTriangulation.cpp" />
     <ClCompile Include="Source\geUnicode.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />
+    <ClCompile Include="Source\geUUID.cpp" />
     <ClCompile Include="Source\geVector2.cpp" />
     <ClCompile Include="Source\geVector2I.cpp" />
     <ClCompile Include="Source\geVector3.cpp" />

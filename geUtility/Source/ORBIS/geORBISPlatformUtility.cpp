@@ -50,9 +50,9 @@ namespace geEngineSDK {
     return false;
   }
 
-  String
+  UUID
   PlatformUtility::generateUUID() {
-    return StringUtil::BLANK;
+    return UUID::EMPTY;
   }
 
   void
