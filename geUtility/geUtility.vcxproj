@@ -322,6 +322,7 @@
     <ClInclude Include="Include\geFwdDeclUtil.h" />
     <ClInclude Include="Include\geGlobalFrameAlloc.h" />
     <ClInclude Include="Include\geGroupAlloc.h" />
+    <ClInclude Include="Include\geInterval.h" />
     <ClInclude Include="Include\geLog.h" />
     <ClInclude Include="Include\geMacroUtil.h" />
     <ClInclude Include="Include\geMath.h" />
@@ -333,6 +334,7 @@
     <ClInclude Include="Include\geMessageHandlerFwd.h" />
     <ClInclude Include="Include\geModule.h" />
     <ClInclude Include="Include\geNonCopyable.h" />
+    <ClInclude Include="Include\geOrientedBox.h" />
     <ClInclude Include="Include\gePath.h" />
     <ClInclude Include="Include\gePlane.h" />
     <ClInclude Include="Include\gePlatformDefines.h" />

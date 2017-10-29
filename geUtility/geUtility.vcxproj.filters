@@ -304,6 +304,12 @@
     <ClInclude Include="Include\Externals\json.hpp">
       <Filter>Source Files\Externals\JSON</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geInterval.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geOrientedBox.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">

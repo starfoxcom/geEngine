@@ -9,6 +9,6 @@ Enviromental variables
 
 External Dependencies
   GoogleTest - For Unit Test design
-  Snappy - For data compression
+  LZ4 - For data compression
   TetGen - For Delaunay tetrahedralization and Voronoi diagrams
   
