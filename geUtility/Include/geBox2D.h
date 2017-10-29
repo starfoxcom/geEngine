@@ -63,7 +63,7 @@ namespace geEngineSDK {
      * @brief Creates and initializes a new box from an array of points.
      * @param Points Array of Points to create for the bounding volume.
      */
-    GE_UTILITY_EXPORT Box2D(const Vector<Vector2>& Points);
+    explicit GE_UTILITY_EXPORT Box2D(const Vector<Vector2>& Points);
 
    public:
     /**

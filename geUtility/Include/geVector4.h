@@ -262,7 +262,13 @@ namespace geEngineSDK {
     equals(const Vector4& V, float Tolerance = Math::KINDA_SMALL_NUMBER) const;
 
     Vector4
-    vectorAbs();
+    vectorAbs() const;
+
+    Vector4
+    vectorMin(const Vector4& V) const;
+
+    Vector4
+    vectorMax(const Vector4& V) const;
 
     /**
      * @brief Check if the vector is of unit length, with specified tolerance.
@@ -546,8 +552,28 @@ namespace geEngineSDK {
   }
 
   FORCEINLINE Vector4
-  Vector4::vectorAbs() {
+  Vector4::vectorAbs() const {
     return Vector4(Math::abs(x), Math::abs(y), Math::abs(z), Math::abs(w));
+  }
+
+  FORCEINLINE Vector4
+  Vector4::vectorMin(const Vector4& V) const {
+    Vector4 Result;
+    Result.x = Math::min(x, V.x);
+    Result.y = Math::min(y, V.y);
+    Result.z = Math::min(z, V.z);
+    Result.w = Math::min(w, V.w);
+    return Result;
+  }
+
+  FORCEINLINE Vector4
+  Vector4::vectorMax(const Vector4& V) const {
+    Vector4 Result;
+    Result.x = Math::max(x, V.x);
+    Result.y = Math::max(y, V.y);
+    Result.z = Math::max(z, V.z);
+    Result.w = Math::max(w, V.w);
+    return Result;
   }
 
   FORCEINLINE Vector4

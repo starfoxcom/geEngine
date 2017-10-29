@@ -37,7 +37,7 @@ namespace geEngineSDK {
      * @param InV Center of sphere.
      * @param InW Radius of sphere.
      */
-    Sphere(Vector3 InV, float InW) : m_center(InV), m_radius(InW) {}
+    Sphere(const Vector3& InV, float InW) : m_center(InV), m_radius(InW) {}
 
     /**
      * @brief Constructor.

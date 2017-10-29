@@ -313,6 +313,9 @@
     <ClInclude Include="Include\geBox2D.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geBoxSphereBounds.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -472,6 +475,9 @@
       <Filter>Source Files\Externals\MD5</Filter>
     </ClCompile>
     <ClCompile Include="Source\geBox2D.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBoxSphereBounds.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>

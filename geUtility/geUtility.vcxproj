@@ -301,6 +301,7 @@
     <ClInclude Include="Include\geBitwise.h" />
     <ClInclude Include="Include\geBox.h" />
     <ClInclude Include="Include\geBox2D.h" />
+    <ClInclude Include="Include\geBoxSphereBounds.h" />
     <ClInclude Include="Include\geColor.h" />
     <ClInclude Include="Include\geCompression.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
@@ -385,6 +386,7 @@
     <ClCompile Include="Source\geBitmapWriter.cpp" />
     <ClCompile Include="Source\geBox.cpp" />
     <ClCompile Include="Source\geBox2D.cpp" />
+    <ClCompile Include="Source\geBoxSphereBounds.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
     <ClCompile Include="Source\geCompression.cpp" />
     <ClCompile Include="Source\geCrashHandler.cpp" />
