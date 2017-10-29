@@ -50,6 +50,15 @@
     <Filter Include="Source Files\Externals\TetGen">
       <UniqueIdentifier>{b31325f8-8b5d-4096-a0a8-f408c4dec8eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Externals\LZ4">
+      <UniqueIdentifier>{3e80b03e-adfd-4ea8-a279-5c399310b160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\MD5">
+      <UniqueIdentifier>{5a127325-f996-419c-97d8-3ef54c709e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\JSON">
+      <UniqueIdentifier>{9a14750f-7159-496c-b065-7a2e278a6e53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
@@ -105,9 +114,6 @@
     </ClInclude>
     <ClInclude Include="Include\geException.h">
       <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Externals\md5.h">
-      <Filter>Source Files\Externals</Filter>
     </ClInclude>
     <ClInclude Include="Include\geDataStream.h">
       <Filter>Source Files\Filesystem</Filter>
@@ -259,9 +265,6 @@
     <ClInclude Include="Include\Externals\TetGen\tetgen.h">
       <Filter>Source Files\Externals\TetGen</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Externals\json.hpp">
-      <Filter>Source Files\Externals</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geTriangulation.h">
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
@@ -292,6 +295,15 @@
     <ClInclude Include="Include\geUUID.h">
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Externals\lz4.h">
+      <Filter>Source Files\Externals\LZ4</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Externals\md5.h">
+      <Filter>Source Files\Externals\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Externals\json.hpp">
+      <Filter>Source Files\Externals\JSON</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -311,9 +323,6 @@
     </ClCompile>
     <ClCompile Include="Source\geFrameAlloc.cpp">
       <Filter>Source Files\Allocators</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Externals\md5.cpp">
-      <Filter>Source Files\Externals</Filter>
     </ClCompile>
     <ClCompile Include="Source\gePath.cpp">
       <Filter>Source Files\Filesystem</Filter>
@@ -446,6 +455,12 @@
     </ClCompile>
     <ClCompile Include="Source\geUUID.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Externals\lz4.c">
+      <Filter>Source Files\Externals\LZ4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Externals\md5.cpp">
+      <Filter>Source Files\Externals\MD5</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
