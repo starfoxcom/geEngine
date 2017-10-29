@@ -92,7 +92,10 @@ namespace geEngineSDK {
      */
     template<typename T>
     DataStream&
-    operator>>(T& val);
+    operator>>(T& val){
+      read(static_cast<void*>(&val), sizeof(T));
+      return *this;
+    }
 
     /**
      * @brief Read the requisite number of bytes from the stream, stopping at

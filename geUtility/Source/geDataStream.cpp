@@ -85,13 +85,6 @@ namespace geEngineSDK {
             0xBF == static_cast<uint8>(buffer[2]));
   }
 
-  template<typename T>
-  DataStream&
-  DataStream::operator>>(T& val) {
-    read(static_cast<void*>(&val), sizeof(T));
-    return *this;
-  }
-
   void
   DataStream::writeString(const String& string, STRING_ENCODING::E encoding) {
     if (STRING_ENCODING::kUTF16 == encoding) {

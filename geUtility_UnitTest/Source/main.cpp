@@ -1,4 +1,4 @@
-//#include <vld.h>
+#include <vld.h>
 #include <gtest/gtest.h>
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
@@ -13,6 +13,7 @@
 #include <geVector2Half.h>
 #include <geVector3.h>
 #include <geTriangulation.h>
+#include <geCompression.h>
 
 #include <geDebug.h>
 
@@ -86,6 +87,26 @@ TEST(geUtility, String_Parser) {
     }
 
     EXPECT_EQ(lineList.size(), 9);
+  }
+}
+
+TEST(geUtility, Compression) {
+  DataStreamPtr fileData = FileSystem::openFile("Test/test.txt");
+  EXPECT_TRUE(fileData);
+  
+  if (fileData) {
+    //Compress file data
+    DataStreamPtr compressedFile = Compression::compress(fileData);
+    EXPECT_TRUE(fileData->size() > compressedFile->size());
+
+    //Decompress file data
+    DataStreamPtr decompressedFile = Compression::decompress(compressedFile);
+
+    String strFile = fileData->getAsString();
+    String strFileDecomp = decompressedFile->getAsString();
+
+    //Compare the information
+    EXPECT_TRUE(std::memcmp(&strFile[0], &strFileDecomp[0], strFile.size()) == 0);
   }
 }
 
