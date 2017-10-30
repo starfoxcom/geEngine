@@ -316,6 +316,12 @@
     <ClInclude Include="Include\geBoxSphereBounds.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geConvexHull2D.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCapsuleShape.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">

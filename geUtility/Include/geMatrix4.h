@@ -542,8 +542,9 @@ namespace geEngineSDK {
   }
 
 
-  class BasisVectorMatrix : Matrix4
+  class BasisVectorMatrix : public Matrix4
   {
+   public:
     //Create Basis matrix from 3 axis vectors and the origin
     BasisVectorMatrix(const Vector3& XAxis,
                       const Vector3& YAxis,
@@ -552,8 +553,9 @@ namespace geEngineSDK {
   };
 
 
-  class LookAtMatrix : Matrix4
+  class LookAtMatrix : public Matrix4
   {
+  public:
     /**
      * @brief Creates a view matrix using an eye position, a look at position, and up vector.
      *        This does the same thing as D3DXMatrixLookAtLH.
@@ -1964,7 +1966,7 @@ namespace geEngineSDK {
 namespace geEngineSDK {
   class TranslationMatrix : public Matrix4
   {
-  public:
+   public:
 
     /**
      * @brief Constructor translation matrix based on given vector
@@ -2049,7 +2051,7 @@ namespace geEngineSDK {
    */
   class RotationMatrix : public RotationTranslationMatrix
   {
-  public:
+   public:
     /**
      * @brief Constructor.
      * @param Rot rotation
@@ -2331,6 +2333,25 @@ namespace geEngineSDK {
     static Matrix4
     make(const Quaternion& Q) {
       return QuatRotationMatrix(Q);
+    }
+  };
+}
+
+namespace std {
+  /**
+  * @brief	Hash value generator for Matrix4.
+  */
+  template<>
+  struct hash<geEngineSDK::Matrix4>
+  {
+    size_t
+    operator()(const geEngineSDK::Matrix4& matrix) const {
+      size_t hash = 0;
+
+      for (size_t i = 0; i < 16; ++i) {
+        geEngineSDK::hash_combine(hash, matrix._m[i]);
+      }
+      return hash;
     }
   };
 }

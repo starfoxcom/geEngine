@@ -1,4 +1,7 @@
 #include <vld.h>
+
+#include <DirectXMath.h>
+
 #include <gtest/gtest.h>
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
@@ -12,6 +15,7 @@
 #include <geVector2I.h>
 #include <geVector2Half.h>
 #include <geVector3.h>
+#include <geMatrix4.h>
 #include <geTriangulation.h>
 #include <geCompression.h>
 
@@ -342,4 +346,49 @@ TEST(geUtility, Tetrahedron_Utilities) {
   TetrahedronVolume newVolume = Triangulation::tetrahedralize(pointList);
   EXPECT_TRUE(newVolume.tetrahedra.size() == 1);
   EXPECT_TRUE(newVolume.outerFaces.size() == 4);
+}
+
+TEST(geUtility, Matrix4_LookAt) {
+  //Construct a DirectX LookAt Matrix
+  DirectX::XMVECTOR EyePosition    = DirectX::XMVectorSet(0.0f, -100.0f, 0.0f, 1.0f);
+  DirectX::XMVECTOR FocusPosition  = DirectX::XMVectorSet(0.0f,    0.0f, 0.0f, 1.0f);
+  DirectX::XMVECTOR UpDirection    = DirectX::XMVectorSet(0.0f,    0.0f, 1.0f, 0.0f);
+  DirectX::XMMATRIX lookAt         = DirectX::XMMatrixLookAtLH(EyePosition,
+                                                               FocusPosition,
+                                                               UpDirection);
+
+  //Construct the same matrix with internal Math
+  Vector3 iEyePosition(0.0f, -100.0f, 0.0f);
+  Vector3 iFocusPosition(0.0f, 0.0f, 0.0f);
+  Vector3 iUpDirection(0.0f, 0.0f, 1.0f);
+  LookAtMatrix ilookAt(iEyePosition, iFocusPosition, iUpDirection);
+
+  for (size_t j = 0; j < 4; ++j) {
+    for (size_t k = 0; k < 4; ++k) {
+      EXPECT_FLOAT_EQ(ilookAt.m[j][k], DirectX::XMVectorGetByIndex(lookAt.r[j], k));
+    }
+  }
+}
+
+TEST(geUtility, Matrix4_Perspective) {
+  float FovAngleY = Degree(60).valueRadians();
+  float AspectRatio = 1920.0f / 1080.0f;
+  float NearZ = 1.0f;
+  float FarZ = 1000.0f;
+  
+  //Construct a DirectX Perspective Matrix
+  DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(FovAngleY,
+                                                                   AspectRatio,
+                                                                   NearZ,
+                                                                   FarZ);
+
+  //Construct the same matrix with internal Math
+  PerspectiveMatrix iprojection(FovAngleY * 0.5f, 1920.0f, 1080.0f, NearZ, FarZ);
+
+  EXPECT_FLOAT_EQ(iprojection.m[1][1] / iprojection.m[0][0],
+                  DirectX::XMVectorGetByIndex(projection.r[1], 1) /
+                  DirectX::XMVectorGetByIndex(projection.r[0], 0));
+
+  EXPECT_FLOAT_EQ(iprojection.m[2][3], DirectX::XMVectorGetByIndex(projection.r[2], 3));
+  EXPECT_FLOAT_EQ(iprojection.m[3][2], DirectX::XMVectorGetByIndex(projection.r[3], 2));
 }

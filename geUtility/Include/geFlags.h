@@ -17,8 +17,10 @@
  * Includes
  */
 /*****************************************************************************/
+#include "gePlatformTypes.h"
 
 namespace geEngineSDK {
+
   template<typename Enum, typename Storage = uint32>
   class Flags
   {

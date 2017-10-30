@@ -302,8 +302,10 @@
     <ClInclude Include="Include\geBox.h" />
     <ClInclude Include="Include\geBox2D.h" />
     <ClInclude Include="Include\geBoxSphereBounds.h" />
+    <ClInclude Include="Include\geCapsuleShape.h" />
     <ClInclude Include="Include\geColor.h" />
     <ClInclude Include="Include\geCompression.h" />
+    <ClInclude Include="Include\geConvexHull2D.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
     <ClInclude Include="Include\geDataStream.h" />
     <ClInclude Include="Include\geDebug.h" />
