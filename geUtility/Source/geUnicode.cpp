@@ -311,7 +311,7 @@ namespace geEngineSDK {
 
     auto iter = input.begin();
     while (iter != input.end()) {
-      char32_t u32char;
+      char32_t u32char = 0;
       iter = UTF8To32(iter, input.end(), u32char, invalidChar);
       output.push_back(UTF32ToANSI(u32char, invalidChar, locale));
     }
@@ -328,7 +328,7 @@ namespace geEngineSDK {
 
     auto iter = input.begin();
     while (iter != input.end()) {
-      char32_t u32char;
+      char32_t u32char = 0;
       iter = wideToUTF32(iter, input.end(), u32char);
       UTF32To8(u32char, backInserter, 4);
     }
@@ -343,7 +343,7 @@ namespace geEngineSDK {
 
     auto iter = input.begin();
     while (iter != input.end()) {
-      char32_t u32char;
+      char32_t u32char = 0;
       iter = UTF8To32(iter, input.end(), u32char);
       UTF32ToWide(u32char, backInserter, 2);
     }
@@ -360,7 +360,7 @@ namespace geEngineSDK {
 
     auto iter = input.begin();
     while (iter != input.end()) {
-      char32_t u32char;
+      char32_t u32char = 0;
       iter = UTF16To32(iter, input.end(), u32char);
       UTF32To8(u32char, backInserter, 4);
     }
@@ -375,7 +375,7 @@ namespace geEngineSDK {
 
     auto iter = input.begin();
     while (iter != input.end()) {
-      char32_t u32char;
+      char32_t u32char = 0;
       iter = UTF8To32(iter, input.end(), u32char);
       UTF32To16(u32char, backInserter, 2);
     }

@@ -17,7 +17,7 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePrerequisitesUtil.h"
+#include "geMath.h"
 #include <limits>
 
 namespace geEngineSDK {
@@ -202,6 +202,6 @@ namespace geEngineSDK {
     }                                                                         \
   };
 
-  DEFINE_INTERVAL_WRAPPER_STRUCT(FloatInterval, float)
-  DEFINE_INTERVAL_WRAPPER_STRUCT(Int32Interval, int32)
+  DEFINE_INTERVAL_WRAPPER_STRUCT(FloatInterval, float);
+  DEFINE_INTERVAL_WRAPPER_STRUCT(Int32Interval, int32);
 }

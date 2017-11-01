@@ -322,6 +322,9 @@
     <ClInclude Include="Include\geCapsuleShape.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geTextureAtlasLayout.h">
+      <Filter>Source Files\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -485,6 +488,9 @@
     </ClCompile>
     <ClCompile Include="Source\geBoxSphereBounds.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTextureAtlasLayout.cpp">
+      <Filter>Source Files\Image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

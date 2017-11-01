@@ -87,7 +87,8 @@ namespace geEngineSDK {
     }
 
     //Create a buffer the size of the original data
-    SPtr<MemoryDataStream> decompData = ge_shared_ptr_new<MemoryDataStream>(originalDataSize);
+    SPtr<MemoryDataStream> decompData = ge_shared_ptr_new<MemoryDataStream>
+                                        (static_cast<SIZE_T>(originalDataSize));
 
     int decompSize = LZ4_decompress_safe(reinterpret_cast<char*>(src.getCurrentPtr()),
                                          reinterpret_cast<char*>(decompData->getPtr()),

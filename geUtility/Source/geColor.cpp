@@ -77,11 +77,6 @@ namespace geEngineSDK {
     b = s_pow22OneOver255Table[refColor.b];
     a = float(refColor.a) * OneOver255;
   }
-  
-  /*
-  LinearColor::LinearColor(const Vector3& InV) : R(InV.X), G(InV.Y), B(InV.Z), A(1.0f) {}
-  LinearColor::LinearColor(const Vector4& InV) : R(InV.X), G(InV.Y), B(InV.Z), A(InV.W) {}
-  */
 
   LinearColor::LinearColor(const Float16Color& refColor) {
     r = refColor.r.getFloat();
@@ -178,8 +173,7 @@ namespace geEngineSDK {
   }
 
   LinearColor
-  LinearColor::getHSV(uint8 /*H*/, uint8 /*S*/, uint8 /*V*/) {
-    /*
+  LinearColor::getHSV(uint8 H, uint8 S, uint8 V) {
     float Brightness = V * 1.4f / 255.f;
     Brightness *= 0.7f / (0.01f + Math::sqrt(Brightness));
     Brightness = Math::clamp(Brightness, 0.f, 1.f);
@@ -188,9 +182,7 @@ namespace geEngineSDK {
       Vector3(0, (170 - H) / 85.f, (H - 85) / 85.f) : 
       Vector3((H - 170) / 85.f, 0, (255 - H) / 84.f);
     const Vector3 ColorVector = (Hue + S / 255.f * (Vector3(1, 1, 1) - Hue)) * Brightness;
-    return LinearColor(ColorVector.X, ColorVector.Y, ColorVector.Z, 1);
-    */
-    return LinearColor();
+    return LinearColor(ColorVector.x, ColorVector.y, ColorVector.z, 1);
   }
 
   LinearColor
