@@ -984,21 +984,21 @@ namespace geEngineSDK {
 
     static void
     toMemory(const String& data, char* memory) {
-      uint64 size = getDynamicSize(data);
+      uint32 size = getDynamicSize(data);
 
-      memcpy(memory, &size, sizeof(uint64));
-      memory += sizeof(uint64);
-      size -= sizeof(uint64);
+      memcpy(memory, &size, sizeof(uint32));
+      memory += sizeof(uint32);
+      size -= sizeof(uint32);
       memcpy(memory, data.data(), static_cast<SIZE_T>(size));
     }
 
-    static uint64
+    static uint32
     fromMemory(String& data, char* memory) {
-      uint64 size;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 stringSize = size - sizeof(uint64);
+      uint32 stringSize = size - sizeof(uint32);
       char* buffer = reinterpret_cast<char*>(ge_alloc(static_cast<SIZE_T>(stringSize + 1)));
       memcpy(buffer, memory, static_cast<SIZE_T>(stringSize));
       buffer[stringSize] = '\0';
@@ -1009,17 +1009,17 @@ namespace geEngineSDK {
       return size;
     }
 
-    static uint64
+    static uint32
     getDynamicSize(const String& data) {
-      uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint64);
+      uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint64>::max()) {
+      if (dataSize > std::numeric_limits<uint32>::max()) {
         __string_throwDataOverflowException();
       }
 #endif
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -1034,28 +1034,28 @@ namespace geEngineSDK {
 
     static void
     toMemory(const WString& data, char* memory) {
-      uint64 size = getDynamicSize(data);
+      uint32 size = getDynamicSize(data);
 
-      memcpy(memory, &size, sizeof(uint64));
-      memory += sizeof(uint64);
-      size -= sizeof(uint64);
+      memcpy(memory, &size, sizeof(uint32));
+      memory += sizeof(uint32);
+      size -= sizeof(uint32);
       memcpy(memory, data.data(), static_cast<SIZE_T>(size));
     }
 
-    static uint64
+    static uint32
     fromMemory(WString& data, char* memory) {
       typedef WString::value_type wcTemp;
 
-      uint64 size;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 stringSize = size - sizeof(uint64);
+      uint32 stringSize = size - sizeof(uint32);
       wcTemp* buffer = reinterpret_cast<wcTemp*>(ge_alloc(static_cast<SIZE_T>(stringSize)
                                                           + sizeof(wcTemp)));
       memcpy(buffer, memory, static_cast<SIZE_T>(stringSize));
 
-      uint64 numChars = stringSize / sizeof(wcTemp);
+      uint32 numChars = stringSize / sizeof(wcTemp);
       buffer[numChars] = L'\0';
 
       data = WString(buffer);
@@ -1065,17 +1065,17 @@ namespace geEngineSDK {
       return size;
     }
 
-    static uint64
+    static uint32
     getDynamicSize(const WString& data) {
-      uint64 dataSize = data.size() * sizeof(WString::value_type) + sizeof(uint64);
+      uint64 dataSize = data.size() * sizeof(WString::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint64>::max()) {
+      if (dataSize > std::numeric_limits<uint32>::max()) {
         __string_throwDataOverflowException();
       }
 #endif
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 }

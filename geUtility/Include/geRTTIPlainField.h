@@ -83,7 +83,7 @@ namespace geEngineSDK {
      *        dynamic size, static size of the element is returned.
      */
     virtual uint32
-    getArrayElemDynamicSize(void*, int) {
+    getArrayElemDynamicSize(void*, uint32) {
       return 0;
     }
 
@@ -101,7 +101,7 @@ namespace geEngineSDK {
      *        It does not check if buffer is large enough.
      */
     virtual void
-    arrayElemToBuffer(void* object, int index, void* buffer) = 0;
+    arrayElemToBuffer(void* object, uint32 index, void* buffer) = 0;
 
     /**
      * @brief Sets the value on the provided field of the provided object.
@@ -119,7 +119,7 @@ namespace geEngineSDK {
      *        buffer points to the proper location and contains the proper type.
      */
     virtual void
-    arrayElemFromBuffer(void* object, int index, void* buffer) = 0;
+    arrayElemFromBuffer(void* object, uint32 index, void* buffer) = 0;
   };
 
   /**
@@ -145,8 +145,8 @@ namespace geEngineSDK {
     void
     initSingle(const String& name, uint16 uniqueId, Any getter, Any setter, uint64 flags) {
       //Just making sure provided type has a type ID
-      static_assert(sizeof(RTTIPlainType<DataType>::id) > 0, "Type has no RTTI ID.");
-      static_assert(0 != RTTIPlainType<DataType>::hasDynamicSize || sizeof(DataType) <= 255,
+      static_assert(sizeof(RTTIPlainType<DataType>::kID) > 0, "Type has no RTTI ID.");
+      static_assert(0 != RTTIPlainType<DataType>::kHasDynamicSize || sizeof(DataType) <= 255,
                     "Trying to create a plain RTTI field with size larger than 255. "        \
                     "In order to use larger sizes for plain types please specialize "        \
                     "RTTIPlainType, set hasDynamicSize to true.");
@@ -189,8 +189,8 @@ namespace geEngineSDK {
               Any setSize,
               uint64 flags) {
       //Just making sure provided type has a type ID
-      static_assert(RTTIPlainType<DataType>::id || true, "");
-      static_assert(RTTIPlainType<DataType>::hasDynamicSize != 0 || sizeof(DataType) <= 255,
+      static_assert(RTTIPlainType<DataType>::kID || true, "");
+      static_assert(RTTIPlainType<DataType>::kHasDynamicSize != 0 || sizeof(DataType) <= 255,
                     "Trying to create a plain RTTI field with size larger than 255. "        \
                     "In order to use larger sizes for plain types please specialize "        \
                     "RTTIPlainType, set hasDynamicSize to true.");
@@ -211,7 +211,7 @@ namespace geEngineSDK {
      */
     uint32
     getTypeSize() override {
-      return sizeof(DataType);
+      return static_cast<uint32>(sizeof(DataType));
     }
 
     /**
@@ -219,7 +219,7 @@ namespace geEngineSDK {
      */
     uint32
     getTypeId() override {
-      return RTTIPlainType<DataType>::id;
+      return RTTIPlainType<DataType>::kID;
     }
 
     /**
@@ -227,7 +227,7 @@ namespace geEngineSDK {
      */
     bool
     hasDynamicSize() override {
-      return 0 != RTTIPlainType<DataType>::hasDynamicSize;
+      return 0 != RTTIPlainType<DataType>::kHasDynamicSize;
     }
 
     /**
@@ -251,13 +251,13 @@ namespace geEngineSDK {
      * @copydoc RTTIPlainFieldBase::getArrayElemDynamicSize
      */
     uint32
-    getArrayElemDynamicSize(void* object, int index) override {
+    getArrayElemDynamicSize(void* object, uint32 index) override {
       checkIsArray(true);
       checkType<DataType>();
 
       ObjectType* castObject = static_cast<ObjectType*>(object);
 
-      function<DataType&(ObjectType*, uint32)> f = 
+      function<DataType&(ObjectType*, uint32)> f =
         any_cast<function<DataType&(ObjectType*, uint32)>>(m_valueGetter);
       DataType value = f(castObject, index);
 
@@ -317,7 +317,7 @@ namespace geEngineSDK {
      * @copydoc RTTIPlainFieldBase::arrayElemToBuffer
      */
     void
-    arrayElemToBuffer(void* object, int index, void* buffer) override {
+    arrayElemToBuffer(void* object, uint32 index, void* buffer) override {
       checkIsArray(true);
       checkType<DataType>();
 
@@ -357,7 +357,7 @@ namespace geEngineSDK {
      * @copydoc RTTIPlainFieldBase::arrayElemFromBuffer
      */
     void
-    arrayElemFromBuffer(void* object, int index, void* buffer) override {
+    arrayElemFromBuffer(void* object, uint32 index, void* buffer) override {
       checkIsArray(true);
       checkType<DataType>();
 

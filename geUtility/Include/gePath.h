@@ -684,9 +684,9 @@ namespace geEngineSDK {
     static void
     toMemory(const Path& data, char* memory) {
       char* pIntMemory = memory;
-      uint64 size = getDynamicSize(data);
-      memcpy(pIntMemory, &size, sizeof(uint64));
-      pIntMemory += sizeof(uint64);
+      uint32 size = getDynamicSize(data);
+      memcpy(pIntMemory, &size, sizeof(uint32));
+      pIntMemory += sizeof(uint32);
 
       pIntMemory = rttiWriteElement(data.m_device, pIntMemory);
       pIntMemory = rttiWriteElement(data.m_node, pIntMemory);
@@ -695,12 +695,12 @@ namespace geEngineSDK {
       pIntMemory = rttiWriteElement(data.m_directories, pIntMemory);
     }
 
-    static uint64
+    static uint32
     fromMemory(Path& data, char* memory) {
       char* pIntMemory = memory;
-      uint64 size;
-      memcpy(&size, pIntMemory, sizeof(uint64));
-      pIntMemory += sizeof(uint64);
+      uint32 size;
+      memcpy(&size, pIntMemory, sizeof(uint32));
+      pIntMemory += sizeof(uint32);
 
       pIntMemory = rttiReadElement(data.m_device, pIntMemory);
       pIntMemory = rttiReadElement(data.m_node, pIntMemory);
@@ -711,20 +711,21 @@ namespace geEngineSDK {
       return size;
     }
 
-    static uint64
+    static uint32
     getDynamicSize(const Path& data) {
-      uint64 dataSize = rttiGetElementSize(data.m_device) +
+      uint64 dataSize =
+        rttiGetElementSize(data.m_device) +
         rttiGetElementSize(data.m_node) +
         rttiGetElementSize(data.m_filename) +
         rttiGetElementSize(data.m_isAbsolute) +
-        rttiGetElementSize(data.m_directories) + sizeof(uint64);
+        rttiGetElementSize(data.m_directories) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint64>::max()) {
+      if (dataSize > std::numeric_limits<uint32>::max()) {
         __string_throwDataOverflowException();
       }
 #endif
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 }

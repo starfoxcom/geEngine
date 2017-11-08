@@ -50,7 +50,7 @@ namespace geEngineSDK {
     /**
      * @brief Creates an unnamed stream.
      */
-    explicit DataStream(uint16 accessMode = ACCESS_MODE::kREAD)
+    DataStream(uint16 accessMode = ACCESS_MODE::kREAD)
       : m_size(0),
         m_access(accessMode) {}
 
@@ -225,7 +225,7 @@ namespace geEngineSDK {
      * @brief Allocates a new chunk of memory and wraps it in a stream.
      * @param[in]  size  Size of the memory chunk in bytes.
      */
-    explicit MemoryDataStream(SIZE_T size);
+    MemoryDataStream(SIZE_T size);
 
     /**
      * @brief Wrap an existing memory chunk in a stream.
@@ -242,7 +242,7 @@ namespace geEngineSDK {
      *        internal buffer.
      * @param[in] sourceStream  Stream to read data from.
      */
-    explicit MemoryDataStream(DataStream& sourceStream);
+    MemoryDataStream(DataStream& sourceStream);
 
     /**
      * @brief Create a stream which pre-buffers the contents of another stream.

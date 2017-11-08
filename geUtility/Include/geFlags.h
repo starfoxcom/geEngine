@@ -18,6 +18,7 @@
  */
 /*****************************************************************************/
 #include "gePlatformTypes.h"
+#include "geFwdDeclUtil.h"
 
 namespace geEngineSDK {
 
@@ -246,7 +247,7 @@ namespace geEngineSDK {
   template<class Enum, class Storage>
   struct RTTIPlainType<Flags<Enum, Storage>>
   {
-    enum { kID = kID_Flags }; enum { kHasDynamicSize = 0 };
+    enum { kID = TYPEID_UTILITY::kID_Flags }; enum { kHasDynamicSize = 0 };
 
     /**
      * @copydoc RTTIPlainType::toMemory
@@ -260,22 +261,22 @@ namespace geEngineSDK {
     /**
      * @copydoc RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(Flags<Enum, Storage>& data, char* memory) {
       Storage storageData;
       RTTIPlainType<Storage>::fromMemory(storageData, memory);
 
       data = Flags<Enum, Storage>(storageData);
-      return static_cast<uint64>(sizeof(Flags<Enum, Storage>));
+      return static_cast<uint32>(sizeof(Flags<Enum, Storage>));
     }
 
     /**
      * @copydoc RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const Flags<Enum, Storage>& data) {
       GE_ASSERT(false); //This should never be called, but just in case
-      return static_cast<uint64>(sizeof(Flags<Enum, Storage>));
+      return static_cast<uint32>(sizeof(Flags<Enum, Storage>));
     }
   };
 }
