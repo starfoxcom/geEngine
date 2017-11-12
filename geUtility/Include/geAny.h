@@ -44,7 +44,7 @@ namespace geEngineSDK {
     class Data : public DataBase
     {
      public:
-      explicit Data(const ValueType& value) : m_value(value) {}
+      Data(const ValueType& value) : m_value(value) {}
       virtual DataBase*
       clone() const override {
         return new Data(m_value);
@@ -57,8 +57,8 @@ namespace geEngineSDK {
     Any() : m_data(nullptr) {}
 
     template<typename ValueType>
-    explicit Any(const ValueType& value) : m_data(ge_new<Data<ValueType>>(value)) {}
-    explicit Any(std::nullptr_t) : m_data(nullptr) {}
+    Any(const ValueType& value) : m_data(ge_new<Data<ValueType>>(value)) {}
+    Any(std::nullptr_t) : m_data(nullptr) {}
     Any(const Any& other) 
       : m_data(nullptr != other.m_data ? other.m_data->clone() : nullptr) {}
 
