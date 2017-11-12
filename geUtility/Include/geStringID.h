@@ -179,9 +179,9 @@ namespace geEngineSDK {
 
     static void
     toMemory(const StringID& data, char* memory) {
-      uint64 size = getDynamicSize(data);
+      uint32 size = getDynamicSize(data);
 
-      uint64 curSize = sizeof(uint64);
+      uint32 curSize = sizeof(uint32);
       memcpy(memory, &size, static_cast<SIZE_T>(curSize));
       memory += curSize;
 
@@ -189,22 +189,22 @@ namespace geEngineSDK {
       memory = rttiWriteElement(isEmpty, memory);
 
       if (!isEmpty) {
-        uint64 length = static_cast<uint64>(strlen(data.c_str()));
+        uint32 length = static_cast<uint32>(strlen(data.c_str()));
         memcpy(memory, data.c_str(), static_cast<SIZE_T>(length) * sizeof(ANSICHAR));
       }
     }
 
-    static uint64
+    static uint32
     fromMemory(StringID& data, char* memory) {
-      uint64 size;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
       bool empty = false;
       memory = rttiReadElement(empty, memory);
 
       if (!empty) {
-        uint64 length = (size - sizeof(uint64) - sizeof(bool)) / sizeof(ANSICHAR);
+        uint32 length = (size - sizeof(uint32) - sizeof(bool)) / sizeof(ANSICHAR);
 
         ANSICHAR* name = reinterpret_cast<ANSICHAR*>
                          (ge_alloc(static_cast<SIZE_T>(length + 1)));
@@ -217,13 +217,13 @@ namespace geEngineSDK {
       return size;
     }
 
-    static uint64
+    static uint32
     getDynamicSize(const StringID& data) {
-      uint64 dataSize = sizeof(bool) + sizeof(uint64);
+      uint32 dataSize = sizeof(bool) + sizeof(uint32);
 
       bool isEmpty = data.empty();
       if (!isEmpty) {
-        uint64 length = static_cast<uint64>(strlen(data.c_str()));
+        uint32 length = static_cast<uint32>(strlen(data.c_str()));
         dataSize += length * sizeof(ANSICHAR);
       }
 

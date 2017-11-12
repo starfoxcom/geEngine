@@ -59,6 +59,12 @@
     <Filter Include="Source Files\Externals\JSON">
       <UniqueIdentifier>{9a14750f-7159-496c-b065-7a2e278a6e53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Reflection">
+      <UniqueIdentifier>{173edd20-2449-4990-a2cc-f5e993919ff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Serialization">
+      <UniqueIdentifier>{b0e75940-0335-4d1d-9ace-254b13bca2bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePlatformDefines.h">
@@ -165,15 +171,6 @@
     </ClInclude>
     <ClInclude Include="Include\geVectorNI.h">
       <Filter>Source Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRTTIField.h">
-      <Filter>Source Files\RTTI</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRTTIManagedDataBlockField.h">
-      <Filter>Source Files\RTTI</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRTTIPlainField.h">
-      <Filter>Source Files\RTTI</Filter>
     </ClInclude>
     <ClInclude Include="Include\geString.h">
       <Filter>Source Files\String</Filter>
@@ -325,6 +322,51 @@
     <ClInclude Include="Include\geTextureAtlasLayout.h">
       <Filter>Source Files\Image</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geRTTIField.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIManagedDataBlockField.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIPlainField.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIType.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geIReflectable.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geIReflectableRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIReflectableField.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRTTIReflectablePtrField.h">
+      <Filter>Source Files\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSerializedObject.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSerializedObjectRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBinaryDiff.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMemorySerializer.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFileSerializer.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBinarySerializer.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBinaryCloner.h">
+      <Filter>Source Files\Serialization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -401,9 +443,6 @@
     </ClCompile>
     <ClCompile Include="Source\geThreadPool.cpp">
       <Filter>Source Files\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geRTTIField.cpp">
-      <Filter>Source Files\RTTI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Win32\geWin32Windows.cpp">
       <Filter>Source Files\Win32</Filter>
@@ -491,6 +530,33 @@
     </ClCompile>
     <ClCompile Include="Source\geTextureAtlasLayout.cpp">
       <Filter>Source Files\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRTTIField.cpp">
+      <Filter>Source Files\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geIReflectable.cpp">
+      <Filter>Source Files\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRTTIType.cpp">
+      <Filter>Source Files\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geSerializedObject.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBinaryDiff.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geMemorySerializer.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBinarySerializer.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBinaryCloner.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geFileSerializer.cpp">
+      <Filter>Source Files\Serialization</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

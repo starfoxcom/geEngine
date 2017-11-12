@@ -82,19 +82,19 @@ namespace geEngineSDK {
      * @brief Deserializes a previously allocated object from the provided memory buffer.
      *        Return the number of bytes read from the memory buffer.
      */
-    static uint64
+    static uint32
     fromMemory(T& data, char* memory) {
       memcpy(&data, memory, sizeof(T));
-      return static_cast<uint64>(sizeof(T));
+      return static_cast<uint32>(sizeof(T));
     }
 
     /**
      * @brief Returns the size of the provided object.
      *        (Works for both static and dynamic size types)
      */
-    static uint64
+    static uint32
     getDynamicSize(const T&) {
-      return static_cast<uint64>(sizeof(T));
+      return static_cast<uint32>(sizeof(T));
     }
   };
 
@@ -107,7 +107,7 @@ namespace geEngineSDK {
    *        otherwise sizeof() is used.
    */
   template<class ElemType>
-  uint64
+  uint32
   rttiGetElementSize(const ElemType& data) {
 #if GE_COMPILER == GE_COMPILER_MSVC
 #	pragma warning( disable : 4127 )
@@ -116,7 +116,7 @@ namespace geEngineSDK {
       return RTTIPlainType<ElemType>::getDynamicSize(data);
     }
 
-    return sizeof(ElemType);
+    return static_cast<uint32>(sizeof(ElemType));
 #if GE_COMPILER == GE_COMPILER_MSVC
 #	pragma warning( default: 4127 )
 #endif
@@ -146,10 +146,10 @@ namespace geEngineSDK {
    */
   template<class ElemType>
   char*
-  rttiWriteElement(const ElemType& data, char* memory, uint64& size) {
+  rttiWriteElement(const ElemType& data, char* memory, uint32& size) {
     RTTIPlainType<ElemType>::toMemory(data, memory);
 
-    uint64 elemSize = rttiGetElementSize(data);
+    uint32 elemSize = rttiGetElementSize(data);
     size += elemSize;
 
     return memory + elemSize;
@@ -179,10 +179,10 @@ namespace geEngineSDK {
    */
   template<class ElemType>
   char*
-  rttiReadElement(ElemType& data, char* memory, uint64& size) {
+  rttiReadElement(ElemType& data, char* memory, uint32& size) {
     RTTIPlainType<ElemType>::fromMemory(data, memory);
 
-    uint64 elemSize = rttiGetElementSize(data);
+    uint32 elemSize = rttiGetElementSize(data);
     size += elemSize;
 
     return memory + elemSize;
@@ -203,14 +203,14 @@ namespace geEngineSDK {
     toMemory(const type& data, char* memory) {                                \
       memcpy(memory, &data, sizeof(type));                                    \
     }                                                                         \
-    static uint64                                                             \
+    static uint32                                                             \
     fromMemory(type& data, char* memory) {                                    \
       memcpy(&data, memory, sizeof(type));                                    \
-      return static_cast<uint64>(sizeof(type));                               \
+      return static_cast<uint32>(sizeof(type));                               \
     }                                                                         \
-    static uint64                                                             \
+    static uint32                                                             \
     getDynamicSize(const type&) {                                             \
-      return static_cast<uint64>(sizeof(type));                               \
+      return static_cast<uint32>(sizeof(type));                               \
     }                                                                         \
   };
 
@@ -228,42 +228,42 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const std::vector<T, StdAlloc<T>>& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 numElements = static_cast<uint64>(data.size());
-      memcpy(memory, &numElements, sizeof(uint64));
-      memory += sizeof(uint64);
-      size += sizeof(uint64);
+      uint32 numElements = static_cast<uint32>(data.size());
+      memcpy(memory, &numElements, sizeof(uint32));
+      memory += sizeof(uint32);
+      size += sizeof(uint32);
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint64 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
+        uint32 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
         RTTIPlainType<T>::toMemory(*iter, memory);
 
         memory += elementSize;
         size += elementSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(std::vector<T, StdAlloc<T>>& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 numElements;
-      memcpy(&numElements, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 numElements;
+      memcpy(&numElements, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      for (uint64 i = 0; i < numElements; ++i) {
+      for (uint32 i = 0; i < numElements; ++i) {
         T element;
-        uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
+        uint32 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.push_back(element);
 
         memory += elementSize;
@@ -275,17 +275,17 @@ namespace geEngineSDK {
     /**
      * @copydoc  RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
-      uint64 dataSize = sizeof(uint64) * 2;
+      uint64 dataSize = sizeof(uint32) * 2;
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += RTTIPlainType<T>::getDynamicSize(*iter);
+        dataSize += static_cast<uint64>(RTTIPlainType<T>::getDynamicSize(*iter));
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -303,42 +303,42 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const std::vector<T, StdAlloc<T>>& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 numElements = static_cast<uint64>(data.size());
-      memcpy(memory, &numElements, sizeof(uint64));
-      memory += sizeof(uint64);
-      size += sizeof(uint64);
+      uint32 numElements = static_cast<uint32>(data.size());
+      memcpy(memory, &numElements, sizeof(uint32));
+      memory += sizeof(uint32);
+      size += sizeof(uint32);
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint64 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
+        uint32 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
         RTTIPlainType<T>::toMemory(*iter, memory);
 
         memory += elementSize;
         size += elementSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc	RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(std::vector<T, StdAlloc<T>>& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 numElements;
-      memcpy(&numElements, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 numElements;
+      memcpy(&numElements, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      for (uint64 i = 0; i < numElements; ++i) {
+      for (uint32 i = 0; i < numElements; ++i) {
         T element;
-        uint64 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
+        uint32 elementSize = RTTIPlainType<T>::fromMemory(element, memory);
         data.insert(element);
 
         memory += elementSize;
@@ -350,17 +350,17 @@ namespace geEngineSDK {
     /**
      * @copydoc	RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
-      uint64 dataSize = sizeof(uint64) * 2;
+      uint64 dataSize = sizeof(uint32) * 2;
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
         dataSize += RTTIPlainType<T>::getDynamicSize(*iter);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -387,52 +387,52 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const MapType& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 numElements = static_cast<uint64>(data.size());
-      memcpy(memory, &numElements, sizeof(uint64));
-      memory += sizeof(uint64);
-      size += sizeof(uint64);
+      uint32 numElements = static_cast<uint32>(data.size());
+      memcpy(memory, &numElements, sizeof(uint32));
+      memory += sizeof(uint32);
+      size += sizeof(uint32);
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
+        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
         RTTIPlainType<Key>::toMemory(iter->first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint64 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
+        uint32 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
         RTTIPlainType<Value>::toMemory(iter->second, memory);
 
         memory += valueSize;
         size += valueSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc   RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(MapType& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 numElements;
-      memcpy(&numElements, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 numElements;
+      memcpy(&numElements, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      for (uint64 i = 0; i < numElements; ++i) {
+      for (uint32 i = 0; i < numElements; ++i) {
         Key key;
-        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
+        uint32 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         Value value;
-        uint64 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
+        uint32 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
         memory += valueSize;
 
         data[key] = value;
@@ -444,18 +444,18 @@ namespace geEngineSDK {
     /**
      * @copydoc   RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const MapType& data) {
-      uint64 dataSize = sizeof(uint64) * 2;
+      uint64 dataSize = sizeof(uint32) * 2;
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
         dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
         dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -484,52 +484,52 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const UnorderedMapType& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 numElements = static_cast<uint64>(data.size());
-      memcpy(memory, &numElements, sizeof(uint64));
-      memory += sizeof(uint64);
-      size += sizeof(uint64);
+      uint32 numElements = static_cast<uint32>(data.size());
+      memcpy(memory, &numElements, sizeof(uint32));
+      memory += sizeof(uint32);
+      size += sizeof(uint32);
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
+        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
         RTTIPlainType<Key>::toMemory(iter->first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint64 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
+        uint32 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
         RTTIPlainType<Value>::toMemory(iter->second, memory);
 
         memory += valueSize;
         size += valueSize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc   RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(UnorderedMapType& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 numElements;
-      memcpy(&numElements, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 numElements;
+      memcpy(&numElements, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      for (uint64 i = 0; i < numElements; ++i) {
+      for (uint32 i = 0; i < numElements; ++i) {
         Key key;
-        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
+        uint32 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         Value value;
-        uint64 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
+        uint32 valueSize = RTTIPlainType<Value>::fromMemory(value, memory);
         memory += valueSize;
 
         data[key] = value;
@@ -541,18 +541,18 @@ namespace geEngineSDK {
     /**
      * @copydoc   RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const UnorderedMapType& data) {
-      uint64 dataSize = sizeof(uint64) * 2;
+      uint64 dataSize = sizeof(uint32) * 2;
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
         dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
         dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -579,42 +579,42 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const UnorderedSetType& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 numElements = static_cast<uint64>(data.size());
-      memcpy(memory, &numElements, sizeof(uint64));
-      memory += sizeof(uint64);
-      size += sizeof(uint64);
+      uint32 numElements = static_cast<uint32>(data.size());
+      memcpy(memory, &numElements, sizeof(uint32));
+      memory += sizeof(uint32);
+      size += sizeof(uint32);
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint64 keySize = RTTIPlainType<Key>::getDynamicSize(*iter);
+        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(*iter);
         RTTIPlainType<Key>::toMemory(*iter, memory);
 
         memory += keySize;
         size += keySize;
       }
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc   RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(UnorderedSetType& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 numElements;
-      memcpy(&numElements, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 numElements;
+      memcpy(&numElements, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      for (uint64 i = 0; i<numElements; ++i) {
+      for (uint32 i = 0; i<numElements; ++i) {
         Key key;
-        uint64 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
+        uint32 keySize = RTTIPlainType<Key>::fromMemory(key, memory);
         memory += keySize;
 
         data.insert(key);
@@ -626,17 +626,17 @@ namespace geEngineSDK {
     /**
      * @copydoc   RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const UnorderedSetType& data) {
-      uint64 dataSize = sizeof(uint64) * 2;
+      uint64 dataSize = sizeof(uint32) * 2;
 
       for (auto iter = data.begin(); iter != data.end(); ++iter) {
         dataSize += RTTIPlainType<Key>::getDynamicSize(*iter);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 
@@ -654,38 +654,38 @@ namespace geEngineSDK {
      */
     static void
     toMemory(const std::pair<A, B>& data, char* memory) {
-      uint64 size = sizeof(uint64);
+      uint32 size = sizeof(uint32);
       char* memoryStart = memory;
-      memory += sizeof(uint64);
+      memory += sizeof(uint32);
 
-      uint64 firstSize = RTTIPlainType<A>::getDynamicSize(data.first);
+      uint32 firstSize = RTTIPlainType<A>::getDynamicSize(data.first);
       RTTIPlainType<A>::toMemory(data.first, memory);
 
       memory += firstSize;
       size += firstSize;
 
-      uint64 secondSize = RTTIPlainType<B>::getDynamicSize(data.second);
+      uint32 secondSize = RTTIPlainType<B>::getDynamicSize(data.second);
       RTTIPlainType<B>::toMemory(data.second, memory);
 
       memory += secondSize;
       size += secondSize;
 
-      memcpy(memoryStart, &size, sizeof(uint64));
+      memcpy(memoryStart, &size, sizeof(uint32));
     }
 
     /**
      * @copydoc   RTTIPlainType::fromMemory
      */
-    static uint64
+    static uint32
     fromMemory(std::pair<A, B>& data, char* memory) {
-      uint64 size = 0;
-      memcpy(&size, memory, sizeof(uint64));
-      memory += sizeof(uint64);
+      uint32 size = 0;
+      memcpy(&size, memory, sizeof(uint32));
+      memory += sizeof(uint32);
 
-      uint64 firstSize = RTTIPlainType<A>::fromMemory(data.first, memory);
+      uint32 firstSize = RTTIPlainType<A>::fromMemory(data.first, memory);
       memory += firstSize;
 
-      uint64 secondSize = RTTIPlainType<B>::fromMemory(data.second, memory);
+      uint32 secondSize = RTTIPlainType<B>::fromMemory(data.second, memory);
       memory += secondSize;
 
       return size;
@@ -694,16 +694,16 @@ namespace geEngineSDK {
     /**
      * @copydoc   RTTIPlainType::getDynamicSize
      */
-    static uint64
+    static uint32
     getDynamicSize(const std::pair<A, B>& data) {
-      uint64 dataSize = sizeof(uint64);
+      uint64 dataSize = sizeof(uint32);
 
       dataSize += RTTIPlainType<A>::getDynamicSize(data.first);
       dataSize += RTTIPlainType<B>::getDynamicSize(data.second);
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint64>::max());
+      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 
-      return dataSize;
+      return static_cast<uint32>(dataSize);
     }
   };
 }

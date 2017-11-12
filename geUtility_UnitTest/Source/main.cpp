@@ -1,8 +1,10 @@
 #include <vld.h>
-
 #include <DirectXMath.h>
 
+#define GTEST_HAS_TR1_TUPLE 0
+#define GTEST_USE_OWN_TR1_TUPLE 0
 #include <gtest/gtest.h>
+
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
 #include <geFileSystem.h>

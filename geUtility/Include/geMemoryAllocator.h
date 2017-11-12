@@ -401,7 +401,7 @@ namespace geEngineSDK {
   }
 
   /**
-   * @brief Frees memory previously allocated with bs_alloc_aligned().
+   * @brief Frees memory previously allocated with ge_alloc_aligned().
    */
   inline void
   ge_free_aligned(void* ptr) {
@@ -409,7 +409,7 @@ namespace geEngineSDK {
   }
 
   /**
-   * @brief Frees memory previously allocated with bs_alloc_aligned16().
+   * @brief Frees memory previously allocated with ge_alloc_aligned16().
    */
   inline void
   ge_free_aligned16(void* ptr) {
