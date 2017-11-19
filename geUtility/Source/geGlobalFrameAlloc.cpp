@@ -45,8 +45,7 @@ namespace geEngineSDK {
 
   void
   ge_frame_free(void* data) {
-    //HACK: Test if this casting is working correctly on PS4
-    g_frameAlloc().dealloc(*reinterpret_cast<uint32**>(data));
+    g_frameAlloc().dealloc(reinterpret_cast<uint8*>(data));
   }
 
   void

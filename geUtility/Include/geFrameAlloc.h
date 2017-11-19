@@ -86,7 +86,7 @@ namespace geEngineSDK {
     /**
      * @brief Allocates a new block of memory of the specified size aligned to
      *        the specified boundary. If the alignment is less or equal to 16 it is
-              more efficient to use the allocAligned16() alternative of this method.
+     *        more efficient to use the allocAligned16() alternative of this method.
      * @param[in] amount  Amount of memory to allocate, in bytes.
      * @param[in] alignment Alignment of the allocated memory. Must be power of two.
      * @note  Not thread safe.
@@ -141,6 +141,7 @@ namespace geEngineSDK {
     void
     setOwnerThread(ThreadId thread);
 
+   private:
     /**
      * @brief Allocates a dynamic block of memory of the wanted size. The exact
      *        allocation size might be slightly higher in order to store block
@@ -150,18 +151,17 @@ namespace geEngineSDK {
     allocBlock(SIZE_T wantedSize);
 
     /**
-     * @brief Frees a memory block.
-     */
+    * @brief Frees a memory block.
+    */
     void
     deallocBlock(MemBlock* block);
 
-   private:
     SIZE_T m_blockSize;
     Vector<MemBlock*> m_blocks;
     MemBlock* m_freeBlock;
     uint32 m_nextBlockIdx;
     std::atomic<SIZE_T> m_totalAllocBytes;
-    uint32* m_lastFrame;
+    void* m_lastFrame;
 
 #if GE_DEBUG_MODE
     ThreadId m_ownerThread;
@@ -184,20 +184,11 @@ namespace geEngineSDK {
     typedef std::ptrdiff_t difference_type;
     
     StdFrameAlloc() _NOEXCEPT : m_FrameAlloc(nullptr) {}
-    explicit StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
+    StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
 
     template<class U>
     StdFrameAlloc(const StdFrameAlloc<U>& refAlloc) _NOEXCEPT
       : m_FrameAlloc(refAlloc.m_FrameAlloc) {
-    }
-
-    /**
-     * @brief Copy operator, added for completion, but probably should never be used.
-     */
-    template<class U>
-    const StdFrameAlloc<U>&
-    operator=(const StdFrameAlloc<U>& refAlloc) {
-      m_FrameAlloc = refAlloc.m_FrameAlloc;
     }
 
     template<class U>
@@ -227,13 +218,13 @@ namespace geEngineSDK {
         return nullptr;
       }
 
-      if (static_cast<size_t>(-1) / sizeof(T) < num) {
-        throw std::bad_array_new_length();
+      if (num > (static_cast<size_t>(-1) / sizeof(T))){
+        return nullptr; //Error
       }
 
-      void* const pv = m_FrameAlloc->alloc(static_cast<uint32>(num * sizeof(T)));
+      void* const pv = m_FrameAlloc->alloc(num * sizeof(T));
       if (!pv) {
-        throw std::bad_alloc();
+        return nullptr; //Error
       }
 
       return static_cast<T*>(pv);

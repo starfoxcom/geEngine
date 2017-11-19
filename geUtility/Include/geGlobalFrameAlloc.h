@@ -76,8 +76,8 @@ namespace geEngineSDK {
    */
   template<class T>
   T*
-  ge_frame_alloc(SIZE_T numBytes) {
-    return reinterpret_cast<T*>(ge_frame_alloc(sizeof(T) * numBytes));
+  ge_frame_alloc(SIZE_T count) {
+    return reinterpret_cast<T*>(ge_frame_alloc(sizeof(T) * count));
   }
 
   /**
@@ -90,7 +90,7 @@ namespace geEngineSDK {
     T* data = ge_frame_alloc<T>(count);
 
     for (SIZE_T i = 0; i<count; ++i) {
-      new (reinterpret_cast<void*>(&data[i])) T;
+      new ((void*)&data[i]) T;
     }
 
     return data;
@@ -105,7 +105,7 @@ namespace geEngineSDK {
   ge_frame_new(Args&& ...args, SIZE_T count = 0) {
     T* data = ge_frame_alloc<T>(count);
     for (SIZE_T i = 0; i<count; ++i) {
-      new (reinterpret_cast<void*>(&data[i])) T(std::forward<Args>(args)...);
+      new ((void*)&data[i]) T(std::forward<Args>(args)...);
     }
     return data;
   }
@@ -118,7 +118,7 @@ namespace geEngineSDK {
   void
   ge_frame_delete(T* data) {
     data->~T();
-    ge_frame_free(reinterpret_cast<void*>(data));
+    ge_frame_free(reinterpret_cast<uint8*>(data));
   }
 
   /**
@@ -133,7 +133,7 @@ namespace geEngineSDK {
       data[i].~T();
     }
 
-    ge_frame_free(reinterpret_cast<void*>(data));
+    ge_frame_free(reinterpret_cast<uint8*>(data));
   }
 
   /**

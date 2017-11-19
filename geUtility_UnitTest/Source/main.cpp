@@ -21,6 +21,8 @@
 #include <geTriangulation.h>
 #include <geCompression.h>
 
+#include <Win32/geWin32Windows.h>
+
 #include <geDebug.h>
 
 using namespace geEngineSDK;
@@ -393,4 +395,50 @@ TEST(geUtility, Matrix4_Perspective) {
 
   EXPECT_FLOAT_EQ(iprojection.m[2][3], DirectX::XMVectorGetByIndex(projection.r[2], 3));
   EXPECT_FLOAT_EQ(iprojection.m[3][2], DirectX::XMVectorGetByIndex(projection.r[3], 2));
+}
+
+LRESULT CALLBACK
+WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+  HDC hdc;
+  PAINTSTRUCT ps;
+
+  switch (msg)
+  {
+  case WM_LBUTTONDOWN:
+    break;
+  case WM_PAINT:
+    hdc = BeginPaint(hwnd, &ps);
+    EndPaint(hwnd, &ps);
+    return 0;
+  case WM_CLOSE:
+    PostQuitMessage(0);
+    break;
+  default:
+    return DefWindowProc(hwnd, msg, wParam, lParam);
+  }
+  return 0;
+}
+
+TEST(geUtility, FrameAllocTest) {
+  WINDOW_DESC windowDesc;
+  windowDesc.showTitleBar = true;
+  windowDesc.showBorder = true;
+  windowDesc.allowResize = true;
+  windowDesc.enableDoubleClick = true;
+  windowDesc.fullscreen = false;
+  windowDesc.width = 1920;
+  windowDesc.height = 1080;
+  windowDesc.hidden = false;
+  windowDesc.left = 0;
+  windowDesc.top = 0;
+  windowDesc.outerDimensions = false;
+  windowDesc.title = "wndTest";
+  windowDesc.toolWindow = false;
+  windowDesc.creationParams = nullptr;
+  windowDesc.modal = true;
+  windowDesc.wndProc = &WndProc;
+  windowDesc.module = GetModuleHandle(NULL);
+  
+  Win32Window* m_appWnd = ge_new<Win32Window>(windowDesc);
+  ge_delete(m_appWnd);
 }
