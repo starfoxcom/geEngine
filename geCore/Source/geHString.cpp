@@ -27,7 +27,6 @@
 #include "geStringTableManager.h"
 
 namespace geEngineSDK {
-
   HString::HString(uint32 stringTableId)
     : m_parameters(nullptr),
       m_isDirty(true),
@@ -41,8 +40,9 @@ namespace geEngineSDK {
   HString::HString(const WString& identifierString, uint32 stringTableId)
     : m_parameters(nullptr),
       m_isDirty(true),
-    m_stringPtr(nullptr) {
-    m_stringData = StringTableManager::instance().getTable(stringTableId)->getStringData(identifierString);
+      m_stringPtr(nullptr) {
+    m_stringData = StringTableManager::instance().
+                    getTable(stringTableId)->getStringData(identifierString);
     if (m_stringData->numParameters > 0) {
       m_parameters = ge_newN<WString>(m_stringData->numParameters);
     }

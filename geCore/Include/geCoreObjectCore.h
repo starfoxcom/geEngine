@@ -80,9 +80,10 @@ namespace geEngineSDK {
       syncToCore(const CoreSyncData& data) {}
 
       /**
-       * @brief Blocks the current thread until the resource is fully initialized.
-       * @note If you call this without calling initialize first a deadlock will occur.
-       *       You should not call this from core thread.
+       * @brief Blocks the current thread until the resource is fully
+       *        initialized.
+       * @note  If you call this without calling initialize first a deadlock
+       *        will occur. You should not call this from core thread.
        */
       void
       synchronize();

@@ -14,6 +14,18 @@
     <Filter Include="Source Files\CoreThread">
       <UniqueIdentifier>{572d585e-945d-4ef0-be0c-51914fdc98dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{5c853ea4-d994-4e1f-81e9-a70ce5809b0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{0f7b9a1e-6659-4cae-8fb7-fe01560644bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{5e7eb5d7-8fa6-4686-9642-243e7f7f3b48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RTTI">
+      <UniqueIdentifier>{3adc3033-b375-4554-b719-11cd73715fb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePrerequisitesCore.h">
@@ -31,6 +43,54 @@
     <ClInclude Include="Include\geStringTable.h">
       <Filter>Source Files\Localization</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geResourceHandle.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGameObjectHandle.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDeferredCallManager.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCommonTypes.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceMetaData.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResource.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceMetaDataRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCoreObject.h">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCommandQueue.h">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCoreThread.h">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCoreThreadQueue.h">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceHandleRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceManifest.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceManifestRTTI.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResources.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -44,6 +104,33 @@
     </ClCompile>
     <ClCompile Include="Source\geStringTable.cpp">
       <Filter>Source Files\Localization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResourceHandle.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geDeferredCallManager.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResourceMetaData.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCommandQueue.cpp">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCoreThread.cpp">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCoreThreadQueue.cpp">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResourceManifest.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResources.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

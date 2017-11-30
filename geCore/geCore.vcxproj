@@ -19,15 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\geCommandQueue.h" />
+    <ClInclude Include="Include\geCommonTypes.h" />
+    <ClInclude Include="Include\geCoreObject.h" />
     <ClInclude Include="Include\geCoreObjectCore.h" />
+    <ClInclude Include="Include\geCoreThread.h" />
+    <ClInclude Include="Include\geCoreThreadQueue.h" />
+    <ClInclude Include="Include\geDeferredCallManager.h" />
+    <ClInclude Include="Include\geGameObjectHandle.h" />
     <ClInclude Include="Include\geHString.h" />
     <ClInclude Include="Include\gePrerequisitesCore.h" />
+    <ClInclude Include="Include\geResource.h" />
+    <ClInclude Include="Include\geResourceHandle.h" />
+    <ClInclude Include="Include\geResourceHandleRTTI.h" />
+    <ClInclude Include="Include\geResourceManifest.h" />
+    <ClInclude Include="Include\geResourceManifestRTTI.h" />
+    <ClInclude Include="Include\geResourceMetaData.h" />
+    <ClInclude Include="Include\geResourceMetaDataRTTI.h" />
+    <ClInclude Include="Include\geResourceRTTI.h" />
+    <ClInclude Include="Include\geResources.h" />
     <ClInclude Include="Include\geStringTable.h" />
     <ClInclude Include="Include\geStringTableManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\geCommandQueue.cpp" />
     <ClCompile Include="Source\geCoreObjectCore.cpp" />
+    <ClCompile Include="Source\geCoreThread.cpp" />
+    <ClCompile Include="Source\geCoreThreadQueue.cpp" />
+    <ClCompile Include="Source\geDeferredCallManager.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
+    <ClCompile Include="Source\geResource.cpp" />
+    <ClCompile Include="Source\geResourceHandle.cpp" />
+    <ClCompile Include="Source\geResourceManifest.cpp" />
+    <ClCompile Include="Source\geResourceMetaData.cpp" />
+    <ClCompile Include="Source\geResources.cpp" />
     <ClCompile Include="Source\geStringTable.cpp" />
     <ClCompile Include="Source\geStringTableManager.cpp" />
   </ItemGroup>
@@ -114,7 +139,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -139,7 +164,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -166,7 +191,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -195,7 +220,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
