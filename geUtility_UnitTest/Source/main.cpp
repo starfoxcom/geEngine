@@ -439,6 +439,5 @@ TEST(geUtility, FrameAllocTest) {
   windowDesc.wndProc = &WndProc;
   windowDesc.module = GetModuleHandle(NULL);
   
-  Win32Window* m_appWnd = ge_new<Win32Window>(windowDesc);
-  ge_delete(m_appWnd);
+  SPtr<Win32Window> m_appWnd = ge_shared_ptr_new<Win32Window>(windowDesc);
 }

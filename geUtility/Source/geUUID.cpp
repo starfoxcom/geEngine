@@ -49,10 +49,10 @@ namespace geEngineSDK {
     return output;
   }
 
-  static const std::array<char, 16> HEX_TO_LITERAL = {'0', '1', '2', '3',
-                                                      '4', '5', '6', '7',
-                                                      '8', '9', 'a', 'b',
-                                                      'c', 'd', 'e', 'f' };
+  static const std::array<char, 16> HEX_TO_LITERAL = {{'0', '1', '2', '3',
+                                                       '4', '5', '6', '7',
+                                                       '8', '9', 'a', 'b',
+                                                       'c', 'd', 'e', 'f' }};
   static const std::array<uint8, 256> LITERAL_TO_HEX = literalToHex();
   UUID UUID::EMPTY;
 

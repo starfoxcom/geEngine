@@ -103,6 +103,8 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT RTTIField
   {
+    virtual ~RTTIField() {}
+
     /**
      * @brief Checks is the field plain type and castable to
      *        RTTIPlainFieldBase.

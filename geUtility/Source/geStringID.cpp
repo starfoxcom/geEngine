@@ -165,12 +165,6 @@ namespace geEngineSDK {
   };
 
   template
-  class StringID::StringIDUtil<const ANSICHAR*>;
-  
-  template
-  class StringID::StringIDUtil<String>;
-
-  template
   GE_UTILITY_EXPORT void
   StringID::construct(const ANSICHAR* const&);
   

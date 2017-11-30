@@ -1673,7 +1673,11 @@ namespace geEngineSDK {
       RTTIReflectablePtrField<DataType, ObjectType>*
       newField = ge_new<RTTIReflectablePtrField<DataType, ObjectType>>();
 
-      newField->initSingle(name, uniqueId, getter, setter, flags);
+      newField->initSingle(name,
+                           static_cast<uint16>(uniqueId),
+                           getter,
+                           setter,
+                           flags);
       addNewField(newField);
     }
 

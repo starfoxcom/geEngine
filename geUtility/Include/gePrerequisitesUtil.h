@@ -116,6 +116,7 @@
 #include "geStringID.h"             //String IDs for string fast comparison
 
 #include "geMessageHandlerFwd.h"    //Forward declarations of the message objects
+#include "geFlags.h"                //Flags template
 #include "geUtil.h"                 //Hashing utilities
 #include "gePath.h"                 //Paths to files
 #include "geEvent.h"                //Event objects and handlers

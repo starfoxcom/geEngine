@@ -233,7 +233,7 @@ namespace geEngineSDK {
   inline Flags<Enum, Storage>                                                 \
   operator&(Enum a, Enum b) {                                                 \
     Flags<Enum, Storage> r(a); r &= b; return r;                              \
-  } \                                                                         \
+  }                                                                           \
                                                                               \
   inline Flags<Enum, Storage>                                                 \
   operator~(Enum a) {                                                         \

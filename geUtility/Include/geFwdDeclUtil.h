@@ -166,7 +166,7 @@ namespace geEngineSDK {
   namespace TYPEID_UTILITY {
   	enum E {
       /**
-       * TID_Abstract is a special type ID used for Abstract classes.
+       * kID_Abstract is a special type ID used for Abstract classes.
        * Only type ID that may be used by more than one class.
        */
       kID_Abstract              = 50,
