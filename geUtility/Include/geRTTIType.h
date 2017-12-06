@@ -59,7 +59,7 @@ namespace geEngineSDK {
   struct META_FirstEntry {};                                                  \
                                                                               \
   void                                                                        \
-  META_InitPrevEntry(META_FirstEntry typeId) {}                               \
+  META_InitPrevEntry(META_FirstEntry /*typeId*/) {}                           \
                                                                               \
   typedef META_FirstEntry
   /***************************************************************************/
@@ -87,7 +87,7 @@ namespace geEngineSDK {
   struct META_NextEntry_##name{};                                             \
                                                                               \
   void                                                                        \
-  META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+  META_InitPrevEntry(META_NextEntry_##name /*typeId*/) {                      \
     addPlainField(#name, id, &MyType::get##name, &MyType::set##name);         \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -116,7 +116,7 @@ namespace geEngineSDK {
   struct META_NextEntry_##name{};                                             \
                                                                               \
   void                                                                        \
-  META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+  META_InitPrevEntry(META_NextEntry_##name /*typeId*/) {                      \
     addPlainField(#name, id, &MyType::get##name, &MyType::set##name);         \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -160,7 +160,7 @@ namespace geEngineSDK {
   struct META_NextEntry_##name {};                                            \
                                                                               \
   void                                                                        \
-  META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+  META_InitPrevEntry(META_NextEntry_##name /*typeId*/) {                      \
     addPlainArrayField(#name,                                                 \
                        id,                                                    \
                        &MyType::get##name,                                    \
@@ -1693,7 +1693,13 @@ namespace geEngineSDK {
       RTTIPlainField<DataType, ObjectType>*
       newField = ge_new<RTTIPlainField<DataType, ObjectType>>();
       
-      newField->initArray(name, uniqueId, getter, getSize, setter, setSize, flags);
+      newField->initArray(name,
+                          static_cast<uint16>(uniqueId),
+                          getter,
+                          getSize,
+                          setter,
+                          setSize,
+                          flags);
       addNewField(newField);
     }
 
