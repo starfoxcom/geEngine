@@ -52,7 +52,7 @@ namespace geEngineSDK {
        */
       SPtr<CoreObject>
       getThisPtr() const {
-        return mThis.lock();
+        return m_this.lock();
       }
 
      public:
@@ -77,7 +77,7 @@ namespace geEngineSDK {
        *        Data used was recorded on the previous sim thread frame.
        */
       virtual void
-      syncToCore(const CoreSyncData& data) {}
+      syncToCore(const CoreSyncData& /*data*/) {}
 
       /**
        * @brief Blocks the current thread until the resource is fully
@@ -95,32 +95,32 @@ namespace geEngineSDK {
        */
       bool
       isInitialized() const {
-        return (mFlags & CO_FLAGS::kInitialized) != 0;
+        return (m_flags & CO_FLAGS::kInitialized) != 0;
       }
 
       bool
       isScheduledToBeInitialized() const {
-        return (mFlags & CO_FLAGS::kScheduledForInit) != 0;
+        return (m_flags & CO_FLAGS::kScheduledForInit) != 0;
       }
 
       void
       setIsInitialized(bool initialized) {
-        mFlags = initialized ?
-          mFlags | CO_FLAGS::kInitialized :
-          mFlags & ~CO_FLAGS::kScheduledForInit;
+        m_flags = initialized ?
+          m_flags | CO_FLAGS::kInitialized :
+          m_flags & ~CO_FLAGS::kScheduledForInit;
       }
 
       void
       setScheduledToBeInitialized(bool scheduled) {
-        mFlags = scheduled ?
-          mFlags | CO_FLAGS::kScheduledForInit :
-          mFlags & ~CO_FLAGS::kScheduledForInit;
+        m_flags = scheduled ?
+          m_flags | CO_FLAGS::kScheduledForInit :
+          m_flags & ~CO_FLAGS::kScheduledForInit;
       }
 
-      volatile uint8 mFlags;
-      std::weak_ptr<CoreObject> mThis;
-      static Signal mCoreGpuObjectLoadedCondition;
-      static Mutex mCoreGpuObjectLoadedMutex;
+      volatile uint8 m_flags;
+      std::weak_ptr<CoreObject> m_this;
+      static Signal m_coreGPUObjectLoadedCondition;
+      static Mutex m_coreGPUObjectLoadedMutex;
     };
   }
 }

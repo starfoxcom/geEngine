@@ -18,7 +18,7 @@
 /*****************************************************************************/
 #include "geCoreThreadQueue.h"
 #include "geCommandQueue.h"
-#include "geMaterial.h"
+//#include "geMaterial.h"
 #include "geCoreThread.h"
 
 namespace geEngineSDK {

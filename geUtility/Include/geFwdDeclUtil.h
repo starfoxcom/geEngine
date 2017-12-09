@@ -106,7 +106,7 @@ namespace geEngineSDK {
   class Timer;
   class Task;
 
-  class GpuResourceData;
+  class GPUResourceData;
   class PixelData;
 
   class HString;
@@ -153,7 +153,7 @@ namespace geEngineSDK {
   typedef std::shared_ptr<FileDataStream> FileDataStreamPtr;
   typedef std::shared_ptr<MeshData> MeshDataPtr;
   typedef std::shared_ptr<PixelData> PixelDataPtr;
-  typedef std::shared_ptr<GpuResourceData> GpuResourceDataPtr;
+  typedef std::shared_ptr<GPUResourceData> GPUResourceDataPtr;
   typedef std::shared_ptr<DataStream> DataStreamPtr;
   typedef std::shared_ptr<MemoryDataStream> MemoryDataStreamPtr;
   typedef std::shared_ptr<Task> TaskPtr;

@@ -38,7 +38,7 @@ namespace geEngineSDK {
   CommandQueueBase::CommandQueueBase(ThreadId threadId)
     : m_myThreadId(threadId) {
     m_asyncOpSyncData = ge_shared_ptr_new<AsyncOpSyncData>();
-    m_commands = ge_new<bs::Queue<QueuedCommand>>();
+    m_commands = ge_new<geEngineSDK::Queue<QueuedCommand>>();
   }
 # endif
 
@@ -224,7 +224,7 @@ namespace geEngineSDK {
   }
 # else
   void
-  CommandQueueBase::addBreakpoint(uint32 queueIdx, uint32 commandIdx) {
+  CommandQueueBase::addBreakpoint(uint32 /*queueIdx*/, uint32 /*commandIdx*/) {
     //Do nothing, no breakpoints in release
   }
 # endif

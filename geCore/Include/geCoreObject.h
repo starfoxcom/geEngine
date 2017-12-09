@@ -31,8 +31,8 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
-#include "geCoreObject.h"
-#include <geIReflectable.h>
+#include "geCoreObjectCore.h"
+#include <geAsyncOp.h>
 
 namespace geEngineSDK {
   class GE_CORE_EXPORT CoreObject

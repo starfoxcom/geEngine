@@ -23,7 +23,7 @@
 #include <geModule.h>
 
 namespace geEngineSDK {
-  class GE_CORE_EXPORT GE_SCRIPT_EXPORT(n : StringTables, m : Localization)
+  class GE_CORE_EXPORT GE_SCRIPT_EXPORT(n:StringTables, m:Localization)
     StringTableManager : public Module<StringTableManager>
   {
    public:
@@ -33,14 +33,14 @@ namespace geEngineSDK {
      * @brief Determines the currently active language. Any newly created
      *        strings will use this value.
      */
-    GE_SCRIPT_EXPORT(n : ActiveLanguage, pr : setter)
+    GE_SCRIPT_EXPORT(n:ActiveLanguage, pr:setter)
     void
     setActiveLanguage(Language language);
 
     /**
      * @copydoc setActiveLanguage()
      */
-    GE_SCRIPT_EXPORT(n : ActiveLanguage, pr : getter)
+    GE_SCRIPT_EXPORT(n:ActiveLanguage, pr:getter)
     Language
     getActiveLanguage() const {
       return m_activeLanguage;
@@ -82,5 +82,6 @@ namespace geEngineSDK {
   /**
    * @brief Provides easier access to StringTableManager.
    */
-  GE_CORE_EXPORT StringTableManager& g_StringTableManager();
+  GE_CORE_EXPORT StringTableManager&
+  g_stringTableManager();
 }

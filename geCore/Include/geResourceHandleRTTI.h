@@ -20,6 +20,7 @@
 #include "gePrerequisitesCore.h"
 #include "geResource.h"
 #include "geResourceMetaData.h"
+#include "geResources.h"
 #include <geRTTIType.h>
 
 namespace geEngineSDK {
@@ -47,7 +48,7 @@ namespace geEngineSDK {
 
     void
     onDeserializationEnded(IReflectable* obj,
-                           const UnorderedMap<String, uint64>& params) override {
+                           const UnorderedMap<String, uint64>& /*params*/) override {
       TResourceHandleBase<false>*
         resourceHandle = static_cast<TResourceHandleBase<false>*>(obj);
 
@@ -107,7 +108,7 @@ namespace geEngineSDK {
 
     void
     onDeserializationEnded(IReflectable* obj,
-                           const UnorderedMap<String, uint64>& params) override {
+                           const UnorderedMap<String, uint64>& /*params*/) override {
       TResourceHandleBase<true>*
         resourceHandle = static_cast<TResourceHandleBase<true>*>(obj);
 

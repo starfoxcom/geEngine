@@ -15329,7 +15329,7 @@ enum tetgenmesh::interresult
           printf("Warning:  Found two facets nearly overlap.\n");
           terminatetetgen(this, 5);
           // unifysubfaces(&checksh, searchsh);
-          *searchtet = spintet;
+          //*searchtet = spintet;
           //return COLLISIONFACE;
         }
       }

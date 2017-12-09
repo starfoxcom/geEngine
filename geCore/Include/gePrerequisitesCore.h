@@ -131,7 +131,7 @@ namespace geEngineSDK {
   class MeshImportOptions;
   struct FontBitmap;
   class GameObject;
-  class GpuResourceData;
+  class GPUResourceData;
   struct RenderOperation;
   class RenderQueue;
   struct ProfilerReport;
@@ -359,7 +359,7 @@ namespace geEngineSDK {
       kID_SceneObject = 1059,
       kID_GameObject = 1060,
       kID_PixelData = 1062,
-      kID_GpuResourceData = 1063,
+      kID_GPUResourceData = 1063,
       kID_VertexDataDesc = 1064,
       kID_MeshBase = 1065,
       kID_GameObjectHandleBase = 1066,

@@ -23,10 +23,10 @@
 
 namespace geEngineSDK {
   namespace geCoreThread {
-    Signal CoreObject::mCoreGpuObjectLoadedCondition;
-    Mutex CoreObject::mCoreGpuObjectLoadedMutex;
+    Signal CoreObject::m_coreGPUObjectLoadedCondition;
+    Mutex CoreObject::m_coreGPUObjectLoadedMutex;
 
-    CoreObject::CoreObject() : mFlags(0) {}
+    CoreObject::CoreObject() : m_flags(0) {}
 
     CoreObject::~CoreObject() {
       THROW_IF_NOT_CORE_THREAD;
@@ -35,12 +35,12 @@ namespace geEngineSDK {
     void
     CoreObject::initialize() {
       {
-        Lock lock(mCoreGpuObjectLoadedMutex);
+        Lock lock(m_coreGPUObjectLoadedMutex);
         setIsInitialized(true);
       }
 
       setScheduledToBeInitialized(false);
-      mCoreGpuObjectLoadedCondition.notify_all();
+      m_coreGPUObjectLoadedCondition.notify_all();
     }
 
     void
@@ -53,21 +53,21 @@ namespace geEngineSDK {
                     "It will cause a deadlock!");
         }
 # endif
-        Lock lock(mCoreGpuObjectLoadedMutex);
+        Lock lock(m_coreGPUObjectLoadedMutex);
         while (!isInitialized()) {
           if (!isScheduledToBeInitialized()) {
             GE_EXCEPT(InternalErrorException,
                       "Attempting to wait until initialization finishes but "
                       "object is not scheduled to be initialized.");
           }
-          mCoreGpuObjectLoadedCondition.wait(lock);
+          m_coreGPUObjectLoadedCondition.wait(lock);
         }
       }
     }
 
     void
     CoreObject::_setThisPtr(SPtr<CoreObject> ptrThis) {
-      mThis = ptrThis;
+      m_this = ptrThis;
     }
   }
 }

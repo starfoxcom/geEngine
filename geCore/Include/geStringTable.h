@@ -280,7 +280,7 @@ namespace geEngineSDK {
      */
     SIZE_T
     getNumStrings() const {
-      return mIdentifiers.size();
+      return m_identifiers.size();
     }
 
     /**
@@ -294,7 +294,9 @@ namespace geEngineSDK {
      * @brief Adds or modifies string translation for the specified language.
      */
     void
-    setString(const WString& identifier, Language language, const WString& value);
+    setString(const WString& identifier,
+              Language language,
+              const WString& value);
 
     /**
      * @brief Returns a string translation for the specified language.
@@ -364,7 +366,7 @@ namespace geEngineSDK {
      */
     Language
     getActiveLanguage() const {
-      return mActiveLanguage;
+      return m_activeLanguage;
     }
 
     /**
@@ -374,11 +376,11 @@ namespace geEngineSDK {
     void
     setActiveLanguage(Language language);
 
-    Language mActiveLanguage;
-    LanguageData* mActiveLanguageData;
-    LanguageData* mDefaultLanguageData;
-    LanguageData* mAllLanguages;
-    UnorderedSet<WString> mIdentifiers;
+    Language m_activeLanguage;
+    LanguageData* m_activeLanguageData;
+    LanguageData* m_defaultLanguageData;
+    LanguageData* m_allLanguages;
+    UnorderedSet<WString> m_identifiers;
 
     /*************************************************************************/
     /**

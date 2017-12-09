@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geUtility", "geUtility\geUtility.vcxproj", "{6E32D479-2E1A-4360-A1F8-920DADC8DAF3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{9E30FB1A-85C7-4D31-929C-BA3E243E1D7C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742} = {14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geUtility_UnitTest", "geUtility_UnitTest\geUtility_UnitTest.vcxproj", "{79D00812-D540-49D1-97EE-E45AD45FEA87}"
@@ -16,6 +17,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geUtility_UnitTest", "geUti
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geCore", "geCore\geCore.vcxproj", "{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

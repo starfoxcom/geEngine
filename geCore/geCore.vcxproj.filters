@@ -26,6 +26,9 @@
     <Filter Include="Source Files\RTTI">
       <UniqueIdentifier>{3adc3033-b375-4554-b719-11cd73715fb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{9591c317-ad73-4460-9252-41e9390a3f43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\gePrerequisitesCore.h">
@@ -85,11 +88,50 @@
     <ClInclude Include="Include\geResourceManifest.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geResourceManifestRTTI.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geResources.h">
       <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geIResourceListener.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceListenerManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geUtility.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSavedResourceData.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSavedResourceDataRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geStringTableRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCoreObjectManager.h">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUResourceData.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUResourceDataRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceManifestRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGameObject.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGameObjectRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGameObjectManager.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGameObjectHandleRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +173,36 @@
     </ClCompile>
     <ClCompile Include="Source\geResources.cpp">
       <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geIResourceListener.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResourceListenerManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geUtility.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geSavedResourceData.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCoreObjectManager.cpp">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCoreObject.cpp">
+      <Filter>Source Files\CoreThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUResourceData.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGameObject.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGameObjectManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGameObjectHandle.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

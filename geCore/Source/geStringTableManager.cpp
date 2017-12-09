@@ -62,7 +62,7 @@ namespace geEngineSDK {
   }
 
   StringTableManager&
-  g_StringTableManager() {
+  g_stringTableManager() {
     return StringTableManager::instance();
   }
 }

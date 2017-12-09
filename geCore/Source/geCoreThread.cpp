@@ -34,7 +34,8 @@
  */
 /*****************************************************************************/
 #include "geCoreThread.h"
-#include "geCoreApplication.h"
+//#include "geCoreApplication.h"
+
 #include <geThreadPool.h>
 #include <geTaskScheduler.h>
 #include <geFrameAlloc.h>
@@ -143,7 +144,7 @@ namespace geEngineSDK {
 
       //Play commands
       m_commandQueue->playbackWithNotify(commands,
-                                         bind(&CoreThread::commandCompletedNotify, this, _1));
+        bind(&CoreThread::commandCompletedNotify, this, _1));
     }
 # endif
   }
