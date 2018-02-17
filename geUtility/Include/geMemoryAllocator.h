@@ -529,6 +529,8 @@ namespace geEngineSDK {
   };
 }
 
-#include "geMemStack.h"
-#include "geGlobalFrameAlloc.h"
+#include "geStackAlloc.h"
+#include "geFreeAlloc.h"
+#include "geFrameAlloc.h"
+#include "geStaticAlloc.h"
 #include "geMemAllocProfiler.h"

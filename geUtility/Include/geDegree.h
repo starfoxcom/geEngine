@@ -22,8 +22,7 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePlatformDefines.h"
-#include "geRTTIPrerequisites.h"
+#include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
   class Radian;

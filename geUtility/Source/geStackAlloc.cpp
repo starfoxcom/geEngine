@@ -18,7 +18,7 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
-#include "geMemStack.h"
+#include "geStackAlloc.h"
 
 namespace geEngineSDK {
   GE_THREADLOCAL MemStackInternal<1024 * 1024>* MemStack::threadMemStack = nullptr;

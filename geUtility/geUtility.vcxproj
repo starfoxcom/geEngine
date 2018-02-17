@@ -327,8 +327,8 @@
     <ClInclude Include="Include\geFloat16Color.h" />
     <ClInclude Include="Include\geFloat32.h" />
     <ClInclude Include="Include\geFrameAlloc.h" />
+    <ClInclude Include="Include\geFreeAlloc.h" />
     <ClInclude Include="Include\geFwdDeclUtil.h" />
-    <ClInclude Include="Include\geGlobalFrameAlloc.h" />
     <ClInclude Include="Include\geGroupAlloc.h" />
     <ClInclude Include="Include\geInterval.h" />
     <ClInclude Include="Include\geIReflectable.h" />
@@ -340,7 +340,7 @@
     <ClInclude Include="Include\geMemAllocProfiler.h" />
     <ClInclude Include="Include\geMemoryAllocator.h" />
     <ClInclude Include="Include\geMemorySerializer.h" />
-    <ClInclude Include="Include\geMemStack.h" />
+    <ClInclude Include="Include\geStackAlloc.h" />
     <ClInclude Include="Include\geMessageHandler.h" />
     <ClInclude Include="Include\geMessageHandlerFwd.h" />
     <ClInclude Include="Include\geModule.h" />
@@ -417,14 +417,13 @@
     <ClCompile Include="Source\geFileSerializer.cpp" />
     <ClCompile Include="Source\geFileSystem.cpp" />
     <ClCompile Include="Source\geFrameAlloc.cpp" />
-    <ClCompile Include="Source\geGlobalFrameAlloc.cpp" />
     <ClCompile Include="Source\geIReflectable.cpp" />
     <ClCompile Include="Source\geLog.cpp" />
     <ClCompile Include="Source\geMath.cpp" />
     <ClCompile Include="Source\geMatrix4.cpp" />
     <ClCompile Include="Source\geMemoryAllocator.cpp" />
     <ClCompile Include="Source\geMemorySerializer.cpp" />
-    <ClCompile Include="Source\geMemStack.cpp" />
+    <ClCompile Include="Source\geStackAlloc.cpp" />
     <ClCompile Include="Source\geMessageHandler.cpp" />
     <ClCompile Include="Source\gePath.cpp" />
     <ClCompile Include="Source\geQuaternion.cpp" />
