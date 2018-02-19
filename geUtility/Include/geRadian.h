@@ -22,7 +22,8 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePrerequisitesUtil.h"
+#include "gePlatformDefines.h"
+#include "geRTTIPrerequisites.h"
 
 namespace geEngineSDK {
   class Degree;

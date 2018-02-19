@@ -568,7 +568,7 @@ namespace geEngineSDK {
                             const String& strFile,
                             uint32 nLine) const {
     //Win32 debug methods are not thread safe
-    Lock(m_crashData->mutex);
+    Lock lock(m_crashData->mutex);
 
     logErrorAndStackTrace(type, strDescription, strFunction, strFile, nLine);
     saveCrashLog();
@@ -584,7 +584,7 @@ namespace geEngineSDK {
     EXCEPTION_POINTERS* exceptionData = static_cast<EXCEPTION_POINTERS*>(exceptionDataPtr);
 
     //Win32 debug methods are not thread safe
-    Lock(m_crashData->mutex);
+    Lock lock(m_crashData->mutex);
 
     win32_initPSAPI();
     win32_loadSymbols();

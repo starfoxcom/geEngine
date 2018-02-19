@@ -26,7 +26,6 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
   /**
@@ -35,7 +34,7 @@ namespace geEngineSDK {
    * @tparam  DynamicAllocator  Allocator to fall-back to when static buffer is
    *                            full.
    */
-  template<int BlockSize = 512, class DynamicAllocator = TFrameAlloc<BlockSize>>
+  template<int BlockSize=512, class DynamicAllocator=TFrameAlloc<BlockSize>>
   class StaticAlloc
   {
    private:
@@ -76,7 +75,8 @@ namespace geEngineSDK {
       }
 
       /**
-       * @brief Releases all allocations within a block but doesn't actually free the memory.
+       * @brief Releases all allocations within a block but doesn't actually 
+       *        free the memory.
        */
       void
       clear() {
@@ -213,7 +213,8 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief Destructs and deallocates an object allocated with the static allocator.
+     * @brief Destructs and deallocates an object allocated with the static
+     *        allocator.
      */
     template<class T>
     void
@@ -277,7 +278,7 @@ namespace geEngineSDK {
 
     template<class U>
     StdStaticAlloc(const StdStaticAlloc<BlockSize, U>& refAlloc) _NOEXCEPT
-      : m_staticAlloc(refAlloc.mStaticAlloc)
+      : m_staticAlloc(refAlloc.m_staticAlloc)
     {}
 
     template<class U>
@@ -313,7 +314,7 @@ namespace geEngineSDK {
      */
     void
     deallocate(T* p, size_t num) const _NOEXCEPT {
-      m_staticAlloc->free(reinterpret_cast<UINT8*>(p), num);
+      m_staticAlloc->free(reinterpret_cast<uint8*>(p), num);
     }
 
     StaticAlloc<BlockSize, FreeAlloc>* m_staticAlloc = nullptr;
@@ -341,7 +342,8 @@ namespace geEngineSDK {
 
     template<class T1, int N1, class T2, int N2>
     friend bool
-    operator==(const StdStaticAlloc<N1, T1>& a, const StdStaticAlloc<N2, T2>& b) throw();
+    operator==(const StdStaticAlloc<N1, T1>& a,
+               const StdStaticAlloc<N2, T2>& b) throw();
 
   };
 
@@ -351,7 +353,8 @@ namespace geEngineSDK {
    */
   template<class T1, int N1, class T2, int N2>
   bool
-  operator==(const StdStaticAlloc<N1, T1>& a, const StdStaticAlloc<N2, T2>& b) throw() {
+  operator==(const StdStaticAlloc<N1, T1>& a,
+             const StdStaticAlloc<N2, T2>& b) throw() {
     return N1 == N2 && a.m_staticAlloc == b.m_staticAlloc;
   }
 
@@ -361,7 +364,8 @@ namespace geEngineSDK {
    */
   template<class T1, int N1, class T2, int N2>
   bool
-  operator!=(const StdStaticAlloc<N1, T1>& a, const StdStaticAlloc<N2, T2>& b) throw() {
+  operator!=(const StdStaticAlloc<N1, T1>& a,
+             const StdStaticAlloc<N2, T2>& b) throw() {
     return !(a == b);
   }
 

@@ -650,6 +650,28 @@ namespace geEngineSDK {
   }
 
   void
+  Path::stripInvalid(String& path) {
+    String illegalChars = "\\/:?\"<>|";
+
+    for (auto& entry : path) {
+      if (illegalChars.find(entry) != String::npos) {
+        entry = ' ';
+      }
+    }
+  }
+
+  void
+  Path::stripInvalid(WString& path) {
+    WString illegalChars = L"\\/:?\"<>|";
+
+    for (auto& entry : path) {
+      if (illegalChars.find(entry) != WString::npos) {
+        entry = ' ';
+      }
+    }
+  }
+
+  void
   Path::pushDirectory(const WString& dir) {
     pushDirectory(UTF8::fromWide(dir));
   }

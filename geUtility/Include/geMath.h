@@ -294,7 +294,7 @@ namespace geEngineSDK {
      * @brief Divide two integers and rounds the result
      */
     template<class T>
-    static FORCEINLINE T
+    static constexpr T
     divideAndRoundUp(T Dividend, T Divisor) {
       return (Dividend + Divisor - 1) / Divisor;
     }
@@ -303,7 +303,7 @@ namespace geEngineSDK {
      * @brief Divide two integers and rounds the result
      */
     template <class T>
-    static FORCEINLINE T
+    static constexpr T
     divideAndRoundDown(T Dividend, T Divisor) {
       return Dividend / Divisor;
     }

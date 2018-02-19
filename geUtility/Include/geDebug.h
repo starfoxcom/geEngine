@@ -162,11 +162,11 @@ namespace geEngineSDK {
    * @brief Shortcut for logging a verbose message in the debug channel.
    *        Verbose messages can be ignored unlike other log messages.
    */
-#define LOGDBG_VERBOSE(x)
+#define LOGDBG_VERBOSE(x) ((void)0)
 
   /**
    * @brief Shortcut for logging a verbose message in the warning channel.
    *        Verbose messages can be ignored unlike other log messages.
    */
-#define LOGWRN_VERBOSE(x)
+#define LOGWRN_VERBOSE(x) ((void)0)
 }

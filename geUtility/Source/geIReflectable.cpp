@@ -42,11 +42,13 @@ namespace geEngineSDK {
   IReflectable::createInstanceFromTypeId(uint32 rttiTypeId) {
     RTTITypeBase* type = _getRTTIfromTypeId(rttiTypeId);
 
+    SPtr<IReflectable> output;
     if (nullptr != type) {
-      return type->newRTTIObject();
+      output = type->newRTTIObject();
+      output->m_rttiData = nullptr;
     }
 
-    return nullptr;
+    return output;
   }
 
   RTTITypeBase*

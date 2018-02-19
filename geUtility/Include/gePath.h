@@ -445,6 +445,20 @@ namespace geEngineSDK {
     static Path
     combine(const Path& left, const Path& right);
 
+    /**
+     * @brief Strips invalid characters from the provided string and replaces
+     *        them with empty spaces.
+     */
+    static void
+    stripInvalid(String& path);
+
+    /**
+     * @brief Strips invalid characters from the provided string and replaces
+     *        them with empty spaces.
+     */
+    static void
+    stripInvalid(WString& path);
+
    private:
     /**
      * @brief Constructs a path by parsing the provided raw string data.

@@ -140,10 +140,7 @@ namespace geEngineSDK {
     Module() {}
 
     virtual
-    ~Module() {
-      _instance() = nullptr;
-      isDestroyed() = true;
-    }
+    ~Module() {}
 
     Module(const Module&) {}
 

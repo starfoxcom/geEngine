@@ -18,9 +18,9 @@
  * Includes
  */
 /*****************************************************************************/
+#include "gePlatformDefines.h"
+#include "geRTTIPrerequisites.h"
 #include "geMemoryAllocator.h"
-#include "geRadian.h"
-
 #include <string>
 
 namespace geEngineSDK {
