@@ -22,6 +22,9 @@
 #include "geSIMD.h"
 #include "gePoolAlloc.h"
 
+#if GE_COMPILER == GE_COMPILER_MSVC
+# pragma warning(disable: 4201)
+#endif
 
 namespace geEngineSDK {
   /**
@@ -969,3 +972,7 @@ namespace geEngineSDK {
     PoolAlloc<sizeof(ElementBoundGroup), 512, 16> m_elemBoundsAlloc;
   };
 }
+
+#if GE_COMPILER == GE_COMPILER_MSVC
+# pragma warning(default: 4201)
+#endif

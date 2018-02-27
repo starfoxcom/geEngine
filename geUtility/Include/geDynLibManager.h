@@ -51,5 +51,6 @@ namespace geEngineSDK {
   };
 
   /** Easy way of accessing DynLibManager. */
-  GE_UTILITY_EXPORT DynLibManager& g_dynLibManager();
+  GE_UTILITY_EXPORT DynLibManager&
+  g_dynLibManager();
 }

@@ -67,7 +67,8 @@ namespace geEngineSDK {
     ge_delete(lib);
   }
 
-  DynLibManager& g_dynLibManager() {
+  DynLibManager&
+  g_dynLibManager() {
     return DynLibManager::instance();
   }
 }
