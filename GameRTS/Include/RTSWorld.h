@@ -3,6 +3,8 @@
 #include <gePrerequisitesUtil.h>
 #include <geVector2I.h>
 
+#include <SFML/Graphics.hpp>
+
 using namespace geEngineSDK;
 
 class RTSTiledMap;
@@ -10,19 +12,13 @@ class RTSMapGridWalker;
 
 class RTSWorld
 {
- private:
-  RTSTiledMap* m_pTiledMap;
-  Vector<RTSMapGridWalker*> m_walkersList;
-  RTSMapGridWalker* m_activeWalker;
-  int8 m_activeWalkerIndex;
-
  public:
   RTSWorld();
   ~RTSWorld();
 
  public:
   bool
-  init();
+  init(sf::RenderTarget* pTarget);
 
   void
   destroy();
@@ -43,4 +39,14 @@ class RTSWorld
 
   void
   setCurrentWalker(const int8 index);
+
+ private:
+  RTSTiledMap* m_pTiledMap;
+  //Vector<RTSMapGridWalker*> m_walkersList;
+  Vector<void*> m_walkersList;
+  //RTSMapGridWalker* m_activeWalker;
+  void* m_activeWalker;
+  int8 m_activeWalkerIndex;
+
+  sf::RenderTarget* m_pTarget;
 };

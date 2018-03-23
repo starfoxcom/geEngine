@@ -4,6 +4,8 @@
 #include <geVector2.h>
 #include <geVector2I.h>
 
+#include <SFML/Graphics.hpp>
+
 #include "RTSConfig.h"
 
 using namespace geEngineSDK;
@@ -59,12 +61,12 @@ class RTSTiledMap
 
  public:
   RTSTiledMap();
-  RTSTiledMap(const int32 mapSize);
+  RTSTiledMap(sf::RenderTarget* pTarget, const Vector2I& mapSize);
   ~RTSTiledMap();
 
  public:
   bool
-  init(const int32 mapSize);
+  init(sf::RenderTarget* pTarget, const Vector2I& mapSize);
 
   void
   destroy();
@@ -75,16 +77,16 @@ class RTSTiledMap
   void
   render();
 
-  int32
+  Vector2I
   getMapSize() const {
     return m_mapSize;
   }
 
   bool
-  loadFromImageFile(String fileName);
+  loadFromImageFile(sf::RenderTarget* pTarget, String fileName);
 
   bool
-  saveToImageFile(String fileName);
+  saveToImageFile(sf::RenderTarget* pTarget, String fileName);
 
   int8
   getCost(const int32 x, const int32 y) const;
@@ -93,7 +95,7 @@ class RTSTiledMap
   setCost(const int32 x, const int32 y, const int8 cost);
 
   int8
-  getType(const int32 x, const int y) const;
+  getType(const int32 x, const int32 y) const;
 
   void
   setType(const int32 x, const int32 y, const uint8 idtype);
@@ -128,11 +130,11 @@ class RTSTiledMap
   preCalc() {
     m_PreCalc_MidResolution = (m_scrEnd - m_scrStart) / 2;
 #ifdef MAP_IS_ISOMETRIC
-    m_PreCalc_MaxCameraCoord.x = m_mapSize * GameOptions::TILEHALFSIZE.x;
-#else	//Estos cálculos aplican solo en el caso de un mapa cuadrado
-    m_PreCalc_MaxCameraCoord.x = m_mapSize * TILESIZE_X;
+    m_PreCalc_MaxCameraCoord.x = m_mapSize.x * GameOptions::TILEHALFSIZE.x;
+#else
+    m_PreCalc_MaxCameraCoord.x = m_mapSize.x * TILESIZE_X;
 #endif
-    m_PreCalc_MaxCameraCoord.y = m_mapSize * TILESIZE_Y;
+    m_PreCalc_MaxCameraCoord.y = m_mapSize.y * TILESIZE_Y;
   }
 
   void
@@ -160,8 +162,9 @@ class RTSTiledMap
                        int32 &scrY);
 
  private:
-  MapTile** m_mapGrid;
-  int32 m_mapSize;
+  Vector2I m_mapSize;
+  Vector<MapTile> m_mapGrid;
+  Vector<RTSTexture> m_mapTextures;
 
   Vector2I m_iCamera;
   Vector2 m_fCamera;
@@ -173,7 +176,5 @@ class RTSTiledMap
   Vector2I m_PreCalc_MaxCameraCoord;
   Vector2I m_PreCalc_ScreenDeface;
 
-  bool m_bShowGrid;
-
-  RTSTexture* m_mapTextures;
+  sf::RenderTarget* m_pTarget;
 };

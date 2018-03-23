@@ -1,5 +1,5 @@
 #include "RTSWorld.h"
-#include "RTSApplication.h"
+#include "RTSTiledMap.h"
 
 RTSWorld::RTSWorld() {
   m_pTiledMap = nullptr;
@@ -11,26 +11,29 @@ RTSWorld::~RTSWorld() {
 }
 
 bool
-RTSWorld::init() {
+RTSWorld::init(sf::RenderTarget* pTarget) {
   GE_ASSERT(nullptr == m_pTiledMap && "World was already initialized");
   destroy();
+
+  m_pTarget = pTarget;
 
   //Initialize the map (right now it's an empty map)
   m_pTiledMap = ge_new<RTSTiledMap>();
   GE_ASSERT(m_pTiledMap);
-  m_pTiledMap->init(256);
+  m_pTiledMap->init(m_pTarget, Vector2I(256, 256));
 
-  //Create the pathfinding classes and push them to the walker list
-  m_walkersList.push_back(ge_new<RTSBreadthFirstSearchMapGridWalker>(m_pTiledMap));
+  //Create the path finding classes and push them to the walker list
+  //m_walkersList.push_back(ge_new<RTSBreadthFirstSearchMapGridWalker>(m_pTiledMap));
 
   //Init the walker objects
+/*
   for (SIZE_T it = 0; it < m_walkersList.size(); ++it) {
     m_walkersList[it]->init();
   }
 
   //Set the first walker as the active walker
   setCurrentWalker(m_walkersList.size() > 0 ? 0 : -1);
-
+*/
   return true;
 }
 
@@ -64,7 +67,7 @@ RTSWorld::updateResolutionData() {
   if (nullptr != m_pTiledMap) {
     Vector2I appResolution = g_gameOptions().s_Resolution;
     
-    m_pTiledMap->setStart(0, 32);
+    m_pTiledMap->setStart(0, 0);
     m_pTiledMap->setEnd(appResolution.x, appResolution.y - 175);
     
     //This ensures a clamp if necessary

@@ -15,14 +15,25 @@
 
 #include <geModule.h>
 #include <geVector2I.h>
+#include <geVector2.h>
+#include <geColor.h>
 
 using namespace geEngineSDK;
 
 class GameOptions : public Module<GameOptions>
 {
-public:
+ public:
+  //Application values
   static Vector2I s_Resolution;
+  static Vector2 s_MapMovementSpeed;
 
+  //World Values
+
+  //Map Values
+  static bool s_MapShowGrid;
+  static Color s_MapGridColor;
+
+  //Global Constants
   static const Vector2I TILEHALFSIZE;
   static const Vector2I BITSFHT_TILEHALFSIZE;
   static const Vector2I BITSHFT_TILESIZE;

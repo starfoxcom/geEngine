@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RTSTexture.h"
+#include "RTSWorld.h"
 
 using namespace geEngineSDK;
 
@@ -18,11 +19,24 @@ class RTSApplication
   int32
   run();
 
+  sf::RenderWindow*
+  getRenderWindow() {
+    return m_window;
+  }
+
+  RTSWorld*
+  getWorld() {
+    return &m_gameWorld;
+  }
+
  protected:
 
  private:
    void
    initSystems();
+
+   void
+   initGUI();
 
    void
    destroySystems();
@@ -42,8 +56,8 @@ class RTSApplication
    void
    renderFrame();
 
+ private:
    sf::RenderWindow* m_window;
    sf::Font* m_arialFont;
-   
-   RTSTexture m_testTexture;
+   RTSWorld m_gameWorld;
 };

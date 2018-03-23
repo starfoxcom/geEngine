@@ -10,12 +10,24 @@
 
 #include <geCrashHandler.h>
 #include <geDynLibManager.h>
+#include <geFileSystem.h>
 #include <geTime.h>
 
 #include <SFML/Graphics.hpp>
 
+#include <commdlg.h>
+#include <imgui.h>
+#include <imgui-sfml.h>
+
 #include "RTSConfig.h"
 #include "RTSApplication.h"
+#include "RTSTiledMap.h"
+
+void
+loadMapFromFile(RTSApplication* pApp);
+
+void
+mainMenu(RTSApplication* pApp);
 
 RTSApplication::RTSApplication() : m_window(nullptr)
 {}
@@ -53,7 +65,9 @@ RTSApplication::initSystems() {
   }
 
   //Create the application window
-  m_window = ge_new<sf::RenderWindow>(sf::VideoMode(1920, 1080), "RTS Game");
+  m_window = ge_new<sf::RenderWindow>(sf::VideoMode(GameOptions::s_Resolution.x,
+                                                    GameOptions::s_Resolution.y),
+                                      "RTS Game");
   if (nullptr == m_window) {
     GE_EXCEPT(InvalidStateException, "Couldn't create Application Window");
   }
@@ -67,10 +81,21 @@ RTSApplication::initSystems() {
   if (!m_arialFont->loadFromFile("Fonts/arial.ttf")) {
     GE_EXCEPT(FileNotFoundException, "Arial font not found");
   }
+
+  //m_window->setVerticalSyncEnabled(true);
+
+  initGUI();
+}
+
+void
+RTSApplication::initGUI() {
+  ImGui::SFML::Init(*m_window);
 }
 
 void
 RTSApplication::destroySystems() {
+  ImGui::SFML::Shutdown();
+
   if (nullptr != m_window) {
     m_window->close();
     ge_delete(m_window);
@@ -92,8 +117,11 @@ RTSApplication::gameLoop() {
   while (m_window->isOpen()) {
     sf::Event event;
     while (m_window->pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
+      ImGui::SFML::ProcessEvent(event);
+      
+      if (event.type == sf::Event::Closed) {
         m_window->close();
+      }
     }
 
     g_time()._update();
@@ -106,27 +134,79 @@ RTSApplication::gameLoop() {
 
 void
 RTSApplication::updateFrame() {
+  float deltaTime = g_time().getFrameDelta();
+  
+  //Update the interface
+  ImGui::SFML::Update(*m_window, deltaTime);
 
+  //Begin the menu 
+  mainMenu(this);
+
+  //Check for camera movement
+  Vector2 axisMovement(FORCE_INIT::kForceInitToZero);
+  Vector2I mousePosition;
+  mousePosition.x = sf::Mouse::getPosition(*m_window).x;
+  mousePosition.y = sf::Mouse::getPosition(*m_window).y;
+
+  if (0 == mousePosition.x ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+#ifdef MAP_IS_ISOMETRIC
+    axisMovement += Vector2(-1.f, 1.f);
+#else
+    axisMovement += Vector2(-1.f, 0.f);
+#endif
+  }
+  if (GameOptions::s_Resolution.x -1 == mousePosition.x ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+#ifdef MAP_IS_ISOMETRIC
+    axisMovement += Vector2(1.f, -1.f);
+#else
+    axisMovement += Vector2(1.f, 0.f);
+#endif
+  }
+  if (0 == mousePosition.y ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+#ifdef MAP_IS_ISOMETRIC
+    axisMovement += Vector2(-1.f, -1.f);
+#else
+    axisMovement += Vector2(0.f, -1.f);
+#endif
+  }
+  if (GameOptions::s_Resolution.y - 1 == mousePosition.y ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+#ifdef MAP_IS_ISOMETRIC
+    axisMovement += Vector2(1.f, 1.f);
+#else
+    axisMovement += Vector2(0.f, 1.f);
+#endif
+  }
+
+  axisMovement *= GameOptions::s_MapMovementSpeed * deltaTime;
+
+  m_gameWorld.getTiledMap()->moveCamera(axisMovement.x, axisMovement.y);
+
+  //Update the world
+  m_gameWorld.update(deltaTime);
 }
 
 void
 RTSApplication::renderFrame() {
-  sf::Sprite sprite;
-  sf::Text text;
-  sf::Texture& texture = *m_testTexture.getTexture();
-  
-  m_window->clear(sf::Color::White);
+  m_window->clear(sf::Color::Blue);
 
-  sprite.setTexture(texture);
-  sprite.setPosition(m_window->getSize().x*0.5f, m_window->getSize().y*0.5f);
-  sprite.setOrigin(texture.getSize().x*0.5f, texture.getSize().y*0.5f);
-  sprite.setRotation(g_time().getTimeMs());
-  m_window->draw(sprite);
-  
+  m_gameWorld.render();
+
+  ImGui::SFML::Render(*m_window);
+
+  sf::Text text;
+  text.setPosition(0.f, 30.f);
   text.setFont(*m_arialFont);
   text.setCharacterSize(24);
   text.setFillColor(sf::Color::Red);
-  text.setString( toString(g_time().getFrameDelta()).c_str() );
+  text.setString( toString(1.0f/g_time().getFrameDelta()).c_str() );
   m_window->draw(text);
 
   m_window->display();
@@ -134,10 +214,81 @@ RTSApplication::renderFrame() {
 
 void
 RTSApplication::postInit() {
-  m_testTexture.loadFromFile("Textures/Terrain/terrain_1.png");
+  m_gameWorld.init(m_window);
+  m_gameWorld.updateResolutionData();
 }
 
 void
 RTSApplication::postDestroy() {
+  m_gameWorld.destroy();
+}
+
+
+
+void
+loadMapFromFile(RTSApplication* pApp) {
+  OPENFILENAMEW ofn = { 0 };
+
+  WString fileName;
+  fileName.resize(MAX_PATH);
+  bool bMustLoad = false;
+
+  Path currentDirectory = FileSystem::getWorkingDirectoryPath();
+
+  ofn.lStructSize = sizeof(ofn);
+  ofn.hwndOwner = nullptr;
+  ofn.lpstrDefExt = L".bmp";
+  ofn.lpstrFilter = L"Bitmap File\0*.BMP\0All\0*.*\0";
+  ofn.lpstrInitialDir = L"Maps\\";
+  ofn.lpstrFile = &fileName[0];
+  ofn.lpstrFile[0] = '\0';
+  ofn.nMaxFile = MAX_PATH;
+  ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+  if (GetOpenFileNameW(&ofn)) {
+    if (fileName.size() > 0) {
+      bMustLoad = true;
+    }
+  }
+
+  SetCurrentDirectoryW(currentDirectory.toWString().c_str());
+
+  if (bMustLoad) {
+    pApp->getWorld()->getTiledMap()->loadFromImageFile(pApp->getRenderWindow(),
+                                                       toString(fileName));
+  }
+}
+
+void
+mainMenu(RTSApplication* pApp) {
+  if (ImGui::BeginMainMenuBar()) {
+    if (ImGui::BeginMenu("Map")) {
+      if (ImGui::MenuItem("Load...", "CTRL+O")) {
+        loadMapFromFile(pApp);
+      }
+      if (ImGui::MenuItem("Save...", "CTRL+S")) {
+
+      }
+      ImGui::EndMenu();
+    }
+    
+    ImGui::EndMainMenuBar();
+  }
+
+  ImGui::Begin("Game Options");
+  {
+
+    ImGui::SliderFloat("Map movement speed X",
+      &GameOptions::s_MapMovementSpeed.x,
+      0.0f,
+      10240.0f);
+    ImGui::SliderFloat("Map movement speed Y",
+      &GameOptions::s_MapMovementSpeed.y,
+      0.0f,
+      10240.0f);
+
+    ImGui::Checkbox("Show grid", &GameOptions::s_MapShowGrid);
+  }
+  ImGui::End();
 
 }
