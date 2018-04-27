@@ -29,6 +29,10 @@ class RTSApplication
     return &m_gameWorld;
   }
 
+  float getFPS() const {
+    return m_framesPerSecond;
+  }
+
  protected:
 
  private:
@@ -60,4 +64,8 @@ class RTSApplication
    sf::RenderWindow* m_window;
    sf::Font* m_arialFont;
    RTSWorld m_gameWorld;
+
+   float m_fpsTimer;
+   float m_fpsCounter;
+   float m_framesPerSecond;
 };

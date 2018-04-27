@@ -12,6 +12,7 @@
 #include <geDynLibManager.h>
 #include <geFileSystem.h>
 #include <geTime.h>
+#include <geUnicode.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -29,7 +30,11 @@ loadMapFromFile(RTSApplication* pApp);
 void
 mainMenu(RTSApplication* pApp);
 
-RTSApplication::RTSApplication() : m_window(nullptr)
+RTSApplication::RTSApplication()
+  : m_window(nullptr),
+    m_fpsTimer(0.0f),
+    m_fpsCounter(0.0f),
+    m_framesPerSecond(0.0f)
 {}
 
 RTSApplication::~RTSApplication() {}
@@ -67,7 +72,8 @@ RTSApplication::initSystems() {
   //Create the application window
   m_window = ge_new<sf::RenderWindow>(sf::VideoMode(GameOptions::s_Resolution.x,
                                                     GameOptions::s_Resolution.y),
-                                      "RTS Game");
+                                      "RTS Game",
+                                      sf::Style::Fullscreen);
   if (nullptr == m_window) {
     GE_EXCEPT(InvalidStateException, "Couldn't create Application Window");
   }
@@ -125,8 +131,10 @@ RTSApplication::gameLoop() {
     }
 
     g_time()._update();
+    ge_frame_mark();
     updateFrame();
     renderFrame();
+    ge_frame_clear();
   }
 
   postDestroy();
@@ -136,6 +144,14 @@ void
 RTSApplication::updateFrame() {
   float deltaTime = g_time().getFrameDelta();
   
+  m_fpsTimer += deltaTime;
+  if (1.0f < m_fpsTimer) {
+    m_framesPerSecond = m_fpsCounter;
+    m_fpsCounter = 0.0f;
+    m_fpsTimer = 0.0f;
+  }
+  m_fpsCounter += 1.0f;
+
   //Update the interface
   ImGui::SFML::Update(*m_window, deltaTime);
 
@@ -201,6 +217,7 @@ RTSApplication::renderFrame() {
 
   ImGui::SFML::Render(*m_window);
 
+  /*
   sf::Text text;
   text.setPosition(0.f, 30.f);
   text.setFont(*m_arialFont);
@@ -208,7 +225,7 @@ RTSApplication::renderFrame() {
   text.setFillColor(sf::Color::Red);
   text.setString( toString(1.0f/g_time().getFrameDelta()).c_str() );
   m_window->draw(text);
-
+  */
   m_window->display();
 }
 
@@ -251,7 +268,7 @@ loadMapFromFile(RTSApplication* pApp) {
     }
   }
 
-  SetCurrentDirectoryW(currentDirectory.toWString().c_str());
+  SetCurrentDirectoryW(UTF8::toWide(currentDirectory.toString()).c_str());
 
   if (bMustLoad) {
     pApp->getWorld()->getTiledMap()->loadFromImageFile(pApp->getRenderWindow(),
@@ -269,6 +286,12 @@ mainMenu(RTSApplication* pApp) {
       if (ImGui::MenuItem("Save...", "CTRL+S")) {
 
       }
+      ImGui::Separator();
+
+      if (ImGui::MenuItem("Quit", "CTRL+Q")) {
+        pApp->getRenderWindow()->close();
+      }
+
       ImGui::EndMenu();
     }
     
@@ -277,6 +300,7 @@ mainMenu(RTSApplication* pApp) {
 
   ImGui::Begin("Game Options");
   {
+    ImGui::Text("Framerate: %f", pApp->getFPS());
 
     ImGui::SliderFloat("Map movement speed X",
       &GameOptions::s_MapMovementSpeed.x,

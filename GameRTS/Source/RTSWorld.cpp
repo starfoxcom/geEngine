@@ -1,6 +1,8 @@
 #include "RTSWorld.h"
 #include "RTSTiledMap.h"
 
+#include "RTSUnitType.h"
+
 RTSWorld::RTSWorld() {
   m_pTiledMap = nullptr;
   m_activeWalkerIndex = -1;	//-1 = Invalid index
@@ -34,6 +36,10 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   //Set the first walker as the active walker
   setCurrentWalker(m_walkersList.size() > 0 ? 0 : -1);
 */
+
+  RTSGame::RTSUnitType unitTypes;
+  unitTypes.loadAnimationData(m_pTarget, 1);
+
   return true;
 }
 

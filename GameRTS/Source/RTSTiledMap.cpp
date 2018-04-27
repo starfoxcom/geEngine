@@ -189,18 +189,17 @@ RTSTiledMap::render() {
       }
 
       tmpTypeTile = m_mapGrid[(iterY*m_mapSize.x) + iterX].getType();
-      clipRect.x = (iterX << GameOptions::BITSHFT_TILESIZE.x) %
-                    m_mapTextures[tmpTypeTile].getWidth();
-      clipRect.y = (iterY << GameOptions::BITSHFT_TILESIZE.y) %
-                    m_mapTextures[tmpTypeTile].getHeight();
+      RTSTexture& refTexture = m_mapTextures[tmpTypeTile];
 
-      m_mapTextures[tmpTypeTile].setPosition(tmpX, tmpY);
-      m_mapTextures[tmpTypeTile].setSrcRect(clipRect.x, clipRect.y, TILESIZE_X, TILESIZE_Y);
-      m_mapTextures[tmpTypeTile].draw();
+      clipRect.x = (iterX << GameOptions::BITSHFT_TILESIZE.x) % refTexture.getWidth();
+      clipRect.y = (iterY << GameOptions::BITSHFT_TILESIZE.y) % refTexture.getHeight();
+
+      refTexture.setPosition(tmpX, tmpY);
+      refTexture.setSrcRect(clipRect.x, clipRect.y, TILESIZE_X, TILESIZE_Y);
+      refTexture.draw();
     }
   }
   
-  ge_frame_mark();
   if (GameOptions::s_MapShowGrid) {
     FrameVector<sf::Vertex> gridLines;
     gridLines.reserve( ((tileFinX - tileIniX) + (tileFinY - tileIniY) + 4) << 1);
@@ -258,7 +257,6 @@ RTSTiledMap::render() {
 
     m_pTarget->draw(&gridLines[0], gridLines.size(), sf::Lines);
   }
-  ge_frame_clear();
 }
 
 RTSTiledMap::MapTile::MapTile() {

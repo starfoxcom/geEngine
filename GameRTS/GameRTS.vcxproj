@@ -102,7 +102,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenGL32.lib;geUtilityd.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -120,7 +120,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenGL32.lib;geUtilityd.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenGL32.lib;geUtility.lib;sfml-graphics.lib;sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,7 +164,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Lib/$(PlatformShortName)/;$(DEVLIBS)SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenGL32.lib;geUtility.lib;sfml-graphics.lib;sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -177,6 +177,7 @@
     <ClCompile Include="Source\RTSConfig.cpp" />
     <ClCompile Include="Source\RTSTexture.cpp" />
     <ClCompile Include="Source\RTSTiledMap.cpp" />
+    <ClCompile Include="Source\RTSUnitType.cpp" />
     <ClCompile Include="Source\RTSWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Include\RTSConfig.h" />
     <ClInclude Include="Include\RTSTexture.h" />
     <ClInclude Include="Include\RTSTiledMap.h" />
+    <ClInclude Include="Include\RTSUnitType.h" />
     <ClInclude Include="Include\RTSWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

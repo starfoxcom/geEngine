@@ -42,6 +42,9 @@ class RTSWorld
 
  private:
   RTSTiledMap* m_pTiledMap;
+  //List<RTSUnitType*> m_lstUnitTypes;
+  //List<RTSUnit*> m_lstUnits;
+  
   //Vector<RTSMapGridWalker*> m_walkersList;
   Vector<void*> m_walkersList;
   //RTSMapGridWalker* m_activeWalker;
