@@ -32,7 +32,7 @@ namespace geEngineSDK {
   using std::ios_base;
   using std::bind;
 
-  FileEncoder::FileEncoder(const Path& fileLocation) : m_writeBuffer(nullptr) {
+  FileEncoder::FileEncoder(const Path& fileLocation) {
     m_writeBuffer = reinterpret_cast<uint8*>(
                       ge_alloc(static_cast<SIZE_T>(WRITE_BUFFER_SIZE)));
 

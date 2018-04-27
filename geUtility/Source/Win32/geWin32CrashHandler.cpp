@@ -22,6 +22,7 @@
 //Disable warning in VS2015 that's not under my control
 #pragma warning(disable : 4091)
 #	include <DbgHelp.h>
+# include "geUnicode.h"
 #pragma warning(default : 4091)
 
 #include "gePrerequisitesUtil.h"
@@ -495,7 +496,8 @@ namespace geEngineSDK {
   CALLBACK win32_writeMiniDumpWorker(void* data) {
     MiniDumpParams* params = static_cast<MiniDumpParams*>(data);
 
-    HANDLE hFile = CreateFileW(params->filePath.toWString().c_str(),
+    WString pathString = UTF8::toWide(params->filePath.toString());
+    HANDLE hFile = CreateFileW(pathString.c_str(),
                                GENERIC_WRITE,
                                0,
                                nullptr,
@@ -543,7 +545,7 @@ namespace geEngineSDK {
   win32_popupErrorMessageBox(const WString& msg, const Path& folder) {
     WString simpleErrorMessage = msg +
             L"\n\nFor more information check the crash report located at:\n " +
-            folder.toWString();
+            UTF8::toWide(folder.toString());
     MessageBoxW(nullptr, simpleErrorMessage.c_str(), L"geEngineSDK fatal error!", MB_OK);
 
   }

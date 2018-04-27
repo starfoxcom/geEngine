@@ -34,6 +34,7 @@ namespace geEngineSDK {
     UINT32 height = 0;
     bool isExternal = false;
     bool isModal = false;
+    bool isHidden = false;
     DWORD style = 0;
     DWORD styleEx = 0;
   };
@@ -41,6 +42,7 @@ namespace geEngineSDK {
   Win32Window::Win32Window(const WINDOW_DESC& desc) {
     m_windowData = ge_new<Pimpl>();
     m_windowData->isModal = desc.modal;
+    m_windowData->isHidden = desc.hidden;
 
     HMONITOR hMonitor = desc.monitor;
     if (!desc.external) {
@@ -310,6 +312,10 @@ namespace geEngineSDK {
       }
     }
 
+    if (desc.hidden) {
+      setHidden(true);
+    }
+
     ge_frame_clear();
   }
 
@@ -427,14 +433,21 @@ namespace geEngineSDK {
     if (hidden) {
       ShowWindow(m_windowData->hWnd, SW_HIDE);
     }
-    else
+    else {
       ShowWindow(m_windowData->hWnd, SW_SHOW);
+    }
+    
+    m_windowData->isHidden = hidden;
   }
 
   void
   Win32Window::minimize() {
     if (m_windowData->hWnd) {
       ShowWindow(m_windowData->hWnd, SW_MINIMIZE);
+    }
+
+    if (m_windowData->isHidden) {
+      ShowWindow(m_windowData->hWnd, SW_HIDE);
     }
   }
 
@@ -443,12 +456,20 @@ namespace geEngineSDK {
     if (m_windowData->hWnd) {
       ShowWindow(m_windowData->hWnd, SW_MAXIMIZE);
     }
+
+    if (m_windowData->isHidden) {
+      ShowWindow(m_windowData->hWnd, SW_HIDE);
+    }
   }
 
   void
   Win32Window::restore() {
     if (m_windowData->hWnd) {
       ShowWindow(m_windowData->hWnd, SW_RESTORE);
+    }
+
+    if (m_windowData->isHidden) {
+      ShowWindow(m_windowData->hWnd, SW_HIDE);
     }
   }
 

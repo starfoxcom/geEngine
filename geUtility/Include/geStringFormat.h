@@ -28,13 +28,13 @@ namespace geEngineSDK {
      */
     struct FormatParamRange
     {
-      FormatParamRange() {}
+      FormatParamRange() = default;
       FormatParamRange(SIZE_T start, uint32 identifierSize, uint32 paramIdx) :
         m_start(start), m_identifierSize(identifierSize), m_paramIdx(paramIdx) {}
 
-      SIZE_T m_start;
-      uint32 m_identifierSize;
-      uint32 m_paramIdx;
+      SIZE_T m_start = 0;
+      uint32 m_identifierSize = 0;
+      uint32 m_paramIdx = 0;
     };
 
     /**
@@ -43,8 +43,8 @@ namespace geEngineSDK {
     template<class T>
     struct ParamData
     {
-      T* m_buffer;
-      SIZE_T m_size;
+      T* m_buffer = nullptr;
+      SIZE_T m_size = 0;
     };
 
    public:
@@ -389,8 +389,8 @@ namespace geEngineSDK {
     }
 
    private:
-    static const uint32 MAX_PARAMS = 20;
-    static const uint32 MAX_IDENTIFIER_SIZE = 2;
-    static const uint32 MAX_PARAM_REFERENCES = 200;
+    static constexpr const uint32 MAX_PARAMS = 20;
+    static constexpr const uint32 MAX_IDENTIFIER_SIZE = 2;
+    static constexpr const uint32 MAX_PARAM_REFERENCES = 200;
   };
 }

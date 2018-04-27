@@ -32,8 +32,8 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT MessageId
   {
    public:
-    MessageId();
-    explicit MessageId(const String& name);
+    MessageId() = default;
+    MessageId(const String& name);
 
     bool
     operator==(const MessageId& rhs) const {
@@ -46,7 +46,7 @@ namespace geEngineSDK {
     static Map<String, uint32> m_uniqueMessageIds;
     static uint32 m_nextMessageId;
 
-    uint32 m_msgIdentifier;
+    uint32 m_msgIdentifier = 0;
   };
 
   /**
@@ -55,7 +55,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT HMessage
   {
    public:
-    HMessage();
+    HMessage() = default;
 
     /**
      * @brief	Disconnects the message listener so it will no longer receive
@@ -69,7 +69,7 @@ namespace geEngineSDK {
     
     explicit HMessage(uint32 id);
 
-    uint32 m_id;
+    uint32 m_id = 0;
   };
 
   /**

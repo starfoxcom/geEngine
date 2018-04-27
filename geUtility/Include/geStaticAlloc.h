@@ -46,9 +46,8 @@ namespace geEngineSDK {
      public:
       MemBlock(uint8* data, SIZE_T size)
         : m_data(data),
-        m_freePtr(nullptr),
-        m_size(size),
-        m_nextBlock(nullptr) {}
+          m_size(size)
+      {}
 
       /**
        * @brief Allocates a piece of memory within the block.
@@ -83,15 +82,15 @@ namespace geEngineSDK {
         m_freePtr = 0;
       }
 
-      uint8* m_data;
-      SIZE_T m_freePtr;
-      SIZE_T m_size;
-      MemBlock* m_nextBlock;
+      uint8* m_data = nullptr;
+      SIZE_T m_freePtr = 0;
+      SIZE_T m_size = 0;
+      MemBlock* m_nextBlock = nullptr;
     };
 
    public:
-    StaticAlloc() : m_freePtr(0), m_totalAllocBytes(0) {}
-    ~StaticAlloc() {}
+    StaticAlloc() = default;
+    ~StaticAlloc() = default;
 
     /**
      * @brief  Allocates a new piece of memory of the specified size.
@@ -249,9 +248,9 @@ namespace geEngineSDK {
 
    private:
     uint8 m_staticData[BlockSize];
-    SIZE_T m_freePtr;
+    SIZE_T m_freePtr = 0;
     DynamicAllocator m_dynamicAlloc;
-    SIZE_T m_totalAllocBytes;
+    SIZE_T m_totalAllocBytes = 0;
   };
 
   /**

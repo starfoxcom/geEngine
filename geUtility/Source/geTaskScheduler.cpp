@@ -33,8 +33,8 @@ namespace geEngineSDK {
     : m_name(name),
       m_priority(priority),
       m_taskId(0),
-      m_taskWorker(taskWorker),
-      m_taskDependency(dependency),
+      m_taskWorker(std::move(taskWorker)),
+      m_taskDependency(std::move(dependency)),
       m_state(0),
       m_parent(nullptr) {}
 
@@ -45,19 +45,19 @@ namespace geEngineSDK {
                SPtr<Task> dependency) {
     return ge_shared_ptr_new<Task>(PrivatelyConstruct(),
                                    name,
-                                   taskWorker,
+                                   std::move(taskWorker),
                                    priority,
-                                   dependency);
+                                   std::move(dependency));
   }
 
   bool
   Task::isComplete() const {
-    return m_state.load() == 2;
+    return m_state == 2;
   }
 
   bool
   Task::isCanceled() const {
-    return m_state.load() == 3;
+    return m_state == 3;
   }
 
   void
@@ -69,14 +69,15 @@ namespace geEngineSDK {
 
   void
   Task::cancel() {
-    m_state.store(3);
+    m_state = 3;
   }
 
   TaskScheduler::TaskScheduler()
     : m_taskQueue(&TaskScheduler::taskCompare),
       m_maxActiveTasks(0),
       m_nextTaskId(0),
-      m_shutdown(false) {
+      m_shutdown(false),
+      m_checkTasks(false) {
     m_maxActiveTasks = GE_THREAD_HARDWARE_CONCURRENCY;
     m_taskSchedulerThread = ThreadPool::instance().run("TaskScheduler",
                                                        bind(&TaskScheduler::runMain, this));
@@ -107,7 +108,7 @@ namespace geEngineSDK {
   }
 
   void
-  TaskScheduler::addTask(const SPtr<Task>& task) {
+  TaskScheduler::addTask(SPtr<Task> task) {
     Lock lock(m_readyMutex);
 
     GE_ASSERT(task->m_state != 1 &&
@@ -116,7 +117,9 @@ namespace geEngineSDK {
     task->m_parent = this;
     task->m_taskId = m_nextTaskId++;
     task->m_state.store(0); //Reset state in case the task is getting re-queued
-    m_taskQueue.insert(task);
+
+    m_checkTasks = true;
+    m_taskQueue.insert(std::move(task));
 
     //Wake main scheduler thread
     m_taskReadyCond.notify_one();
@@ -145,29 +148,36 @@ namespace geEngineSDK {
     while (true) {
       Lock lock(m_readyMutex);
 
-      while ((m_taskQueue.size() == 0 || (uint32)m_activeTasks.size() >= m_maxActiveTasks)
+      while ((!m_checkTasks || (uint32)m_activeTasks.size() >= m_maxActiveTasks)
              && !m_shutdown) {
         m_taskReadyCond.wait(lock);
       }
+
+      m_checkTasks = false;
 
       if (m_shutdown) {
         break;
       }
 
-      for (uint32 i = 0;
-          (i < m_taskQueue.size()) && ((uint32)m_activeTasks.size() < m_maxActiveTasks);
-          i++) {
-        SPtr<Task> curTask = *m_taskQueue.begin();
-        m_taskQueue.erase(m_taskQueue.begin());
+      for (auto iter = m_taskQueue.begin(); iter != m_taskQueue.end();) {
+        if ((uint32)m_activeTasks.size() >= m_maxActiveTasks) {
+          break;
+        }
+
+        SPtr<Task> curTask = *iter;
 
         if (curTask->isCanceled()) {
+          iter = m_taskQueue.erase(iter);
           continue;
         }
 
         if (nullptr != curTask->m_taskDependency &&
             !curTask->m_taskDependency->isComplete()) {
+          ++iter;
           continue;
         }
+
+        iter = m_taskQueue.erase(iter);
 
         curTask->m_state.store(1);
         m_activeTasks.push_back(curTask);
@@ -198,8 +208,14 @@ namespace geEngineSDK {
       m_taskCompleteCond.notify_all();
     }
 
-    //Possibly this task was someones dependency, so wake the main scheduler thread
-    m_taskReadyCond.notify_one();
+    //Wake the main scheduler thread in case there are other tasks waiting or
+    //this task was someone's dependency
+    {
+      Lock lock(m_readyMutex);
+
+      m_checkTasks = true;
+      m_taskReadyCond.notify_one();
+    }
   }
 
   void

@@ -515,22 +515,22 @@ namespace geEngineSDK {
     /**
      * @brief Global 2D zero vector constant (0,0)
      */
-    static const Vector2 ZERO;
+    static GE_UTILITY_EXPORT const Vector2 ZERO;
 
     /**
      * @brief Global 2D unit vector constant (1,1)
      */
-    static const Vector2 UNIT;
+    static GE_UTILITY_EXPORT const Vector2 UNIT;
 
     /**
      * @brief Global 2D unit vector X constant (1,0)
      */
-    static const Vector2 UNIT_X;
+    static GE_UTILITY_EXPORT const Vector2 UNIT_X;
 
     /**
      * @brief Global 2D unit vector Y constant (0,1)
      */
-    static const Vector2 UNIT_Y;
+    static GE_UTILITY_EXPORT const Vector2 UNIT_Y;
   };
 
   /***************************************************************************/

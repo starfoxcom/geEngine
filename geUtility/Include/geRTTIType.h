@@ -575,7 +575,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT RTTITypeBase
   {
    public:
-    RTTITypeBase();
+    RTTITypeBase() = default;
     virtual ~RTTITypeBase();
 
     /**
@@ -1197,9 +1197,8 @@ namespace geEngineSDK {
           return true;
         }
 
-        const Vector<RTTITypeBase*>& derivedClasses = currentType->getDerivedClasses();
-        for (auto iter = derivedClasses.begin(); iter != derivedClasses.end(); ++iter) {
-          todo.push(*iter);
+        for (const auto& item : currentType->getDerivedClasses()) {
+          todo.push(item);
         }
       }
 
@@ -1713,7 +1712,13 @@ namespace geEngineSDK {
       RTTIReflectableField<DataType, ObjectType>*
       newField = ge_new<RTTIReflectableField<DataType, ObjectType>>();
 
-      newField->initArray(name, uniqueId, getter, getSize, setter, setSize, flags);
+      newField->initArray(name,
+                          static_cast<uint16>(uniqueId),
+                          getter,
+                          getSize,
+                          setter,
+                          setSize,
+                          flags);
       addNewField(newField);
     }
 
@@ -1747,7 +1752,11 @@ namespace geEngineSDK {
       RTTIManagedDataBlockField<uint8*, ObjectType>*
       newField = ge_new<RTTIManagedDataBlockField<uint8*, ObjectType>>();
 
-      newField->initSingle(name, uniqueId, getter, setter, flags);
+      newField->initSingle(name,
+                           static_cast<uint16>(uniqueId),
+                           getter,
+                           setter,
+                           flags);
       addNewField(newField);
     }
 

@@ -25,8 +25,6 @@ namespace geEngineSDK {
   Map<String, uint32> MessageId::m_uniqueMessageIds;
   uint32 MessageId::m_nextMessageId = 0;
 
-  MessageId::MessageId() : m_msgIdentifier(0) {}
-
   MessageId::MessageId(const String& name) {
     auto findIter = m_uniqueMessageIds.find(name);
 
@@ -39,8 +37,6 @@ namespace geEngineSDK {
     }
   }
 
-  HMessage::HMessage() : m_id(0) {}
-
   HMessage::HMessage(uint32 id) : m_id(id) {}
 
   void
@@ -49,9 +45,6 @@ namespace geEngineSDK {
       MessageHandler::instance().unsubscribe(m_id);
     }
   }
-
-  //0 is reserved for not initialized
-  MessageHandler::MessageHandler() : m_nextCallbackId(1) {}
 
   void
   MessageHandler::send(MessageId message) {
@@ -90,7 +83,8 @@ namespace geEngineSDK {
                         [&](MessageHandlerData& x)
                         {
                           return x.id == handleId;
-                        }));
+                        }),
+                        handlerData.end());
     }
 
     m_handlerIdToMessageMap.erase(handleId);

@@ -39,44 +39,44 @@ namespace geEngineSDK {
   /**
    * @brief Wide string used primarily for handling Unicode text.
    */
-  typedef BasicString<UNICHAR> WString;
+  using WString = BasicString<UNICHAR>;
 
   /**
    * @brief Narrow string used primarily for handling ASCII text.
    */
-  typedef BasicString<ANSICHAR> String;
+  using String = BasicString<ANSICHAR>;
 
   /**
    * @brief Wide string used UTF-16 encoded strings.
    */
-  typedef BasicString<char16_t> U16String;
+  using U16String = BasicString<char16_t>;
 
   /**
    * @brief Wide string used UTF-32 encoded strings.
    */
-  typedef BasicString<char32_t> U32String;
+  using U32String = BasicString<char32_t>;
 
   /**
    * @brief Wide string stream used for primarily for constructing strings
    *        consisting of Unicode text.
    */
-  typedef BasicStringStream<UNICHAR> WStringStream;
+  using WStringStream = BasicStringStream<UNICHAR>;
 
   /**
    * @brief Wide string stream used for primarily for constructing strings
    *        consisting of ASCII text.
    */
-  typedef BasicStringStream<ANSICHAR> StringStream;
+  using StringStream = BasicStringStream<ANSICHAR>;
 
   /**
    * @brief Wide string stream used primarily for constructing UTF-16 strings.
    */
-  typedef BasicStringStream<char16_t> U16StringStream;
+  using U16StringStream = BasicStringStream<char16_t>;
 
   /**
    * @brief Wide string stream used primarily for constructing UTF-32 strings.
    */
-  typedef BasicStringStream<char32_t> U32StringStream;
+  using U32StringStream = BasicStringStream<char32_t>;
 
   /**
    * @brief Equivalent to String, except it avoids any dynamic allocations
@@ -978,7 +978,8 @@ namespace geEngineSDK {
    *        serialized as value types.
    * @see   RTTIPlainType
    */
-  template<> struct RTTIPlainType<String>
+  template<>
+  struct RTTIPlainType<String>
   {
     enum { kID = TYPEID_UTILITY::kID_String }; enum { kHasDynamicSize = 1 };
 
@@ -1028,7 +1029,8 @@ namespace geEngineSDK {
   *        serialized as value types.
   * @see   RTTIPlainType
   */
-  template<> struct RTTIPlainType<WString>
+  template<>
+  struct RTTIPlainType<WString>
   {
     enum { kID = TYPEID_UTILITY::kID_WString }; enum { kHasDynamicSize = 1 };
 

@@ -21,16 +21,29 @@
 #include "geDynLib.h"
 
 namespace geEngineSDK {
-  DynLibManager::DynLibManager() {}
+  static bool
+  operator<(const NPtr<DynLib>& lhs, const NPtr<DynLib>& rhs) {
+    return lhs->getName() < rhs->getName();
+  }
+
+  static bool
+  operator<(const NPtr<DynLib>& lhs, const String& rhs) {
+    return lhs->getName() < rhs;
+  }
+
+  static bool
+  operator<(const String& lhs, const NPtr<DynLib>& rhs) {
+    return lhs < rhs->getName();
+  }
 
   DynLibManager::~DynLibManager() {
     //Unload & delete resources in turn
     for (auto& entry : m_loadedLibraries) {
-      entry.second->unload();
-      ge_delete(entry.second);
+      entry->unload();
+      ge_delete(entry.get());
     }
 
-    // Empty the list
+    //Empty the list
     m_loadedLibraries.clear();
   }
 
@@ -43,22 +56,26 @@ namespace geEngineSDK {
     const SIZE_T extLength = extension.length();
 
     if (length <= extLength || filename.substr(length - extLength) != extension) {
-      filename += extension;
+      filename.append(extension);
     }
 
-    auto iterFind = m_loadedLibraries.find(filename);
-    if (iterFind != m_loadedLibraries.end()) {
-      return iterFind->second;
+    if constexpr(nullptr != DynLib::PREFIX) {
+      filename.insert(0, DynLib::PREFIX);
     }
 
-    DynLib* newLib = ge_new<DynLib>(filename);
-    m_loadedLibraries[filename] = newLib;
+    const auto& iterFind = m_loadedLibraries.lower_bound(filename);
+    if (iterFind != m_loadedLibraries.end() && (*iterFind)->getName() == filename) {
+      return iterFind->get();
+    }
+
+    DynLib* newLib = new (ge_alloc<DynLib>()) DynLib(std::move(filename));
+    m_loadedLibraries.emplace_hint(iterFind, newLib);
     return newLib;
   }
 
   void
   DynLibManager::unload(DynLib* lib) {
-    auto iterFind = m_loadedLibraries.find(lib->getName());
+    const auto& iterFind = m_loadedLibraries.find(lib->getName());
     if (iterFind != m_loadedLibraries.end()) {
       m_loadedLibraries.erase(iterFind);
     }

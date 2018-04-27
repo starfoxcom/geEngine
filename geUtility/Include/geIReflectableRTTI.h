@@ -25,8 +25,6 @@ namespace geEngineSDK {
     : public RTTIType<IReflectable, IReflectable, IReflectableRTTI>
   {
    public:
-    IReflectableRTTI() {}
-
     const String&
     getRTTIName() override {
       static String name = "IReflectable";

@@ -24,13 +24,7 @@ namespace geEngineSDK {
 
   const double Time::MICROSEC_TO_SEC = 1.0 / 1000000.0;
 
-  Time::Time()
-    : m_frameDelta(0.0f),
-      m_timeSinceStart(0.0f),
-      m_timeSinceStartMs(0),
-      m_appStartTime(0),
-      m_lastFrameTime(0),
-      m_currentFrame(0UL) {
+  Time::Time() {
     m_timer = ge_new<Timer>();
     m_appStartTime = m_timer->getStartMs();
     m_lastFrameTime = m_timer->getMicroseconds();

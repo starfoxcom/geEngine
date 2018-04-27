@@ -103,7 +103,7 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT RTTIField
   {
-    virtual ~RTTIField() {}
+    virtual ~RTTIField() = default;
 
     /**
      * @brief Checks is the field plain type and castable to

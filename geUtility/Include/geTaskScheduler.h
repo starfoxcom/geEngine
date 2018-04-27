@@ -140,7 +140,7 @@ namespace geEngineSDK {
      * @brief Queues a new task.
      */
     void
-    addTask(const SPtr<Task>& task);
+    addTask(SPtr<Task> task);
 
     /**
      * @brief Adds a new worker thread which will be used for executing queued tasks.
@@ -196,6 +196,7 @@ namespace geEngineSDK {
     uint32 m_maxActiveTasks;
     uint32 m_nextTaskId;
     bool m_shutdown;
+    bool m_checkTasks;
 
     Mutex m_readyMutex;
     Mutex m_completeMutex;

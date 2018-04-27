@@ -28,25 +28,7 @@
 #endif
 
 namespace geEngineSDK {
-
-#if GE_PLATFORM == GE_PLATFORM_LINUX
-  const char* DynLib::EXTENSION = "so";
-  const char* DynLib::PREFIX = "lib";
-#elif GE_PLATFORM == GE_PLATFORM_OSX
-  const char* DynLib::EXTENSION = "dylib";
-  const char* DynLib::PREFIX = "lib";
-#elif GE_PLATFORM == GE_PLATFORM_WIN32
-  const char* DynLib::EXTENSION = "dll";
-  const char* DynLib::PREFIX = nullptr;
-#elif GE_PLATFORM == GE_PLATFORM_PS4
-  const char* DynLib::EXTENSION = "prx";
-  const char* DynLib::PREFIX = "a";
-#else
-#  error Unhandled platform
-#endif
-
-  DynLib::DynLib(const String& name) {
-    m_name = name;
+  DynLib::DynLib(String name) : m_name(std::move(name)) {
 #if GE_PLATFORM == GE_PLATFORM_PS4
     m_hInst = 0;
 #else
@@ -54,8 +36,6 @@ namespace geEngineSDK {
 #endif
     load();
   }
-
-  DynLib::~DynLib() {}
 
   void
   DynLib::load() {

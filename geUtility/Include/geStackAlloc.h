@@ -43,13 +43,8 @@ namespace geEngineSDK {
     class MemBlock
     {
      public:
-      explicit MemBlock(SIZE_T size)
-        : m_data(nullptr),
-          m_freePtr(0),
-          m_size(size),
-          m_nextBlock(nullptr),
-          m_prevBlock(nullptr) {}
-      ~MemBlock() {}
+      MemBlock(SIZE_T size) : m_size(size) {}
+      ~MemBlock() = default;
 
       /**
        * @brief Returns the first free address and increments the free pointer.
@@ -79,18 +74,18 @@ namespace geEngineSDK {
 #endif
       }
      public:
-      uint8* m_data;
-      SIZE_T m_freePtr;
-      SIZE_T m_size;
-      MemBlock* m_nextBlock;
-      MemBlock* m_prevBlock;
+      uint8* m_data = nullptr;
+      SIZE_T m_freePtr = 0;
+      SIZE_T m_size = 0;
+      MemBlock* m_nextBlock = nullptr;
+      MemBlock* m_prevBlock = nullptr;
     };
 
    private:
-    MemBlock* m_freeBlock;
+    MemBlock* m_freeBlock = nullptr;
 
    public:
-    MemStackInternal() : m_freeBlock(nullptr) {
+    MemStackInternal() {
       m_freeBlock = allocBlock(BlockCapacity);
     }
 
@@ -276,8 +271,10 @@ namespace geEngineSDK {
   /**
    * @copydoc MemoryStackInternal::alloc
    */
-  GE_UTILITY_EXPORT void*
-  ge_stack_alloc(SIZE_T numBytes);
+  inline void*
+  ge_stack_alloc(SIZE_T numBytes) {
+    return reinterpret_cast<void*>(MemStack::alloc(numBytes));
+  }
 
   /**
    * @brief Allocates enough memory to hold the specified type, on the stack,
@@ -361,8 +358,10 @@ namespace geEngineSDK {
   /**
    * @copydoc MemoryStackInternal::dealloc()
    */
-  GE_UTILITY_EXPORT void
-  ge_stack_free(void* data);
+  inline void
+  ge_stack_free(void* data) {
+    return MemStack::deallocLast(reinterpret_cast<uint8*>(data));
+  }
 
   /**
    * @brief Allows use of a stack allocator by using normal new/delete/free/dealloc operators.

@@ -40,7 +40,7 @@ namespace geEngineSDK {
     };
 
    public:
-    MessageHandler();
+    MessageHandler() = default;
 
     /**
      * @brief Sends a message to all subscribed listeners.
@@ -63,6 +63,6 @@ namespace geEngineSDK {
 
     Map<uint32, Vector<MessageHandlerData>> m_messageHandlers;
     Map<uint32, uint32> m_handlerIdToMessageMap;
-    uint32 m_nextCallbackId;
+    uint32 m_nextCallbackId = 1;
   };
 }

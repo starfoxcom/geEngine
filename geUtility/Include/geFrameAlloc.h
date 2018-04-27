@@ -42,8 +42,8 @@ namespace geEngineSDK {
     class MemBlock
     {
      public:
-      explicit MemBlock(SIZE_T size);
-      ~MemBlock();
+      MemBlock(SIZE_T size) : m_size(size) {}
+      ~MemBlock() = default;
 
       /**
        * @brief Allocates a piece of memory within the block. Caller must
@@ -59,8 +59,8 @@ namespace geEngineSDK {
       clear();
 
      public:
-      uint8* m_data;
-      SIZE_T m_freePtr;
+      uint8* m_data = nullptr;
+      SIZE_T m_freePtr = 0;
       SIZE_T m_size;
     };
 
@@ -200,7 +200,7 @@ namespace geEngineSDK {
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
     
-    StdFrameAlloc() _NOEXCEPT : m_FrameAlloc(nullptr) {}
+    StdFrameAlloc() _NOEXCEPT = default;
     StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
 
     template<class U>
@@ -256,7 +256,7 @@ namespace geEngineSDK {
     }
 
    public:
-    FrameAlloc* m_FrameAlloc;
+    FrameAlloc* m_FrameAlloc = nullptr;
 
     size_t
     max_size() const {

@@ -101,7 +101,7 @@ namespace geEngineSDK {
      * @copydoc RTTIField::getArraySize
      */
     uint32
-    getArraySize(void* object) override {
+    getArraySize(void* /*object*/) override {
       GE_EXCEPT(InternalErrorException, "Data block types don't support arrays.");
       return 0;
     }
@@ -110,7 +110,7 @@ namespace geEngineSDK {
      * @copydoc RTTIField::setArraySize
      */
     void
-    setArraySize(void* object, uint32 size) override {
+    setArraySize(void* /*object*/, uint32 /*size*/) override {
       GE_EXCEPT(InternalErrorException, "Data block types don't support arrays.");
     }
 

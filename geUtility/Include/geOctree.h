@@ -33,10 +33,7 @@ namespace geEngineSDK {
   class OctreeElementId
   {
    public:
-    OctreeElementId()
-      : m_node(nullptr),
-        m_elementIdx(0)
-    {}
+    OctreeElementId() = default;
 
     OctreeElementId(void* node, uint32 elementIdx)
       : m_node(node),
@@ -47,8 +44,8 @@ namespace geEngineSDK {
     template<class, class>
     friend class Octree;
 
-    void* m_node;
-    uint32 m_elementIdx;
+    void* m_node = nullptr;
+    uint32 m_elementIdx = 0u;
   };
 
   /**
@@ -90,12 +87,8 @@ namespace geEngineSDK {
      */
     struct ElementGroup
     {
-      ElementGroup()
-        : next(nullptr)
-      {}
-
       ElemType v[Options::maxElementsPerNode];
-      ElementGroup* next;
+      ElementGroup* next = nullptr;
     };
 
     /**
@@ -105,12 +98,8 @@ namespace geEngineSDK {
      */
     struct ElementBoundGroup
     {
-      ElementBoundGroup()
-        : next(nullptr)
-      {}
-
       simd::AABox v[Options::maxElementsPerNode];
-      ElementBoundGroup* next;
+      ElementBoundGroup* next = nullptr;
     };
 
     /**
@@ -118,15 +107,9 @@ namespace geEngineSDK {
      */
     struct NodeElements
     {
-      NodeElements()
-        : values(nullptr),
-          bounds(nullptr),
-          count(0)
-      {}
-
-      ElementGroup* values;
-      ElementBoundGroup* bounds;
-      uint32 count;
+      ElementGroup* values = nullptr;
+      ElementBoundGroup* bounds = nullptr;
+      uint32 count = 0;
     };
    public:
     /**
@@ -228,11 +211,8 @@ namespace geEngineSDK {
       Node(Node* parent)
         : m_parent(parent),
           m_totalNumElements(0),
-        m_isLeaf(true) {
-        for (auto& entry : m_children) {
-          entry = nullptr;
-        }
-      }
+          m_isLeaf(true)
+      {}
 
       /**
        * @brief Returns a child node with the specified index. May return null.
@@ -278,7 +258,8 @@ namespace geEngineSDK {
       NodeElements m_elements;
 
       Node* m_parent;
-      Node* m_children[8];
+      Node* m_children[8] = { nullptr, nullptr, nullptr, nullptr,
+                              nullptr, nullptr, nullptr, nullptr };
 
       uint32 m_totalNumElements : 31;
       uint32 m_isLeaf : 1;
@@ -430,9 +411,7 @@ namespace geEngineSDK {
     class HNode
     {
      public:
-      HNode()
-        : m_node(nullptr)
-      {}
+      HNode() = default;
 
       HNode(const Node* node, const NodeBounds& bounds)
         : m_node(node),
@@ -456,7 +435,7 @@ namespace geEngineSDK {
       }
 
      private:
-      const Node* m_node;
+      const Node* m_node = nullptr;
       NodeBounds m_bounds;
     };
 
@@ -543,11 +522,7 @@ namespace geEngineSDK {
     class ElementIterator
     {
      public:
-      ElementIterator()
-        : m_currentIdx(-1),
-          m_currentElemGroup(nullptr),
-          m_currentBoundGroup(nullptr)
-      {}
+      ElementIterator() = default;
 
       /**
        * @brief Constructs an iterator that iterates over the specified node's
@@ -616,10 +591,10 @@ namespace geEngineSDK {
       }
 
     private:
-      int32 m_currentIdx;
-      ElementGroup* m_currentElemGroup;
-      ElementBoundGroup* m_currentBoundGroup;
-      uint32 m_elemsInGroup;
+      int32 m_currentIdx = -1;
+      ElementGroup* m_currentElemGroup = nullptr;
+      ElementBoundGroup* m_currentBoundGroup = nullptr;
+      uint32 m_elemsInGroup = 0;
     };
 
     /**
@@ -702,8 +677,7 @@ namespace geEngineSDK {
      *            Options class.
      */
     Octree(const Vector3& center, float extent, void* context = nullptr)
-      : m_root(nullptr),
-        m_rootBounds(simd::AABox(center, extent)),
+      : m_rootBounds(simd::AABox(center, extent)),
         m_minNodeExtent(extent * std::pow(0.5f * (1.0f + 1.0f / Options::loosePadding),
                                           Options::maxDepth)),
         m_context(context)
@@ -962,7 +936,7 @@ namespace geEngineSDK {
       elements.count = 0;
     }
 
-    Node m_root;
+    Node m_root{nullptr};
     NodeBounds m_rootBounds;
     float m_minNodeExtent;
     void* m_context;

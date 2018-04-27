@@ -21,6 +21,7 @@
 #include "Win32/geWin32PlatformUtility.h"
 #include "geColor.h"
 #include "geUUID.h"
+#include "geUnicode.h"
 
 #include <shellapi.h>
 #include <iphlpapi.h>
@@ -257,6 +258,42 @@ namespace geEngineSDK {
                   (uuid.Data4[5] << 24);
 
     return UUID(data1, data2, data3, data4);
+  }
+
+  String
+  PlatformUtility::convertCaseUTF8(const String& input, bool toUpper) {
+    if (input.empty()) {
+      return "";
+    }
+
+    WString wideString = UTF8::toWide(input);
+
+    DWORD flags = LCMAP_LINGUISTIC_CASING;
+    flags |= toUpper ? LCMAP_UPPERCASE : LCMAP_LOWERCASE;
+
+    uint32 reqNumChars = LCMapStringEx(LOCALE_NAME_USER_DEFAULT,
+                                       flags,
+                                       wideString.data(),
+                                       static_cast<int>(wideString.length()),
+                                       nullptr,
+                                       0,
+                                       nullptr,
+                                       nullptr,
+                                       0);
+
+    WString outputWideString(reqNumChars, ' ');
+
+    LCMapStringEx(LOCALE_NAME_USER_DEFAULT,
+                  flags,
+                  wideString.data(),
+                  static_cast<int>(wideString.length()),
+                  &outputWideString[0],
+                  static_cast<int>(outputWideString.length()),
+                  nullptr,
+                  nullptr,
+                  0);
+
+    return UTF8::fromWide(outputWideString);
   }
 
   void

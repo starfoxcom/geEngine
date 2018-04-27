@@ -100,12 +100,12 @@ namespace geEngineSDK {
      */
     static const double MICROSEC_TO_SEC;
    private:
-    float m_frameDelta;         /**< Frame delta in seconds */
-    float m_timeSinceStart;     /**< Time since start in seconds */
-    uint64 m_timeSinceStartMs;
-    uint64 m_appStartTime;      /**< Time the application started, in microseconds */
-    uint64 m_lastFrameTime;     /**< Time since last runOneFrame call, In microseconds */
-    atomic<uint32> m_currentFrame;
+    float m_frameDelta = 0.0f;      /**< Frame delta in seconds */
+    float m_timeSinceStart = 0.0f;  /**< Time since start in seconds */
+    uint64 m_timeSinceStartMs = 0u;
+    uint64 m_appStartTime = 0u;     /**< Time the application started, in microseconds */
+    uint64 m_lastFrameTime = 0u;    /**< Time since last runOneFrame call, In microseconds */
+    atomic<uint32> m_currentFrame{0UL};
     Timer* m_timer;
   };
 

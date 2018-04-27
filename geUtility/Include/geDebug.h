@@ -43,7 +43,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Debug
   {
    public:
-     Debug() : m_logHash(0) {}
+     Debug() = default;
 
     /**
      * @brief Adds a log entry in the "Debug" channel.
@@ -118,7 +118,7 @@ namespace geEngineSDK {
     _triggerCallbacks();
 
    private:
-    uint64 m_logHash;
+    uint64 m_logHash = 0;
     Log m_log;
   };
 

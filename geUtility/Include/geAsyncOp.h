@@ -55,9 +55,9 @@ namespace geEngineSDK {
    private:
     struct AsyncOpData
     {
-      AsyncOpData() : m_isCompleted(false) {}
+      AsyncOpData() = default;
       Any m_returnValue;
-      volatile atomic<bool> m_isCompleted;
+      volatile atomic<bool> m_isCompleted{false};
     };
 
    public:

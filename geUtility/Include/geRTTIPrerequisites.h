@@ -237,9 +237,9 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
       size += sizeof(uint32);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint32 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
-        RTTIPlainType<T>::toMemory(*iter, memory);
+      for (const auto& item : data) {
+        uint32 elementSize = rttiGetElementSize(item);
+        RTTIPlainType<T>::toMemory(item, memory);
 
         memory += elementSize;
         size += elementSize;
@@ -279,8 +279,8 @@ namespace geEngineSDK {
     getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
       uint64 dataSize = sizeof(uint32) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += static_cast<uint64>(RTTIPlainType<T>::getDynamicSize(*iter));
+      for (const auto& item : data) {
+        dataSize += rttiGetElementSize(item);
       }
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
@@ -312,9 +312,9 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
       size += sizeof(uint32);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint32 elementSize = RTTIPlainType<T>::getDynamicSize(*iter);
-        RTTIPlainType<T>::toMemory(*iter, memory);
+      for (const auto& item : data) {
+        uint32 elementSize = rttiGetElementSize(item);
+        RTTIPlainType<T>::toMemory(item, memory);
 
         memory += elementSize;
         size += elementSize;
@@ -354,8 +354,8 @@ namespace geEngineSDK {
     getDynamicSize(const std::vector<T, StdAlloc<T>>& data) {
       uint64 dataSize = sizeof(uint32) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += RTTIPlainType<T>::getDynamicSize(*iter);
+      for (const auto& item : data) {
+        dataSize += rttiGetElementSize(item);
       }
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
@@ -396,15 +396,15 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
       size += sizeof(uint32);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
-        RTTIPlainType<Key>::toMemory(iter->first, memory);
+      for (const auto& item : data) {
+        uint32 keySize = rttiGetElementSize(item.first);
+        RTTIPlainType<Key>::toMemory(item.first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint32 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
-        RTTIPlainType<Value>::toMemory(iter->second, memory);
+        uint32 valueSize = rttiGetElementSize(item.second);
+        RTTIPlainType<Value>::toMemory(item.second, memory);
 
         memory += valueSize;
         size += valueSize;
@@ -448,9 +448,9 @@ namespace geEngineSDK {
     getDynamicSize(const MapType& data) {
       uint64 dataSize = sizeof(uint32) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
-        dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
+      for (const auto& item : data) {
+        dataSize += rttiGetElementSize(item.first);
+        dataSize += rttiGetElementSize(item.second);
       }
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
@@ -493,15 +493,15 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
       size += sizeof(uint32);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(iter->first);
-        RTTIPlainType<Key>::toMemory(iter->first, memory);
+      for (const auto& item : data) {
+        uint32 keySize = rttiGetElementSize(item.first);
+        RTTIPlainType<Key>::toMemory(item.first, memory);
 
         memory += keySize;
         size += keySize;
 
-        uint32 valueSize = RTTIPlainType<Value>::getDynamicSize(iter->second);
-        RTTIPlainType<Value>::toMemory(iter->second, memory);
+        uint32 valueSize = rttiGetElementSize(item.second);
+        RTTIPlainType<Value>::toMemory(item.second, memory);
 
         memory += valueSize;
         size += valueSize;
@@ -545,9 +545,9 @@ namespace geEngineSDK {
     getDynamicSize(const UnorderedMapType& data) {
       uint64 dataSize = sizeof(uint32) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += RTTIPlainType<Key>::getDynamicSize(iter->first);
-        dataSize += RTTIPlainType<Value>::getDynamicSize(iter->second);
+      for (const auto& item : data) {
+        dataSize += RTTIPlainType<Key>::getDynamicSize(item.first);
+        dataSize += RTTIPlainType<Value>::getDynamicSize(item.second);
       }
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
@@ -588,9 +588,9 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
       size += sizeof(uint32);
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        uint32 keySize = RTTIPlainType<Key>::getDynamicSize(*iter);
-        RTTIPlainType<Key>::toMemory(*iter, memory);
+      for (const auto& item : data) {
+        uint32 keySize = rttiGetElementSize(item);
+        RTTIPlainType<Key>::toMemory(item, memory);
 
         memory += keySize;
         size += keySize;
@@ -630,8 +630,8 @@ namespace geEngineSDK {
     getDynamicSize(const UnorderedSetType& data) {
       uint64 dataSize = sizeof(uint32) * 2;
 
-      for (auto iter = data.begin(); iter != data.end(); ++iter) {
-        dataSize += RTTIPlainType<Key>::getDynamicSize(*iter);
+      for (const auto& item : data) {
+        dataSize += rttiGetElementSize(item);
       }
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
@@ -658,13 +658,13 @@ namespace geEngineSDK {
       char* memoryStart = memory;
       memory += sizeof(uint32);
 
-      uint32 firstSize = RTTIPlainType<A>::getDynamicSize(data.first);
+      uint32 firstSize = rttiGetElementSize(data.first);
       RTTIPlainType<A>::toMemory(data.first, memory);
 
       memory += firstSize;
       size += firstSize;
 
-      uint32 secondSize = RTTIPlainType<B>::getDynamicSize(data.second);
+      uint32 secondSize = rttiGetElementSize(data.second);
       RTTIPlainType<B>::toMemory(data.second, memory);
 
       memory += secondSize;
@@ -698,8 +698,8 @@ namespace geEngineSDK {
     getDynamicSize(const std::pair<A, B>& data) {
       uint64 dataSize = sizeof(uint32);
 
-      dataSize += RTTIPlainType<A>::getDynamicSize(data.first);
-      dataSize += RTTIPlainType<B>::getDynamicSize(data.second);
+      dataSize += rttiGetElementSize(data.first);
+      dataSize += rttiGetElementSize(data.second);
 
       GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
 

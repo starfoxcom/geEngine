@@ -20,40 +20,67 @@
 #include "gePrerequisitesUtil.h"
 #include "geUUID.h"
 #include "gePlatformUtility.h"
-#include <chrono>
+
+namespace {
+  constexpr const char HEX_TO_LITERAL[16] = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f'
+  };
+
+  constexpr const geEngineSDK::uint8 LITERAL_TO_HEX[256] = {
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    //0 through 9 translate to 0 though 9
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0x08, 0x09, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    //A through F translate to 10 though 15
+    0xFF, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    //a through f translate to 10 though 15
+    0xFF, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+  };
+}
 
 namespace geEngineSDK {
-
-  std::array<uint8, 256>
-  literalToHex() {
-    std::array<uint8, 256> output;
-    output.fill(255);
-
-    output['0'] = 0;
-    output['1'] = 1;
-    output['2'] = 2;
-    output['3'] = 3;
-    output['4'] = 4;
-    output['5'] = 5;
-    output['6'] = 6;
-    output['7'] = 7;
-    output['8'] = 8;
-    output['9'] = 9;
-    output['a'] = 10;
-    output['b'] = 11;
-    output['c'] = 12;
-    output['d'] = 13;
-    output['e'] = 14;
-    output['f'] = 15;
-
-    return output;
-  }
-
-  static const std::array<char, 16> HEX_TO_LITERAL = {{'0', '1', '2', '3',
-                                                       '4', '5', '6', '7',
-                                                       '8', '9', 'a', 'b',
-                                                       'c', 'd', 'e', 'f' }};
-  static const std::array<uint8, 256> LITERAL_TO_HEX = literalToHex();
   UUID UUID::EMPTY;
 
   UUID::UUID(const String& uuid) {
@@ -67,8 +94,8 @@ namespace geEngineSDK {
 
     //First group: 8 digits
     for (int32 i = 7; i >= 0; --i) {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[0] |= hexVal << (i * 4);
     }
 
@@ -76,8 +103,8 @@ namespace geEngineSDK {
 
     //Second group: 4 digits
     for (int32 i = 7; i >= 4; --i) {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[1] |= hexVal << (i * 4);
     }
 
@@ -86,8 +113,8 @@ namespace geEngineSDK {
     //Third group: 4 digits
     for (int32 i = 3; i >= 0; --i)
     {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[1] |= hexVal << (i * 4);
     }
 
@@ -96,8 +123,8 @@ namespace geEngineSDK {
     //Fourth group: 4 digits
     for (int32 i = 7; i >= 4; --i)
     {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[2] |= hexVal << (i * 4);
     }
 
@@ -106,15 +133,15 @@ namespace geEngineSDK {
     //Fifth group: 12 digits
     for (int32 i = 3; i >= 0; --i)
     {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[2] |= hexVal << (i * 4);
     }
 
     for (int32 i = 7; i >= 0; --i)
     {
-      char charVal = static_cast<char>(tolower(uuid[idx++]));
-      uint8 hexVal = LITERAL_TO_HEX[charVal];
+      char charVal = uuid[idx++];
+      uint8 hexVal = LITERAL_TO_HEX[static_cast<int>(charVal)];
       m_data[3] |= hexVal << (i * 4);
     }
   }
@@ -170,7 +197,8 @@ namespace geEngineSDK {
     return String((const char*)output, 36);
   }
 
-  UUID UUIDGenerator::generateRandom() {
+  UUID
+  UUIDGenerator::generateRandom() {
     return PlatformUtility::generateUUID();
   }
 }

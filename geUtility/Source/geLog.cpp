@@ -21,10 +21,6 @@
 #include "geException.h"
 
 namespace geEngineSDK {
-  LogEntry::LogEntry(const String& msg, uint32 channel) : m_msg(msg), m_channel(channel) {}
-
-  Log::Log() : m_hash(0) {}
-
   Log::~Log() {
     clear();
   }
