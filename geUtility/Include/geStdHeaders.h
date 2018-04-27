@@ -59,32 +59,8 @@
 #include <bitset>
 #include <array>
 
-/*****************************************************************************/
-/**
- * Note - not in the original STL, but exists in SGI STL and STLport
- * For GCC 4.3 see http://gcc.gnu.org/gcc-4.3/changes.html
- */
-/*****************************************************************************/
-#if (GE_COMPILER == GE_COMPILER_GNUC)
-# if GE_COMP_VER >= 430
-#   include <tr1/unordered_map>
-#   include <tr1/unordered_set>
-# elif (GE_PLATFORM == GE_PLATFORM_PS4)
-#   include <unordered_map>
-#   include <unordered_set>
-# else
-#   include <ext/hash_map>
-#   include <ext/hash_set>
-# endif
-#else
-# if (GE_COMPILER == GE_COMPILER_MSVC) && GE_COMP_VER >= 1600 //VC++ 10.0 or higher
-#   include <unordered_map>
-#   include <unordered_set>
-# else
-#   include <hash_set>
-#   include <hash_map>
-# endif
-#endif
+#include <unordered_map>
+#include <unordered_set>
 
 /*****************************************************************************/
 /**
@@ -94,6 +70,7 @@
 #include <algorithm>
 #include <functional>
 #include <limits>
+#include <iterator>
 
 /*****************************************************************************/
 /**
@@ -239,6 +216,16 @@ namespace geEngineSDK {
             typename A = StdAlloc<std::pair<const K, V>>>
   using UnorderedMultimap = std::unordered_multimap<K, V, H, C, A>;
 
+  /**
+   * Equivalent to Vector, except it avoids any dynamic allocations until the
+   * number of elements exceeds @p Count.
+   */
+  //TODO: Currently equivalent to Vector, need to implement the allocator
+  template <typename T,
+            int Count,
+            typename Alloc = StdAlloc<T>>
+  using SmallVector = std::vector<T, Alloc>;
+
   /***************************************************************************/
   /**
    * Smart pointers
@@ -258,13 +245,15 @@ namespace geEngineSDK {
    *        a pointer. Reference to the object must be unique. The object is
    *        destroyed automatically when the pointer to the object is destroyed.
    */
-	template <typename T, typename Alloc = GenAlloc>
-	using UPtr = std::unique_ptr<T, decltype(&ge_delete<T, Alloc>)>;
+  template <typename T,
+            typename Alloc = GenAlloc,
+            typename Delete = decltype(&ge_delete<T, Alloc>)>
+  using UPtr = std::unique_ptr<T, Delete>;
 
   /**
    * @brief Create a new shared pointer using a custom allocator category.
    */
-  template<class Type, class AllocCategory, class... Args>
+  template<class Type, class AllocCategory = GenAlloc, class... Args>
 	SPtr<Type>
   ge_shared_ptr_new(Args&&... args) {
 		return std::allocate_shared<Type>(StdAlloc<Type, AllocCategory>(),
@@ -272,54 +261,70 @@ namespace geEngineSDK {
 	}
 
 	/**
-   * @brief Create a new shared pointer using the default allocator category.
-   */
-  template<class Type, class... Args>
-  SPtr<Type>
-  ge_shared_ptr_new(Args&&... args) {
-    return std::allocate_shared<Type>(StdAlloc<Type, GenAlloc>(),
-                                      std::forward<Args>(args)...);
-  }
-
-	/**
    * @brief	Create a new shared pointer from a previously constructed object.
    *        Pointer specific data will be allocated using the provided allocator category.
    */
-	template<class Type, class MainAlloc = GenAlloc, class PtrDataAlloc = GenAlloc>
-	SPtr<Type>
-  ge_shared_ptr(Type* data) {
-		return std::shared_ptr<Type>(data, &ge_delete<Type, MainAlloc>, 
-									 StdAlloc<Type, PtrDataAlloc>());
-	}
+  template<typename Type,
+           typename MainAlloc = GenAlloc,
+           typename PtrDataAlloc = GenAlloc,
+           typename Deleter = decltype(&ge_delete<Type, MainAlloc>)>
+  SPtr<Type>
+  ge_shared_ptr(Type* data, Deleter del = &ge_delete<Type, MainAlloc>) {
+    return SPtr<Type>(data, std::move(del), StdAlloc<Type, PtrDataAlloc>());
+  }
 
   /**
    * @brief Create a new unique pointer from a previously constructed object.
    *        Pointer specific data will be allocated using the provided allocator category.
    */
-  template<class Type, class Alloc = GenAlloc>
-  UPtr<Type, Alloc>
-  ge_unique_ptr(Type* data) {
-    return std::unique_ptr<Type,
-                           decltype(&ge_delete<Type, Alloc>)> (data, ge_delete<Type, Alloc>);
+  template<typename Type,
+           typename Alloc = GenAlloc,
+           typename Deleter = decltype(&ge_delete<Type, Alloc>)>
+  UPtr<Type, Alloc, Deleter>
+  ge_unique_ptr(Type* data, Deleter del = &ge_delete<Type, Alloc>) {
+    return std::unique_ptr<Type, Deleter>(data, std::move(del));
   }
 
   /**
    * @brief	Create a new unique pointer using a custom allocator category.
    */
-  template<class Type, class Alloc, class... Args>
-  UPtr<Type>
+  template<typename Type,
+           typename Alloc = GenAlloc,
+           typename Deleter = decltype(&ge_delete<Type, Alloc>),
+           typename... Args>
+  UPtr<Type, Alloc, Deleter>
   ge_unique_ptr_new(Args &&... args) {
     Type* rawPtr = ge_new<Type, Alloc>(std::forward<Args>(args)...);
-    return ge_unique_ptr<Type, Alloc>(rawPtr);
+    return ge_unique_ptr<Type, Alloc, Deleter>(rawPtr);
   }
 
+  template<typename T>
+  struct NativePtr
+  {
+    constexpr NativePtr(T* p = nullptr) : m_ptr(p) {}
+    
+    constexpr T& operator*() const {
+      return *m_ptr;
+    }
+
+    constexpr T* operator->() const {
+      return m_ptr;
+    }
+
+    constexpr T* get() const {
+      return m_ptr;
+    }
+
+   private:
+    T* m_ptr;
+  };
+
   /**
-   * @brief	Create a new unique pointer using the default allocator category.
+   * @brief "Smart" pointer that is not smart. Does nothing but hold a pointer
+   *        value. No memory management is performed at all.
+   *        This class exists to make storing pointers in containers easier to
+   *        manage, such as with non-member comparison operators.
    */
-  template<class Type, class... Args>
-  UPtr<Type>
-  ge_unique_ptr_new(Args &&... args) {
-    Type* rawPtr = ge_new<Type, GenAlloc>(std::forward<Args>(args)...);
-    return ge_unique_ptr<Type, GenAlloc>(rawPtr);
-  }
+  template <typename T>
+  using NPtr = NativePtr<T>;
 }

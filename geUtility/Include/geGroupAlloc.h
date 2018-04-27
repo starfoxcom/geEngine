@@ -28,7 +28,7 @@ namespace geEngineSDK {
   class GroupAlloc : INonCopyable
   {
    public:
-    GroupAlloc() : m_data(nullptr), m_dataPtr(nullptr), m_numBytes(0) {}
+    GroupAlloc() = default;
 
     GroupAlloc(GroupAlloc&& other) _NOEXCEPT
       : m_data(other.m_data),
@@ -188,8 +188,8 @@ namespace geEngineSDK {
     }
 
    private:
-    uint8* m_data;
-    uint8* m_dataPtr;
-    SIZE_T m_numBytes;
+    uint8* m_data = nullptr;
+    uint8* m_dataPtr = nullptr;
+    SIZE_T m_numBytes = 0;
   };
 }

@@ -26,89 +26,65 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT WINDOW_DESC
   {
-    WINDOW_DESC()
-      : module(nullptr),
-        monitor(nullptr),
-        parent(nullptr),
-        external(nullptr),
-        creationParams(nullptr),
-        width(0),
-        height(0),
-        fullscreen(false),
-        hidden(false),
-        left(-1),
-        top(-1),
-        title(""),
-        showTitleBar(true),
-        showBorder(true),
-        allowResize(true),
-        outerDimensions(false),
-        enableDoubleClick(true),
-        toolWindow(false),
-        backgroundPixels(nullptr),
-        backgroundWidth(0),
-        backgroundHeight(0),
-        alphaBlending(false),
-        modal(false),
-        wndProc(nullptr) {}
+    WINDOW_DESC() = default;
 
     /**
      * @brief Instance to the local module.
      */
-    HINSTANCE module;
+    HINSTANCE module = nullptr;
 
     /**
      * @brief Handle of the monitor onto which to display the window.
      */
-    HMONITOR monitor;
+    HMONITOR monitor = nullptr;
 
     /**
      * @brief Optional handle to the parent window if this window is to be a
      *        child of an existing window.
      */
-    HWND parent;
+    HWND parent = nullptr;
 
     /**
      * @brief Optional external window handle if the window was created externally.
      */
-    HWND external;
+    HWND external = nullptr;
 
     /**
      * @brief Parameter that will be passed through the WM_CREATE message.
      */
-    void* creationParams;
+    void* creationParams = nullptr;
     
     /**
      * @brief Width of the window in pixels.
      */
-    uint32 width;
+    uint32 width = 0;
 
     /**
      * @brief Height of the window in pixels.
      */
-    uint32 height;
+    uint32 height = 0;
 
     /**
      * @brief Should the window be opened in fullscreen mode.
      */
-    bool fullscreen;
+    bool fullscreen = false;
     
     /**
      * @brief Should the window be hidden initially.
      */
-    bool hidden;
+    bool hidden = false;
 
     /**
      * @brief Window origin on X axis in pixels. -1 == screen center.
      *        Relative to provided monitor.
      */
-    int32 left;
+    int32 left = -1;
 
     /**
      * @brief Window origin on Y axis in pixels. -1 == screen center.
      *        Relative to provided monitor.
      */
-    int32 top;
+    int32 top = -1;
 
     /**
      * @brief Title of the window.
@@ -118,66 +94,66 @@ namespace geEngineSDK {
     /**
      * @brief Determines if the title-bar should be shown or not.
      */
-    bool showTitleBar;
+    bool showTitleBar = true;
 
     /**
      * @brief Determines if the window border should be shown or not.
      */
-    bool showBorder;
+    bool showBorder = true;
 
     /**
      * @brief Determines if the user can resize the window by dragging on the window edges.
      */
-    bool allowResize;
+    bool allowResize = true;
 
     /**
      * @brief Do our dimensions include space for things like title-bar and border.
      */
-    bool outerDimensions;
+    bool outerDimensions = false;
 
     /**
      * @brief Does window accept double-clicks.
      */
-    bool enableDoubleClick;
+    bool enableDoubleClick = true;
 
     /**
      * @brief Tool windows have a different style than normal windows and can
      *        be created with no border or title bar.
      */
-    bool toolWindow;
+    bool toolWindow = false;
 
     /**
      * @brief Optional background image to apply to the window. This must be a buffer of size
      * backgroundWidth * backgroundHeight.
      */
-    Color* backgroundPixels;
+    Color* backgroundPixels = nullptr;
 
     /**
      * @brief Width of the background image. Only relevant if backgroundPixels is not null.
      */
-    uint32 backgroundWidth;
+    uint32 backgroundWidth = 0;
 
     /**
      * @brief Width of the background image. Only relevant if backgroundPixels is not null.
      */
-    uint32 backgroundHeight;
+    uint32 backgroundHeight = 0;
 
     /**
      * @brief If true the window will support transparency based on the alpha channel
      *        of the background image.
      */
-    bool alphaBlending;
+    bool alphaBlending = false;
     
     /**
      * @brief When a modal window is open all other windows will be locked
      *        until modal window is closed.
      */
-    bool modal;
+    bool modal = false;
 
     /**
      * @brief Pointer to a function that handles windows message processing.
      */
-    WNDPROC wndProc;
+    WNDPROC wndProc = nullptr;
   };
 
   /**

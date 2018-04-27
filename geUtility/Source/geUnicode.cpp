@@ -64,12 +64,12 @@ namespace geEngineSDK {
     output = 0;
     switch (numBytes)
     {
-    case 6: output += static_cast<uint8>(*begin); ++begin; output <<= 6;
-    case 5: output += static_cast<uint8>(*begin); ++begin; output <<= 6;
-    case 4: output += static_cast<uint8>(*begin); ++begin; output <<= 6;
-    case 3: output += static_cast<uint8>(*begin); ++begin; output <<= 6;
-    case 2: output += static_cast<uint8>(*begin); ++begin; output <<= 6;
-    case 1: output += static_cast<uint8>(*begin); ++begin;
+    case 6: output += static_cast<uint8>(*begin); ++begin; output <<= 6; BS_FALLTHROUGH;
+    case 5: output += static_cast<uint8>(*begin); ++begin; output <<= 6; BS_FALLTHROUGH;
+    case 4: output += static_cast<uint8>(*begin); ++begin; output <<= 6; BS_FALLTHROUGH;
+    case 3: output += static_cast<uint8>(*begin); ++begin; output <<= 6; BS_FALLTHROUGH;
+    case 2: output += static_cast<uint8>(*begin); ++begin; output <<= 6; BS_FALLTHROUGH;
+    case 1: output += static_cast<uint8>(*begin); ++begin; BS_FALLTHROUGH;
     default: break;
     }
 
@@ -129,10 +129,10 @@ namespace geEngineSDK {
     char bytes[4];
     switch (numBytes)
     {
-    case 4: bytes[3] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6;
-    case 3: bytes[2] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6;
-    case 2: bytes[1] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6;
-    case 1: bytes[0] = static_cast<char>(input | headers[numBytes]);
+    case 4: bytes[3] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; BS_FALLTHROUGH;
+    case 3: bytes[2] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; BS_FALLTHROUGH;
+    case 2: bytes[1] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; BS_FALLTHROUGH;
+    case 1: bytes[0] = static_cast<char>(input | headers[numBytes]); BS_FALLTHROUGH;
     default: break;
     }
 
@@ -411,5 +411,57 @@ namespace geEngineSDK {
     }
 
     return output;
+  }
+
+  SIZE_T
+  UTF8::count(const String& input) {
+    SIZE_T length = 0;
+    for (ANSICHAR i : input) {
+      //Include only characters that don't start with bits 10
+      length += (i & 0xc0) != 0x80;
+    }
+    return length;
+  }
+
+  SIZE_T
+  UTF8::charToByteIndex(const String& input, SIZE_T charIdx) {
+    SIZE_T curChar = 0;
+    SIZE_T curByte = 0;
+    for (ANSICHAR i : input) {
+      //Include only characters that don't start with bits 10
+      if ((i & 0xc0) != 0x80) {
+        if (curChar == charIdx) {
+          return curByte;
+        }
+        curChar++;
+      }
+      curByte++;
+    }
+
+    return input.size();
+  }
+
+  SIZE_T
+  UTF8::charByteCount(const String& input, SIZE_T charIdx) {
+    const SIZE_T byteIdx = charToByteIndex(input, charIdx);
+
+    SIZE_T count = 1;
+    for (auto i = byteIdx + 1; i < input.size(); ++i) {
+      if ((i & 0xc0) != 0x80) {
+        break;
+      }
+      count++;
+    }
+    return count;
+  }
+
+  String
+  UTF8::toLower(const String& input) {
+    return PlatformUtility::convertCaseUTF8(input, false);
+  }
+
+  String
+  UTF8::toUpper(const String& input) {
+    return PlatformUtility::convertCaseUTF8(input, true);
   }
 }

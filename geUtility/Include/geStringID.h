@@ -36,10 +36,10 @@ namespace geEngineSDK {
     static const StringID NONE;
 
    private:
-    static const int32 HASH_TABLE_SIZE = 4096;
-    static const int32 MAX_CHUNK_COUNT = 50;
-    static const int32 ELEMENTS_PER_CHUNK = 256;
-    static const int32 STRING_SIZE = 256;
+    static constexpr const int32 HASH_TABLE_SIZE = 4096;
+    static constexpr const int32 MAX_CHUNK_COUNT = 50;
+    static constexpr const int32 ELEMENTS_PER_CHUNK = 256;
+    static constexpr const int32 STRING_SIZE = 256;
 
    private:
     /**
@@ -81,18 +81,18 @@ namespace geEngineSDK {
     };
 
    public:
-    StringID();
+    StringID() = default;
 
-    StringID(const ANSICHAR* name) : m_data(nullptr) {
+    StringID(const ANSICHAR* name) {
       construct(name);
     }
 
-    StringID(const String& name) : m_data(nullptr) {
+    StringID(const String& name) {
       construct(name);
     }
 
     template<int N>
-    StringID(const ANSICHAR name[N]) : m_Data(nullptr) {
+    StringID(const ANSICHAR name[N]) {
       construct(static_cast<const ANSICHAR*>(name));
     }
 
@@ -169,7 +169,8 @@ namespace geEngineSDK {
     static uint32 m_nextId;
     static uint32 m_numChunks;
     static SpinLock m_sync;
-    InternalData* m_data;
+
+    InternalData* m_data = nullptr;
   };
 
   template<>

@@ -22,14 +22,6 @@
 #include "geException.h"
 
 namespace geEngineSDK {
-  FrameAlloc::MemBlock::MemBlock(SIZE_T size) 
-    : m_data(nullptr),
-      m_freePtr(0),
-      m_size(size)
-  {}
-
-  FrameAlloc::MemBlock::~MemBlock() {}
-
   uint8*
   FrameAlloc::MemBlock::alloc(SIZE_T amount) {
     uint8* freePtr = &m_data[m_freePtr];

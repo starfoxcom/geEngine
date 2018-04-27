@@ -33,24 +33,21 @@ namespace geEngineSDK {
     /**
      * @brief Initializes an empty UUID.
      */
-    UUID() : m_data() {}
+    constexpr UUID() = default;
 
     /**
      * @brief Initializes an UUID using geEngine's UUID representation.
      */
-    UUID(uint32 data1, uint32 data2, uint32 data3, uint32 data4) {
-      m_data[0] = data1;
-      m_data[1] = data2;
-      m_data[2] = data3;
-      m_data[3] = data4;
-    }
+    constexpr UUID(uint32 data1, uint32 data2, uint32 data3, uint32 data4)
+      : m_data{ data1, data2, data3, data4 }
+    {}
 
     /**
      * @brief Initializes an UUID using its string representation.
      */
     explicit UUID(const String& uuid);
 
-    bool
+    constexpr bool
     operator==(const UUID& rhs) const {
       return m_data[0] == rhs.m_data[0] &&
              m_data[1] == rhs.m_data[1] &&
@@ -58,12 +55,12 @@ namespace geEngineSDK {
              m_data[3] == rhs.m_data[3];
     }
 
-    bool
+    constexpr bool
     operator!=(const UUID& rhs) const {
       return !(*this == rhs);
     }
 
-    bool
+    constexpr bool
     operator<(const UUID& rhs) const {
       for (uint32 i = 0; i < 4; i++) {
         if (m_data[i] < rhs.m_data[i]) {
@@ -82,7 +79,7 @@ namespace geEngineSDK {
     /**
      * @brief Checks has the UUID been initialized to a valid value.
      */
-    bool
+    constexpr bool
     empty() const {
       return m_data[0] == 0 &&
              m_data[1] == 0 &&
@@ -100,7 +97,7 @@ namespace geEngineSDK {
    
    private:
     friend struct std::hash<UUID>;
-    uint32 m_data[4];
+    uint32 m_data[4] = { 0,0,0,0 };
   };
 
   GE_ALLOW_MEMCPY_SERIALIZATION(UUID)
@@ -112,11 +109,12 @@ namespace geEngineSDK {
     */
   class GE_UTILITY_EXPORT UUIDGenerator
   {
-  public:
+   public:
     /**
      * @brief Generate a new random universally unique identifier.
      */
-    static UUID generateRandom();
+    static UUID
+    generateRandom();
   };
 }
 

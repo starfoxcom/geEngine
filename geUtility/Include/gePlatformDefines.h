@@ -57,17 +57,20 @@
 #   define GE_THREADLOCAL __thread
 #   define GE_STDCALL __attribute__((stdcall))
 #   define GE_CDECL __attribute__((cdecl))
+#   define GE_FALLTHROUGH [[clang::fallthrough]];
 #elif defined(__GNUC__) //Check after Clang, as Clang defines this too
 #   define GE_COMPILER GE_COMPILER_GNUC
 #   define GE_COMP_VER (((__GNUC__)*100) + (__GNUC_MINOR__*10) + __GNUC_PATCHLEVEL__)
 #   define GE_THREADLOCAL __thread
 #   define GE_STDCALL __attribute__((stdcall))
 #   define GE_CDECL __attribute__((cdecl))
+#   define GE_FALLTHROUGH __attribute__((fallthrough));
 #elif defined (__INTEL_COMPILER)
 #   define GE_COMPILER GE_COMPILER_INTEL
 #   define GE_COMP_VER __INTEL_COMPILER
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
+#   define BS_FALLTHROUGH
 /** 
  * GE_THREADLOCAL define is down below because Intel compiler defines it
  * differently based on platform
@@ -80,6 +83,7 @@
 #   define GE_THREADLOCAL __declspec(thread)
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
+#   define BS_FALLTHROUGH
 #   undef __PRETTY_FUNCTION__
 #   define __PRETTY_FUNCTION__ __FUNCSIG__
 #else

@@ -40,7 +40,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Path
   {
    public:
-    Path();
+    Path() = default;
 
     /**
      * @brief Constructs a path by parsing the provided path string. 
@@ -49,9 +49,7 @@ namespace geEngineSDK {
      *                  rules of the platform the application is being compiled to.
      *                  Otherwise it will be parsed according to provided type.
      */
-    Path(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
     Path(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
-    Path(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
     Path(const ANSICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
 
     /**
@@ -64,9 +62,7 @@ namespace geEngineSDK {
      *        parsed according to the rules of the platform the application is
      *        being compiled to.
      */
-    Path& operator=(const WString& pathStr);
     Path& operator=(const String& pathStr);
-    Path& operator=(const UNICHAR* pathStr);
     Path& operator=(const ANSICHAR* pathStr);
     Path& operator=(const Path& path);
 
@@ -122,25 +118,7 @@ namespace geEngineSDK {
      * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
      */
     void
-    assign(const UNICHAR* pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
-
-    /**
-     * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
-     */
-    void
     assign(const String& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
-
-    /**
-     * @copydoc void Path::assign(const ANSICHAR*, PATH_TYPE::E)
-     */
-    void
-    assign(const WString& pathStr, PATH_TYPE::E type = PATH_TYPE::kDefault);
-    
-    /**
-    * @brief Appends another path to the end of this path.
-    */
-    Path&
-    append(const Path& path);
 
     /**
      * @brief Converts the path in a string according to platform path rules.
@@ -152,21 +130,13 @@ namespace geEngineSDK {
     toString(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
 
     /**
-     * @copydoc void Path::toString(PATH_TYPE::E)
-     */
-    WString
-    toWString(PATH_TYPE::E type = PATH_TYPE::kDefault) const;
-
-    /**
      * @brief Converts the path to either a string or a wstring, doing The
      *        Right Thing for the current platform. This method is equivalent
      *        to toWString() on Windows, and to toString() elsewhere.
      */
 #if GE_PLATFORM == GE_PLATFORM_WIN32
     WString
-    toPlatformString() const {
-      return toWString();
-    }
+    toPlatformString() const;
 #else
     String
     toPlatformString() const {
@@ -259,6 +229,12 @@ namespace geEngineSDK {
     makeRelative(const Path& base);
 
     /**
+     * @brief Appends another path to the end of this path.
+     */
+    Path&
+    append(const Path& path);
+
+    /**
      * @brief Checks if the current path contains the provided path.
      *        Comparison is case insensitive and paths will be compared as-is,
      *        without canonization.
@@ -278,22 +254,9 @@ namespace geEngineSDK {
      * @brief Change or set the filename in the path.
      */
     void
-    setFilename(const WString& filename);
-
-    /**
-     * @brief Change or set the filename in the path.
-     */
-    void
     setFilename(const String& filename) {
       m_filename = filename;
     }
-
-    /**
-     * @brief Change or set the base name in the path. Base name changes the filename
-     *        by changing its base to the provided value but keeping extension intact.
-     */
-    void
-    setBasename(const WString& basename);
 
     /**
      * @brief	Change or set the base name in the path. Base name changes the filename
@@ -307,21 +270,7 @@ namespace geEngineSDK {
      * @param[in] extension Extension with a leading ".".
      */
     void
-    setExtension(const WString& extension);
-
-    /**
-     * @brief Change or set the extension of the filename in the path.
-     * @param[in] extension Extension with a leading ".".
-     */
-    void
     setExtension(const String& extension);
-
-    /**
-     * @brief Returns a filename in the path.
-     * @param[in] extension If true, returned filename will contain an extension.
-     */
-    WString
-    getWFilename(bool extension = true) const;
 
     /**
      * @brief Returns a filename in the path.
@@ -329,12 +278,6 @@ namespace geEngineSDK {
      */
     String
     getFilename(bool extension = true) const;
-
-    /**
-     * @brief Returns file extension with the leading "."
-     */
-    WString
-    getWExtension() const;
 
     /**
      * @brief Returns file extension with the leading "."
@@ -353,20 +296,8 @@ namespace geEngineSDK {
     /**
      * @brief Gets a directory name with the specified index from the path.
      */
-    WString
-    getWDirectory(SIZE_T idx) const;
-
-    /**
-     * @brief Gets a directory name with the specified index from the path.
-     */
     const String&
     getDirectory(SIZE_T idx) const;
-
-    /**
-     * @brief Returns path device (e.g. drive, volume, etc.) if one exists in the path.
-     */
-    WString
-    getWDevice() const;
 
     /**
      * @brief Returns path device (e.g. drive, volume, etc.) if one exists in the path.
@@ -379,23 +310,10 @@ namespace geEngineSDK {
     /**
      * @brief Returns path node (e.g. network name) if one exists in the path.
      */
-    WString
-    getWNode() const;
-
-    /**
-     * @brief Returns path node (e.g. network name) if one exists in the path.
-     */
     const String&
     getNode() const {
       return m_node;
     }
-
-    /**
-     * @brief Gets last element in the path, filename if it exists, otherwise
-     *        the last directory. If no directories exist returns device or node.
-     */
-    WString
-    getWTail() const;
 
     /**
      * @brief Gets last element in the path, filename if it exists, otherwise
@@ -452,13 +370,6 @@ namespace geEngineSDK {
     static void
     stripInvalid(String& path);
 
-    /**
-     * @brief Strips invalid characters from the provided string and replaces
-     *        them with empty spaces.
-     */
-    static void
-    stripInvalid(WString& path);
-
    private:
     /**
      * @brief Constructs a path by parsing the provided raw string data.
@@ -466,12 +377,6 @@ namespace geEngineSDK {
      * @param[in] type  If set to default path will be parsed according to the
      *                  rules of the platform the application is being compiled to.
      *                  Otherwise it will be parsed according to provided type.
-     */
-    void
-    assign(const UNICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::kDefault);
-
-    /**
-     * @copydoc Path::assign(const UNICHAR*, uint32, PATH_TYPE::E)
      */
     void
     assign(const ANSICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type = PATH_TYPE::kDefault);
@@ -524,7 +429,7 @@ namespace geEngineSDK {
             }
 
             m_isAbsolute = true;
-            setDevice(geEngineSDK::toWString(drive));
+            setDevice(String(1, drive));
 
             idx++;
             if (idx >= numChars || ('\\' != pathStr[idx] && '/' != pathStr[idx])) {
@@ -579,7 +484,7 @@ namespace geEngineSDK {
         else if (pathStr[idx] == '~') {
           idx++;
           if (idx >= numChars || '/' == pathStr[idx]) {
-            pushDirectory(geEngineSDK::toWString('~'));
+            pushDirectory(String("~"));
             m_isAbsolute = true;
           }
           else {
@@ -621,17 +526,12 @@ namespace geEngineSDK {
     }
 
     void
-    setNode(const WString& node);
-
-    void
     setNode(const String& node) {
       m_node = node;
     }
 
     void
-    setDevice(const WString& device);
-
-    void setDevice(const String& device) {
+    setDevice(const String& device) {
       m_device = device;
     }
 
@@ -654,22 +554,10 @@ namespace geEngineSDK {
     pushDirectory(const String& dir);
 
     /**
-     * @copydoc Path::pushDirectory(const String&)
-     */
-    void
-    pushDirectory(const WString& dir);
-
-    /**
      * @brief Helper method that throws invalid path exception.
      */
     static void
     throwInvalidPathException(const String& path);
-
-    /**
-     * @copydoc Path::throwInvalidPathException(const String&)
-     */
-    static void
-    throwInvalidPathException(const WString& path);
 
    public:
     static const Path BLANK;
@@ -682,7 +570,7 @@ namespace geEngineSDK {
     String m_device;
     String m_filename;
     String m_node;
-    bool m_isAbsolute;
+    bool m_isAbsolute = false;
   };
 
   /**

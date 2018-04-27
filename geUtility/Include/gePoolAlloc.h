@@ -101,10 +101,7 @@ namespace geEngineSDK {
     };
 
    public:
-    PoolAlloc()
-      : m_freeBlock(nullptr),
-        m_totalNumElems(0),
-        m_numBlocks(0) {
+    PoolAlloc() {
       static_assert(ElemSize >= 4,
                     "Pool allocator minimum allowed element size is 4 bytes.");
       static_assert(ElemsPerBlock > 0,
@@ -251,8 +248,8 @@ namespace geEngineSDK {
     static constexpr SIZE_T
       ActualElemSize = ((ElemSize + Alignment - 1) / Alignment) * Alignment;
 
-    MemBlock* m_freeBlock;
-    SIZE_T m_totalNumElems;
-    SIZE_T m_numBlocks;
+    MemBlock* m_freeBlock = nullptr;
+    SIZE_T m_totalNumElems = 0;
+    SIZE_T m_numBlocks = 0;
   };
 }

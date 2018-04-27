@@ -32,7 +32,7 @@ namespace geEngineSDK {
    */
   struct RTTIPlainFieldBase : public RTTIField
   {
-    virtual ~RTTIPlainFieldBase() {}
+    virtual ~RTTIPlainFieldBase() = default;
 
     /**
      * @brief Throws an exception if the current field type and provided

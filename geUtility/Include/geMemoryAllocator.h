@@ -27,6 +27,7 @@
 #include <atomic>
 #include <limits>
 #include <utility>
+
 #if GE_PLATFORM == GE_PLATFORM_LINUX
 # include <malloc.h>
 #endif
@@ -134,12 +135,12 @@ namespace geEngineSDK {
      */
     static GE_UTILITY_EXPORT void
     incrementAllocCount() {
-      m_allocs++;
+      ++m_allocs;
     }
     
     static GE_UTILITY_EXPORT void
     incrementFreeCount() {
-      m_frees++;
+      ++m_frees;
     }
 
     static GE_THREADLOCAL uint64 m_allocs;
@@ -274,7 +275,7 @@ namespace geEngineSDK {
     T* ptr = reinterpret_cast<T*>(MemoryAllocator<Alloc>::allocate(sizeof(T) * count));
 
     for (SIZE_T i = 0; i < count; ++i) {
-      new (reinterpret_cast<void*>(&ptr[i])) T;
+      new (&ptr[i]) T;
     }
 
     return ptr;
@@ -286,7 +287,7 @@ namespace geEngineSDK {
   template<class T, class Alloc, class... Args>
   T*
   ge_new(Args&& ...args) {
-    return new (ge_alloc<Alloc>(sizeof(T))) T(std::forward<Args>(args)...);
+    return new (ge_alloc<T, Alloc>()) T(std::forward<Args>(args)...);
   }
 
   /**
@@ -377,7 +378,7 @@ namespace geEngineSDK {
   ge_newN(SIZE_T count) {
     T* ptr = reinterpret_cast<T*>(MemoryAllocator<GenAlloc>::allocate(sizeof(T) * count));
     for (SIZE_T i = 0; i < count; ++i) {
-      new (reinterpret_cast<void*>(&ptr[i])) T;
+      new (&ptr[i]) T;
     }
 
     return ptr;
@@ -389,7 +390,7 @@ namespace geEngineSDK {
   template<class T, class... Args>
   T*
   ge_new(Args&& ...args) {
-    return new (ge_alloc<GenAlloc>(sizeof(T))) T(std::forward<Args>(args)...);
+    return new (ge_alloc<T, GenAlloc>()) T(std::forward<Args>(args)...);
   }
 
   /**
@@ -439,27 +440,29 @@ namespace geEngineSDK {
   class StdAlloc
   {
    public:
-    typedef T value_type;
-    typedef T* pointer;
-    typedef const T* const_pointer;
-    typedef T& reference;
-    typedef const T& const_reference;
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
+    using value_type = T;
+    using pointer = value_type*;
+    using const_pointer = const value_type*;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
     
-    StdAlloc() _NOEXCEPT {}
-    
-    template<class U, class Alloc2>
-    StdAlloc(const StdAlloc<U, Alloc2>&) _NOEXCEPT {}
+    constexpr StdAlloc() = default;
+    constexpr StdAlloc(StdAlloc&&) = default;
+    constexpr StdAlloc(const StdAlloc&) = default;
 
     template<class U, class Alloc2>
-    bool
+    constexpr StdAlloc(const StdAlloc<U, Alloc2>&) _NOEXCEPT {}
+
+    template<class U, class Alloc2>
+    constexpr bool
     operator==(const StdAlloc<U, Alloc2>&) const _NOEXCEPT {
       return true;
     }
 
     template<class U, class Alloc2>
-    bool
+    constexpr bool
     operator!=(const StdAlloc<U, Alloc2>&) const _NOEXCEPT {
       return false;
     }
@@ -468,25 +471,25 @@ namespace geEngineSDK {
     class rebind
     {
      public:
-      typedef StdAlloc<U, Alloc> other;
+       using other = StdAlloc<U, Alloc>;
     };
 
     /**
      * @brief Allocate but don't initialize number elements of type T.
      */
-    T*
-    allocate(const size_t num) const {
+    static T*
+    allocate(const size_t num) {
       if (0 == num) {
         return nullptr;
       }
 
-      if (num > static_cast<size_t>(-1) / sizeof(T)) {
-        throw std::bad_array_new_length();
+      if (num > std::numeric_limits<size_t>::max() / sizeof(T)) {
+        throw nullptr;
       }
 
       void* const pv = ge_alloc<Alloc>(num * sizeof(T));
       if (!pv) {
-        throw std::bad_alloc();
+        return nullptr;
       }
 
       return static_cast<T*>(pv);
@@ -495,22 +498,18 @@ namespace geEngineSDK {
     /**
      * @brief Deallocate storage p of deleted elements.
      */
-    void
-    deallocate(T* p, size_t) const _NOEXCEPT {
-      ge_free<Alloc>(reinterpret_cast<void*>(p));
+    static void
+    deallocate(pointer p, size_t) {
+      ge_free<Alloc>(p);
     }
 
-    size_t
-    max_size() const {
+    static constexpr size_t
+    max_size() {
       return std::numeric_limits<size_type>::max() / sizeof(T);
     }
 
-    void
-    construct(pointer p, const_reference t) {
-      new (p) T(t);
-    }
-
-    void destroy(pointer p) {
+    static constexpr void
+    destroy(pointer p) {
       p->~T();
     }
 
@@ -520,10 +519,15 @@ namespace geEngineSDK {
      *        libstdc++-4.8, but compilation fails on OSX, hence the #if.
      */
 #if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_WIN32
-    template<class U, class... Args>
-    void
-    construct(U* p, Args&& ...args) {
-      new(p) U(std::forward<Args>(args)...);
+    template<class... Args>
+    static void
+    construct(pointer p, Args&& ...args) {
+      new(p) T(std::forward<Args>(args)...);
+    }
+#else
+    static void
+    construct(pointer p, const_reference t) {
+      new (p) T(t);
     }
 #endif
   };

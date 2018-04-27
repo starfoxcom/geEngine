@@ -193,7 +193,9 @@ namespace geEngineSDK {
       kID_SerializedSubObject   = 86,
       kID_SerializedDataBlock   = 87,
 
-      kID_IReflectable          = 90
+      kID_IReflectable          = 90,
+
+      kID_DataBlob              = 100
     };
   }
 }

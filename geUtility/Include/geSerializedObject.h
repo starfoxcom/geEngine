@@ -25,7 +25,7 @@
 namespace geEngineSDK {
   struct GE_UTILITY_EXPORT SerializedInstance : IReflectable
   {
-    virtual ~SerializedInstance() {}
+    virtual ~SerializedInstance() = default;
 
     /**
      * @brief Performs a deep clone of this object any any potential child
@@ -59,9 +59,9 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedEntry : IReflectable
   {
-    SerializedEntry() : fieldId(0), serialized(nullptr) {}
+    SerializedEntry() = default;
 
-    uint32 fieldId;
+    uint32 fieldId = 0;
     SPtr<SerializedInstance> serialized;
 
     /*************************************************************************/
@@ -84,9 +84,9 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedArrayEntry : IReflectable
   {
-    SerializedArrayEntry() : index(0), serialized(nullptr) {}
+    SerializedArrayEntry() = default;
 
-    uint32 index;
+    uint32 index = 0;
     SPtr<SerializedInstance> serialized;
 
     /*************************************************************************/
@@ -110,9 +110,9 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedSubObject : IReflectable
   {
-    SerializedSubObject() : typeId(0) {}
+    SerializedSubObject() = default;
 
-    uint32 typeId;
+    uint32 typeId = 0;
     UnorderedMap<uint32, SerializedEntry> entries;
 
     /*************************************************************************/
@@ -172,7 +172,7 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedField : SerializedInstance
   {
-    SerializedField() : value(nullptr), size(0), ownsMemory(false) {}
+    SerializedField() = default;
 
     ~SerializedField() {
       if (nullptr != value && ownsMemory) {
@@ -186,9 +186,9 @@ namespace geEngineSDK {
     SPtr<SerializedInstance>
     clone(bool cloneData = true) override;
 
-    uint8* value;
-    uint32 size;
-    bool ownsMemory;
+    uint8* value = nullptr;
+    uint32 size = 0;
+    bool ownsMemory = false;
 
     /*************************************************************************/
     /**
@@ -210,7 +210,7 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedDataBlock : SerializedInstance
   {
-    SerializedDataBlock() : offset(0), size(0) {}
+    SerializedDataBlock() = default;
 
     /**
      * @copydoc SerializedInstance::clone
@@ -219,8 +219,8 @@ namespace geEngineSDK {
     clone(bool cloneData = true) override;
 
     SPtr<DataStream> stream;
-    uint32 offset;
-    uint32 size;
+    uint32 offset = 0;
+    uint32 size = 0;
 
     /*************************************************************************/
     /**
@@ -242,7 +242,7 @@ namespace geEngineSDK {
    */
   struct GE_UTILITY_EXPORT SerializedArray : SerializedInstance
   {
-    SerializedArray() : numElements(0) {}
+    SerializedArray() = default;
 
     /**
      * @copydoc SerializedInstance::clone
@@ -251,7 +251,7 @@ namespace geEngineSDK {
     clone(bool cloneData = true) override;
 
     UnorderedMap<uint32, SerializedArrayEntry> entries;
-    uint32 numElements;
+    uint32 numElements = 0;
 
     /*************************************************************************/
     /**

@@ -54,10 +54,9 @@ namespace geEngineSDK {
   RTTITypeBase*
   IReflectable::_getRTTIfromTypeId(uint32 rttiTypeId) {
     Stack<RTTITypeBase*> todo;
-    Vector<RTTITypeBase*>& rootClasses = getDerivedClasses();
 
-    for (auto iter = rootClasses.begin(); iter != rootClasses.end(); ++iter) {
-      todo.push(*iter);
+    for (const auto& item : getDerivedClasses()) {
+      todo.push(item);
     }
 
     while (!todo.empty()) {
@@ -68,9 +67,8 @@ namespace geEngineSDK {
         return curType;
       }
 
-      Vector<RTTITypeBase*>& derivedClasses = curType->getDerivedClasses();
-      for (auto iter = derivedClasses.begin(); iter != derivedClasses.end(); ++iter) {
-        todo.push(*iter);
+      for (const auto& item : curType->getDerivedClasses()) {
+        todo.push(item);
       }
     }
 

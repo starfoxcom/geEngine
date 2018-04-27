@@ -33,7 +33,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT HThread
   {
    public:
-    HThread();
+    HThread() = default;
     HThread(ThreadPool* pool, uint32 threadId);
 
     /**
@@ -43,8 +43,8 @@ namespace geEngineSDK {
     blockUntilComplete();
 
    private:
-    uint32 m_threadId;
-    ThreadPool* m_pool;
+    uint32 m_threadId = 0;
+    ThreadPool* m_pool = nullptr;
   };
 
   /**
@@ -53,8 +53,8 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT PooledThread
   {
    public:
-    explicit PooledThread(const String& name);
-    virtual ~PooledThread();
+    PooledThread(const String& name) : m_name(name) {}
+    virtual ~PooledThread() = default;
 
     /**
      * @brief Initializes the pooled thread. Must be called right after the
@@ -144,12 +144,12 @@ namespace geEngineSDK {
     function<void()> m_workerMethod;
 
     String m_name;
-    uint32 m_id;
-    bool m_idle;
-    bool m_threadStarted;
-    bool m_threadReady;
+    uint32 m_id = 0;
+    bool m_idle = true;
+    bool m_threadStarted = false;
+    bool m_threadReady = false;
 
-    time_t m_idleTime;
+    time_t m_idleTime = 0;
 
     Thread* m_thread;
     mutable Mutex m_mutex;
@@ -169,7 +169,7 @@ namespace geEngineSDK {
   class TPooledThread : public PooledThread
   {
    public:
-    explicit TPooledThread(const String& name) : PooledThread(name) {}
+    using PooledThread::PooledThread;
 
     /**
      * @copydoc PooledThread::onThreadStarted
@@ -277,7 +277,8 @@ namespace geEngineSDK {
     SIZE_T m_defaultCapacity;
     SIZE_T m_maxCapacity;
     uint32 m_idleTimeout;
-    uint32 m_age;
+    uint32 m_age = 0;
+
     atomic_uint m_uniqueId;
     mutable Mutex m_mutex;
   };

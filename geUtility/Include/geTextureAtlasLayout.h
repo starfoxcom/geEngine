@@ -33,31 +33,26 @@ namespace geEngineSDK {
      */
     struct TexAtlasNode
     {
-      TexAtlasNode()
-        : x(0),
-          y(0),
-          width(0),
-          height(0),
-          children { Math::MAX_UINT32, Math::MAX_UINT32 },
-          nodeFull(false)
-      {}
+      constexpr TexAtlasNode() = default;
       
-      TexAtlasNode(uint32 x, uint32 y, uint32 width, uint32 height)
+      constexpr TexAtlasNode(uint32 x, uint32 y, uint32 width, uint32 height)
         : x(x),
           y(y),
           width(width),
-          height(height),
-          children{ Math::MAX_UINT32, Math::MAX_UINT32 },
-          nodeFull(false)
+          height(height)
       {}
 
-      uint32 x, y, width, height;
-      uint32 children[2];
-      bool nodeFull;
+      uint32 x = 0;
+      uint32 y = 0;
+      uint32 width = 0;
+      uint32 height = 0;
+      uint32 children[2] = { std::numeric_limits<uint32>::max(),
+                             std::numeric_limits<uint32>::max() };
+      bool nodeFull = false;
     };
 
    public:
-    TextureAtlasLayout();
+    TextureAtlasLayout() = default;
 
     /**
      * @brief Constructs a new texture atlas layout with the provided parameters.
@@ -73,7 +68,16 @@ namespace geEngineSDK {
                        uint32 height,
                        uint32 maxWidth,
                        uint32 maxHeight,
-                       bool pow2 = false);
+                       bool pow2 = false)
+      : m_initialWidth(width),
+        m_initialHeight(height),
+        m_width(width),
+        m_height(height),
+        m_maxWidth(maxWidth),
+        m_maxHeight(maxHeight),
+        m_pow2(pow2) {
+      m_nodes.push_back(TexAtlasNode(0, 0, maxWidth, maxHeight));
+    }
 
     /**
      * @brief Attempts to add a new element in the layout. Elements should be
@@ -144,13 +148,13 @@ namespace geEngineSDK {
               uint32& y,
               bool allowGrowth);
 
-    uint32 m_initialWidth;
-    uint32 m_initialHeight;
-    uint32 m_width;
-    uint32 m_height;
-    uint32 m_maxWidth;
-    uint32 m_maxHeight;
-    bool m_pow2;
+    uint32 m_initialWidth = 0;
+    uint32 m_initialHeight = 0;
+    uint32 m_width = 0;
+    uint32 m_height = 0;
+    uint32 m_maxWidth = 0;
+    uint32 m_maxHeight = 0;
+    bool m_pow2 = false;
 
     Vector<TexAtlasNode> m_nodes;
   };

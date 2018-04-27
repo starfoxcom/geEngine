@@ -176,4 +176,49 @@ namespace geEngineSDK {
     static void
     moveFile(const Path& oldPath, const Path& newPath);
   };
+
+  /**
+   * @brief Locks access to files on the same drive, allowing only one file to
+   *        be read at a time, per drive. This prevents multiple threads
+   *        accessing multiple files on the same drive at once, ruining
+   *        performance on mechanical drives.
+   */
+  class GE_UTILITY_EXPORT FileScheduler final
+  {
+   public:
+    /**
+     * @brief Locks access and doesn't allow other threads to get past this
+     *        point until access is unlocked. Any scheduled file access should
+     *        happen past this point.
+     */
+    static void
+    lock(const Path& /*path*/) {
+      //Note: File path should be analyzed and determined on which drive does
+      //the path belong to. Locks can then be issued on a per-drive basis,
+      //instead of having one global lock. This would allow multiple files to
+      //be accessed at the same time, as long as they're on different drives.
+      m_mutex.lock();
+    }
+
+    /**
+     * @brief Unlocks access and allows another thread to lock file access.
+     *        Must be provided with the same file path as lock().
+     */
+    static void
+    unlock(const Path& /*path*/) {
+      m_mutex.unlock();
+    }
+
+    /**
+     * @brief Returns a lock object that immediately locks access (same as
+     *        lock()), and then calls unlock() when it goes out of scope.
+     */
+    static Lock
+    getLock(const Path& /*path*/) {
+      return Lock(m_mutex);
+    }
+
+   private:
+    static Mutex m_mutex;
+  };
 }

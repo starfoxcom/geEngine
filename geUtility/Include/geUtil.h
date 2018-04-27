@@ -73,4 +73,13 @@ namespace geEngineSDK {
     GE_ASSERT(nullptr != arr);
     memset(arr, 0, sizeof(T) * count);
   }
+
+  /**
+   * @brief Returns the size of the provided static array.
+   */
+  template <class T, SIZE_T N>
+  constexpr SIZE_T
+  ge_size(const T(&array)[N]) {
+    return N;
+  }
 }

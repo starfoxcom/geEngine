@@ -23,7 +23,7 @@
 
 namespace geEngineSDK {
   const String CrashHandler::s_crashReportFolder = "Reports";
-  const String CrashHandler::s_crashLogName = "geEngine_Log.html";
+  const String CrashHandler::s_crashLogName = u8"geEngine_Log.html";
   const String CrashHandler::s_fatalErrorMsg = 
     "A fatal error occurred and the program has to terminate!";
 
@@ -74,6 +74,6 @@ namespace geEngineSDK {
 
   void
   CrashHandler::saveCrashLog() const {
-    g_Debug().saveLog(getCrashFolder() + toWString(s_crashLogName));
+    g_Debug().saveLog(getCrashFolder() + s_crashLogName);
   }
 }

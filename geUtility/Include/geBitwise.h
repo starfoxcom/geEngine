@@ -35,8 +35,9 @@ namespace geEngineSDK {
      /**
       * @brief Returns the most significant bit set in a value.
       */
+    template<typename IntType>
     static uint32
-    mostSignificantBitSet(uint32 value) {
+    mostSignificantBitSet(IntType value) {
       uint32 result = 0;
       while (0 != value) {
         ++result;

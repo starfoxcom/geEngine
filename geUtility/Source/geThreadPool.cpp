@@ -35,8 +35,6 @@ namespace geEngineSDK {
   using std::function;
   using std::time;
 
-  HThread::HThread() : m_threadId(0), m_pool(nullptr) {}
-
   HThread::HThread(ThreadPool* pool, uint32 threadId)
     : m_threadId(threadId),
       m_pool(pool) {}
@@ -64,17 +62,6 @@ namespace geEngineSDK {
       }
     }
   }
-
-  PooledThread::PooledThread(const String& name)
-    : m_name(name),
-      m_id(0),
-      m_idle(true),
-      m_threadStarted(false),
-      m_threadReady(false),
-      m_idleTime(0),
-      m_thread(nullptr) {}
-
-  PooledThread::~PooledThread() {}
 
   void
   PooledThread::initialize() {
@@ -207,8 +194,8 @@ namespace geEngineSDK {
   ThreadPool::ThreadPool(SIZE_T threadCapacity, SIZE_T maxCapacity, uint32 idleTimeout)
     : m_defaultCapacity(threadCapacity),
       m_maxCapacity(maxCapacity),
-      m_idleTimeout(idleTimeout),
-      m_age(0) {}
+      m_idleTimeout(idleTimeout)
+  {}
 
   ThreadPool::~ThreadPool() {
     stopAll();

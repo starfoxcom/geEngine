@@ -47,7 +47,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT BinarySerializer
   {
   public:
-    BinarySerializer();
+    BinarySerializer() = default;
 
     /**
      * @brief Encodes all serializable fields provided by @p object into a
@@ -286,7 +286,7 @@ namespace geEngineSDK {
     isObjectMetaData(uint32 encodedData);
 
     UnorderedMap<void*, uint32> m_objectAddrToId;
-    uint32 m_lastUsedObjectId;
+    uint32 m_lastUsedObjectId = 1;
     Vector<ObjectToEncode> m_objectsToEncode;
     uint32 m_totalBytesWritten;
 
@@ -296,14 +296,14 @@ namespace geEngineSDK {
     UnorderedMap<String, uint64> m_params;
 
     //Meta field size
-    static const uint32 META_SIZE = 4;
+    static constexpr const uint32 META_SIZE = 4;
     
     //Size of the field storing number of array elements
-    static const uint32 NUM_ELEM_FIELD_SIZE = 4;
+    static constexpr const uint32 NUM_ELEM_FIELD_SIZE = 4;
     
     //Size of the field storing the size of a child complex type
-    static const uint32 COMPLEX_TYPE_FIELD_SIZE = 4;
+    static constexpr const uint32 COMPLEX_TYPE_FIELD_SIZE = 4;
 
-    static const uint32 DATA_BLOCK_TYPE_FIELD_SIZE = 4;
+    static constexpr const uint32 DATA_BLOCK_TYPE_FIELD_SIZE = 4;
   };
 }

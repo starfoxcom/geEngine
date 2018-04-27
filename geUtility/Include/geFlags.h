@@ -26,9 +26,9 @@ namespace geEngineSDK {
   class Flags
   {
    public:
-    typedef Storage InternalType;
+    using InternalType = Storage;
 
-    Flags() : m_bits(0) {}
+    Flags() = default;
 
     Flags(Enum value) {
       m_bits = static_cast<Storage>(value);
@@ -213,7 +213,7 @@ namespace geEngineSDK {
     }
 
    private:
-    Storage m_bits;
+    Storage m_bits{0};
   };
 
   /**

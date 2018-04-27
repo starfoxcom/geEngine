@@ -34,8 +34,7 @@ namespace geEngineSDK {
   {
    public:
     Exception(const char* type, const String& description, const String& source)
-      : m_line(0), 
-        m_typeName(type), 
+      : m_typeName(type), 
         m_description(description), 
         m_source(source) {}
 
@@ -59,7 +58,7 @@ namespace geEngineSDK {
         m_file(rhs.m_file),
         m_fullDesc(rhs.m_fullDesc) {}
 
-    ~Exception() _NOEXCEPT {}
+    ~Exception() _NOEXCEPT = default;
 
     Exception&
     operator=(const Exception& rhs) {
@@ -136,7 +135,7 @@ namespace geEngineSDK {
     }
 
    protected:
-    long m_line;
+    long m_line = 0;
     String m_typeName;
     String m_description;
     String m_source;

@@ -22,32 +22,6 @@
 #include "geDebug.h"
 
 namespace geEngineSDK {
-  
-  TextureAtlasLayout::TextureAtlasLayout()
-    : m_initialWidth(0),
-    m_initialHeight(0),
-    m_width(0),
-    m_height(0),
-    m_maxWidth(0),
-    m_maxHeight(0),
-    m_pow2(false)
-  {}
-
-  TextureAtlasLayout::TextureAtlasLayout(uint32 width,
-                                         uint32 height,
-                                         uint32 maxWidth,
-                                         uint32 maxHeight,
-                                         bool pow2)
-    : m_initialWidth(width),
-      m_initialHeight(height),
-      m_width(width),
-      m_height(height),
-      m_maxWidth(maxWidth),
-      m_maxHeight(maxHeight),
-      m_pow2(pow2) {
-    m_nodes.push_back(TexAtlasNode(0, 0, maxWidth, maxHeight));
-  }
-
   bool
   TextureAtlasLayout::addElement(uint32 width, uint32 height, uint32& x, uint32& y) {
     if (0 == width || 0 == height) {
