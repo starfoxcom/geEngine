@@ -27,8 +27,6 @@ namespace geEngineSDK {
     : public RTTIType<SerializedInstance, IReflectable, SerializedInstanceRTTI>
   {
    public:
-    SerializedInstanceRTTI() {}
-
     const String&
     getRTTIName() override {
       static String name = "SerializedInstance";
@@ -68,13 +66,11 @@ namespace geEngineSDK {
 
    public:
     SerializedFieldRTTI() {
-     /*
       addDataBlockField("data",
                         0,
                         &SerializedFieldRTTI::getData,
                         &SerializedFieldRTTI::setData,
                         0);
-                        */
     }
 
     const String&
@@ -118,13 +114,11 @@ namespace geEngineSDK {
     }
    public:
     SerializedDataBlockRTTI() {
-      /*
       addDataBlockField("data",
                         0,
                         &SerializedDataBlockRTTI::getData,
                         &SerializedDataBlockRTTI::setData,
                         0);
-                        */
     }
 
     const String&
@@ -169,14 +163,12 @@ namespace geEngineSDK {
     }
    public:
     SerializedObjectRTTI() {
-      /*
       addReflectableArrayField("entries",
                                1,
                                &SerializedObjectRTTI::getEntry,
                                &SerializedObjectRTTI::getNumEntries,
                                &SerializedObjectRTTI::setEntry,
                                &SerializedObjectRTTI::setNumEntries);
-                               */
     }
 
     const String&
@@ -236,20 +228,17 @@ namespace geEngineSDK {
 
    public:
     SerializedArrayRTTI() {
-      /*
       addPlainField("numElements",
                     0,
                     &SerializedArrayRTTI::getNumElements,
                     &SerializedArrayRTTI::setNumElements);
-                    */
-      /*
+
       addReflectableArrayField("entries",
                                1,
                                &SerializedArrayRTTI::getEntry,
                                &SerializedArrayRTTI::getNumEntries,
                                &SerializedArrayRTTI::setEntry,
                                &SerializedArrayRTTI::setNumEntries);
-                              */
     }
 
     void
@@ -329,20 +318,17 @@ namespace geEngineSDK {
 
    public:
     SerializedSubObjectRTTI() {
-      /*
       addPlainField("typeId",
                     0,
                     &SerializedSubObjectRTTI::getTypeId,
                     &SerializedSubObjectRTTI::setTypeId);
-                    */
-      /*
+
       addReflectableArrayField("entries",
                                1,
                                &SerializedSubObjectRTTI::getEntry,
                                &SerializedSubObjectRTTI::getNumEntries,
                                &SerializedSubObjectRTTI::setEntry,
                                &SerializedSubObjectRTTI::setNumEntries);
-                               */
     }
 
     void
@@ -408,18 +394,16 @@ namespace geEngineSDK {
 
    public:
     SerializedEntryRTTI() {
-      /*
+
       addPlainField("fieldId",
                     0,
                     &SerializedEntryRTTI::getFieldId,
                     &SerializedEntryRTTI::setFieldId);
-                    */
-      /*
+
       addReflectablePtrField("serialized",
                              1,
                              &SerializedEntryRTTI::getSerialized,
                              &SerializedEntryRTTI::setSerialized);
-                             */
     }
 
     const String&
@@ -472,12 +456,10 @@ namespace geEngineSDK {
         &SerializedArrayEntryRTTI::setArrayIdx,
         0);
 
-      /*
       addReflectablePtrField("serialized",
                              1,
                              &SerializedArrayEntryRTTI::getSerialized,
                              &SerializedArrayEntryRTTI::setSerialized);
-                             */
     }
 
     const String&

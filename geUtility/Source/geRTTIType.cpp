@@ -35,14 +35,10 @@
 namespace geEngineSDK {
   using std::find_if;
 
-  RTTITypeBase::RTTITypeBase() {}
-
   RTTITypeBase::~RTTITypeBase() {
-    for (auto iter = m_fields.begin(); iter != m_fields.end(); ++iter) {
-      ge_delete(*iter);
+    for (const auto& item : m_fields) {
+      ge_delete(item);
     }
-
-    m_fields.clear();
   }
 
   RTTIField*

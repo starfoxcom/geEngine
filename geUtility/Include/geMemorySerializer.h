@@ -29,8 +29,8 @@ namespace geEngineSDK {
     };
 
    public:
-    MemorySerializer();
-    ~MemorySerializer();
+    MemorySerializer() = default;
+    ~MemorySerializer() = default;
 
     /**
      * @brief Parses the provided object, serializes all of its data as
@@ -80,6 +80,6 @@ namespace geEngineSDK {
     flushBuffer(uint8* bufferStart, uint32 bytesWritten, uint32& newBufferSize);
 
    private:
-    static const uint32 WRITE_BUFFER_SIZE = 16384;
+    static constexpr const uint32 WRITE_BUFFER_SIZE = 16384;
   };
 }

@@ -51,18 +51,17 @@ namespace geEngineSDK {
      * @brief Creates an unnamed stream.
      */
     DataStream(uint16 accessMode = ACCESS_MODE::kREAD)
-      : m_size(0),
-        m_access(accessMode) {}
+      : m_access(accessMode)
+    {}
 
     /**
      * @brief Creates a named stream.
      */
     DataStream(const String& name, uint16 accessMode = ACCESS_MODE::kREAD) 
       : m_name(name),
-        m_size(0),
         m_access(accessMode) {}
 
-    virtual ~DataStream() {}
+    virtual ~DataStream() = default;
 
     const String&
     getName(void) {
@@ -211,7 +210,7 @@ namespace geEngineSDK {
     static const uint32 streamTempSize;
 
     String m_name;
-    SIZE_T m_size;
+    SIZE_T m_size = 0;
     uint16 m_access;
   };
 

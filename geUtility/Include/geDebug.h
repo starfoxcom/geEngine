@@ -43,7 +43,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Debug
   {
    public:
-     Debug() : m_logHash(0) {}
+     Debug() = default;
 
     /**
      * @brief Adds a log entry in the "Debug" channel.
@@ -118,7 +118,7 @@ namespace geEngineSDK {
     _triggerCallbacks();
 
    private:
-    uint64 m_logHash;
+    uint64 m_logHash = 0;
     Log m_log;
   };
 
@@ -162,11 +162,11 @@ namespace geEngineSDK {
    * @brief Shortcut for logging a verbose message in the debug channel.
    *        Verbose messages can be ignored unlike other log messages.
    */
-#define LOGDBG_VERBOSE(x)
+#define LOGDBG_VERBOSE(x) ((void)0)
 
   /**
    * @brief Shortcut for logging a verbose message in the warning channel.
    *        Verbose messages can be ignored unlike other log messages.
    */
-#define LOGWRN_VERBOSE(x)
+#define LOGWRN_VERBOSE(x) ((void)0)
 }

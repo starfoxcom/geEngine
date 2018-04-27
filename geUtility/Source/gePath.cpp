@@ -26,21 +26,11 @@
 namespace geEngineSDK {
   const Path Path::BLANK = Path();
 
-  Path::Path() : m_isAbsolute(false) {}
-
   Path::Path(const ANSICHAR* pathStr, PATH_TYPE::E type) {
     assign(pathStr, type);
   }
 
-  Path::Path(const UNICHAR* pathStr, PATH_TYPE::E type) {
-    assign(pathStr, type);
-  }
-
   Path::Path(const String& pathStr, PATH_TYPE::E type) {
-    assign(pathStr, type);
-  }
-
-  Path::Path(const WString& pathStr, PATH_TYPE::E type) {
     assign(pathStr, type);
   }
 
@@ -53,17 +43,7 @@ namespace geEngineSDK {
     return *this;
   }
 
-  Path& Path::operator=(const WString& pathStr) {
-    assign(pathStr);
-    return *this;
-  }
-
   Path& Path::operator=(const String& pathStr) {
-    assign(pathStr);
-    return *this;
-  }
-
-  Path& Path::operator=(const UNICHAR* pathStr) {
     assign(pathStr);
     return *this;
   }
@@ -97,57 +77,8 @@ namespace geEngineSDK {
   }
 
   void
-  Path::assign(const UNICHAR* pathStr, PATH_TYPE::E type) {
-    assign(pathStr, wcslen(pathStr), type);
-  }
-
-  void
   Path::assign(const String& pathStr, PATH_TYPE::E type) {
     assign(pathStr.data(), pathStr.length(), type);
-  }
-
-  void
-  Path::assign(const WString& pathStr, PATH_TYPE::E type) {
-    assign(pathStr.data(), pathStr.length(), type);
-  }
-
-  Path&
-  Path::append(const Path& path) {
-    if (!m_filename.empty()) {
-      pushDirectory(m_filename);
-    }
-
-    for (auto& dir : path.m_directories) {
-      pushDirectory(dir);
-    }
-
-    m_filename = path.m_filename;
-    return *this;
-  }
-
-  void
-  Path::assign(const UNICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type) {
-    switch (type) {
-    case PATH_TYPE::kWindows:
-      parseWindows(pathStr, numChars);
-      break;
-    case PATH_TYPE::kUnix:
-      parseUnix(pathStr, numChars);
-      break;
-    case PATH_TYPE::kDefault:
-    default:
-#if GE_PLATFORM == GE_PLATFORM_WIN32
-      parseWindows(pathStr, numChars);
-#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
-      GE_PLATFORM == GE_PLATFORM_LINUX || \
-      GE_PLATFORM == GE_PLATFORM_PS4
-      //TODO: Test parsing with PS4
-      parseUnix(pathStr, numChars);
-#else
-      static_assert(false, "Unsupported platform for path.");
-#endif
-      break;
-    }
   }
 
   void
@@ -175,6 +106,13 @@ namespace geEngineSDK {
     }
   }
 
+#if GE_PLATFORM == GE_PLATFORM_WIN32
+  WString
+  Path::toPlatformString() const {
+    return UTF8::toWide(toString());
+  }
+#endif
+
   String
   Path::toString(PATH_TYPE::E type) const {
     switch (type) {
@@ -190,28 +128,6 @@ namespace geEngineSDK {
       GE_PLATFORM == GE_PLATFORM_LINUX || \
       GE_PLATFORM == GE_PLATFORM_PS4
       return buildUnix();
-#else
-      static_assert(false, "Unsupported platform for path.");
-#endif
-      break;
-    }
-  }
-
-  WString
-  Path::toWString(PATH_TYPE::E type) const {
-    switch (type) {
-    case PATH_TYPE::kWindows:
-      return UTF8::toWide(buildWindows());
-    case PATH_TYPE::kUnix:
-      return UTF8::toWide(buildUnix());
-    case PATH_TYPE::kDefault:
-    default:
-#if GE_PLATFORM == GE_PLATFORM_WIN32
-      return UTF8::toWide(buildWindows());
-#elif GE_PLATFORM == GE_PLATFORM_OSX   || \
-      GE_PLATFORM == GE_PLATFORM_LINUX || \
-      GE_PLATFORM == GE_PLATFORM_PS4
-      return UTF8::toWide(buildUnix());
 #else
       static_assert(false, "Unsupported platform for path.");
 #endif
@@ -426,9 +342,18 @@ namespace geEngineSDK {
     return true;
   }
 
-  void
-  Path::setFilename(const WString& filename) {
-    m_filename = UTF8::fromWide(filename);
+  Path&
+  Path::append(const Path& path) {
+    if (!m_filename.empty()) {
+      pushDirectory(m_filename);
+    }
+
+    for (auto& dir : path.m_directories) {
+      pushDirectory(dir);
+    }
+
+    m_filename = path.m_filename;
+    return *this;
   }
 
   void
@@ -437,26 +362,11 @@ namespace geEngineSDK {
   }
 
   void
-  Path::setBasename(const WString& basename) {
-    m_filename = UTF8::fromWide(basename) + getExtension();
-  }
-
-  void
-  Path::setExtension(const WString& extension) {
-    setExtension(UTF8::fromWide(extension));
-  }
-
-  void
   Path::setExtension(const String& extension) {
     StringStream stream;
     stream << getFilename(false);
     stream << extension;
     m_filename = stream.str();
-  }
-
-  WString
-  Path::getWFilename(bool extension) const {
-    return UTF8::toWide(getFilename(extension));
   }
 
   String
@@ -473,11 +383,6 @@ namespace geEngineSDK {
         return m_filename;
       }
     }
-  }
-
-  WString
-  Path::getWExtension() const {
-    return UTF8::toWide(getExtension());
   }
 
   String
@@ -500,26 +405,6 @@ namespace geEngineSDK {
                 "]");
     }
     return m_directories[idx];
-  }
-
-  WString
-  Path::getWDirectory(SIZE_T idx) const {
-    return UTF8::toWide(getDirectory(idx));
-  }
-
-  WString
-  Path::getWDevice() const {
-    return UTF8::toWide(m_device);
-  }
-
-  WString
-  Path::getWNode() const {
-    return UTF8::toWide(m_node);
-  }
-
-  WString
-  Path::getWTail() const {
-    return UTF8::toWide(getTail());
   }
 
   const String&
@@ -545,24 +430,8 @@ namespace geEngineSDK {
   }
 
   void
-  Path::throwInvalidPathException(const WString& path) {
-    GE_EXCEPT(InvalidParametersException, 
-              "Incorrectly formatted path provided: " + geEngineSDK::toString(path));
-  }
-
-  void
   Path::throwInvalidPathException(const String& path) {
     GE_EXCEPT(InvalidParametersException, "Incorrectly formatted path provided: " + path);
-  }
-
-  void
-  Path::setNode(const WString& node) {
-    m_node = UTF8::fromWide(node);
-  }
-
-  void
-  Path::setDevice(const WString& device) {
-    m_device = UTF8::fromWide(device);
   }
 
   String
@@ -650,8 +519,14 @@ namespace geEngineSDK {
   }
 
   void
-  Path::pushDirectory(const WString& dir) {
-    pushDirectory(UTF8::fromWide(dir));
+  Path::stripInvalid(String& path) {
+    String illegalChars = "\\/:?\"<>|";
+
+    for (auto& entry : path) {
+      if (illegalChars.find(entry) != String::npos) {
+        entry = ' ';
+      }
+    }
   }
 
   void

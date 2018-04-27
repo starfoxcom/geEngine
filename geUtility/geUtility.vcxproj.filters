@@ -94,16 +94,10 @@
     <ClInclude Include="Include\geFrameAlloc.h">
       <Filter>Source Files\Allocators</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geGlobalFrameAlloc.h">
-      <Filter>Source Files\Allocators</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geMemAllocProfiler.h">
       <Filter>Source Files\Allocators</Filter>
     </ClInclude>
     <ClInclude Include="Include\geMemoryAllocator.h">
-      <Filter>Source Files\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geMemStack.h">
       <Filter>Source Files\Allocators</Filter>
     </ClInclude>
     <ClInclude Include="Include\geStaticAlloc.h">
@@ -367,15 +361,27 @@
     <ClInclude Include="Include\geBinaryCloner.h">
       <Filter>Source Files\Serialization</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geStackAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geFreeAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\gePoolAlloc.h">
+      <Filter>Source Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geOctree.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSIMD.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geDataBlob.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
-      <Filter>Source Files\Allocators</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geMemStack.cpp">
-      <Filter>Source Files\Allocators</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geGlobalFrameAlloc.cpp">
       <Filter>Source Files\Allocators</Filter>
     </ClCompile>
     <ClCompile Include="Source\geException.cpp">
@@ -557,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="Source\geFileSerializer.cpp">
       <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geStackAlloc.cpp">
+      <Filter>Source Files\Allocators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

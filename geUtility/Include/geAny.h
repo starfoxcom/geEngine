@@ -35,7 +35,7 @@ namespace geEngineSDK {
     class DataBase
     {
      public:
-      virtual ~DataBase() {}
+      virtual ~DataBase() = default;
       virtual DataBase*
       clone() const = 0;
     };
@@ -54,7 +54,7 @@ namespace geEngineSDK {
     };
 
    public:
-    Any() : m_data(nullptr) {}
+    Any() = default;
 
     template<typename ValueType>
     Any(const ValueType& value) : m_data(ge_new<Data<ValueType>>(value)) {}
@@ -108,7 +108,7 @@ namespace geEngineSDK {
     any_cast_unsafe(Any*);
 
    public:
-    DataBase* m_data;
+    DataBase* m_data = nullptr;
   };
 
   /**

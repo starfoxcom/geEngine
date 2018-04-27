@@ -42,20 +42,21 @@ namespace geEngineSDK {
   IReflectable::createInstanceFromTypeId(uint32 rttiTypeId) {
     RTTITypeBase* type = _getRTTIfromTypeId(rttiTypeId);
 
+    SPtr<IReflectable> output;
     if (nullptr != type) {
-      return type->newRTTIObject();
+      output = type->newRTTIObject();
+      output->m_rttiData = nullptr;
     }
 
-    return nullptr;
+    return output;
   }
 
   RTTITypeBase*
   IReflectable::_getRTTIfromTypeId(uint32 rttiTypeId) {
     Stack<RTTITypeBase*> todo;
-    Vector<RTTITypeBase*>& rootClasses = getDerivedClasses();
 
-    for (auto iter = rootClasses.begin(); iter != rootClasses.end(); ++iter) {
-      todo.push(*iter);
+    for (const auto& item : getDerivedClasses()) {
+      todo.push(item);
     }
 
     while (!todo.empty()) {
@@ -66,9 +67,8 @@ namespace geEngineSDK {
         return curType;
       }
 
-      Vector<RTTITypeBase*>& derivedClasses = curType->getDerivedClasses();
-      for (auto iter = derivedClasses.begin(); iter != derivedClasses.end(); ++iter) {
-        todo.push(*iter);
+      for (const auto& item : curType->getDerivedClasses()) {
+        todo.push(item);
       }
     }
 

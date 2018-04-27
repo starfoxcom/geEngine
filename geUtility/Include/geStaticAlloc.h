@@ -8,10 +8,13 @@
  * Static allocator that attempts to perform zero heap (dynamic) allocations by
  * always keeping an active preallocated buffer. The allocator provides a fixed
  * amount of preallocated memory, and if the size of the allocated data goes
- * over that limit the allocator will fall back to dynamic heap allocations.
+ * over that limit the allocator will fall back to dynamic heap allocations
+ * using the selected allocator.
  *
- * This kind of allocator is only able to free all of its memory at once.
- * Freeing individual elements wont free the memory until a call to clear().
+ * Static allocations can only be freed if memory is deallocated in opposite
+ * order it is allocated. Otherwise static memory gets orphaned until a call to
+ * clear().
+ * Dynamic memory allocations behave depending on the selected allocator.
  *
  * @bug     No known bugs.
  */
@@ -23,18 +26,15 @@
  * Includes
  */
 /*****************************************************************************/
-#include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
   /**
-   * @tparam  BlockSize Size of the initially allocated static block, and minimum size of any
-   *           dynamically allocated memory.
-   * @tparam  MaxDynamicMemory  Maximum amount of unused memory allowed in the buffer after a
-   *          call to clear(). Keeping active dynamic buffers can help prevent further memory
-   *          allocations at the cost of memory. This is not relevant if you stay within the
-   *          bounds of the statically allocated memory.
+   * @tparam  BlockSize   Size of the initially allocated static block, and
+   *                      minimum size of any dynamically allocated memory.
+   * @tparam  DynamicAllocator  Allocator to fall-back to when static buffer is
+   *                            full.
    */
-  template<int BlockSize = 512, int MaxDynamicMemory = 512>
+  template<int BlockSize=512, class DynamicAllocator=TFrameAlloc<BlockSize>>
   class StaticAlloc
   {
    private:
@@ -46,10 +46,8 @@ namespace geEngineSDK {
      public:
       MemBlock(uint8* data, SIZE_T size)
         : m_data(data),
-        m_freePtr(nullptr),
-        m_size(size),
-        m_prevBlock(nullptr),
-        m_nextBlock(nullptr) {}
+          m_size(size)
+      {}
 
       /**
        * @brief Allocates a piece of memory within the block.
@@ -64,30 +62,35 @@ namespace geEngineSDK {
       }
 
       /**
-       * @brief Releases all allocations within a block but doesn't actually free the memory.
+       * @brief Frees a piece of memory within the block. If the memory isn't
+       *        the last allocated memory, no deallocation happens and that
+       *        memory is instead orphaned.
+       */
+      void
+      free(uint8* data, SIZE_T allocSize) {
+        if ((data + allocSize) == (m_data + m_freePtr)) {
+          m_freePtr -= allocSize;
+        }
+      }
+
+      /**
+       * @brief Releases all allocations within a block but doesn't actually 
+       *        free the memory.
        */
       void
       clear() {
         m_freePtr = 0;
       }
 
-      uint8* m_data;
-      SIZE_T m_freePtr;
-      SIZE_T m_size;
-      MemBlock* m_nextBlock;
-      MemBlock* m_prevBlock;
+      uint8* m_data = nullptr;
+      SIZE_T m_freePtr = 0;
+      SIZE_T m_size = 0;
+      MemBlock* m_nextBlock = nullptr;
     };
 
    public:
-    StaticAlloc()
-      : m_staticBlock(m_staticData, BlockSize),
-      m_freeBlock(&m_staticBlock),
-      m_totalAllocBytes(0) {}
-
-    ~StaticAlloc() {
-      GE_ASSERT(m_freeBlock == &m_staticBlock && nullptr == m_staticBlock.m_freePtr);
-      freeBlocks(m_freeBlock);
-    }
+    StaticAlloc() = default;
+    ~StaticAlloc() = default;
 
     /**
      * @brief  Allocates a new piece of memory of the specified size.
@@ -103,12 +106,16 @@ namespace geEngineSDK {
       amount += sizeof(SIZE_T);
 #endif
 
-      SIZE_T freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
-      if (amount > freeMem) {
-        allocBlock(amount);
-      }
+      SIZE_T freeMem = BlockSize - m_freePtr;
 
-      uint8* data = m_freeBlock->alloc(amount);
+      uint8* data;
+      if (amount > freeMem) {
+        data = m_dynamicAlloc.alloc(amount);
+      }
+      else {
+        data = &m_staticData[m_freePtr];
+        m_freePtr += amount;
+      }
 
 #if GE_DEBUG_MODE
       m_totalAllocBytes += amount;
@@ -126,6 +133,32 @@ namespace geEngineSDK {
      * @brief Deallocates a previously allocated piece of memory.
      */
     void
+    free(void* data, SIZE_T allocSize) {
+      if (nullptr == data) {
+        return;
+      }
+
+      uint8* dataPtr = reinterpret_cast<uint8*>(data);
+#if GE_DEBUG_MODE
+      dataPtr -= sizeof(SIZE_T);
+
+      SIZE_T* storedSize = reinterpret_cast<SIZE_T*>(dataPtr);
+      m_totalAllocBytes -= *storedSize;
+#endif
+      if (data > m_staticData && data < (m_staticData + BlockSize)) {
+        if (((reinterpret_cast<uint8*>(data)) + allocSize) == (m_staticData + m_freePtr)) {
+          m_freePtr -= allocSize;
+        }
+      }
+      else {
+        m_dynamicAlloc.free(dataPtr);
+      }
+    }
+
+    /**
+     * @brief Deallocates a previously allocated piece of memory.
+     */
+    void
     free(void* data) {
       if (nullptr == data) {
         return;
@@ -134,13 +167,16 @@ namespace geEngineSDK {
       //Dealloc is only used for debug and can be removed if needed.
       //All the actual deallocation happens in clear()
 
+      uint8* dataPtr = reinterpret_cast<uint8*>(data);
 #if GE_DEBUG_MODE
-      uint8* dataPtr = (uint8*)data;
       dataPtr -= sizeof(SIZE_T);
 
-      SIZE_T* storedSize = (SIZE_T*)(dataPtr);
+      SIZE_T* storedSize = reinterpret_cast<SIZE_T*>(dataPtr);
       m_totalAllocBytes -= *storedSize;
 #endif
+      if (data < m_staticData || data >= (m_staticData + BlockSize)) {
+        m_dynamicAlloc.free(dataPtr);
+      }
     }
 
     /**
@@ -153,7 +189,7 @@ namespace geEngineSDK {
       T* data = reinterpret_cast<T*>(alloc(sizeof(T) * count));
 
       for (SIZE_T i = 0; i < count; ++i) {
-        new (reinterpret_cast<void*>(&data[i])) T;
+        new ((void*)(&data[i])) T;
       }
 
       return data;
@@ -169,20 +205,21 @@ namespace geEngineSDK {
       T* data = reinterpret_cast<T*>(alloc(sizeof(T) * count));
 
       for (SIZE_T i = 0; i < count; ++i) {
-        new (reinterpret_cast<void*>(&data[i])) T(std::forward<Args>(args)...);
+        new ((void*)(&data[i])) T(std::forward<Args>(args)...);
       }
 
       return data;
     }
 
     /**
-     * @brief Destructs and deallocates an object allocated with the static allocator.
+     * @brief Destructs and deallocates an object allocated with the static
+     *        allocator.
      */
     template<class T>
     void
     destruct(T* data) {
       data->~T();
-      free(data);
+      free(data, sizeof(T));
     }
 
     /**
@@ -195,7 +232,7 @@ namespace geEngineSDK {
       for (SIZE_T i = 0; i < count; ++i) {
         data[i].~T();
       }
-      free(data);
+      free(data, sizeof(T) * count);
     }
 
     /**
@@ -205,88 +242,137 @@ namespace geEngineSDK {
     void
     clear() {
       GE_ASSERT(0 == m_totalAllocBytes);
-
-      MemBlock* dynamicBlock = m_staticBlock.m_nextBlock;
-      int32 totalDynamicMemAmount = 0;
-      uint32 numDynamicBlocks = 0;
-
-      while (nullptr != dynamicBlock) {
-        totalDynamicMemAmount += dynamicBlock->m_freePtr;
-        dynamicBlock->clear();
-
-        dynamicBlock = dynamicBlock->m_nextBlock;
-        ++numDynamicBlocks;
-      }
-
-      m_freeBlock = &m_staticBlock;
-      m_staticBlock.clear();
-
-      if (1 < numDynamicBlocks) {
-        freeBlocks(&m_staticBlock);
-        allocBlock(std::min(totalDynamicMemAmount, MaxDynamicMemory));
-        m_freeBlock = &m_staticBlock;
-      }
-      else if (1 == numDynamicBlocks && 0 == MaxDynamicMemory) {
-        freeBlocks(&m_staticBlock);
-      }
+      m_freePtr = 0;
+      m_dynamicAlloc.clear();
     }
 
    private:
     uint8 m_staticData[BlockSize];
-    MemBlock m_staticBlock;
+    SIZE_T m_freePtr = 0;
+    DynamicAllocator m_dynamicAlloc;
+    SIZE_T m_totalAllocBytes = 0;
+  };
 
-    MemBlock* m_freeBlock;
-    SIZE_T m_totalAllocBytes;
+  /**
+   * @brief Allocator for the standard library that internally uses a static
+   *        allocator.
+   */
+  template<int BlockSize, class T>
+  class StdStaticAlloc
+  {
+   public:
+    typedef T value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
+
+    StdStaticAlloc() = default;
+
+    StdStaticAlloc(StaticAlloc<BlockSize, FreeAlloc>* refAlloc) _NOEXCEPT
+      : m_staticAlloc(refAlloc)
+    {}
+
+    template<class U>
+    StdStaticAlloc(const StdStaticAlloc<BlockSize, U>& refAlloc) _NOEXCEPT
+      : m_staticAlloc(refAlloc.m_staticAlloc)
+    {}
+
+    template<class U>
+    class rebind
+    {
+     public:
+      typedef StdStaticAlloc<BlockSize, U> other;
+    };
 
     /**
-    * @brief Allocates a dynamic block of memory of the wanted size.
-    *        The exact allocation size might be slightly higher in order to
-    *        store block meta data.
-    */
-    MemBlock*
-    allocBlock(SIZE_T wantedSize) {
-      SIZE_T blockSize = BlockSize;
-      if (wantedSize > blockSize) {
-        blockSize = wantedSize;
+     * @brief Allocate but don't initialize number elements of type T.
+     */
+    T*
+    allocate(const size_t num) const {
+      if (0 == num) {
+        return nullptr;
       }
 
-      MemBlock* dynamicBlock = m_freeBlock->m_nextBlock;
-      MemBlock* newBlock = nullptr;
-      while (nullptr != dynamicBlock) {
-        if (dynamicBlock->m_size >= blockSize) {
-          newBlock = dynamicBlock;
-          break;
-        }
-
-        dynamicBlock = dynamicBlock->m_nextBlock;
+      if (num > static_cast<size_t>(-1) / sizeof(T)) {
+        return nullptr; //Error
       }
 
-      if (nullptr == newBlock) {
-        uint8* data = reinterpret_cast<uint8*>(ge_alloc(blockSize + sizeof(MemBlock)));
-        newBlock = new (data)MemBlock(data + sizeof(MemBlock), blockSize);
-        newBlock->m_prevBlock = m_freeBlock;
-        m_freeBlock->m_nextBlock = newBlock;
+      void* const pv = m_staticAlloc->alloc(num * sizeof(T));
+      if (!pv) {
+        return nullptr; //Error
       }
 
-      m_freeBlock = newBlock;
-      return newBlock;
+      return static_cast<T*>(pv);
     }
 
     /**
-     * @brief Releases memory for any dynamic blocks following the provided block
-     *        (if there are any).
+     * @brief Deallocate storage p of deleted elements.
      */
     void
-    freeBlocks(MemBlock* start) {
-      MemBlock* dynamicBlock = start->m_nextBlock;
-      while (nullptr != dynamicBlock) {
-        MemBlock* nextBlock = dynamicBlock->m_nextBlock;
-        dynamicBlock->~MemBlock();
-        ge_free(dynamicBlock);
-        dynamicBlock = nextBlock;
-      }
-
-      start->m_nextBlock = nullptr;
+    deallocate(T* p, size_t num) const _NOEXCEPT {
+      m_staticAlloc->free(reinterpret_cast<uint8*>(p), num);
     }
+
+    StaticAlloc<BlockSize, FreeAlloc>* m_staticAlloc = nullptr;
+
+    size_t
+    max_size() const {
+      return std::numeric_limits<size_type>::max() / sizeof(T);
+    }
+
+    void
+    construct(pointer p, const_reference t) {
+      new (p) T(t);
+    }
+
+    void
+    destroy(pointer p) {
+      p->~T();
+    }
+
+    template<class U, class... Args>
+    void
+    construct(U* p, Args&&... args) {
+      new(p) U(std::forward<Args>(args)...);
+    }
+
+    template<class T1, int N1, class T2, int N2>
+    friend bool
+    operator==(const StdStaticAlloc<N1, T1>& a,
+               const StdStaticAlloc<N2, T2>& b) throw();
+
   };
+
+  /**
+   * @brief Return that all specializations of this allocator are
+   *        interchangeable.
+   */
+  template<class T1, int N1, class T2, int N2>
+  bool
+  operator==(const StdStaticAlloc<N1, T1>& a,
+             const StdStaticAlloc<N2, T2>& b) throw() {
+    return N1 == N2 && a.m_staticAlloc == b.m_staticAlloc;
+  }
+
+  /**
+   * @brief Return that all specializations of this allocator are
+   *        interchangeable.
+   */
+  template<class T1, int N1, class T2, int N2>
+  bool
+  operator!=(const StdStaticAlloc<N1, T1>& a,
+             const StdStaticAlloc<N2, T2>& b) throw() {
+    return !(a == b);
+  }
+
+  /**
+   * @brief Equivalent to Vector, except it avoids any dynamic allocations
+   *        until the number of elements exceeds @p Count.
+   * Requires allocator to be explicitly provided.
+   */
+  template<typename T, int Count>
+  using StaticVector = std::vector<T, StdStaticAlloc<sizeof(T) * Count, T>>;
 }

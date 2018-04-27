@@ -97,5 +97,40 @@ namespace geEngineSDK {
      */
     static U32String
     toUTF32(const String& input);
+
+    /**
+     * @brief Counts the number of characters in the provided UTF-8 input
+     *        string.
+     */
+    static SIZE_T
+    count(const String& input);
+
+    /**
+     * @brief Converts the provided UTF8 encoded string to lowercase.
+     */
+    static String
+    toLower(const String& input);
+
+    /**
+     * @brief Converts the provided UTF8 encoded string to uppercase.
+     */
+    static String
+    toUpper(const String& input);
+
+    /**
+     * @brief Returns the byte at which the character with the specified index
+     *        starts. The string is expected to be in UTF-8 encoding. If @p
+     *        charIdx is out of range the method returns the index past the
+     *        last byte in the string (same as the string length in bytes).
+     */
+    static SIZE_T
+    charToByteIndex(const String& input, SIZE_T charIdx);
+
+    /**
+     * @brief Calculates the number of bytes taken up by the character at the
+     *        specified position.
+     */
+    static SIZE_T
+    charByteCount(const String& input, SIZE_T charIdx);
   };
 }

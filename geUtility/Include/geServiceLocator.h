@@ -20,6 +20,8 @@
 #include "geException.h"
 
 namespace geEngineSDK {
+  using std::atomic;
+
   /**
   * @brief A locator system that allows you to quickly find a service of a specific type.
   * @note This is similar to a singleton pattern but unlike singleton the active instance
@@ -54,16 +56,13 @@ namespace geEngineSDK {
      */
     static void
     _remove(T* service) {
-      if (m_service != service) {
-        return;
-      }
-      m_service = nullptr;
+      m_service.compare_exchange_strong(service, nullptr);
     }
 
    private:
-    static T* m_service;
+    static atomic<T*> m_service;
   };
 
   template <class T>
-  T* ServiceLocator<T>::m_service = nullptr;
+  atomic<T*> ServiceLocator<T>::m_service(nullptr);
 }

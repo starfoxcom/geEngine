@@ -132,6 +132,16 @@ namespace geEngineSDK {
     getSystemInfo();
 
     /**
+     * @brief Converts a UTF8 encoded string into uppercase or lowercase.
+     * @param[in]  input    String to convert.
+     * @param[in]  toUpper  If true, converts the character to uppercase.
+     *                      Otherwise convert to lowercase.
+     * @return     Converted string.
+     */
+    static String
+    convertCaseUTF8(const String& input, bool toUpper);
+
+    /**
      * @brief Assigns information about GPU hardware.
      *        This data will be returned by getSystemInfo() when requested.
      *        This is expeced to be called by the render API backend when initialized.

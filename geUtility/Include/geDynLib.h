@@ -48,15 +48,31 @@ namespace geEngineSDK {
   /**
    * @brief Class that holds data about a dynamic library.
    */
-  class GE_UTILITY_EXPORT DynLib
+  class GE_UTILITY_EXPORT DynLib final
   {
    public:
+#if GE_PLATFORM == GE_PLATFORM_LINUX
+    static  const char* EXTENSION = "so";
+    static constexpr const char* PREFIX = "lib";
+#elif GE_PLATFORM == GE_PLATFORM_OSX
+    static constexpr const char* EXTENSION = "dylib";
+    static constexpr const char* PREFIX = "lib";
+#elif GE_PLATFORM == GE_PLATFORM_WIN32
+    static constexpr const char* EXTENSION = "dll";
+    static constexpr const char* PREFIX = nullptr;
+#elif GE_PLATFORM == GE_PLATFORM_PS4
+    static constexpr const char* EXTENSION = "prx";
+    static constexpr const char* PREFIX = "a";
+#else
+#  error Unhandled platform
+#endif
+
     /**
      * @brief Constructs the dynamic library object and loads the library with
      *        the specified name.
      */
-    explicit DynLib(const String& name);
-    ~DynLib();
+    DynLib(String name);
+    ~DynLib() = default;
 
     /**
      * @brief Loads the library. Does nothing if library is already loaded.
@@ -96,12 +112,8 @@ namespace geEngineSDK {
     static String
     dynlibError();
 
-   public:
-    static const char* EXTENSION;
-    static const char* PREFIX;
-
    protected:
-    String m_name;
+    const String m_name;
     DYNLIB_HANDLE m_hInst;  //Handle to the loaded library.
   };
 }

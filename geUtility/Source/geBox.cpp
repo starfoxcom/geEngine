@@ -23,7 +23,23 @@
 #include "geVector4.h"
 #include "geMatrix4.h"
 
+#define SIMDPP_ARCH_X86_SSE4_1
+
+#if GE_COMPILER == GE_COMPILER_MSVC
+# pragma warning(disable: 4127)
+# pragma warning(disable: 4244)
+#endif
+
+# include "Externals/simdpp/simd.h"
+
+#if GE_COMPILER == GE_COMPILER_MSVC
+# pragma warning(default: 4127)
+# pragma warning(default: 4244)
+#endif
+
 namespace geEngineSDK {
+  using namespace simdpp;
+
   AABox::AABox(const Vector3* Points, SIZE_T Count)
     : m_min(0, 0, 0),
       m_max(0, 0, 0),
@@ -53,6 +69,8 @@ namespace geEngineSDK {
 
     const Vector4 VecMin(m_min.x, m_min.y, m_min.z, 0.0f);
     const Vector4 VecMax(m_max.x, m_max.y, m_max.z, 0.0f);
+
+    auto myExtents = load<float32x4>(&VecMin);
 
     const Vector4 m0(M.m[0][0], M.m[0][1], M.m[0][2], M.m[0][3]);
     const Vector4 m1(M.m[1][0], M.m[1][1], M.m[1][2], M.m[1][3]);

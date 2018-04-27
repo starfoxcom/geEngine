@@ -30,7 +30,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT DynLibManager : public Module<DynLibManager>
   {
    public:
-    DynLibManager();
+    DynLibManager() = default;
     virtual ~DynLibManager();
 
     /**
@@ -47,9 +47,10 @@ namespace geEngineSDK {
     unload(DynLib* lib);
 
    protected:
-    Map<String, DynLib*> m_loadedLibraries;
+    Set<NPtr<DynLib>, std::less<>> m_loadedLibraries;
   };
 
   /** Easy way of accessing DynLibManager. */
-  GE_UTILITY_EXPORT DynLibManager& g_dynLibManager();
+  GE_UTILITY_EXPORT DynLibManager&
+  g_dynLibManager();
 }

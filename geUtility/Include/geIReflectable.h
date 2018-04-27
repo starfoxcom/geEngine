@@ -30,7 +30,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT IReflectable
   {
    public:
-    virtual ~IReflectable() {}
+    virtual ~IReflectable() = default;
 
     /**
      * @brief Returns an interface you can use to access class's RTTI.

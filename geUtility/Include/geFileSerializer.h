@@ -46,7 +46,7 @@ namespace geEngineSDK {
     flushBuffer(uint8* bufferStart, uint32 bytesWritten, uint32& newBufferSize);
 
     std::ofstream m_outputStream;
-    uint8* m_writeBuffer;
+    uint8* m_writeBuffer = nullptr;
 
     static const uint32 WRITE_BUFFER_SIZE = 2048;
   };

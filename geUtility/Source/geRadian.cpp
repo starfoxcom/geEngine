@@ -17,6 +17,7 @@
  * Includes
  */
 /*****************************************************************************/
+#include "gePrerequisitesUtil.h"
 #include "geRadian.h"
 #include "geMath.h"
 

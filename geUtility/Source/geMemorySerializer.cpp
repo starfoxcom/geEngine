@@ -28,10 +28,6 @@ namespace geEngineSDK {
   using std::function;
   using std::bind;
 
-  MemorySerializer::MemorySerializer() {}
-
-  MemorySerializer::~MemorySerializer() {}
-
   uint8*
   MemorySerializer::encode(IReflectable* object,
                            uint32& bytesWritten,

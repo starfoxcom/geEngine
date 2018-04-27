@@ -17,18 +17,11 @@
  * Includes
  */
 /*****************************************************************************/
+#include "gePrerequisitesUtil.h"
 #include "geFrameAlloc.h"
 #include "geException.h"
 
 namespace geEngineSDK {
-  FrameAlloc::MemBlock::MemBlock(SIZE_T size) 
-    : m_data(nullptr),
-      m_freePtr(0),
-      m_size(size)
-  {}
-
-  FrameAlloc::MemBlock::~MemBlock() {}
-
   uint8*
   FrameAlloc::MemBlock::alloc(SIZE_T amount) {
     uint8* freePtr = &m_data[m_freePtr];
@@ -47,19 +40,16 @@ namespace geEngineSDK {
       m_freeBlock(nullptr),
       m_nextBlockIdx(0),
      m_totalAllocBytes(0),
-     m_lastFrame(nullptr),
-     m_ownerThread(GE_THREAD_CURRENT_ID) {
-    allocBlock(m_blockSize);
-  }
+     m_lastFrame(nullptr)
+  {}
 #else
   FrameAlloc::FrameAlloc(SIZE_T blockSize)
     : m_blockSize(blockSize),
       m_freeBlock(nullptr),
       m_nextBlockIdx(0),
       m_totalAllocBytes(0),
-      m_lastFrame(nullptr) {
-    allocBlock(m_blockSize);
-  }
+      m_lastFrame(nullptr)
+  {}
 #endif
 
   FrameAlloc::~FrameAlloc() {
@@ -71,11 +61,13 @@ namespace geEngineSDK {
   uint8*
   FrameAlloc::alloc(SIZE_T amount) {
 #if GE_DEBUG_MODE
-    GE_ASSERT(GE_THREAD_CURRENT_ID == m_ownerThread &&
-              "Frame allocator called from invalid thread.");
     amount += sizeof(SIZE_T);
 #endif
-    SIZE_T freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
+    SIZE_T freeMem = 0;
+    if (nullptr != m_freeBlock) {
+      freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
+    }
+
     if (amount > freeMem) {
       allocBlock(amount);
     }
@@ -97,25 +89,28 @@ namespace geEngineSDK {
   uint8*
   FrameAlloc::allocAligned(SIZE_T amount, SIZE_T alignment) {
 #if GE_DEBUG_MODE
-    GE_ASSERT(GE_THREAD_CURRENT_ID == m_ownerThread &&
-              "Frame allocator called from invalid thread.");
-
     amount += sizeof(SIZE_T);
-    SIZE_T freePtr = m_freeBlock->m_freePtr + sizeof(SIZE_T);
-#else
-    SIZE_T freePtr = m_freeBlock->m_freePtr;
 #endif
-
-    SIZE_T alignOffset = alignment - (freePtr & (alignment - 1));
-
-    SIZE_T freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
-    if ((amount + alignOffset) > freeMem) {
-      /** New blocks are allocated on a 16 byte boundary, ensure we enough
-      space is allocated taking into account the requested alignment */
+    SIZE_T freeMem = 0;
+    SIZE_T freePtr = 0;
+    if (nullptr != m_freeBlock) {
+      freeMem = m_freeBlock->m_size - m_freeBlock->m_freePtr;
 #if GE_DEBUG_MODE
-      alignOffset = alignment - sizeof(SIZE_T) & (alignment - 1);
+      freePtr = m_freeBlock->m_freePtr + sizeof(SIZE_T);
 #else
-      if (alignment > 16) {
+      freePtr = m_freeBlock->m_freePtr;
+#endif
+    }
+
+    SIZE_T alignOffset = (alignment - (freePtr & (alignment - 1))) & (alignment - 1);
+    if ((amount + alignOffset) > freeMem) {
+      //New blocks are allocated on a 16 byte boundary, ensure enough space is
+      //allocated taking into account the requested alignment
+
+#if GE_DEBUG_MODE
+      alignOffset = (alignment - (sizeof(SIZE_T) & (alignment - 1))) & (alignment - 1);
+#else
+      if (16 < alignment) {
         alignOffset = alignment - 16;
       }
       else {
@@ -141,7 +136,7 @@ namespace geEngineSDK {
   }
 
   void
-  FrameAlloc::dealloc(uint8* data) {
+  FrameAlloc::free(uint8* data) {
 #if GE_DEBUG_MODE
     data -= sizeof(SIZE_T);
     SIZE_T* storedSize = reinterpret_cast<SIZE_T*>(data);
@@ -160,14 +155,10 @@ namespace geEngineSDK {
 
   void
   FrameAlloc::clear() {
-#if GE_DEBUG_MODE
-    GE_ASSERT(GE_THREAD_CURRENT_ID == m_ownerThread &&
-              "Frame allocator called from invalid thread.");
-#endif
     if (nullptr != m_lastFrame) {
       GE_ASSERT(m_blocks.size() > 0 && 0 < m_nextBlockIdx);
       //HACK: Test if this casting is working correctly on PS4
-      dealloc(static_cast<uint8*>(m_lastFrame));
+      free(static_cast<uint8*>(m_lastFrame));
 
       uint8* framePtr = static_cast<uint8*>(m_lastFrame);
       m_lastFrame = *static_cast<void**>(m_lastFrame);
@@ -247,6 +238,9 @@ namespace geEngineSDK {
 
         allocBlock(totalBytes);
       }
+      else if (m_blocks.size() > 0) {
+        m_blocks[0]->m_freePtr = 0;
+      }
     }
   }
 
@@ -299,11 +293,49 @@ namespace geEngineSDK {
   }
 
   void
-  FrameAlloc::setOwnerThread(ThreadId thread) {
-#if GE_DEBUG_MODE
-    m_ownerThread = thread;
-#else
-    GE_UNREFERENCED_PARAMETER(thread);
-#endif
+  FrameAlloc::setOwnerThread(ThreadId /*thread*/) {}
+
+  GE_THREADLOCAL FrameAlloc* _globalFrameAlloc = nullptr;
+
+  GE_UTILITY_EXPORT FrameAlloc&
+  g_frameAlloc() {
+    if (nullptr == _globalFrameAlloc) {
+      //Note: This will leak memory but since it should exist throughout the
+      //entirety of runtime it should only leak on shutdown when the OS will
+      //free it anyway.
+      _globalFrameAlloc = new FrameAlloc();
+    }
+
+    return *_globalFrameAlloc;
+  }
+
+  GE_UTILITY_EXPORT uint8*
+  ge_frame_alloc(SIZE_T numBytes) {
+    return g_frameAlloc().alloc(numBytes);
+  }
+
+  GE_UTILITY_EXPORT uint8*
+  ge_frame_alloc_aligned(SIZE_T count, SIZE_T align) {
+    return g_frameAlloc().allocAligned(count, align);
+  }
+
+  GE_UTILITY_EXPORT void
+  ge_frame_free(void* data) {
+    g_frameAlloc().free(reinterpret_cast<uint8*>(data));
+  }
+
+  GE_UTILITY_EXPORT void
+  ge_frame_free_aligned(void* data) {
+    g_frameAlloc().free((uint8*)data);
+  }
+
+  GE_UTILITY_EXPORT void
+  ge_frame_mark() {
+    g_frameAlloc().markFrame();
+  }
+
+  GE_UTILITY_EXPORT void
+  ge_frame_clear() {
+    g_frameAlloc().clear();
   }
 }

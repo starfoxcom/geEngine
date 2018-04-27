@@ -57,17 +57,20 @@
 #   define GE_THREADLOCAL __thread
 #   define GE_STDCALL __attribute__((stdcall))
 #   define GE_CDECL __attribute__((cdecl))
+#   define GE_FALLTHROUGH [[clang::fallthrough]];
 #elif defined(__GNUC__) //Check after Clang, as Clang defines this too
 #   define GE_COMPILER GE_COMPILER_GNUC
 #   define GE_COMP_VER (((__GNUC__)*100) + (__GNUC_MINOR__*10) + __GNUC_PATCHLEVEL__)
 #   define GE_THREADLOCAL __thread
 #   define GE_STDCALL __attribute__((stdcall))
 #   define GE_CDECL __attribute__((cdecl))
+#   define GE_FALLTHROUGH __attribute__((fallthrough));
 #elif defined (__INTEL_COMPILER)
 #   define GE_COMPILER GE_COMPILER_INTEL
 #   define GE_COMP_VER __INTEL_COMPILER
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
+#   define BS_FALLTHROUGH
 /** 
  * GE_THREADLOCAL define is down below because Intel compiler defines it
  * differently based on platform
@@ -80,6 +83,7 @@
 #   define GE_THREADLOCAL __declspec(thread)
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
+#   define BS_FALLTHROUGH
 #   undef __PRETTY_FUNCTION__
 #   define __PRETTY_FUNCTION__ __FUNCSIG__
 #else
@@ -283,4 +287,47 @@
 #else
 # define GE_DEBUG_ONLY(x)
 # define GE_ASSERT(x)
+#endif
+
+/*****************************************************************************/
+/**
+ * Disable some compiler warnings
+ */
+/*****************************************************************************/
+
+//If we are compiling with Visual Studio
+#if GE_COMPILER == GE_COMPILER_MSVC
+  /**
+   * TODO:  This is not deactivated anywhere, therefore it applies to any file
+   * that includes this header. Right now I don't have an easier way to apply
+   * these warnings globally so I'm keeping it this way.
+   */
+
+  //Secure versions aren't multi platform, so we won't be using them
+# define _CRT_SECURE_NO_WARNINGS
+
+  /**
+   * Disable: "<type> needs to have DLL interface to be used by clients'
+   * Happens on STL member variables which are not public therefore is ok
+   */
+# pragma warning (disable: 4251)
+
+  //Disable: 'X' Function call with parameters that may be unsafe
+# pragma warning(disable: 4996) 
+
+  /**
+   * Disable: decorated name length exceeded, name was truncated. Happens with
+   * really long type names. Even fairly standard use of std::unordered_map
+   * with custom parameters, meaning I can't really do much to avoid it.
+   * It shouldn't effect execution but might cause problems if you compile library
+   * with one compiler and use it in another.
+   */
+# pragma warning(disable: 4503)
+	
+  /**
+   * Disable: nonstandard extension used: override specifier 'keyword'.
+   * Happens when a keyword was used that is not in the C++ standard, for example,
+   * one of the override specifiers that also works under /clr.
+   */
+# pragma warning(disable : 4481)
 #endif

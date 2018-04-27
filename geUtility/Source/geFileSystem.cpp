@@ -65,13 +65,13 @@ namespace geEngineSDK {
 
         for (auto& file : files) {
           Path fileDestPath = destinationPath;
-          fileDestPath.append(file.getWTail());
+          fileDestPath.append(file.getTail());
           todo.push(std::make_tuple(file, fileDestPath));
         }
 
         for (auto& dir : directories) {
           Path dirDestPath = destinationPath;
-          dirDestPath.append(dir.getWTail());
+          dirDestPath.append(dir.getTail());
           todo.push(std::make_tuple(dir, dirDestPath));
         }
       }
@@ -117,4 +117,6 @@ namespace geEngineSDK {
 
     FileSystem::moveFile(oldPath, newPath);
   }
+
+  Mutex FileScheduler::m_mutex;
 }

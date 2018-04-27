@@ -29,11 +29,7 @@ namespace geEngineSDK {
   class BaseConnectionData
   {
    public:
-    BaseConnectionData() 
-      : m_prev(nullptr),
-        m_next(nullptr),
-        m_isActive(true),
-        m_handleLinks(0) {}
+    BaseConnectionData() = default;
 
     virtual ~BaseConnectionData() {
       GE_ASSERT(!m_handleLinks && !m_isActive);
@@ -45,10 +41,10 @@ namespace geEngineSDK {
     }
 
    public:
-    BaseConnectionData* m_prev;
-    BaseConnectionData* m_next;
-    bool m_isActive;
-    uint32 m_handleLinks;
+    BaseConnectionData* m_prev = nullptr;
+    BaseConnectionData* m_next = nullptr;
+    bool m_isActive = true;
+    uint32 m_handleLinks = 0;
   };
 
   /**
@@ -56,12 +52,7 @@ namespace geEngineSDK {
    */
   struct EventInternalData
   {
-    EventInternalData()
-      : m_connections(nullptr),
-        m_freeConnections(nullptr),
-        m_lastConnection(nullptr),
-        m_newConnections(nullptr),
-        m_isCurrentlyTriggering(false) {}
+    EventInternalData() = default;
 
     ~EventInternalData() {
       BaseConnectionData* conn = m_connections;
@@ -192,13 +183,13 @@ namespace geEngineSDK {
       m_freeConnections->~BaseConnectionData();
     }
 
-    BaseConnectionData* m_connections;
-    BaseConnectionData* m_freeConnections;
-    BaseConnectionData* m_lastConnection;
-    BaseConnectionData* m_newConnections;
+    BaseConnectionData* m_connections = nullptr;
+    BaseConnectionData* m_freeConnections = nullptr;
+    BaseConnectionData* m_lastConnection = nullptr;
+    BaseConnectionData* m_newConnections = nullptr;
 
     RecursiveMutex m_mutex;
-    bool m_isCurrentlyTriggering;
+    bool m_isCurrentlyTriggering = false;
   };
 
   /**
@@ -208,11 +199,15 @@ namespace geEngineSDK {
   class HEvent
   {
    public:
-    HEvent() : m_connection(nullptr) {}
+    HEvent() = default;
 
-    explicit HEvent(const SPtr<EventInternalData>& eventData, BaseConnectionData* connection)
+    HEvent(const HEvent& e) {
+      this->operator=(e);
+    }
+
+    explicit HEvent(SPtr<EventInternalData> eventData, BaseConnectionData* connection)
       : m_connection(connection),
-        m_eventData(eventData) {
+        m_eventData(std::move(eventData)) {
       connection->m_handleLinks++;
     }
 
@@ -260,7 +255,7 @@ namespace geEngineSDK {
     }
 
    private:
-    BaseConnectionData* m_connection;
+    BaseConnectionData* m_connection = nullptr;
     SPtr<EventInternalData> m_eventData;
   };
 
@@ -298,7 +293,7 @@ namespace geEngineSDK {
      * @brief Register a new callback that will get notified once the event is triggered.
      */
     HEvent
-    connect(function<RetType(Args...)> func) {
+    connect(function<RetType(Args...)>& func) {
       RecursiveLock lock(m_internalData->m_mutex);
 
       ConnectionData* connData = nullptr;

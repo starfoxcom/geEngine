@@ -17,6 +17,7 @@
  * Includes
  */
 /*****************************************************************************/
+#include "gePrerequisitesUtil.h"
 #include "geDegree.h"
 #include "geMath.h"
 

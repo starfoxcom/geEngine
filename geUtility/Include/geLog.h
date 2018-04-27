@@ -27,9 +27,12 @@ namespace geEngineSDK {
    */
   class GE_UTILITY_EXPORT LogEntry
   {
-  public:
-    LogEntry() {}
-    LogEntry(const String& msg, uint32 channel);
+   public:
+    LogEntry() = default;
+    LogEntry(String msg, uint32 channel)
+      : m_msg(std::move(msg)),
+        m_channel(channel)
+    {}
 
     /**
      * @brief Channel the message was recorded on.
@@ -61,7 +64,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Log
   {
    public:
-    Log();
+    Log() = default;
     ~Log();
 
     /**
@@ -127,7 +130,7 @@ namespace geEngineSDK {
 
     Vector<LogEntry> m_entries;
     Queue<LogEntry> m_unreadEntries;
-    uint64 m_hash;
+    uint64 m_hash = 0;
     mutable RecursiveMutex m_mutex;
   };
 }

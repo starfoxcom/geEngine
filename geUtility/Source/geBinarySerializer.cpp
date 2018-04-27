@@ -76,8 +76,6 @@ namespace geEngineSDK {
   using std::make_pair;
   using std::static_pointer_cast;
 
-  BinarySerializer::BinarySerializer() : m_lastUsedObjectId(1) {}
-
   void
   BinarySerializer::encode(IReflectable* object,
                            uint8* buffer,

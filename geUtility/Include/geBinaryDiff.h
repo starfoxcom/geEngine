@@ -42,7 +42,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT IDiff
   {
    public:
-    virtual ~IDiff() {}
+    virtual ~IDiff() = default;
 
     /**
      * @brief Generates per-field differences between the provided original and

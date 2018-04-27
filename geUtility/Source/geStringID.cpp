@@ -19,7 +19,7 @@
 #include "geStringID.h"
 
 namespace geEngineSDK {
-  const StringID StringID::NONE = StringID();
+  const StringID StringID::NONE;
 
   volatile StringID::InitStatics StringID::m_initStatics = StringID::InitStatics();
   StringID::InternalData* StringID::m_stringHashTable[HASH_TABLE_SIZE];
@@ -38,8 +38,6 @@ namespace geEngineSDK {
     memset(m_chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
     m_numChunks++;
   }
-
-  StringID::StringID() : m_data(nullptr) {}
 
   template<class T>
   void
