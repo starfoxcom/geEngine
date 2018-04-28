@@ -27,7 +27,7 @@ namespace geEngineSDK {
     StringTableManager : public Module<StringTableManager>
   {
    public:
-    StringTableManager();
+    StringTableManager() = default;
 
     /**
      * @brief Determines the currently active language. Any newly created
@@ -75,7 +75,7 @@ namespace geEngineSDK {
     setTable(uint32 id, const HStringTable& table);
 
    private:
-    Language m_activeLanguage;
+    Language m_activeLanguage = StringTable::DEFAULT_LANGUAGE;
     UnorderedMap<uint32, HStringTable> m_tables;
   };
 

@@ -27,6 +27,9 @@
 /*****************************************************************************/
 
 namespace geEngineSDK {
+  using std::nullptr_t;
+  using std::static_pointer_cast;
+
   class GameObjectManager;
 
   template<typename T>
@@ -37,9 +40,8 @@ namespace geEngineSDK {
    */
   struct GameObjectInstanceData
   {
-    GameObjectInstanceData() : object(nullptr), instanceId(0) {}
     SPtr<GameObject> object;
-    uint64 instanceId;
+    uint64 instanceId = 0;
   };
 
   typedef SPtr<GameObjectInstanceData> GameObjectInstanceDataPtr;
@@ -49,7 +51,7 @@ namespace geEngineSDK {
    */
   struct GE_CORE_EXPORT GameObjectHandleData
   {
-    GameObjectHandleData() : m_ptr(nullptr) {}
+    GameObjectHandleData() = default;
 
     GameObjectHandleData(const SPtr<GameObjectInstanceData>& ptr) {
       m_ptr = ptr;
@@ -165,7 +167,7 @@ namespace geEngineSDK {
 
     GameObjectHandleBase(const SPtr<GameObject> ptr);
     GameObjectHandleBase(const SPtr<GameObjectHandleData>& data);
-    GameObjectHandleBase(std::nullptr_t ptr);
+    GameObjectHandleBase(nullptr_t ptr);
 
     /**
      * @brief Throws an exception if the referenced GameObject has been
@@ -242,7 +244,7 @@ namespace geEngineSDK {
      * @brief Invalidates the handle.
      */
     GameObjectHandle<T>&
-    operator=(std::nullptr_t ptr) {
+    operator=(nullptr_t ptr) {
       m_data = ge_shared_ptr_new<GameObjectHandleData>();
       return *this;
     }
@@ -264,7 +266,7 @@ namespace geEngineSDK {
     SPtr<T>
     getInternalPtr() const {
       throwIfDestroyed();
-      return std::static_pointer_cast<T>(m_data->m_ptr->object);
+      return static_pointer_cast<T>(m_data->m_ptr->object);
     }
 
     /**

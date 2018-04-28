@@ -196,6 +196,8 @@ namespace geEngineSDK {
   class CLight;
   class CAnimation;
   class CBone;
+  class CAudioSource;
+  class CAudioListener;
   class GpuPipelineParamInfo;
   class MaterialParams;
   template <class T> class TAnimationCurve;
@@ -439,6 +441,18 @@ namespace geEngineSDK {
       kID_SceneActor = 1140,
       kID_AudioListener = 1141,
       kID_AudioSource = 1142,
+      kID_ShaderVariationParam = 1143,
+      kID_ShaderVariation = 1144,
+      kID_GpuProgramBytecode = 1145,
+      kID_GpuParamBlockDesc = 1146,
+      kID_GpuParamDataDesc = 1147,
+      kID_GpuParamObjectDesc = 1148,
+      kID_GpuParamDesc = 1149,
+      kID_BlendStateDesc = 1150,
+      kID_RasterizerStateDesc = 1151,
+      kID_DepthStencilStateDesc = 1152,
+      kID_SerializedGpuProgramData = 1153,
+      kID_SubShader = 1154,
 
       //Moved from Engine layer
       kID_CCamera = 30000,
@@ -453,7 +467,8 @@ namespace geEngineSDK {
       kID_ColorGradingSettings = 30019,
       kID_DepthOfFieldSettings = 30020,
       kID_AmbientOcclusionSettings = 30021,
-      kID_ScreenSpaceReflectionsSettings = 30022
+      kID_ScreenSpaceReflectionsSettings = 30022,
+      kID_ShadowSettings = 30023
     };
   }
 }
@@ -510,6 +525,8 @@ namespace geEngineSDK {
   typedef GameObjectHandle<CReflectionProbe> HReflectionProbe;
   typedef GameObjectHandle<CSkybox> HSkybox;
   typedef GameObjectHandle<CLightProbeVolume> HLightProbeVolume;
+  typedef GameObjectHandle<CAudioSource> HAudioSource;
+  typedef GameObjectHandle<CAudioListener> HAudioListener;
 }
 
 namespace geEngineSDK {

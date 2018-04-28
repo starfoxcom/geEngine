@@ -27,16 +27,20 @@
 #include <geUUID.h>
 
 namespace geEngineSDK {
+  using std::nullptr_t;
+  using std::atomic;
+  using std::memory_order_relaxed;
+  using std::static_pointer_cast;
+
   /**
    * @brief Data that is shared between all resource handles.
    */
   struct GE_CORE_EXPORT ResourceHandleData
   {
-    ResourceHandleData() : m_isCreated(false), m_refCount(0) {}
     SPtr<Resource> m_ptr;
     UUID m_uuid;
-    bool m_isCreated;
-    uint32 m_refCount;
+    bool m_isCreated = false;
+    atomic<uint32> m_refCount{0};
   };
 
   /**
@@ -51,7 +55,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT ResourceHandleBase : public IReflectable
   {
    public:
-    virtual ~ResourceHandleBase();
+    virtual ~ResourceHandleBase() = default;
 
     /**
      * @brief Checks if the resource is loaded. Until resource is loaded this
@@ -96,7 +100,7 @@ namespace geEngineSDK {
     }
 
    protected:
-    ResourceHandleBase();
+    ResourceHandleBase() = default;
 
     /**
      * @brief Destroys the resource the handle is pointing to.
@@ -115,6 +119,14 @@ namespace geEngineSDK {
      */
     void
     setHandleData(const SPtr<Resource>& ptr, const UUID& uuid);
+
+    /**
+     * @brief Clears the created flag and the resource pointer, making the
+     *        handle invalid until the resource is loaded again and assigned
+     *        through setHandleData().
+     */
+    void
+    clearHandleData();
 
     /**
      * @brief Increments the reference count of the handle. Only to be used by
@@ -164,7 +176,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT TResourceHandleBase<true> : public ResourceHandleBase
   {
    public:
-    virtual ~TResourceHandleBase() {}
+    virtual ~TResourceHandleBase() = default;
 
    protected:
     void
@@ -195,22 +207,22 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT TResourceHandleBase<false> : public ResourceHandleBase
   {
    public:
-    virtual ~TResourceHandleBase() {}
+    virtual ~TResourceHandleBase() = default;
 
    protected:
     void
     addRef() {
       if (m_data) {
-        m_data->m_refCount++;
+        m_data->m_refCount.fetch_add(1, memory_order_relaxed);
       }
     };
 
     void
     releaseRef() {
       if (m_data) {
-        m_data->m_refCount--;
+        uint32 refCount = m_data->m_refCount.fetch_sub(1, memory_order_relaxed);
 
-        if (0 == m_data->m_refCount) {
+        if (1 == refCount) {
           destroy();
         }
       }
@@ -239,7 +251,7 @@ namespace geEngineSDK {
   class TResourceHandle : public TResourceHandleBase<WeakHandle>
   {
    public:
-    TResourceHandle() {}
+    TResourceHandle() = default;
 
     /**
      * @brief Copy constructor.
@@ -285,7 +297,7 @@ namespace geEngineSDK {
      *        held to the resource.
      */
     TResourceHandle<T, WeakHandle>&
-    operator=(std::nullptr_t ptr) {
+    operator=(nullptr_t ptr) {
       this->releaseRef();
       this->m_data = nullptr;
       return *this;
@@ -303,7 +315,7 @@ namespace geEngineSDK {
     template<class _Ty>
     struct Bool_struct
     {
-      int32 _member;
+      int _member;
     };
 
     /**
@@ -334,7 +346,7 @@ namespace geEngineSDK {
     SPtr<T>
     getInternalPtr() const {
       this->throwIfNotLoaded();
-      return std::static_pointer_cast<T>(this->m_data->m_ptr);
+      return static_pointer_cast<T>(this->m_data->m_ptr);
     }
 
     /**
@@ -434,7 +446,7 @@ namespace geEngineSDK {
   template<class _Ty1, bool _Weak1, class _Ty2, bool _Weak2>
   bool
   operator==(const TResourceHandle<_Ty1, _Weak1>& _Left,
-             std::nullptr_t  _Right) {
+             nullptr_t  _Right) {
     return _Left.getHandleData() == nullptr ||
            _Left.getHandleData()->m_uuid.empty();
   }
@@ -449,14 +461,14 @@ namespace geEngineSDK {
   /**
    * @copydoc ResourceHandleBase
    */
-  template <typename T>
+  template<typename T>
   using ResourceHandle = TResourceHandle<T, false>;
 
   /**
    * @copydoc ResourceHandleBase
    * Weak handles don't prevent the resource from being unloaded.
    */
-  template <typename T>
+  template<typename T>
   using WeakResourceHandle = TResourceHandle<T, true>;
 
   /**

@@ -40,7 +40,7 @@ namespace geEngineSDK {
     m_data = ge_shared_ptr_new<GameObjectHandleData>(ptr->m_instanceData);
   }
 
-  GameObjectHandleBase::GameObjectHandleBase(std::nullptr_t /*ptr*/) {
+  GameObjectHandleBase::GameObjectHandleBase(nullptr_t /*ptr*/) {
     m_data = ge_shared_ptr_new<GameObjectHandleData>(nullptr);
   }
 

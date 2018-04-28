@@ -56,13 +56,13 @@ namespace geEngineSDK {
       //Do nothing
     }
 
-    UnorderedSet<WString>&
+    UnorderedSet<String>&
     getIdentifiers(StringTable* obj) {
       return obj->m_identifiers;
     }
 
     void
-    setIdentifiers(StringTable* obj, UnorderedSet<WString>& val) {
+    setIdentifiers(StringTable* obj, UnorderedSet<String>& val) {
       obj->m_identifiers = val;
     }
 
@@ -152,7 +152,7 @@ namespace geEngineSDK {
 
       data.strings.clear();
       for (uint32 i = 0; i < numElements; ++i) {
-        WString identifier;
+        String identifier;
         memory = rttiReadElement(identifier, memory);
 
         SPtr<LocalizedStringData> entryData = ge_shared_ptr_new<LocalizedStringData>();

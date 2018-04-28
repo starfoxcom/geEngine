@@ -33,23 +33,17 @@ namespace geEngineSDK {
   Signal ResourceHandleBase::m_resourceCreatedCondition;
   Mutex ResourceHandleBase::m_resourceCreatedMutex;
 
-  ResourceHandleBase::ResourceHandleBase() {
-    m_data = nullptr;
-  }
-
-  ResourceHandleBase::~ResourceHandleBase() {}
-
   bool
   ResourceHandleBase::isLoaded(bool checkDependencies) const {
-    bool isLoaded = (nullptr != m_data &&
-                     m_data->m_isCreated &&
-                     nullptr != m_data->m_ptr);
+    bool bIsLoaded = (nullptr != m_data &&
+                      m_data->m_isCreated &&
+                      nullptr != m_data->m_ptr);
 
-    if (checkDependencies && isLoaded) {
-      isLoaded = m_data->m_ptr->areDependenciesLoaded();
+    if (checkDependencies && bIsLoaded) {
+      bIsLoaded = m_data->m_ptr->areDependenciesLoaded();
     }
 
-    return isLoaded;
+    return bIsLoaded;
   }
 
   void
@@ -113,13 +107,20 @@ namespace geEngineSDK {
   }
 
   void
+  ResourceHandleBase::clearHandleData() {
+    m_data->m_ptr = nullptr;
+    Lock lock(m_resourceCreatedMutex);
+    m_data->m_isCreated = false;
+  }
+
+  void
   ResourceHandleBase::addInternalRef() {
-    m_data->m_refCount++;
+    m_data->m_refCount.fetch_add(1, memory_order_relaxed);
   }
 
   void
   ResourceHandleBase::removeInternalRef() {
-    m_data->m_refCount--;
+    m_data->m_refCount.fetch_sub(1, memory_order_relaxed);
   }
 
   void

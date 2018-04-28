@@ -38,7 +38,7 @@ namespace geEngineSDK {
      * @param[in] stringTableId Unique identifier of the string table to
      *            retrieve the string from.
      */
-    explicit HString(const WString& identifier, uint32 stringTableId = 0);
+    explicit HString(const String& identifier, uint32 stringTableId = 0);
 
     /**
      * @brief Creates a new localized string with the specified identifier and
@@ -53,8 +53,8 @@ namespace geEngineSDK {
      * @param[in]	stringTableId	Unique identifier of the string table to
      *            retrieve the string from.
      */
-    explicit HString(const WString& identifier,
-                     const WString& defaultString,
+    explicit HString(const String& identifier,
+                     const String& defaultString,
                      uint32 stringTableId = 0);
 
     /**
@@ -69,9 +69,9 @@ namespace geEngineSDK {
     HString&
     operator=(const HString& rhs);
 
-    operator const WString&() const;
+    operator const String&() const;
 
-    const WString&
+    const String&
     getValue() const;
 
     /**
@@ -82,7 +82,7 @@ namespace geEngineSDK {
      *        like numbers, embedded in them.
      */
     void
-    setParameter(uint32 idx, const WString& value);
+    setParameter(uint32 idx, const String& value);
 
     /**
      * @brief Returns an empty string.
@@ -92,9 +92,9 @@ namespace geEngineSDK {
 
    private:
     SPtr<LocalizedStringData> m_stringData;
-    WString* m_parameters;
-    mutable bool m_isDirty;
-    mutable WString m_cachedString;
-    mutable WString* m_stringPtr;
+    String* m_parameters = nullptr;
+    mutable bool m_isDirty = true;
+    mutable String m_cachedString;
+    mutable String* m_stringPtr = nullptr;
   };
 }

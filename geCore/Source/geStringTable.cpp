@@ -24,13 +24,9 @@
 
 namespace geEngineSDK {
   using std::sort;
+  using std::min;
 
   const Language StringTable::DEFAULT_LANGUAGE = Language::EnglishUS;
-
-  LocalizedStringData::LocalizedStringData()
-    : numParameters(0),
-      parameterOffsets(nullptr)
-  {}
 
   LocalizedStringData::~LocalizedStringData() {
     if (nullptr != parameterOffsets) {
@@ -39,11 +35,11 @@ namespace geEngineSDK {
   }
 
   void
-  LocalizedStringData::concatenateString(WString& outputString,
-                                         WString* parameters,
+  LocalizedStringData::concatenateString(String& outputString,
+                                         String* parameters,
                                          uint32 numParameterValues) const {
     //Safeguard in case translated strings have different number of parameters
-    uint32 actualNumParameters = std::min(numParameterValues, numParameters);
+    uint32 actualNumParameters = min(numParameterValues, numParameters);
 
     if (nullptr != parameters) {
       SIZE_T totalNumChars = 0;
@@ -54,40 +50,44 @@ namespace geEngineSDK {
         prevIdx = parameterOffsets[i].location;
       }
 
-      totalNumChars += string.size() - prevIdx;
+      totalNumChars += this->string.size() - prevIdx;
 
       outputString.resize(totalNumChars);
       
-      //String contiguity required by C++11, but this should work elsewhere as well
-      WCHAR* strData = &outputString[0];
+      //String contiguity required by C++11, but should work elsewhere as well
+      ANSICHAR* strData = &outputString[0];
 
       prevIdx = 0;
       for (uint32 i = 0; i < actualNumParameters; ++i) {
         uint32 strSize = parameterOffsets[i].location - prevIdx;
-        memcpy(strData, &string[prevIdx], strSize * sizeof(WCHAR));
+        memcpy(strData, &this->string[prevIdx], strSize * sizeof(ANSICHAR));
         strData += strSize;
 
-        WString& param = parameters[parameterOffsets[i].paramIdx];
-        memcpy(strData, &param[0], param.size() * sizeof(WCHAR));
+        String& param = parameters[parameterOffsets[i].paramIdx];
+        memcpy(strData, &param[0], param.size() * sizeof(ANSICHAR));
         strData += param.size();
 
         prevIdx = parameterOffsets[i].location;
       }
 
-      memcpy(strData, &string[prevIdx], (string.size() - prevIdx) * sizeof(WCHAR));
+      memcpy(strData,
+             &this->string[prevIdx],
+             (this->string.size() - prevIdx) * sizeof(ANSICHAR));
     }
     else {
-      outputString.resize(string.size());
+      outputString.resize(this->string.size());
 
-      //String contiguity required by C++11, but this should work elsewhere as well
-      WCHAR* strData = &outputString[0];
+      //String contiguity required by C++11, but should work elsewhere as well
+      ANSICHAR* strData = &outputString[0];
 
-      memcpy(strData, &string[0], string.size() * sizeof(WCHAR));
+      memcpy(strData,
+             &this->string[0],
+             this->string.size() * sizeof(ANSICHAR));
     }
   }
 
   void
-  LocalizedStringData::updateString(const WString& _string) {
+  LocalizedStringData::updateString(const String& str) {
     if (nullptr != parameterOffsets) {
       ge_deleteN(parameterOffsets, numParameters);
     }
@@ -95,12 +95,13 @@ namespace geEngineSDK {
     Vector<ParamOffset> paramOffsets;
 
     int32 lastBracket = -1;
-    WStringStream bracketChars;
-    WStringStream cleanString;
+    StringStream bracketChars;
+    StringStream cleanString;
     bool escaped = false;
     uint32 numRemovedChars = 0;
-    for (uint32 i = 0; i < static_cast<uint32>(_string.size()); ++i) {
-      if ('^' == _string[i] && !escaped) {
+
+    for (uint32 i = 0; i < static_cast<uint32>(str.size()); ++i) {
+      if ('^' == str[i] && !escaped) {
         numRemovedChars++;
         escaped = true;
         continue;
@@ -108,21 +109,21 @@ namespace geEngineSDK {
 
       if (-1 == lastBracket) {
         //If current char is non-escaped opening bracket start parameter definition
-        if ('{' == _string[i] && !escaped) {
+        if ('{' == str[i] && !escaped) {
           lastBracket = i;
         }
         else {
-          cleanString << _string[i];
+          cleanString << str[i];
         }
       }
       else {
-        if (isdigit(_string[i])) {
-          bracketChars << _string[i];
+        if (isdigit(str[i])) {
+          bracketChars << str[i];
         }
         else {
           //If current char is non-escaped closing bracket end parameter definition
           uint32 numParamChars = static_cast<uint32>(bracketChars.tellp());
-          if ('}' == _string[i] && numParamChars > 0 && !escaped) {
+          if ('}' == str[i] && numParamChars > 0 && !escaped) {
             //+2 for open and closed brackets
             numRemovedChars += numParamChars + 2;
             uint32 paramIdx = parseUnsignedInt(bracketChars.str());
@@ -131,13 +132,13 @@ namespace geEngineSDK {
           else {
             //Last bracket wasn't really a parameter
             for (uint32 j = lastBracket; j <= i; ++j) {
-              cleanString << _string[j];
+              cleanString << str[j];
             }
           }
 
           lastBracket = -1;
 
-          bracketChars.str(L"");
+          bracketChars.str(u8"");
           bracketChars.clear();
         }
       }
@@ -145,7 +146,7 @@ namespace geEngineSDK {
       escaped = false;
     }
 
-    string = cleanString.str();
+    this->string = cleanString.str();
     numParameters = static_cast<uint32>(paramOffsets.size());
 
     //Try to find out of order param offsets and fix them
@@ -165,7 +166,7 @@ namespace geEngineSDK {
         }
 
         lastParamIdx = paramOffsets[i].paramIdx;
-        sequentialIdx++;
+        ++sequentialIdx;
 
         paramOffsets[i].paramIdx = sequentialIdx;
       }
@@ -210,13 +211,13 @@ namespace geEngineSDK {
   }
 
   bool
-  StringTable::contains(const WString& identifier) {
+  StringTable::contains(const String& identifier) {
     return m_identifiers.find(identifier) == m_identifiers.end();
   }
 
-  Vector<WString>
+  Vector<String>
   StringTable::getIdentifiers() const {
-    Vector<WString> output;
+    Vector<String> output;
     for (auto& entry : m_identifiers) {
       output.push_back(entry);
     }
@@ -224,9 +225,9 @@ namespace geEngineSDK {
   }
 
   void
-  StringTable::setString(const WString& identifier,
+  StringTable::setString(const String& identifier,
                          Language language,
-                         const WString& value) {
+                         const String& value) {
     LanguageData* curLanguage = &(m_allLanguages[static_cast<uint32>(language)]);
     auto iterFind = curLanguage->strings.find(identifier);
 
@@ -243,8 +244,8 @@ namespace geEngineSDK {
     stringData->updateString(value);
   }
 
-  WString
-  StringTable::getString(const WString& identifier, Language language) {
+  String
+  StringTable::getString(const String& identifier, Language language) {
     LanguageData* curLanguage = &(m_allLanguages[static_cast<uint32>(language)]);
     auto iterFind = curLanguage->strings.find(identifier);
     if (iterFind != curLanguage->strings.end()) {
@@ -254,7 +255,7 @@ namespace geEngineSDK {
   }
 
   void
-  StringTable::removeString(const WString& identifier) {
+  StringTable::removeString(const String& identifier) {
     for (uint32 i = 0; i < static_cast<uint32>(Language::Count); ++i) {
       m_allLanguages[i].strings.erase(identifier);
     }
@@ -263,12 +264,12 @@ namespace geEngineSDK {
   }
 
   SPtr<LocalizedStringData>
-  StringTable::getStringData(const WString& identifier, bool insertIfNonExisting) {
+  StringTable::getStringData(const String& identifier, bool insertIfNonExisting) {
     return getStringData(identifier, m_activeLanguage, insertIfNonExisting);
   }
 
   SPtr<LocalizedStringData>
-  StringTable::getStringData(const WString& identifier,
+  StringTable::getStringData(const String& identifier,
                              Language language,
                              bool insertIfNonExisting) {
     LanguageData* curLanguage = &(m_allLanguages[static_cast<uint32>(language)]);

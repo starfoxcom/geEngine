@@ -23,7 +23,7 @@
 
 namespace geEngineSDK {
   enum class GE_SCRIPT_EXPORT(m:Localization) Language {
-    Afar,
+      Afar,
       Abkhazian,
       Avestan,
       Afrikaans,
@@ -231,20 +231,20 @@ namespace geEngineSDK {
       uint32 location;
     };
 
-    LocalizedStringData();
+    LocalizedStringData() = default;
     ~LocalizedStringData();
 
     void
-    concatenateString(WString& outputString,
-                      WString* parameters,
+    concatenateString(String& outputString,
+                      String* parameters,
                       uint32 numParameterValues) const;
 
     void
-    updateString(const WString& string);
+    updateString(const String& str);
 
-    WString string;
-    uint32 numParameters;
-    ParamOffset* parameterOffsets;
+    String string;
+    uint32 numParameters = 0;
+    ParamOffset* parameterOffsets = nullptr;
   };
 
   /**
@@ -252,14 +252,15 @@ namespace geEngineSDK {
    */
   struct LanguageData
   {
-    UnorderedMap<WString, SPtr<LocalizedStringData>> strings;
+    UnorderedMap<String, SPtr<LocalizedStringData>> strings;
   };
 
   /**
    * @brief Used for string localization. Stores strings and their translations
    *        in various languages.
    */
-  class GE_CORE_EXPORT StringTable : public Resource
+  class GE_CORE_EXPORT GE_SCRIPT_EXPORT(m:Localization) StringTable
+    : public Resource
   {
     //TODO:When editing string table I will need to ensure that all languages
     //of the same string have the same number of parameters
@@ -272,44 +273,50 @@ namespace geEngineSDK {
      * @param[in] identifier  Identifier to look for.
      * @return  True if the identifier exists in the table, false otherwise.
      */
+    GE_SCRIPT_EXPORT()
     bool
-    contains(const WString& identifier);
+    contains(const String& identifier);
 
     /**
      * @brief Returns a total number of strings in the table.
      */
-    SIZE_T
+    GE_SCRIPT_EXPORT(n:NumStrings, pr:getter)
+    uint32
     getNumStrings() const {
-      return m_identifiers.size();
+      return static_cast<uint32>(m_identifiers.size());
     }
 
     /**
      * @brief Returns all identifiers that the string table contains localized
      *        strings for.
      */
-    Vector<WString>
+    GE_SCRIPT_EXPORT(n:Identifiers, pr:getter)
+    Vector<String>
     getIdentifiers() const;
 
     /**
      * @brief Adds or modifies string translation for the specified language.
      */
+    GE_SCRIPT_EXPORT()
     void
-    setString(const WString& identifier,
+    setString(const String& identifier,
               Language language,
-              const WString& value);
+              const String& value);
 
     /**
      * @brief Returns a string translation for the specified language.
      *        Returns the identifier itself if one doesn't exist.
      */
-    WString
-    getString(const WString& identifier, Language language);
+    GE_SCRIPT_EXPORT()
+    String
+    getString(const String& identifier, Language language);
 
     /**
      * @brief Removes the string described by identifier, from all languages.
      */
+    GE_SCRIPT_EXPORT()
     void
-    removeString(const WString& identifier);
+    removeString(const String& identifier);
 
     /**
      * @brief Gets a string data for the specified string identifier and
@@ -323,7 +330,7 @@ namespace geEngineSDK {
      *          get deleted.
      */
     SPtr<LocalizedStringData>
-    getStringData(const WString& identifier, bool insertIfNonExisting = true);
+    getStringData(const String& identifier, bool insertIfNonExisting = true);
 
     /**
      * @brief Gets a string data for the specified identifier and language.
@@ -337,13 +344,14 @@ namespace geEngineSDK {
      *          get deleted.
      */
     SPtr<LocalizedStringData>
-    getStringData(const WString& identifier,
+    getStringData(const String& identifier,
                   Language language,
                   bool insertIfNonExisting = true);
 
     /**
      * @brief Creates a new empty string table resource.
      */
+    GE_SCRIPT_EXPORT(ec:StringTable)
     static HStringTable
     create();
 
@@ -380,7 +388,7 @@ namespace geEngineSDK {
     LanguageData* m_activeLanguageData;
     LanguageData* m_defaultLanguageData;
     LanguageData* m_allLanguages;
-    UnorderedSet<WString> m_identifiers;
+    UnorderedSet<String> m_identifiers;
 
     /*************************************************************************/
     /**

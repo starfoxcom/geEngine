@@ -27,40 +27,32 @@
 #include "geStringTableManager.h"
 
 namespace geEngineSDK {
-  HString::HString(uint32 stringTableId)
-    : m_parameters(nullptr),
-      m_isDirty(true),
-      m_stringPtr(nullptr) {
-    m_stringData = StringTableManager::instance().getTable(stringTableId)->getStringData(L"");
+  HString::HString(uint32 stringTableId) {
+    m_stringData = StringTableManager::instance().
+                     getTable(stringTableId)->getStringData(u8"");
     if (m_stringData->numParameters > 0) {
-      m_parameters = ge_newN<WString>(m_stringData->numParameters);
+      m_parameters = ge_newN<String>(m_stringData->numParameters);
     }
   }
 
-  HString::HString(const WString& identifierString, uint32 stringTableId)
-    : m_parameters(nullptr),
-      m_isDirty(true),
-      m_stringPtr(nullptr) {
+  HString::HString(const String& identifierString, uint32 stringTableId) {
     m_stringData = StringTableManager::instance().
                     getTable(stringTableId)->getStringData(identifierString);
     if (m_stringData->numParameters > 0) {
-      m_parameters = ge_newN<WString>(m_stringData->numParameters);
+      m_parameters = ge_newN<String>(m_stringData->numParameters);
     }
   }
 
-  HString::HString(const WString& identifierString,
-                   const WString& defaultString,
-                   uint32 stringTableId)
-    : m_parameters(nullptr),
-      m_isDirty(true),
-      m_stringPtr(nullptr) {
+  HString::HString(const String& identifierString,
+                   const String& defaultString,
+                   uint32 stringTableId) {
     HStringTable table = StringTableManager::instance().getTable(stringTableId);
     table->setString(identifierString, StringTable::DEFAULT_LANGUAGE, defaultString);
 
     m_stringData = table->getStringData(identifierString);
 
     if (m_stringData->numParameters > 0) {
-      m_parameters = ge_newN<WString>(m_stringData->numParameters);
+      m_parameters = ge_newN<String>(m_stringData->numParameters);
     }
   }
 
@@ -70,7 +62,7 @@ namespace geEngineSDK {
     m_cachedString = copy.m_cachedString;
 
     if (copy.m_stringData->numParameters > 0) {
-      m_parameters = ge_newN<WString>(m_stringData->numParameters);
+      m_parameters = ge_newN<String>(m_stringData->numParameters);
       if (nullptr != copy.m_parameters) {
         for (uint32 i = 0; i < m_stringData->numParameters; ++i) {
           m_parameters[i] = copy.m_parameters[i];
@@ -90,7 +82,7 @@ namespace geEngineSDK {
     }
   }
 
-  HString::operator const WString& () const {
+  HString::operator const String& () const {
     return getValue();
   }
 
@@ -106,7 +98,7 @@ namespace geEngineSDK {
     m_cachedString = rhs.m_cachedString;
 
     if (rhs.m_stringData->numParameters > 0) {
-      m_parameters = ge_newN<WString>(m_stringData->numParameters);
+      m_parameters = ge_newN<String>(m_stringData->numParameters);
       if (nullptr != rhs.m_parameters) {
         for (uint32 i = 0; i < m_stringData->numParameters; ++i) {
           m_parameters[i] = rhs.m_parameters[i];
@@ -123,7 +115,7 @@ namespace geEngineSDK {
     return *this;
   }
 
-  const WString&
+  const String&
   HString::getValue() const {
     if (m_isDirty) {
       if (nullptr != m_parameters) {
@@ -143,7 +135,7 @@ namespace geEngineSDK {
   }
 
   void
-  HString::setParameter(uint32 idx, const WString& value) {
+  HString::setParameter(uint32 idx, const String& value) {
     if (idx >= m_stringData->numParameters) {
       return;
     }

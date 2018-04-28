@@ -294,20 +294,11 @@ namespace geEngineSDK {
      */
     GBT_STRUCTURED,
     /**
-     * Buffer containing raw bytes. It is up to the user to interpret the data.
-     */
-    GBT_RAW,
-    /**
      * Special type of buffer allowing you to specify arguments for draw
      * operations inside the buffer instead of providing them directly. Useful
      * when you want to control drawing directly from GPU.
      */
-    GBT_INDIRECTARGUMENT,
-    /**
-     * A stack-like buffer that allows you to add or remove elements to/from
-     * the buffer from within the GPU program.
-     */
-    GBT_APPENDCONSUME
+    GBT_INDIRECTARGUMENT
   };
 
   /**
@@ -689,7 +680,13 @@ namespace geEngineSDK {
     /**
      * Signifies that the shader is rendering a transparent object.
      */
-    Transparent = 0x1
+    Transparent = 0x1,
+
+    /**
+     * Signifies the shader should use the forward rendering pipeline,
+     * if relevant.
+     */
+    Forward = 0x2
   };
 
   /**
@@ -792,15 +789,14 @@ namespace geEngineSDK {
    * @brief Texture addressing mode, per component.
    */
   struct UVWAddressingMode {
-    UVWAddressingMode() : u(TAM_WRAP), v(TAM_WRAP), w(TAM_WRAP) {}
     bool
     operator==(const UVWAddressingMode& rhs) const {
       return u == rhs.u && v == rhs.v && w == rhs.w;
     }
 
-    TextureAddressingMode u;
-    TextureAddressingMode v;
-    TextureAddressingMode w;
+    TextureAddressingMode u{ TAM_WRAP };
+    TextureAddressingMode v{ TAM_WRAP };
+    TextureAddressingMode w{ TAM_WRAP };
   };
 
   /**
@@ -883,7 +879,8 @@ namespace geEngineSDK {
     /**
     * @brief Gets the internal data and checks the data is of valid size. */
     template<class T>
-    const T& getData() const {
+    const T&
+    getData() const {
       GE_ASSERT(sizeof(T) == m_size);
       return *reinterpret_cast<T*>(m_data);
     }

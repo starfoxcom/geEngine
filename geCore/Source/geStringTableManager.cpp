@@ -20,10 +20,6 @@
 #include "geStringTableManager.h"
 
 namespace geEngineSDK {
-  StringTableManager::StringTableManager()
-    : m_activeLanguage(StringTable::DEFAULT_LANGUAGE)
-  {}
-
   void
   StringTableManager::setActiveLanguage(Language language) {
     if (language != m_activeLanguage) {
@@ -38,8 +34,9 @@ namespace geEngineSDK {
   HStringTable
   StringTableManager::getTable(uint32 id) {
     auto iterFind = m_tables.find(id);
-    if (iterFind != m_tables.end())
+    if (iterFind != m_tables.end()) {
       return iterFind->second;
+    }
 
     HStringTable newTable = StringTable::create();
     setTable(id, newTable);
