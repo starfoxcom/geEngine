@@ -36,12 +36,6 @@
 #include <geException.h>
 
 namespace geEngineSDK {
-  GPUResourceData::GPUResourceData()
-    : m_data(nullptr),
-      m_ownsData(false),
-      m_locked(false)
-  {}
-
   GPUResourceData::GPUResourceData(const GPUResourceData& copy) {
     m_data = copy.m_data;
     

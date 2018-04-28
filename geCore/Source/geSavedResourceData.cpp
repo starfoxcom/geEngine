@@ -22,11 +22,6 @@
 #include "geSavedResourceDataRTTI.h"
 
 namespace geEngineSDK {
-  SavedResourceData::SavedResourceData()
-    : m_allowAsync(true),
-      m_compressionMethod(0)
-  {}
-
   SavedResourceData::SavedResourceData(const Vector<UUID>& dependencies,
                                        bool allowAsync,
                                        uint32 compressionMethod)

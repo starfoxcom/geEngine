@@ -42,12 +42,10 @@ namespace geEngineSDK {
   using std::bind;
 
   CoreObject::CoreObject(bool initializeOnCoreThread)
-    : m_flags(0),
+    : m_flags(initializeOnCoreThread ? CGO_FLAGS::kInitOnCoreThread : 0),
       m_coreDirtyFlags(0),
-      m_internalID(0) {
-    m_internalID = CoreObjectManager::instance().registerObject(this);
-    m_flags = initializeOnCoreThread ? m_flags | CGO_INIT_ON_CORE_THREAD : m_flags;
-  }
+      m_internalID(CoreObjectManager::instance().generateId())
+  {}
 
   CoreObject::~CoreObject() {
     if (!isDestroyed()) {
@@ -114,6 +112,7 @@ namespace geEngineSDK {
       }
     }
 
+    m_flags |= CGO_FLAGS::kInitialized;
     markDependenciesDirty();
   }
 
@@ -166,17 +165,15 @@ namespace geEngineSDK {
   CoreObject::queueReturnGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
                                     function<void(AsyncOp&)> func) {
     //See queueGPUCommand
-    return g_coreThread().queueReturnCommand(bind(&CoreObject::executeReturnGPUCommand,
-                                                  obj,
-                                                  func,
-                                                  _1));
+    return g_coreThread().queueReturnCommand(
+      bind(&CoreObject::executeReturnGPUCommand, obj, func, _1));
   }
 
   void
   CoreObject::queueInitializeGPUCommand(const SPtr<geCoreThread::CoreObject>& obj) {
     function<void()> func = bind(&geCoreThread::CoreObject::initialize, obj.get());
     CoreThread::instance().queueCommand(bind(&CoreObject::executeGPUCommand, obj, func),
-                                        CTQF_InternalQueue);
+                                        CTQF::kInternalQueue);
   }
 
   void

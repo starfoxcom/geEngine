@@ -22,6 +22,8 @@
 #include <geAsyncOp.h>
 
 namespace geEngineSDK {
+  using std::function;
+
   class GE_CORE_EXPORT CoreThreadQueueBase
   {
    public:
@@ -35,14 +37,14 @@ namespace geEngineSDK {
      *        value once finished.
      */
     AsyncOp
-    queueReturnCommand(std::function<void(AsyncOp&)> commandCallback);
+    queueReturnCommand(function<void(AsyncOp&)> commandCallback);
 
     /**
      * @brief Queues a new generic command that will be added to the command
      *        queue.
      */
     void
-    queueCommand(std::function<void()> commandCallback);
+    queueCommand(function<void()> commandCallback);
 
     /**
      * @brief Makes all the currently queued commands available to the core

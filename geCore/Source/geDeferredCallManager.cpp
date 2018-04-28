@@ -19,10 +19,8 @@
 #include "geDeferredCallManager.h"
 
 namespace geEngineSDK {
-  DeferredCallManager::DeferredCallManager() {}
-
   void
-  DeferredCallManager::queueDeferredCall(std::function<void()> func) {
+  DeferredCallManager::queueDeferredCall(function<void()> func) {
     m_callbacks.push_back(func);
   }
 
@@ -30,7 +28,7 @@ namespace geEngineSDK {
   DeferredCallManager::_update() {
     while (!m_callbacks.empty()) {
       //Copy because callbacks can be queued within callbacks
-      Vector<std::function<void()>> callbackCopy = m_callbacks;
+      Vector<function<void()>> callbackCopy = m_callbacks;
       m_callbacks.clear();
       for (auto& call : callbackCopy) {
         call();
@@ -39,7 +37,7 @@ namespace geEngineSDK {
   }
 
   void
-  deferredCall(std::function<void()> callback) {
+  deferredCall(function<void()> callback) {
     DeferredCallManager::instance().queueDeferredCall(callback);
   }
 }

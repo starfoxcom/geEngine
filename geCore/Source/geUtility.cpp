@@ -20,7 +20,7 @@
 /*****************************************************************************/
 #include "geUtility.h"
 #include "geRTTIType.h"
-#include "geSceneObject.h"
+//#include "geSceneObject.h"
 
 namespace geEngineSDK {
   Vector<ResourceDependency>

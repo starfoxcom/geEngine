@@ -26,19 +26,19 @@ namespace geEngineSDK {
   {
    public:
     Resource(bool requiresGpuInitialization = true);
-    virtual ~Resource() {};
+    virtual ~Resource() = default;
 
     /**
      * @brief Returns the name of the resource.
      */
-    const WString&
+    const String&
     getName() const;
 
     /**
      * @brief Sets the name of the resource.
      */
     void
-    setName(const WString& name);
+    setName(const String& name);
 
     /**
      * @brief Retrieves meta-data containing various information describing a

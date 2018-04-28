@@ -21,12 +21,6 @@
 #include "geGameObject.h"
 
 namespace geEngineSDK {
-  GameObjectManager::GameObjectManager()
-    : m_nextAvailableID(1),
-      m_isDeserializationActive(false),
-      m_goDeserializationMode(GODM_UseNewIds | GODM_BreakExternal)
-  {}
-
   GameObjectManager::~GameObjectManager() {
     destroyQueuedObjects();
   }
@@ -109,7 +103,7 @@ namespace geEngineSDK {
 
         m_objects[m_nextAvailableID] = handle;
         m_idMapping[originalId] = m_nextAvailableID;
-        m_nextAvailableID++;
+        ++m_nextAvailableID;
 
         return handle;
       }
@@ -118,7 +112,7 @@ namespace geEngineSDK {
 
         m_objects[m_nextAvailableID] = handle;
         m_idMapping[originalId] = m_nextAvailableID;
-        m_nextAvailableID++;
+        ++m_nextAvailableID;
 
         return handle;
       }
@@ -174,27 +168,27 @@ namespace geEngineSDK {
 
     auto findIter = m_idMapping.find(instanceId);
     if (m_idMapping.end() != findIter) {
-      if ((flags & GODM_UseNewIds) != 0) {
+      if ((flags & GOHDM::kUseNewIds) != 0) {
         instanceId = findIter->second;
       }
       isInternalReference = true;
     }
 
     if (isInternalReference ||
-        (!isInternalReference && (flags & GODM_RestoreExternal) != 0)) {
+        (!isInternalReference && (flags & GOHDM::kRestoreExternal) != 0)) {
       auto findIterObj = m_objects.find(instanceId);
 
       if (m_objects.end() != findIterObj) {
         data.handle._resolve(findIterObj->second);
       }
       else {
-        if ((flags & GODM_KeepMissing) == 0) {
+        if ((flags & GOHDM::kKeepMissing) == 0) {
           data.handle._resolve(nullptr);
         }
       }
     }
     else {
-      if ((flags & GODM_KeepMissing) == 0) {
+      if ((flags & GOHDM::kKeepMissing) == 0) {
         data.handle._resolve(nullptr);
       }
     }
@@ -251,7 +245,7 @@ namespace geEngineSDK {
   }
 
   void
-  GameObjectManager::registerOnDeserializationEndCallback(std::function<void()> callback) {
+  GameObjectManager::registerOnDeserializationEndCallback(function<void()> callback) {
 # if GE_DEBUG_MODE
     if (!m_isDeserializationActive) {
       GE_EXCEPT(InvalidStateException,

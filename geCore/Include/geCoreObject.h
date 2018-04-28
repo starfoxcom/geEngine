@@ -35,20 +35,23 @@
 #include <geAsyncOp.h>
 
 namespace geEngineSDK {
+  using std::function;
+  using std::weak_ptr;
+  using std::forward;
+
+  /**
+   * @brief Values that represent current state of the core object
+   */
+  namespace CGO_FLAGS {
+    enum E {
+      kDestroyed = 0x01,
+      kInitOnCoreThread = 0x02,
+      kInitialized = 0x04,
+    };
+  }
+
   class GE_CORE_EXPORT CoreObject
   {
-   protected:
-    /**
-     * @brief Values that represent current state of the core object
-     */
-    enum Flags {
-      //Object has been destroyed and shouldn't be used.
-      CGO_DESTROYED = 0x01,
-      
-      //Object requires initialization on core thread.
-      CGO_INIT_ON_CORE_THREAD = 0x02
-    };
-
    public:
     /**
      * @brief Frees all the data held by this object.
@@ -73,12 +76,21 @@ namespace geEngineSDK {
     initialize();
 
     /**
+     * @brief Returns true if the object has been initialized. Non-initialized
+     *        object should not be used.
+     */
+    bool
+    isInitialized() const {
+      return (m_flags & CGO_FLAGS::kInitialized) != 0;
+    }
+
+    /**
      * @brief Returns true if the object has been destroyed. Destroyed object
      *        should not be used.
      */
     bool
     isDestroyed() const {
-      return (m_flags & CGO_DESTROYED) != 0;
+      return (m_flags & CGO_FLAGS::kDestroyed) != 0;
     }
 
     /**
@@ -172,7 +184,7 @@ namespace geEngineSDK {
      */
     static void
     queueGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
-                    std::function<void()> func);
+                    function<void()> func);
 
     /**
      * @brief Queues a command to be executed on the core thread, with a return
@@ -185,16 +197,18 @@ namespace geEngineSDK {
      */
     static AsyncOp
     queueReturnGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
-                          std::function<void(AsyncOp&)> func);
+                          function<void(AsyncOp&)> func);
 
     bool
     requiresInitOnCoreThread() const {
-      return (m_flags & CGO_INIT_ON_CORE_THREAD) != 0;
+      return (m_flags & CGO_FLAGS::kInitOnCoreThread) != 0;
     }
 
     void
     setIsDestroyed(bool destroyed) {
-      m_flags = destroyed ? m_flags | CGO_DESTROYED : m_flags & ~CGO_DESTROYED;
+      m_flags = destroyed ? 
+        m_flags | CGO_FLAGS::kDestroyed :
+        m_flags & ~CGO_FLAGS::kDestroyed;
     }
 
    private:
@@ -203,7 +217,7 @@ namespace geEngineSDK {
     volatile uint8 m_flags;
     uint32 m_coreDirtyFlags;
     uint64 m_internalID;  //0 is not a valid ID
-    std::weak_ptr<CoreObject> m_this;
+    weak_ptr<CoreObject> m_this;
 
     /**
      * @brief Queues object initialization command on the core thread. The
@@ -230,7 +244,7 @@ namespace geEngineSDK {
      */
     static void
     executeGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
-                      std::function<void()> func);
+                      function<void()> func);
 
     /**
      * @brief Helper wrapper method used for queuing commands with a return
@@ -238,7 +252,7 @@ namespace geEngineSDK {
      */
     static void
     executeReturnGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
-                            std::function<void(AsyncOp&)> func,
+                            function<void(AsyncOp&)> func,
                             AsyncOp& op);
 
    protected:
@@ -343,7 +357,7 @@ namespace geEngineSDK {
   template<class Type, class MainAlloc, class PtrDataAlloc, class... Args>
   SPtr<Type>
   ge_core_ptr_new(Args &&...args) {
-    return SPtr<Type>(ge_new<Type, MainAlloc>(std::forward<Args>(args)...),
+    return SPtr<Type>(ge_new<Type, MainAlloc>(forward<Args>(args)...),
                                               &CoreObject::_delete<Type, MainAlloc>,
                                               StdAlloc<Type, PtrDataAlloc>());
   }
@@ -357,7 +371,7 @@ namespace geEngineSDK {
   template<class Type, class MainAlloc, class... Args>
   SPtr<Type>
   ge_core_ptr_new(Args &&...args) {
-    return SPtr<Type>(ge_new<Type, MainAlloc>(std::forward<Args>(args)...),
+    return SPtr<Type>(ge_new<Type, MainAlloc>(forward<Args>(args)...),
                                               &CoreObject::_delete<Type, MainAlloc>,
                                               StdAlloc<Type, GenAlloc>());
   }
@@ -370,7 +384,7 @@ namespace geEngineSDK {
   template<class Type, class... Args>
   SPtr<Type>
   ge_core_ptr_new(Args &&...args) {
-    return SPtr<Type>(ge_new<Type, GenAlloc>(std::forward<Args>(args)...),
+    return SPtr<Type>(ge_new<Type, GenAlloc>(forward<Args>(args)...),
                                              &CoreObject::_delete<Type, GenAlloc>,
                                              StdAlloc<Type, GenAlloc>());
   }

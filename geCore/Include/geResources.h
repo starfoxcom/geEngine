@@ -26,48 +26,51 @@ namespace geEngineSDK {
   /**
    * @brief Flags that can be used to control resource loading.
    */
-  enum class ResourceLoadFlag {
-    /**
-     * No flags.
-     */
-    None = 0,
-    
-    /**
-     * If enabled all resources referenced by the root resource will be loaded
-     * as well.
-     */
-    LoadDependencies = 1 << 0,
+  namespace RESOURCE_LOAD_FLAG {
+    enum class E {
+      /**
+       * No flags.
+       */
+      kNone = 0,
 
-    /**
-     * If enabled the resource system will keep an internal reference to the
-     * resource so it doesn't get destroyed when it goes out of scope. You can
-     * call Resources::release() to release the internal reference. Each call
-     * to load will create a new internal reference and therefore must be
-     * followed by the same number of release calls. If dependencies are being
-     * loaded, they will not have internal references created regardless of
-     * this parameter.
-     */
-    KeepInternalRef = 1 << 1,
+      /**
+       * If enabled all resources referenced by the root resource will be loaded
+       * as well.
+       */
+      kLoadDependencies = 1 << 0,
 
-    /**
-     * Determines if the loaded resource keeps original data loaded. Sometime
-     * resources will process loaded data and discard the original (e.g.
-     * uncompressing audio on load). This flag can prevent the resource from
-     * discarding the original data. The original data might be required for
-     * saving the resource (via Resources::save), but will use up extra memory.
-     * Normally you want to keep this enabled if you plan on saving the
-     * resource to disk.
-     */
-    KeepSourceData = 1 << 2,
+      /**
+       * If enabled the resource system will keep an internal reference to the
+       * resource so it doesn't get destroyed when it goes out of scope. You can
+       * call Resources::release() to release the internal reference. Each call
+       * to load will create a new internal reference and therefore must be
+       * followed by the same number of release calls. If dependencies are being
+       * loaded, they will not have internal references created regardless of
+       * this parameter.
+       */
+      kKeepInternalRef = 1 << 1,
 
-    /**
-     * Default set of flags used for resource loading.
-     */
-    Default = LoadDependencies | KeepInternalRef
-  };
+      /**
+       * Determines if the loaded resource keeps original data loaded. Sometime
+       * resources will process loaded data and discard the original (e.g.
+       * uncompressing audio on load). This flag can prevent the resource from
+       * discarding the original data. The original data might be required for
+       * saving the resource (via Resources::save), but will use up extra memory.
+       * Normally you want to keep this enabled if you plan on saving the
+       * resource to disk.
+       */
+      kKeepSourceData = 1 << 2,
 
-  typedef Flags<ResourceLoadFlag> ResourceLoadFlags;
-  GE_FLAGS_OPERATORS(ResourceLoadFlag);
+      /**
+       * Default set of flags used for resource loading.
+       */
+      kDefault = kLoadDependencies | kKeepInternalRef
+    };
+  }
+
+  using RLF = RESOURCE_LOAD_FLAG::E;
+  typedef Flags<RLF> ResourceLoadFlags;
+  GE_FLAGS_OPERATORS(RLF);
 
   /**
    * @brief Manager for dealing with all engine resources. It allows you to
@@ -81,13 +84,13 @@ namespace geEngineSDK {
      */
     struct LoadedResourceData
     {
-      LoadedResourceData() : numInternalRefs(0) {}
+      LoadedResourceData() = default;
       LoadedResourceData(const WeakResourceHandle<Resource>& resource)
-        : resource(resource), numInternalRefs(0)
+        : resource(resource)
       {}
 
       WeakResourceHandle<Resource> resource;
-      uint32 numInternalRefs;
+      uint32 numInternalRefs = 0;
     };
 
     /**
@@ -121,16 +124,14 @@ namespace geEngineSDK {
      * @see release(ResourceHandleBase&), unloadAllUnused()
      */
     HResource
-    load(const Path& filePath,
-         ResourceLoadFlags loadFlags = ResourceLoadFlag::Default);
+    load(const Path& filePath, ResourceLoadFlags loadFlags = RLF::kDefault);
 
     /**
      * @copydoc load(const Path&, ResourceLoadFlags)
      */
     template<class T>
     ResourceHandle<T>
-    load(const Path& filePath,
-         ResourceLoadFlags loadFlags = ResourceLoadFlag::Default) {
+    load(const Path& filePath, ResourceLoadFlags loadFlags = RLF::kDefault) {
       return static_resource_cast<T>(load(filePath, loadFlags));
     }
 
@@ -141,7 +142,7 @@ namespace geEngineSDK {
      */
     HResource
     load(const WeakResourceHandle<Resource>& handle,
-         ResourceLoadFlags loadFlags = ResourceLoadFlag::Default);
+         ResourceLoadFlags loadFlags = RLF::kDefault);
 
     /**
      * @copydoc load(const WeakResourceHandle<Resource>&, ResourceLoadFlags)
@@ -149,7 +150,7 @@ namespace geEngineSDK {
     template<class T>
     ResourceHandle<T>
     load(const WeakResourceHandle<T>& handle,
-         ResourceLoadFlags loadFlags = ResourceLoadFlag::Default) {
+         ResourceLoadFlags loadFlags = RLF::kDefault) {
       return static_resource_cast<T>(load((const WeakResourceHandle<Resource>&)handle,
                                           loadFlags));
     }
@@ -166,7 +167,7 @@ namespace geEngineSDK {
      */
     HResource
     loadAsync(const Path& filePath,
-              ResourceLoadFlags loadFlags = ResourceLoadFlag::Default);
+              ResourceLoadFlags loadFlags = RLF::kDefault);
 
     /**
      * @copydoc loadAsync
@@ -174,7 +175,7 @@ namespace geEngineSDK {
     template<class T>
     ResourceHandle<T>
     loadAsync(const Path& filePath,
-              ResourceLoadFlags loadFlags = ResourceLoadFlag::Default) {
+              ResourceLoadFlags loadFlags = RLF::kDefault) {
       return static_resource_cast<T>(loadAsync(filePath, loadFlags));
     }
 
@@ -191,7 +192,7 @@ namespace geEngineSDK {
     HResource
     loadFromUUID(const UUID& uuid,
                  bool async = false,
-                 ResourceLoadFlags loadFlags = ResourceLoadFlag::Default);
+                 ResourceLoadFlags loadFlags = RLF::kDefault);
 
     /**
      * @brief Releases an internal reference to the resource held by the
@@ -213,6 +214,13 @@ namespace geEngineSDK {
      */
     void
     unloadAllUnused();
+
+    /**
+     * @brief Forces unload of all resources, whether they are being used or
+     *        not.
+     */
+    void
+    unloadAll();
 
     /**
      * @brief Saves the resource at the specified location.
@@ -363,7 +371,7 @@ namespace geEngineSDK {
      * @note  Internal method used primarily be resource factory methods.
      */
     HResource
-    _createResourceHandle(const SPtr<Resource>& obj, const UUID& UUID);
+    _createResourceHandle(const SPtr<Resource>& obj, const UUID& uuid);
 
     /**
      * @brief Returns an existing handle for the specified UUID if one exists,
@@ -382,7 +390,7 @@ namespace geEngineSDK {
      *        retrieved from memory if its currently loaded.
      */
     HResource
-    loadInternal(const UUID& UUID,
+    loadInternal(const UUID& uuid,
                  const Path& filePath,
                  bool synchronous,
                  ResourceLoadFlags loadFlags);
@@ -421,6 +429,7 @@ namespace geEngineSDK {
 
     Mutex m_inProgressResourcesMutex;
     Mutex m_loadedResourceMutex;
+    RecursiveMutex m_destroyMutex;
 
     UnorderedMap<UUID, WeakResourceHandle<Resource>> m_handles;
     UnorderedMap<UUID, LoadedResourceData> m_loadedResources;

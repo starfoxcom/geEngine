@@ -26,13 +26,13 @@ namespace geEngineSDK {
     : public RTTIType<ResourceMetaData, IReflectable, ResourceMetaDataRTTI>
   {
    private:
-    WString&
+    String&
     getDisplayName(ResourceMetaData* obj) {
       return obj->m_displayName;
     }
 
     void
-    setDisplayName(ResourceMetaData* obj, WString& name) {
+    setDisplayName(ResourceMetaData* obj, String& name) {
       obj->m_displayName = name;
     }
 

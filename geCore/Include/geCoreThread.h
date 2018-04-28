@@ -41,36 +41,41 @@
 #include <geThreadPool.h>
 
 namespace geEngineSDK {
+  using std::function;
+
   /**
    * @brief Flags that control how is a command submitted to the command queue.
    */
-  enum CoreThreadQueueFlag {
-    /**
-     * Default flag, meaning the commands will be added to the per-thread queue
-     * and only begin executing after submit() has been called.
-     */
-    CTQF_Default = 0,
+  namespace CORE_THREAD_QUEUE_FLAGS {
+    enum E {
+      /**
+       * Default flag, meaning the commands will be added to the per-thread queue
+       * and only begin executing after submit() has been called.
+       */
+      kDefault = 0,
 
-    /**
-     * Specifies that the queued command should be executed on the internal
-     * queue. Internal queue doesn't require a separate CoreThread::submit()
-     * call, and the queued command is instead immediately visible to the core
-     * thread. The downside is that the queue requires additional
-     * synchronization and is slower than the normal queue.
-     */
-    CTQF_InternalQueue = 1 << 0,
+      /**
+       * Specifies that the queued command should be executed on the internal
+       * queue. Internal queue doesn't require a separate CoreThread::submit()
+       * call, and the queued command is instead immediately visible to the core
+       * thread. The downside is that the queue requires additional
+       * synchronization and is slower than the normal queue.
+       */
+      kInternalQueue = 1 << 0,
 
-    /**
-     * If true, the method will block until the command finishes executing on
-     * the core thread. Only relevant for the internal queue commands since
-     * contents of the normal queue won't be submitted to the core thread until
-     * the CoreThread::submit() call.
-     */
-    CTQF_BlockUntilComplete = 1 << 1
-  };
+      /**
+       * If true, the method will block until the command finishes executing on
+       * the core thread. Only relevant for the internal queue commands since
+       * contents of the normal queue won't be submitted to the core thread until
+       * the CoreThread::submit() call.
+       */
+      kBlockUntilComplete = 1 << 1
+    };
+  }
 
-  typedef Flags<CoreThreadQueueFlag> CoreThreadQueueFlags;
-  GE_FLAGS_OPERATORS(CoreThreadQueueFlag)
+  using CTQF = CORE_THREAD_QUEUE_FLAGS::E;
+  typedef Flags<CTQF> CoreThreadQueueFlags;
+  GE_FLAGS_OPERATORS(CTQF)
 
   class GE_CORE_EXPORT CoreThread : public Module<CoreThread>
   {
@@ -132,8 +137,8 @@ namespace geEngineSDK {
      * @note  Thread safe
      */
     AsyncOp
-    queueReturnCommand(std::function<void(AsyncOp&)> commandCallback,
-                       CoreThreadQueueFlags flags = CTQF_Default);
+    queueReturnCommand(function<void(AsyncOp&)> commandCallback,
+                       CoreThreadQueueFlags flags = CTQF::kDefault);
 
     /**
      * @brief Queues a new command that will be added to the global command
@@ -144,8 +149,8 @@ namespace geEngineSDK {
      * @note  Thread safe
      */
     void
-    queueCommand(std::function<void()> commandCallback,
-                 CoreThreadQueueFlags flags = CTQF_Default);
+    queueCommand(function<void()> commandCallback,
+                 CoreThreadQueueFlags flags = CTQF::kDefault);
 
     /**
      * @brief Called once every frame.
@@ -201,19 +206,14 @@ namespace geEngineSDK {
 
     HThread m_coreThread;
     bool m_coreThreadStarted;
-
     ThreadId m_simThreadId;
     ThreadId m_coreThreadId;
-
     Mutex m_commandQueueMutex;
     Mutex m_coreQueueMutex;
-
     Signal m_commandReadyCondition;
     Mutex m_commandNotifyMutex;
-
     Signal m_commandCompleteCondition;
     Mutex m_threadStartedMutex;
-
     Signal m_coreThreadStartedCondition;
 
     CommandQueue<CommandQueueSync>* m_commandQueue;

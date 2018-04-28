@@ -37,7 +37,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT GPUResourceData : public IReflectable
   {
    public:
-    GPUResourceData();
+    GPUResourceData() = default;
     GPUResourceData(const GPUResourceData& copy);
     virtual ~GPUResourceData();
 
@@ -117,9 +117,9 @@ namespace geEngineSDK {
     getInternalBufferSize() const = 0;
 
    private:
-    uint8* m_data;
-    bool m_ownsData;
-    mutable bool m_locked;
+    uint8* m_data = nullptr;
+    bool m_ownsData = false;
+    mutable bool m_locked = false;
 
     /*************************************************************************/
     /**

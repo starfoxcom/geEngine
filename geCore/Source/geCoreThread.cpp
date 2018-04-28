@@ -50,10 +50,10 @@ namespace geEngineSDK {
 
   CoreThread::CoreThread()
     : m_activeFrameAlloc(0),
-    m_coreThreadShutdown(false),
-    m_coreThreadStarted(false),
-    m_commandQueue(nullptr),
-    m_maxCommandNotifyId(0) {
+      m_coreThreadShutdown(false),
+      m_coreThreadStarted(false),
+      m_commandQueue(nullptr),
+      m_maxCommandNotifyId(0) {
     for (uint32 i = 0; i < NUM_SYNC_BUFFERS; ++i) {
       m_frameAllocs[i] = ge_new<FrameAlloc>();
       m_frameAllocs[i]->setOwnerThread(GE_THREAD_CURRENT_ID); //Sim thread
@@ -214,16 +214,16 @@ namespace geEngineSDK {
   }
 
   AsyncOp
-  CoreThread::queueReturnCommand(std::function<void(AsyncOp&)> commandCallback,
+  CoreThread::queueReturnCommand(function<void(AsyncOp&)> commandCallback,
                                  CoreThreadQueueFlags flags) {
     GE_ASSERT(GE_THREAD_CURRENT_ID != getCoreThreadId() &&
               "Cannot queue commands on the core thread for the core thread");
 
-    if (!flags.isSet(CTQF_InternalQueue)) {
+    if (!flags.isSet(CTQF::kInternalQueue)) {
       return getQueue()->queueReturnCommand(commandCallback);
     }
     else {
-      bool blockUntilComplete = flags.isSet(CTQF_BlockUntilComplete);
+      bool blockUntilComplete = flags.isSet(CTQF::kBlockUntilComplete);
 
       AsyncOp op;
       uint32 commandId = Math::MAX_UINT32;
@@ -249,16 +249,16 @@ namespace geEngineSDK {
   }
 
   void
-  CoreThread::queueCommand(std::function<void()> commandCallback,
+  CoreThread::queueCommand(function<void()> commandCallback,
                            CoreThreadQueueFlags flags) {
     GE_ASSERT(GE_THREAD_CURRENT_ID != getCoreThreadId() &&
               "Cannot queue commands on the core thread for the core thread");
 
-    if (!flags.isSet(CTQF_InternalQueue)) {
+    if (!flags.isSet(CTQF::kInternalQueue)) {
       getQueue()->queueCommand(commandCallback);
     }
     else {
-      bool blockUntilComplete = flags.isSet(CTQF_BlockUntilComplete);
+      bool blockUntilComplete = flags.isSet(CTQF::kBlockUntilComplete);
 
       uint32 commandId = Math::MAX_UINT32;
       {

@@ -22,6 +22,8 @@
 #include "geCoreThread.h"
 
 namespace geEngineSDK {
+  using std::bind;
+
   CoreThreadQueueBase::CoreThreadQueueBase(CommandQueueBase* commandQueue)
     : m_commandQueue(commandQueue)
   {}
@@ -31,12 +33,12 @@ namespace geEngineSDK {
   }
 
   AsyncOp
-  CoreThreadQueueBase::queueReturnCommand(std::function<void(AsyncOp&)> commandCallback) {
+  CoreThreadQueueBase::queueReturnCommand(function<void(AsyncOp&)> commandCallback) {
     return m_commandQueue->queueReturn(commandCallback);
   }
 
   void
-  CoreThreadQueueBase::queueCommand(std::function<void()> commandCallback) {
+  CoreThreadQueueBase::queueCommand(function<void()> commandCallback) {
     m_commandQueue->queue(commandCallback);
   }
 
@@ -44,10 +46,10 @@ namespace geEngineSDK {
   CoreThreadQueueBase::submitToCoreThread(bool /*blockUntilComplete*/) {
     Queue<QueuedCommand>* commands = m_commandQueue->flush();
 
-    g_coreThread().queueCommand(std::bind(&CommandQueueBase::playback,
-                                          m_commandQueue,
-                                          commands),
-                                CTQF_InternalQueue | CTQF_BlockUntilComplete);
+    g_coreThread().queueCommand(bind(&CommandQueueBase::playback,
+                                     m_commandQueue,
+                                     commands),
+                                CTQF::kInternalQueue | CTQF::kBlockUntilComplete);
   }
 
   void

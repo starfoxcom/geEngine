@@ -26,8 +26,6 @@ namespace geEngineSDK {
     Signal CoreObject::m_coreGPUObjectLoadedCondition;
     Mutex CoreObject::m_coreGPUObjectLoadedMutex;
 
-    CoreObject::CoreObject() : m_flags(0) {}
-
     CoreObject::~CoreObject() {
       THROW_IF_NOT_CORE_THREAD;
     }

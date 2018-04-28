@@ -26,7 +26,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT SavedResourceData : public IReflectable
   {
    public:
-    SavedResourceData();
+    SavedResourceData() = default;
     SavedResourceData(const Vector<UUID>& dependencies,
                       bool allowAsync,
                       uint32 compressionMethod);
@@ -57,8 +57,8 @@ namespace geEngineSDK {
 
    private:
     Vector<UUID> m_dependencies;
-    bool m_allowAsync;
-    uint32 m_compressionMethod;
+    bool m_allowAsync = true;
+    uint32 m_compressionMethod = 0;
 
     /*************************************************************************/
     /**

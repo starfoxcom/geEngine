@@ -19,7 +19,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
 #include "geGameObject.h"
-#include "geSceneObject.h"
+//#include "geSceneObject.h"
 #include "geGameObjectManager.h"
 #include <geRTTIType.h>
 
@@ -115,7 +115,7 @@ namespace geEngineSDK {
     void
     onDeserializationStarted(IReflectable* obj,
                              const UnorderedMap<String,
-                             uint64>& params) override {
+                             uint64>&/* params*/) override {
       GameObject* gameObject = static_cast<GameObject*>(obj);
 
       //It's possible we're just accessing the game object fields, in which

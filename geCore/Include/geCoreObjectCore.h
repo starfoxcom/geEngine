@@ -38,14 +38,14 @@ namespace geEngineSDK {
     class GE_CORE_EXPORT CoreObject
     {
      public:
-      CoreObject();
+      CoreObject() = default;
       virtual ~CoreObject();
 
       /**
        * @brief Called on the core thread when the object is first created.
        */
       virtual void
-        initialize();
+      initialize();
 
       /**
        * @brief Returns a shared_ptr version of "this" pointer.
@@ -107,7 +107,7 @@ namespace geEngineSDK {
       setIsInitialized(bool initialized) {
         m_flags = initialized ?
           m_flags | CO_FLAGS::kInitialized :
-          m_flags & ~CO_FLAGS::kScheduledForInit;
+          m_flags & ~CO_FLAGS::kInitialized;
       }
 
       void
@@ -117,7 +117,7 @@ namespace geEngineSDK {
           m_flags & ~CO_FLAGS::kScheduledForInit;
       }
 
-      volatile uint8 m_flags;
+      volatile uint8 m_flags = 0;
       std::weak_ptr<CoreObject> m_this;
       static Signal m_coreGPUObjectLoadedCondition;
       static Mutex m_coreGPUObjectLoadedMutex;

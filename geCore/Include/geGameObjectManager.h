@@ -23,41 +23,46 @@
 #include <geModule.h>
 
 namespace geEngineSDK {
+  using std::function;
+
   /**
    * @brief Possible modes to use when deserializing games objects.
    */
-  enum GameObjectHandleDeserializationMode
-  {
-    /**
-     * All handles will point to old ID that were restored from the
-     * deserialized file.
-     */
-    GODM_UseOriginalIds = 0x01,
+  namespace GAME_OBJECT_HANDLE_DESERIALIZATION_MODE {
+    enum E {
+      /**
+       * All handles will point to old ID that were restored from the
+       * deserialized file.
+       */
+      kUseOriginalIds = 0x01,
 
-    /**
-     * All handles will point to new IDs that were given to the deserialized
-     * GameObjects.
-     */
-    GODM_UseNewIds = 0x02,
+      /**
+       * All handles will point to new IDs that were given to the deserialized
+       * GameObjects.
+       */
+      kUseNewIds = 0x02,
 
-    /**
-     * Handles pointing to GameObjects outside of the currently deserialized
-     * set will attempt to be restored in case those objects are still active.
-     */
-    GODM_RestoreExternal = 0x04,
+      /**
+       * Handles pointing to GameObjects outside of the currently deserialized
+       * set will attempt to be restored in case those objects are still active.
+       */
+      kRestoreExternal = 0x04,
 
-    /**
-     * Handles pointing to GameObjects outside of the currently deserialized
-     * set will be broken.
-     */
-    GODM_BreakExternal = 0x08,
+      /**
+       * Handles pointing to GameObjects outside of the currently deserialized
+       * set will be broken.
+       */
+      kBreakExternal = 0x08,
 
-    /**
-     * Handles pointing to GameObjects that cannot be found will not be set to
-     * null.
-     */
-    GODM_KeepMissing = 0x10
-  };
+      /**
+       * Handles pointing to GameObjects that cannot be found will not be set to
+       * null.
+       */
+      kKeepMissing = 0x10
+    };
+  }
+
+  using GOHDM = GAME_OBJECT_HANDLE_DESERIALIZATION_MODE::E;
 
   /**
    * @brief Tracks GameObject creation and destructions. Also resolves
@@ -76,7 +81,7 @@ namespace geEngineSDK {
     };
 
    public:
-    GameObjectManager();
+    GameObjectManager() = default;
     ~GameObjectManager();
 
     /**
@@ -192,7 +197,7 @@ namespace geEngineSDK {
      *        serialization ends.
      */
     void
-    registerOnDeserializationEndCallback(std::function<void()> callback);
+    registerOnDeserializationEndCallback(function<void()> callback);
 
     /**
      * @brief Changes the deserialization mode for any following GameObject
@@ -221,16 +226,16 @@ namespace geEngineSDK {
     }
 
    private:
-    uint64 m_nextAvailableID; //0 is not a valid ID
+    uint64 m_nextAvailableID = 1; //0 is not a valid ID
     Map<uint64, GameObjectHandleBase> m_objects;
     Map<uint64, GameObjectHandleBase> m_queuedForDestroy;
 
     GameObject* m_activeDeserializedObject;
-    bool m_isDeserializationActive;
+    bool m_isDeserializationActive = false;
     Map<uint64, uint64> m_idMapping;
     Map<uint64, SPtr<GameObjectHandleData>> m_unresolvedHandleData;
     Vector<UnresolvedHandle> m_unresolvedHandles;
-    Vector<std::function<void()>> m_endCallbacks;
-    uint32 m_goDeserializationMode;
+    Vector<function<void()>> m_endCallbacks;
+    uint32 m_goDeserializationMode = GOHDM::kUseNewIds | GOHDM::kBreakExternal;
   };
 }

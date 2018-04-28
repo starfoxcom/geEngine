@@ -23,6 +23,9 @@
 #include <functional>
 
 namespace geEngineSDK {
+  using std::defer_lock;
+  using std::function;
+
   /**
    * @brief Command queue policy that provides no synchronization. Should be
    *        used with command queues that are used on a single thread only.
@@ -30,8 +33,8 @@ namespace geEngineSDK {
   class CommandQueueNoSync
   {
    public:
-    CommandQueueNoSync() {}
-    virtual ~CommandQueueNoSync() {}
+    CommandQueueNoSync() = default;
+    virtual ~CommandQueueNoSync() = default;
 
     bool
     isValidThread(ThreadId ownerThread) const {
@@ -52,8 +55,8 @@ namespace geEngineSDK {
   class CommandQueueSync
   {
    public:
-    CommandQueueSync() : m_lock(m_commandQueueMutex, std::defer_lock) {}
-    virtual ~CommandQueueSync() {}
+    CommandQueueSync() : m_lock(m_commandQueueMutex, defer_lock) {}
+    virtual ~CommandQueueSync() = default;
 
     bool
     isValidThread(ThreadId /*ownerThread*/) const {
@@ -83,7 +86,7 @@ namespace geEngineSDK {
   struct QueuedCommand
   {
 # if GE_DEBUG_MODE
-    QueuedCommand(std::function<void(AsyncOp&)> _callback,
+    QueuedCommand(function<void(AsyncOp&)> _callback,
                   uint32 _debugId,
                   const SPtr<AsyncOpSyncData>& asyncOpSyncData,
                   bool _notifyWhenComplete = false,
@@ -96,7 +99,7 @@ namespace geEngineSDK {
         notifyWhenComplete(_notifyWhenComplete)
     {}
 
-    QueuedCommand(std::function<void()> _callback,
+    QueuedCommand(function<void()> _callback,
                   uint32 _debugId,
                   bool _notifyWhenComplete = false,
                   uint32 _callbackId = 0)
@@ -110,7 +113,7 @@ namespace geEngineSDK {
 
     uint32 debugId;
 # else
-    QueuedCommand(std::function<void(AsyncOp&)> _callback,
+    QueuedCommand(function<void(AsyncOp&)> _callback,
                   const SPtr<AsyncOpSyncData>& asyncOpSyncData,
                   bool _notifyWhenComplete = false,
                   uint32 _callbackId = 0)
@@ -121,7 +124,7 @@ namespace geEngineSDK {
         notifyWhenComplete(_notifyWhenComplete)
     {}
 
-    QueuedCommand(std::function<void()> _callback,
+    QueuedCommand(function<void()> _callback,
                   bool _notifyWhenComplete = false,
                   uint32 _callbackId = 0)
       : callback(_callback),
@@ -132,7 +135,7 @@ namespace geEngineSDK {
     {}
 # endif
 
-    ~QueuedCommand() {}
+    ~QueuedCommand() = default;
 
     QueuedCommand(const QueuedCommand& source) {
       callback = source.callback;
@@ -162,8 +165,8 @@ namespace geEngineSDK {
       return *this;
     }
 
-    std::function<void()> callback;
-    std::function<void(AsyncOp&)> callbackWithReturnValue;
+    function<void()> callback;
+    function<void(AsyncOp&)> callbackWithReturnValue;
     AsyncOp asyncOp;
     bool returnsValue;
     uint32 callbackId;
@@ -206,7 +209,7 @@ namespace geEngineSDK {
      */
     void
     playbackWithNotify(Queue<QueuedCommand>* commands,
-                       std::function<void(uint32)> notifyCallback);
+                       function<void(uint32)> notifyCallback);
 
     /**
      * @brief Executes all provided commands one by one in order. To get the
@@ -252,7 +255,7 @@ namespace geEngineSDK {
      *        automatically, but the return value will default to nullptr)
      */
     AsyncOp
-    queueReturn(std::function<void(AsyncOp&)> commandCallback,
+    queueReturn(function<void(AsyncOp&)> commandCallback,
                 bool _notifyWhenComplete = false,
                 uint32 _callbackId = 0);
 
@@ -271,7 +274,7 @@ namespace geEngineSDK {
      *            then later find it if needed.
      */
     void
-    queue(std::function<void()> commandCallback,
+    queue(function<void()> commandCallback,
           bool _notifyWhenComplete = false,
           uint32 _callbackId = 0);
 
@@ -349,11 +352,11 @@ namespace geEngineSDK {
     uint32 m_maxDebugIdx;
     uint32 m_commandQueueIdx;
 
-    static uint32 maxCommandQueueIdx;
+    static uint32 s_maxCommandQueueIdx;
     static UnorderedSet<QueueBreakpoint,
                         QueueBreakpoint::HashFunction,
-                        QueueBreakpoint::EqualFunction> setBreakpoints;
-    static Mutex commandQueueBreakpointMutex;
+                        QueueBreakpoint::EqualFunction> s_setBreakpoints;
+    static Mutex s_commandQueueBreakpointMutex;
 
     /**
      * @brief Checks if the specified command has a breakpoint and throw an
@@ -381,13 +384,13 @@ namespace geEngineSDK {
       : CommandQueueBase(threadId)
     {}
 
-    ~CommandQueue() {}
+    ~CommandQueue() = default;
 
     /**
      * @copydoc CommandQueueBase::queueReturn
      */
     AsyncOp
-    queueReturn(std::function<void(AsyncOp&)> commandCallback,
+    queueReturn(function<void(AsyncOp&)> commandCallback,
                 bool _notifyWhenComplete = false,
                 uint32 _callbackId = 0) {
 # if GE_DEBUG_MODE
@@ -409,7 +412,7 @@ namespace geEngineSDK {
      * @copydoc CommandQueueBase::queue
      */
     void
-    queue(std::function<void()> commandCallback,
+    queue(function<void()> commandCallback,
           bool _notifyWhenComplete = false,
           uint32 _callbackId = 0) {
 # if GE_DEBUG_MODE

@@ -30,8 +30,8 @@ namespace geEngineSDK {
     m_asyncOpSyncData = ge_shared_ptr_new<AsyncOpSyncData>();
     m_commands = ge_new<geEngineSDK::Queue<QueuedCommand>>();
     {
-      Lock lock(commandQueueBreakpointMutex);
-      m_commandQueueIdx = maxCommandQueueIdx++;
+      Lock lock(s_commandQueueBreakpointMutex);
+      m_commandQueueIdx = s_maxCommandQueueIdx++;
     }
   }
 # else
@@ -54,7 +54,7 @@ namespace geEngineSDK {
   }
 
   AsyncOp
-  CommandQueueBase::queueReturn(std::function<void(AsyncOp&)> commandCallback,
+  CommandQueueBase::queueReturn(function<void(AsyncOp&)> commandCallback,
                                 bool _notifyWhenComplete,
                                 uint32 _callbackId) {
 # if GE_DEBUG_MODE
@@ -79,7 +79,7 @@ namespace geEngineSDK {
   }
 
   void
-  CommandQueueBase::queue(std::function<void()> commandCallback,
+  CommandQueueBase::queue(function<void()> commandCallback,
                           bool _notifyWhenComplete,
                           uint32 _callbackId) {
 # if GE_DEBUG_MODE
@@ -100,24 +100,24 @@ namespace geEngineSDK {
 # endif
   }
 
-  geEngineSDK::Queue<QueuedCommand>*
+  Queue<QueuedCommand>*
   CommandQueueBase::flush() {
-    geEngineSDK::Queue<QueuedCommand>* oldCommands = m_commands;
+    Queue<QueuedCommand>* oldCommands = m_commands;
 
     if (!m_emptyCommandQueues.empty()) {
       m_commands = m_emptyCommandQueues.top();
       m_emptyCommandQueues.pop();
     }
     else {
-      m_commands = ge_new<geEngineSDK::Queue<QueuedCommand>>();
+      m_commands = ge_new<Queue<QueuedCommand>>();
     }
 
     return oldCommands;
   }
 
   void
-  CommandQueueBase::playbackWithNotify(geEngineSDK::Queue<QueuedCommand>* commands,
-                                       std::function<void(uint32)> notifyCallback) {
+  CommandQueueBase::playbackWithNotify(Queue<QueuedCommand>* commands,
+                                       function<void(uint32)> notifyCallback) {
     THROW_IF_NOT_CORE_THREAD;
 
     if (nullptr == commands) {
@@ -154,13 +154,13 @@ namespace geEngineSDK {
   }
 
   void
-  CommandQueueBase::playback(geEngineSDK::Queue<QueuedCommand>* commands) {
-    playbackWithNotify(commands, std::function<void(uint32)>());
+  CommandQueueBase::playback(Queue<QueuedCommand>* commands) {
+    playbackWithNotify(commands, function<void(uint32)>());
   }
 
   void
   CommandQueueBase::cancelAll() {
-    geEngineSDK::Queue<QueuedCommand>* commands = flush();
+    Queue<QueuedCommand>* commands = flush();
 
     while (!commands->empty()) {
       commands->pop();
@@ -183,13 +183,13 @@ namespace geEngineSDK {
   }
 
 # if GE_DEBUG_MODE
-  Mutex CommandQueueBase::commandQueueBreakpointMutex;
-  uint32 CommandQueueBase::maxCommandQueueIdx = 0;
+  Mutex CommandQueueBase::s_commandQueueBreakpointMutex;
+  uint32 CommandQueueBase::s_maxCommandQueueIdx = 0;
 
   UnorderedSet<CommandQueueBase::QueueBreakpoint,
                CommandQueueBase::QueueBreakpoint::HashFunction,
                CommandQueueBase::QueueBreakpoint::EqualFunction>
-               CommandQueueBase::setBreakpoints;
+               CommandQueueBase::s_setBreakpoints;
 
   inline size_t
   CommandQueueBase::QueueBreakpoint::
@@ -208,8 +208,8 @@ namespace geEngineSDK {
 
   void
   CommandQueueBase::addBreakpoint(uint32 queueIdx, uint32 commandIdx) {
-    Lock lock(commandQueueBreakpointMutex);
-    setBreakpoints.insert(QueueBreakpoint(queueIdx, commandIdx));
+    Lock lock(s_commandQueueBreakpointMutex);
+    s_setBreakpoints.insert(QueueBreakpoint(queueIdx, commandIdx));
   }
 
   void
@@ -217,8 +217,8 @@ namespace geEngineSDK {
     //I purposely don't use a mutex here, as this gets called very often.
     //Generally breakpoints will only be added at the start of the application,
     //so race conditions should not occur.
-    auto iterFind = setBreakpoints.find(QueueBreakpoint(queueIdx, commandIdx));
-    if (iterFind != setBreakpoints.end()) {
+    auto iterFind = s_setBreakpoints.find(QueueBreakpoint(queueIdx, commandIdx));
+    if (iterFind != s_setBreakpoints.end()) {
       GE_ASSERT(false && "Command queue breakpoint triggered!");
     }
   }

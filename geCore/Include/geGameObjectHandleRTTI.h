@@ -45,7 +45,7 @@ namespace geEngineSDK {
 
    public:
     GameObjectHandleRTTI() {
-      addPlainField("instanceId",
+      addPlainField("m_instanceId",
                     0,
                     &GameObjectHandleRTTI::getInstanceId,
                     &GameObjectHandleRTTI::setInstanceId);

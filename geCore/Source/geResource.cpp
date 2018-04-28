@@ -28,13 +28,13 @@ namespace geEngineSDK {
     m_metaData = ge_shared_ptr_new<ResourceMetaData>();
   }
 
-  const WString&
+  const String&
   Resource::getName() const {
     return m_metaData->m_displayName;
   }
 
   void
-  Resource::setName(const WString& name) {
+  Resource::setName(const String& name) {
     m_metaData->m_displayName = name;
   }
 

@@ -30,6 +30,8 @@
 #include <geException.h>
 
 namespace geEngineSDK {
+  using std::static_pointer_cast;
+
   ResourceManifest::ResourceManifest(const ConstructPrivately& /*dummy*/) {}
 
   ResourceManifest::ResourceManifest(const String& name) : m_name(name) {}
@@ -148,7 +150,7 @@ namespace geEngineSDK {
   ResourceManifest::load(const Path& path, const Path& relativePath) {
     FileDecoder fs(path);
     SPtr<ResourceManifest>
-      manifest = std::static_pointer_cast<ResourceManifest>(fs.decode());
+      manifest = static_pointer_cast<ResourceManifest>(fs.decode());
 
     SPtr<ResourceManifest> copy = create(manifest->m_name);
 

@@ -21,10 +21,12 @@
 #include <geModule.h>
 
 namespace geEngineSDK {
+  using std::function;
+
   class GE_CORE_EXPORT DeferredCallManager : public Module<DeferredCallManager>
   {
    public:
-    DeferredCallManager();
+    DeferredCallManager() = default;
 
     /**
      * @brief Register a deferred call that will be executed once at the start
@@ -32,7 +34,7 @@ namespace geEngineSDK {
      * @param[in] func  The function to execute.
      */
     void
-    queueDeferredCall(std::function<void()> func);
+    queueDeferredCall(function<void()> func);
 
     /**
      * @brief Executes all the scheduled calls. To be called once per frame.
@@ -42,6 +44,6 @@ namespace geEngineSDK {
 
    private:
     friend class DeferredCall;
-    Vector<std::function<void()>> m_callbacks;
+    Vector<function<void()>> m_callbacks;
   };
 }

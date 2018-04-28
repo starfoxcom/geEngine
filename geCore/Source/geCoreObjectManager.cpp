@@ -32,8 +32,6 @@ namespace geEngineSDK {
   using std::bind;
   using std::function;
 
-  CoreObjectManager::CoreObjectManager() :m_nextAvailableID(1) {}
-
   CoreObjectManager::~CoreObjectManager() {
 # if GE_DEBUG_MODE
     Lock lock(m_objectsMutex);
@@ -54,15 +52,19 @@ namespace geEngineSDK {
   }
 
   uint64
-  CoreObjectManager::registerObject(CoreObject* object) {
-    GE_ASSERT(nullptr != object);
+  CoreObjectManager::generateId() {
+    Lock lock(m_objectsMutex);
+    return m_nextAvailableID++;
+  }
 
+  void
+  CoreObjectManager::registerObject(CoreObject* object) {
+    //GE_ASSERT(nullptr != object);
     Lock lock(m_objectsMutex);
 
-    m_objects[m_nextAvailableID] = object;
-    m_dirtyObjects[m_nextAvailableID] = { object, -1 };
-
-    return m_nextAvailableID++;
+    uint64 objId = object->getInternalID();
+    m_objects[objId] = object;
+    m_dirtyObjects[objId] = { object, -1 };
   }
 
   void
@@ -300,7 +302,7 @@ namespace geEngineSDK {
         uint8* dataPtr = entry.syncData.getBuffer();
 
         if (nullptr != dataPtr) {
-          entry.allocator->dealloc(dataPtr);
+          entry.allocator->free(dataPtr);
         }
       }
     };
@@ -329,10 +331,13 @@ namespace geEngineSDK {
           const Vector<CoreObject*>& dependants = iterFind->second;
           for (auto& dependant : dependants) {
             if (!dependant->isCoreDirty()) {
-              //To ensure the loop below doesn't skip it
-              dependant->m_coreDirtyFlags |= 0xFFFFFFFF;
               dirtyDependants.insert(dependant);
             }
+            
+            //NOTE: This tells the object it was marked dirty due to a
+            //dependency, but it doesn't tell it due to which one. Eventually
+            //it might be nice to have that information as well.
+            dependant->m_coreDirtyFlags |= 0x80000000;
           }
         }
       }
@@ -416,7 +421,7 @@ namespace geEngineSDK {
       uint8* data = objSyncData.syncData.getBuffer();
 
       if (nullptr != data) {
-        syncData.alloc->dealloc(data);
+        syncData.alloc->free(data);
       }
     }
 

@@ -25,7 +25,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT ResourceMetaData : public IReflectable
   {
    public:
-    WString m_displayName;
+    String m_displayName;
 
     /*************************************************************************/
     /**

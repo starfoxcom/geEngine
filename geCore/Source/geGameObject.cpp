@@ -27,8 +27,6 @@ namespace geEngineSDK {
       m_isDestroyed(false)
   {}
 
-  GameObject::~GameObject() {}
-
   void
   GameObject::initialize(const SPtr<GameObject>& object, uint64 instanceId) {
     m_instanceData = ge_shared_ptr_new<GameObjectInstanceData>();

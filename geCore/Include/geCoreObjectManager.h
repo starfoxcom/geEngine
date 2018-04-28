@@ -66,14 +66,20 @@ namespace geEngineSDK {
     };
 
    public:
-    CoreObjectManager();
+    CoreObjectManager() = default;
     ~CoreObjectManager();
+
+    /**
+     * @brief Generates a new unique ID for a core object.
+     */
+    uint64
+    generateId();
 
     /**
      * @brief Registers a new CoreObject notifying the manager the object	is
      *        created.
      */
-    uint64
+    void
     registerObject(CoreObject* object);
 
     /**
@@ -151,7 +157,7 @@ namespace geEngineSDK {
     void
     updateDependencies(CoreObject* object, Vector<CoreObject*>* dependencies);
 
-    uint64 m_nextAvailableID;
+    uint64 m_nextAvailableID = 1;
     Map<uint64, CoreObject*> m_objects;
     Map<uint64, DirtyObjectData> m_dirtyObjects;
     Map<uint64, Vector<CoreObject*>> m_dependencies;
