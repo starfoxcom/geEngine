@@ -2163,15 +2163,40 @@ namespace geEngineSDK {
                                     const Vector3& Origin);
   };
 
+  namespace {
+    void
+    getSinCos(float& S, float& C, float Degrees) {
+      if (0.f == Degrees) {
+        S = 0.f;
+        C = 1.f;
+      }
+      else if (90.f == Degrees) {
+        S = 1.f;
+        C = 0.f;
+      }
+      else if (180.f == Degrees) {
+        S = 0.f;
+        C = -1.f;
+      }
+      else if (270.f == Degrees) {
+        S = -1.f;
+        C = 0.f;
+      }
+      else {
+        Math::sin_cos(&S, &C, Degrees * Math::DEG2RAD);
+      }
+    }
+  }
+
   FORCEINLINE ScaleRotationTranslationMatrix::
     ScaleRotationTranslationMatrix(const Vector3& Scale,
                                    const Rotator& Rot,
                                    const Vector3& Origin) {
     float SP, SY, SR;
     float CP, CY, CR;
-    Math::sin_cos(&SP, &CP, Rot.pitch * Math::DEG2RAD);
-    Math::sin_cos(&SY, &CY, Rot.yaw   * Math::DEG2RAD);
-    Math::sin_cos(&SR, &CR, Rot.roll  * Math::DEG2RAD);
+    getSinCos(SP, CP, Rot.pitch);
+    getSinCos(SY, CY, Rot.yaw);
+    getSinCos(SR, CR, Rot.roll);
 
     m[0][0] = (CP * CY) * Scale.x;
     m[0][1] = (CP * SY) * Scale.x;
