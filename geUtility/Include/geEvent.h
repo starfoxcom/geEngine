@@ -293,7 +293,7 @@ namespace geEngineSDK {
      * @brief Register a new callback that will get notified once the event is triggered.
      */
     HEvent
-    connect(function<RetType(Args...)>& func) {
+    connect(function<RetType(Args...)> func) {
       RecursiveLock lock(m_internalData->m_mutex);
 
       ConnectionData* connData = nullptr;
