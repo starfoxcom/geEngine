@@ -52,6 +52,7 @@
     <ClInclude Include="Include\geStringTable.h" />
     <ClInclude Include="Include\geStringTableManager.h" />
     <ClInclude Include="Include\geStringTableRTTI.h" />
+    <ClInclude Include="Include\geTransform.h" />
     <ClInclude Include="Include\geUtility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +78,7 @@
     <ClCompile Include="Source\geSavedResourceData.cpp" />
     <ClCompile Include="Source\geStringTable.cpp" />
     <ClCompile Include="Source\geStringTableManager.cpp" />
+    <ClCompile Include="Source\geTransform.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -133,6 +133,9 @@
     <ClInclude Include="Include\geGameObjectHandleRTTI.h">
       <Filter>Source Files\RTTI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geTransform.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -202,6 +205,9 @@
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\geGameObjectHandle.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTransform.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
