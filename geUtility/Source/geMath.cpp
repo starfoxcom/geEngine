@@ -89,6 +89,8 @@ namespace geEngineSDK {
   const float Math::THRESH_POINTS_ARE_SAME  = (0.00002f);
   const float Math::THRESH_POINTS_ARE_NEAR  = (0.015f);
   const float Math::THRESH_NORMALS_ARE_SAME = (0.00002f);
+  const float Math::THRESH_UVS_ARE_SAME     = (0.0009765625f);
+
   const float Math::THRESH_VECTORS_ARE_NEAR = (0.0004f);
 
   const float Math::THRESH_SPLIT_POLY_WITH_PLANE  = (0.25f);
@@ -99,6 +101,8 @@ namespace geEngineSDK {
 
   const float Math::THRESH_VECTOR_NORMALIZED = (0.01f);
   const float Math::THRESH_QUAT_NORMALIZED   = (0.01f);
+
+  const float Math::ZERO_ANIMWEIGHT_THRESH = (0.00001f);
 
   Radian
   Math::acos(float Value) {

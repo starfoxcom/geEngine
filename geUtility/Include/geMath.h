@@ -1379,59 +1379,90 @@ namespace geEngineSDK {
     /**
      * Magic numbers for numerical precision.
      */
-    
-     /** Thickness of plane for front/back/inside test */
-    static const float THRESH_POINT_ON_PLANE;
-    
-    /** Thickness of polygon side's side-plane for point-inside/outside/on side test */
-    static const float THRESH_POINT_ON_SIDE;
-    
-    /** Two points are same if within this distance */
-    static const float THRESH_POINTS_ARE_SAME;
-    
+
     /**
-     * Two points are near if within this distance and can be combined
-     * if imprecise math is ok
+     * Thickness of plane for front/back/inside test
+     */
+    static const float THRESH_POINT_ON_PLANE;
+
+    /**
+     * Thickness of polygon side's side-plane for point-inside/outside/on side
+     * test
+     */
+    static const float THRESH_POINT_ON_SIDE;
+
+    /**
+     * Two points are same if within this distance
+     */
+    static const float THRESH_POINTS_ARE_SAME;
+
+    /**
+     * Two points are near if within this distance and can be combined if
+     * imprecise math is ok
      */
     static const float THRESH_POINTS_ARE_NEAR;
-    
-    /** Two normal points are same if within this distance */
+
+    /**
+     * Two normal points are same if within this distance
+     */
     static const float THRESH_NORMALS_ARE_SAME;
 
+    /**
+     * Two UV are same if within this threshold (1.0f/1024f)
+     */
+    static const float THRESH_UVS_ARE_SAME;
+
     /*************************************************************************/
-    //Making this too large results in incorrect CSG classification and disaster
-     /**
-      *Two vectors are near if within this distance and can be combined
-      * if imprecise math is ok
-      */
+    //Making this too large results in wrong CSG classification and disaster
+    /**
+     * Two vectors are near if within this distance and can be combined if
+     * imprecise math is ok
+     */
     static const float THRESH_VECTORS_ARE_NEAR;
     /*************************************************************************/
 
-    /** A plane splits a polygon in half */
-    static const float THRESH_SPLIT_POLY_WITH_PLANE;
-    
-    /** A plane exactly splits a polygon */
-    static const float THRESH_SPLIT_POLY_PRECISELY;
-    
-    /** Size of a unit normal that is considered "zero", squared */
-    static const float THRESH_ZERO_NORM_SQUARED;
-    
     /**
-     * Two unit vectors are parallel if abs(A dot B) is greater than or equal to this.
+     * A plane splits a polygon in half
+     */
+    static const float THRESH_SPLIT_POLY_WITH_PLANE;
+
+    /**
+     * A plane exactly splits a polygon
+     */
+    static const float THRESH_SPLIT_POLY_PRECISELY;
+
+    /**
+     * Size of a unit normal that is considered "zero", squared
+     */
+    static const float THRESH_ZERO_NORM_SQUARED;
+
+    /**
+     * Two unit vectors are parallel if abs(A dot B) is greater than or equal
+     * to this.
      * This is roughly cosine(1.0 degrees).
      */
     static const float THRESH_NORMALS_ARE_PARALLEL;
-    
+
     /**
      * Two unit vectors are orthogonal (perpendicular) if abs(A dot B) is less
      * than or equal this. This is roughly cosine(89.0 degrees).
      */
     static const float THRESH_NORMALS_ARE_ORTHOGONAL;
 
-    /** Allowed error for a normalized vector (against squared magnitude) */
+    /**
+     * Allowed error for a normalized vector (against squared magnitude)
+     */
     static const float THRESH_VECTOR_NORMALIZED;
     
-    /** Allowed error for a normalized quaternion (against squared magnitude) */
+    /**
+     * Allowed error for a normalized quaternion (against squared magnitude)
+     */
     static const float THRESH_QUAT_NORMALIZED;
+
+    /**
+     * 
+     */
+    static const float ZERO_ANIMWEIGHT_THRESH;
+
   };
 }
