@@ -136,9 +136,6 @@
     <ClInclude Include="Include\geTransform.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geTransformRTTI.h">
-      <Filter>Source Files\RTTI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
