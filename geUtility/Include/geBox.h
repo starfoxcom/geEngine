@@ -21,6 +21,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geVector3.h"
+#include "geTransform.h"
 
 namespace geEngineSDK {
   /**
@@ -315,10 +316,8 @@ namespace geEngineSDK {
      * @param M The transformation object to perform the inversely transform this box with.
      * @return	The transformed box.
      */
-    /*
     GE_UTILITY_EXPORT AABox
     inverseTransformBy(const Transform& M) const;
-    */
 
     /**
      * @brief Checks whether the given location is inside this box.
@@ -393,10 +392,8 @@ namespace geEngineSDK {
      * @return The transformed box.
      * @see TransformProjectBy
      */
-    /*
     GE_UTILITY_EXPORT AABox
     transformBy(const Transform& M) const;
-    */
 
     /**
      * @brief Transforms and projects a world bounding box to screen space

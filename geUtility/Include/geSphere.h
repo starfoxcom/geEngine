@@ -119,7 +119,8 @@ namespace geEngineSDK {
      * @param M Transform information.
      * @return Result of transformation.
      */
-    //GE_UTILITY_EXPORT Sphere transformBy(const Transform& M) const;
+    GE_UTILITY_EXPORT Sphere
+    transformBy(const Transform& M) const;
 
     /**
      * @brief Get volume of the current sphere

@@ -75,6 +75,7 @@ namespace geEngineSDK {
   class Matrix3;
   class Matrix4;
   class RotationTranslationMatrix;
+  class Transform;
   class Plane;
   class Rotator;
   class Quaternion;
@@ -195,7 +196,8 @@ namespace geEngineSDK {
 
       kID_IReflectable          = 90,
 
-      kID_DataBlob              = 100
+      kID_DataBlob              = 100,
+      kID_Transform             = 101
     };
   }
 }

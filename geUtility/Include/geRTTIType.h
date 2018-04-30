@@ -59,18 +59,20 @@ namespace geEngineSDK {
   struct META_FirstEntry {};                                                  \
                                                                               \
   void                                                                        \
-  META_InitPrevEntry(META_FirstEntry typeId) {}                               \
+  META_InitPrevEntry(META_FirstEntry typeId) {                                \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
+  }                                                                           \
                                                                               \
   typedef META_FirstEntry
-  /***************************************************************************/
+   /***************************************************************************/
 
-  /***************************************************************************/
-  /**
-   * @brief Registers a new member field in the RTTI type. The field references
-   *        the @p name member in the owner class.
-   * The type of the member must be a valid plain type. Each field must specify
-   * a unique ID for @p id.
-   */
+   /***************************************************************************/
+   /**
+    * @brief Registers a new member field in the RTTI type. The field references
+    *        the @p name member in the owner class.
+    * The type of the member must be a valid plain type. Each field must specify
+    * a unique ID for @p id.
+    */
 #define GE_RTTI_MEMBER_PLAIN(name, id)                                        \
   META_Entry_##name;                                                          \
                                                                               \
@@ -88,6 +90,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addPlainField(#name, id, &MyType::get##name, &MyType::set##name);         \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -117,6 +120,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addPlainField(#name, id, &MyType::get##name, &MyType::set##name);         \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -161,6 +165,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addPlainArrayField(#name,                                                 \
                        id,                                                    \
                        &MyType::get##name,                                    \
@@ -208,6 +213,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addPlainArrayField(#name,                                                 \
                        id,                                                    \
                        &MyType::get##name,                                    \
@@ -244,6 +250,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectableField(#name, id, &MyType::get##name, &MyType::set##name);   \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -273,6 +280,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectableField(#name, id, &MyType::get##name, &MyType::set##name);   \
     META_InitPrevEntry(META_Entry_##name());                                  \
   }                                                                           \
@@ -317,6 +325,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectableArrayField(#name,                                           \
                              id,                                              \
                              &MyType::get##name,                              \
@@ -364,6 +373,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectableArrayField(#name,                                           \
                              id,                                              \
                              &MyType::get##name,                              \
@@ -400,6 +410,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectablePtrField(#name,                                             \
                            id,                                                \
                            &MyType::get##name,                                \
@@ -432,6 +443,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectablePtrField(#name,                                             \
                            id,                                                \
                            &MyType::get##name,                                \
@@ -479,6 +491,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectablePtrArrayField(#name,                                        \
                                 id,                                           \
                                 &MyType::get##name,                           \
@@ -526,6 +539,7 @@ namespace geEngineSDK {
                                                                               \
   void                                                                        \
   META_InitPrevEntry(META_NextEntry_##name typeId) {                          \
+    GE_UNREFERENCED_PARAMETER(typeId);                                        \
     addReflectablePtrArrayField(#name,                                        \
                                 id,                                           \
                                 &MyType::get##name,                           \
@@ -553,7 +567,7 @@ namespace geEngineSDK {
     }                                                                         \
   };                                                                          \
                                                                               \
-  META_InitAllMembers m_initMembers;
+  META_InitAllMembers m_initMembers{this};
   /***************************************************************************/
 
   /**
@@ -1151,7 +1165,7 @@ namespace geEngineSDK {
       s_initOnStart.makeSureIAmInstantiated();
     }
 
-    virtual ~RTTIType() {}
+    virtual ~RTTIType() = default;
 
     /**
      * @brief Returns a singleton of this RTTI type.
@@ -1692,7 +1706,13 @@ namespace geEngineSDK {
       RTTIPlainField<DataType, ObjectType>*
       newField = ge_new<RTTIPlainField<DataType, ObjectType>>();
       
-      newField->initArray(name, uniqueId, getter, getSize, setter, setSize, flags);
+      newField->initArray(name,
+                          static_cast<uint16>(uniqueId),
+                          getter,
+                          getSize,
+                          setter,
+                          setSize,
+                          flags);
       addNewField(newField);
     }
 

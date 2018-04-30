@@ -22,7 +22,7 @@
 
 namespace geEngineSDK {
   BoxSphereBounds
-  BoxSphereBounds::transformBy(const Matrix4& M) const {
+    BoxSphereBounds::transformBy(const Matrix4& M) const {
 # if GE_DEBUG_MODE
     if (M.containsNaN()) {
       LOGERR("Input Matrix contains NaN/Inf!");
@@ -60,15 +60,10 @@ namespace geEngineSDK {
     return Result;
   }
 
-  /*
   BoxSphereBounds
   BoxSphereBounds::transformBy(const Transform& M) const {
-# if GE_DEBUG_MODE
-    M.diagnosticCheckNaN_All();
-# endif
-    const Matrix Mat = M.toMatrixWithScale();
+    const Matrix4 Mat = M.toMatrixWithScale();
     BoxSphereBounds Result = transformBy(Mat);
     return Result;
   }
-  */
 }
