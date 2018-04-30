@@ -382,6 +382,8 @@
     <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
+    <ClInclude Include="Include\geTransform.h" />
+    <ClInclude Include="Include\geTransformRTTI.h" />
     <ClInclude Include="Include\geTriangulation.h" />
     <ClInclude Include="Include\geUnicode.h" />
     <ClInclude Include="Include\geUtil.h" />
@@ -444,6 +446,7 @@
     <ClCompile Include="Source\geThreadPool.cpp" />
     <ClCompile Include="Source\geTime.cpp" />
     <ClCompile Include="Source\geTimer.cpp" />
+    <ClCompile Include="Source\geTransform.cpp" />
     <ClCompile Include="Source\geTriangulation.cpp" />
     <ClCompile Include="Source\geUnicode.cpp" />
     <ClCompile Include="Source\geUtil.cpp" />

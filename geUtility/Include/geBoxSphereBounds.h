@@ -222,10 +222,8 @@ namespace geEngineSDK {
      * @param M The Transform object.
      * @return The transformed volume.
      */
-    /*
     GE_UTILITY_EXPORT BoxSphereBounds
     transformBy(const Transform& M) const;
-    */
 
     /**
      * @brief Constructs a bounding volume containing both A and B.
