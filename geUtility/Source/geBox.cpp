@@ -100,7 +100,6 @@ namespace geEngineSDK {
     return NewBox;
   }
 
-  /*
   AABox
   AABox::transformBy(const Transform& M) const {
     return transformBy(M.toMatrixWithScale());
@@ -129,7 +128,6 @@ namespace geEngineSDK {
 
     return NewBox;
   }
-  */
 
   AABox
   AABox::transformProjectBy(const Matrix4& ProjM) const {
