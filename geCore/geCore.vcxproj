@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClInclude Include="Include\geCommandQueue.h" />
     <ClInclude Include="Include\geCommonTypes.h" />
+    <ClInclude Include="Include\geComponent.h" />
+    <ClInclude Include="Include\geComponentRTTI.h" />
     <ClInclude Include="Include\geCoreObject.h" />
     <ClInclude Include="Include\geCoreObjectCore.h" />
     <ClInclude Include="Include\geCoreObjectManager.h" />
@@ -52,12 +54,11 @@
     <ClInclude Include="Include\geStringTable.h" />
     <ClInclude Include="Include\geStringTableManager.h" />
     <ClInclude Include="Include\geStringTableRTTI.h" />
-    <ClInclude Include="Include\geTransform.h" />
-    <ClInclude Include="Include\geTransformRTTI.h" />
     <ClInclude Include="Include\geUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geCommandQueue.cpp" />
+    <ClCompile Include="Source\geComponent.cpp" />
     <ClCompile Include="Source\geCoreObject.cpp" />
     <ClCompile Include="Source\geCoreObjectCore.cpp" />
     <ClCompile Include="Source\geCoreObjectManager.cpp" />
@@ -79,7 +80,6 @@
     <ClCompile Include="Source\geSavedResourceData.cpp" />
     <ClCompile Include="Source\geStringTable.cpp" />
     <ClCompile Include="Source\geStringTableManager.cpp" />
-    <ClCompile Include="Source\geTransform.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

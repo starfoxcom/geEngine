@@ -216,7 +216,6 @@ namespace geEngineSDK {
   class CReflectionProbe;
   class CSkybox;
   class CLightProbeVolume;
-  class Transform;
   class SceneActor;
 
   //Asset import
@@ -437,7 +436,7 @@ namespace geEngineSDK {
       kID_LightProbeVolume = 1136,
       kID_SavedLightProbeInfo = 1137,
       kID_CLightProbeVolume = 1138,
-      kID_Transform = 1139,
+
       kID_SceneActor = 1140,
       kID_AudioListener = 1141,
       kID_AudioSource = 1142,

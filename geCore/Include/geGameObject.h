@@ -52,6 +52,8 @@ namespace geEngineSDK {
     };
   }
 
+  using TransformChangedFlags = TRANSFORM_CHANGED_FLAGS::E;
+
   /**
    * @brief Type of object that can be referenced by a GameObject handle. Each
    *        object has an unique ID and is registered with the
