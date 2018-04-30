@@ -36,7 +36,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    FORCEINLINE Vector2() {}
+    FORCEINLINE Vector2() = default;
 
     /**
      * @brief Constructor using initial values for each component.

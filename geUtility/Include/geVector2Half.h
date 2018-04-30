@@ -33,7 +33,7 @@ namespace geEngineSDK {
     /**
      * @brief Default Constructor (no initialization).
      */
-    FORCEINLINE Vector2Half() {}
+    FORCEINLINE Vector2Half() = default;
 
     /**
      * @brief Constructor.

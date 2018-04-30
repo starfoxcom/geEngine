@@ -24,13 +24,13 @@ namespace geEngineSDK {
   /**
    * @brief Implements a basic sphere.
    */
-  class Sphere
+  class Sphere final
   {
    public:
     /**
      * @brief Default constructor (no initialization).
      */
-    Sphere() {}
+    Sphere() = default;
 
     /**
      * @brief Creates and initializes a new sphere with the specified parameters.

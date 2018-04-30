@@ -22,7 +22,7 @@
 #include "geInterval.h"
 
 namespace geEngineSDK {
-  class OrientedBox
+  class OrientedBox final
   {
    public:
     /**
@@ -30,15 +30,7 @@ namespace geEngineSDK {
      * Constructs a unit-sized, origin-centered box with axes aligned to the
      * coordinate system.
      */
-    OrientedBox()
-      : m_center(0.0f),
-        m_axisX(1.0f, 0.0f, 0.0f),
-        m_axisY(0.0f, 1.0f, 0.0f),
-        m_axisZ(0.0f, 0.0f, 1.0f),
-        m_extentX(1.0f),
-        m_extentY(1.0f),
-        m_extentZ(1.0f)
-    {}
+    OrientedBox() = default;
 
    public:
     /**
@@ -59,37 +51,37 @@ namespace geEngineSDK {
     /**
      * @brief Holds the center of the box.
      */
-    Vector3 m_center;
+    Vector3 m_center{0.0f};
 
     /**
      * @brief Holds the x-axis vector of the box. Must be a unit vector.
      */
-    Vector3 m_axisX;
+    Vector3 m_axisX{ 1.0f, 0.0f, 0.0f };
 
     /**
      * @brief Holds the y-axis vector of the box. Must be a unit vector.
      */
-    Vector3 m_axisY;
+    Vector3 m_axisY{ 0.0f, 1.0f, 0.0f };
 
     /**
      * @brief Holds the z-axis vector of the box. Must be a unit vector.
      */
-    Vector3 m_axisZ;
+    Vector3 m_axisZ{ 0.0f, 0.0f, 1.0f };
 
     /**
      * @brief Holds the extent of the box along its x-axis.
      */
-    float m_extentX;
+    float m_extentX = 1.0f;
 
     /**
      * @brief Holds the extent of the box along its y-axis.
      */
-    float m_extentY;
+    float m_extentY = 1.0f;
 
     /**
      * @brief Holds the extent of the box along its z-axis.
      */
-    float m_extentZ;
+    float m_extentZ = 1.0f;
   };
 
   /***************************************************************************/

@@ -30,13 +30,13 @@ namespace geEngineSDK {
    * for many different things in the Engine and in games, such as bounding
    * volumes, collision detection and visibility calculation.
    */
-  class AABox
+  class AABox final
   {
    public:
     /**
      * @brief Default constructor (no initialization).
      */
-    AABox() {}
+    AABox() = default;
 
     /**
     * @brief Creates and initializes a new box with zero extent and marks it as

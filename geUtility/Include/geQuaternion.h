@@ -47,7 +47,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    FORCEINLINE Quaternion() {}
+    FORCEINLINE Quaternion() = default;
 
     /**
      * @brief Creates and initializes a new quaternion, with the w component

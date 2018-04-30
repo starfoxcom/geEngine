@@ -29,13 +29,13 @@ namespace geEngineSDK {
    * @brief Class for a combined axis aligned bounding box and bounding sphere
    *        with the same origin. (28 bytes).
    */
-  class BoxSphereBounds
+  class BoxSphereBounds final
   {
    public:
     /**
      * @brief Default constructor.
      */
-    BoxSphereBounds() {}
+    BoxSphereBounds() = default;
 
     /**
      * @brief Creates and initializes a new instance.
