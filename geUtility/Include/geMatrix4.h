@@ -39,7 +39,7 @@ namespace geEngineSDK {
      * Constructors
      */
     /*************************************************************************/
-    FORCEINLINE Matrix4();
+    FORCEINLINE Matrix4() = default;
 
     /**
      * @brief Constructor.
@@ -703,7 +703,6 @@ namespace geEngineSDK {
    * Constructors
    */
   /***************************************************************************/
-  FORCEINLINE Matrix4::Matrix4() {}
 
   FORCEINLINE Matrix4::Matrix4(const Plane& InX,
                                const Plane& InY,

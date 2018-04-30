@@ -34,7 +34,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    Vector2I();
+    Vector2I() = default;
 
     /**
      * @brief Copy constructor.
@@ -330,8 +330,6 @@ namespace geEngineSDK {
    * Vector2I inline functions
    */
   /***************************************************************************/
-
-  FORCEINLINE Vector2I::Vector2I() {}
 
   FORCEINLINE Vector2I::Vector2I(int32 InX, int32 InY) : x(InX), y(InY) {}
 

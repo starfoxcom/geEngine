@@ -58,7 +58,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    FORCEINLINE Rotator() {}
+    FORCEINLINE Rotator() = default;
 
     /**
      * @brief Constructor
