@@ -52,17 +52,15 @@ namespace geEngineSDK {
                                             ZAxis | ZAxis)) * m_radius;
     return Result;
   }
-  /*
+
   Sphere
-  Sphere::TransformBy(const FTransform& M) const {
-    Sphere	Result;
-
-    Result.Center = M.TransformPosition(this->Center);
-    Result.W = M.GetMaximumAxisScale() * W;
-
+  Sphere::transformBy(const Transform& M) const {
+    Sphere Result;
+    Result.m_center = M.transformPosition(this->m_center);
+    Result.m_radius = M.getMaximumAxisScale() * m_radius;
     return Result;
   }
-  */
+
   float
   Sphere::getVolume() const {
     return (4.f / 3.f) * Math::PI * (m_radius * m_radius * m_radius);
