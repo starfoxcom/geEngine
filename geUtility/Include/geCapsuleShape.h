@@ -51,7 +51,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor.
      */
-    CapsuleShape() {}
+    CapsuleShape() = default;
 
     /**
      * @brief Create and initialize a new instance.

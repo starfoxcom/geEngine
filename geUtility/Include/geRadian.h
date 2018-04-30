@@ -36,23 +36,20 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Radian
   {
    public:
-    explicit Radian(float r = 0.0f) : m_radian(r) {}
-    explicit Radian(const Degree& d);
-    Radian(const Radian& r) {
-      m_radian = r.valueRadians();
-    }
+    constexpr Radian() = default;
+    constexpr Radian(const Radian&) = default;
+    constexpr explicit Radian(float r) : m_radian(r) {}
 
-    Radian&
+    Radian(const Degree& d);
+
+    constexpr Radian&
     operator=(const float& f) {
       m_radian = f;
       return *this;
     }
 
-    Radian&
-    operator=(const Radian& r) {
-      m_radian = r.m_radian;
-      return *this;
-    }
+    constexpr Radian&
+    operator=(const Radian&) = default;
     
     Radian&
     operator=(const Degree& d);
@@ -262,7 +259,7 @@ namespace geEngineSDK {
     }
 
    private:
-    float m_radian;
+    float m_radian = 0.0f;
   };
 
   GE_ALLOW_MEMCPY_SERIALIZATION(Radian);

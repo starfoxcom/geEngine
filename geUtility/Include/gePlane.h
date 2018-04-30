@@ -29,7 +29,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    FORCEINLINE Plane();
+    FORCEINLINE Plane() = default;
 
     /**
      * @brief Copy Constructor.
@@ -328,8 +328,6 @@ namespace geEngineSDK {
    * Plane inline functions
    */
   /***************************************************************************/
-
-  FORCEINLINE Plane::Plane() {}
 
   FORCEINLINE Plane::Plane(const Plane& P) : Vector3(P), w(P.w) {}
 
