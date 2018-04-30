@@ -24,13 +24,13 @@ namespace geEngineSDK {
   /**
    * @brief Implements a rectangular 2D Box.
    */
-  class Box2D
+  class Box2D final
   {
    public:
     /**
      * @brief Default constructor (no initialization).
      */
-    Box2D() {}
+    Box2D() = default;
 
     /**
      * @brief Creates and initializes a new box.

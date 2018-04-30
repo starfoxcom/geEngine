@@ -36,21 +36,17 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Degree
   {
    public:
-    explicit Degree(float d = 0.0f) : m_degree(d) {}
-    explicit Degree(const Radian& r);
-    Degree(const Degree& d) {
-      m_degree = d.valueDegrees();
-    }
+    constexpr Degree() = default;
+    constexpr Degree(const Degree& d) = default;
+    constexpr explicit Degree(float d) : m_degree(d) {}
+    Degree(const Radian& r);
+
+    constexpr Degree&
+    operator=(const Degree& d) = default;
 
     Degree&
     operator=(const float& f) {
       m_degree = f;
-      return *this;
-    }
-
-    Degree&
-    operator=(const Degree& d) {
-      m_degree = d.m_degree;
       return *this;
     }
 
@@ -262,7 +258,7 @@ namespace geEngineSDK {
     }
 
    private:
-    float m_degree;
+    float m_degree = 0.0f;
   };
 
   GE_ALLOW_MEMCPY_SERIALIZATION(Degree);

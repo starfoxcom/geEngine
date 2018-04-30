@@ -38,7 +38,7 @@ namespace geEngineSDK {
     /**
      * @brief Default constructor (no initialization).
      */
-    FORCEINLINE Vector3();
+    FORCEINLINE Vector3() = default;
 	
     /**
      * @brief Copy constructor.
@@ -1161,8 +1161,6 @@ namespace geEngineSDK {
   inline Vector3 Vector3::degreesToRadians(const Vector3& degVector) {
     return degVector * Math::DEG2RAD;
   }
-
-  FORCEINLINE Vector3::Vector3() {}
   
   FORCEINLINE Vector3::Vector3(const Vector3& other) {
     x = other.x;
