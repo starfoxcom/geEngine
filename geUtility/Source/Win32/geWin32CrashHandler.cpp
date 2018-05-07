@@ -86,7 +86,7 @@ namespace geEngineSDK {
         stackTrace[numEntries] = stackFrame.AddrPC.Offset;
       }
 
-      numEntries++;
+      ++numEntries;
 
       if (0 == stackFrame.AddrPC.Offset || 0 == stackFrame.AddrFrame.Offset) {
         break;

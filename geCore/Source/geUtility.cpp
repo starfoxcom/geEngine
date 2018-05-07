@@ -20,7 +20,7 @@
 /*****************************************************************************/
 #include "geUtility.h"
 #include "geRTTIType.h"
-//#include "geSceneObject.h"
+#include "geSceneObject.h"
 
 namespace geEngineSDK {
   Vector<ResourceDependency>
@@ -32,7 +32,7 @@ namespace geEngineSDK {
     uint32 i = 0;
     for (auto& entry : dependencies) {
       dependencyList[i] = entry.second;
-      i++;
+      ++i;
     }
 
     return dependencyList;
@@ -44,7 +44,7 @@ namespace geEngineSDK {
 
     uint32 depth = 0;
     while (nullptr != parent) {
-      depth++;
+      ++depth;
       parent = parent->getParent();
     }
 
@@ -80,7 +80,7 @@ namespace geEngineSDK {
               if (!resource.getUUID().empty()) {
                 ResourceDependency& dependency = dependencies[resource.getUUID()];
                 dependency.resource = resource;
-                dependency.numReferences++;
+                ++dependency.numReferences;
               }
             }
           }
@@ -90,7 +90,7 @@ namespace geEngineSDK {
             if (!resource.getUUID().empty()) {
               ResourceDependency& dependency = dependencies[resource.getUUID()];
               dependency.resource = resource;
-              dependency.numReferences++;
+              ++dependency.numReferences;
             }
           }
         }

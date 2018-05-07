@@ -532,10 +532,10 @@ namespace geEngineSDK {
   template<uint32 NumRows, uint32 NumColumns>
   FORCEINLINE Matrix<NumRows, NumColumns>::Matrix(const Matrix4& InMatrix)
   {
-    for (uint32 RowIndex = 0; (RowIndex < NumRows) && (RowIndex < 4); RowIndex++) {
+    for (uint32 RowIndex = 0; (RowIndex < NumRows) && (RowIndex < 4); ++RowIndex) {
       for (uint32 ColumnIndex = 0;
            (ColumnIndex < NumColumns) && (ColumnIndex < 4);
-           ColumnIndex++) {
+           ++ColumnIndex) {
         m[RowIndex][ColumnIndex] = InMatrix.m[RowIndex][ColumnIndex];
       }
     }

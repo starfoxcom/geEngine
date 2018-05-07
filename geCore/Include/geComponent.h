@@ -215,7 +215,7 @@ namespace geEngineSDK {
      *        _setNotifyFlags().
      */
     virtual void
-    onTransformChanged(TransformChangedFlags flags) {}
+    onTransformChanged(TransformChangedFlags /*flags*/) {}
 
     /**
      * @brief Checks whether the component wants to received the specified
@@ -284,7 +284,7 @@ namespace geEngineSDK {
     HComponent m_thisHandle;
     TransformChangedFlags m_notifyFlags = TransformChangedFlags::kNone;
     ComponentFlags m_flags;
-    uint32 m_sceneManagerId = -1;
+    uint32 m_sceneManagerId = static_cast<uint32>(-1);
 
    private:
     HSceneObject m_parent;

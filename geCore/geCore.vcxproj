@@ -38,6 +38,11 @@
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHString.h" />
     <ClInclude Include="Include\geIResourceListener.h" />
+    <ClInclude Include="Include\gePrefab.h" />
+    <ClInclude Include="Include\gePrefabDiff.h" />
+    <ClInclude Include="Include\gePrefabDiffRTTI.h" />
+    <ClInclude Include="Include\gePrefabRTTI.h" />
+    <ClInclude Include="Include\gePrefabUtility.h" />
     <ClInclude Include="Include\gePrerequisitesCore.h" />
     <ClInclude Include="Include\geResource.h" />
     <ClInclude Include="Include\geResourceHandle.h" />
@@ -51,6 +56,10 @@
     <ClInclude Include="Include\geResources.h" />
     <ClInclude Include="Include\geSavedResourceData.h" />
     <ClInclude Include="Include\geSavedResourceDataRTTI.h" />
+    <ClInclude Include="Include\geSceneActor.h" />
+    <ClInclude Include="Include\geSceneManager.h" />
+    <ClInclude Include="Include\geSceneObject.h" />
+    <ClInclude Include="Include\geSceneObjectRTTI.h" />
     <ClInclude Include="Include\geStringTable.h" />
     <ClInclude Include="Include\geStringTableManager.h" />
     <ClInclude Include="Include\geStringTableRTTI.h" />
@@ -71,6 +80,9 @@
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
     <ClCompile Include="Source\geIResourceListener.cpp" />
+    <ClCompile Include="Source\gePrefab.cpp" />
+    <ClCompile Include="Source\gePrefabDiff.cpp" />
+    <ClCompile Include="Source\gePrefabUtility.cpp" />
     <ClCompile Include="Source\geResource.cpp" />
     <ClCompile Include="Source\geResourceHandle.cpp" />
     <ClCompile Include="Source\geResourceListenerManager.cpp" />
@@ -78,6 +90,9 @@
     <ClCompile Include="Source\geResourceMetaData.cpp" />
     <ClCompile Include="Source\geResources.cpp" />
     <ClCompile Include="Source\geSavedResourceData.cpp" />
+    <ClCompile Include="Source\geSceneActor.cpp" />
+    <ClCompile Include="Source\geSceneManager.cpp" />
+    <ClCompile Include="Source\geSceneObject.cpp" />
     <ClCompile Include="Source\geStringTable.cpp" />
     <ClCompile Include="Source\geStringTableManager.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />

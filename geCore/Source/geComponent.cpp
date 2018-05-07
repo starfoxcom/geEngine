@@ -43,7 +43,7 @@
 /*****************************************************************************/
 #include "geComponent.h"
 #include "geGameObjectManager.h"
-//#include "geSceneObject.h"
+#include "geSceneObject.h"
 #include "geComponentRTTI.h"
 
 namespace geEngineSDK {
@@ -58,7 +58,7 @@ namespace geEngineSDK {
 
   bool
   Component::calculateBounds(BoxSphereBounds& bounds) {
-    Vector3 position = so()->getTransform().getPosition();
+    Vector3 position = so()->getTransform().getTranslation();
     bounds = BoxSphereBounds(AABox(position, position), Sphere(position, 0.0f));
     return false;
   }

@@ -199,7 +199,7 @@ namespace geEngineSDK {
         uint64 handleId = (uint64)resource.getHandleData().get();
         resourceHandleIds[idx] = handleId;
         m_resourceToListenerMap[handleId].push_back(listener);
-        idx++;
+        ++idx;
       }
 
       m_listenerToResourceMap[listener] = resourceHandleIds;

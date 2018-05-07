@@ -126,12 +126,6 @@ namespace geEngineSDK {
 
   String
   DataStream::getAsString() {
-    //Read the entire buffer - ideally in one read, but if the size of the
-    //buffer is unknown, do multiple fixed size reads.
-    SIZE_T bufSize = (m_size > 0 ? m_size : 4096);
-    stringstream::char_type* tempBuffer = 
-      static_cast<stringstream::char_type*>(ge_alloc(bufSize));
-
     //Ensure read from begin of stream
     seek(0);
 
@@ -167,6 +161,12 @@ namespace geEngineSDK {
     }
 
     seek(dataOffset);
+
+    //Read the entire buffer - ideally in one read, but if the size of the
+    //buffer is unknown, do multiple fixed size reads.
+    SIZE_T bufSize = (m_size > 0 ? m_size : 4096);
+    stringstream::char_type* tempBuffer =
+      static_cast<stringstream::char_type*>(ge_alloc(bufSize));
 
     stringstream result;
     while (!isEOF()) {

@@ -20,6 +20,7 @@
 #include "gePrerequisitesCore.h"
 #include "geResource.h"
 #include "geResourceMetaData.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {

@@ -102,7 +102,7 @@ namespace geEngineSDK {
 
     for (uint32 i = 0; i < static_cast<uint32>(str.size()); ++i) {
       if ('^' == str[i] && !escaped) {
-        numRemovedChars++;
+        ++numRemovedChars;
         escaped = true;
         continue;
       }

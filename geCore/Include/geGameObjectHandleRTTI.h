@@ -20,6 +20,7 @@
 #include "gePrerequisitesCore.h"
 #include "geGameObjectHandle.h"
 #include "geGameObjectManager.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {

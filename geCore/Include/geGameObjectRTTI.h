@@ -19,8 +19,9 @@
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
 #include "geGameObject.h"
-//#include "geSceneObject.h"
+#include "geSceneObject.h"
 #include "geGameObjectManager.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {

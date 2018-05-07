@@ -484,7 +484,7 @@ namespace geEngineSDK {
 
     const uint32&
     dwColor(void) const {
-      return *((uint32*)this);
+      return *(reinterpret_cast<uint32*>(const_cast<Color*>(this)));
     }
 
     bool

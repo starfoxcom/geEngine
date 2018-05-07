@@ -244,7 +244,7 @@ namespace geEngineSDK {
      * @brief Invalidates the handle.
      */
     GameObjectHandle<T>&
-    operator=(nullptr_t ptr) {
+    operator=(nullptr_t /*ptr*/) {
       m_data = ge_shared_ptr_new<GameObjectHandleData>();
       return *this;
     }

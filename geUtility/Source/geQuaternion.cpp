@@ -401,4 +401,56 @@ namespace geEngineSDK {
 
     OutTan = P * PreExp.exp();
   }
+
+  void
+  Quaternion::lookRotation(const Vector3& forwardDir) {
+    if (Vector3::ZERO == forwardDir) {
+      return;
+    }
+
+    Quaternion retValue = IDENTITY;
+
+    Vector3 nrmForwardDir = forwardDir;
+    nrmForwardDir.normalize();
+
+    Vector3 currentForwardDir = -retValue.getForwardVector();
+
+    if ((nrmForwardDir + currentForwardDir).sizeSquared() < 0.00005f) {
+      //Oops, a 180 degree turn (infinite possible rotation axes)
+      //Default to yaw i.e. use current UP
+      *this = Quaternion(-z, w, x, -y);
+    }
+    else {
+      //Derive shortest arc to new direction
+      Quaternion rotQuat = findBetween(currentForwardDir, nrmForwardDir);
+      *this = rotQuat * *this;
+    }
+  }
+
+  void
+  Quaternion::lookRotation(const Vector3& forwardDir, const Vector3& upDir) {
+    Vector3 forward = forwardDir;
+    Vector3 up = upDir;
+
+    forward.normalize();
+    up.normalize();
+
+    if (Math::isNearlyEqual(forward | up, 1.0f)) {
+      lookRotation(forward);
+      return;
+    }
+
+    Vector3 right = forward ^ up;
+    Vector3 realUp = right ^ forward;
+
+    right.normalize();
+    realUp.normalize();
+
+    Quaternion ret;
+    w = sqrtf(1.0f + right.x + up.y + forward.z) * 0.5f;
+    float w4_recip = 1.0f / (4.0f * ret.w);
+    x = (up.z - forward.y) * w4_recip;
+    y = (forward.x - right.z) * w4_recip;
+    z = (right.y - up.x) * w4_recip;
+  }
 }

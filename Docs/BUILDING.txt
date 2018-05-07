@@ -1,8 +1,10 @@
-If the libraries are going to be used dynamically, they need to use the DLL's Runtimes. Otherwise, compile with ths static ones.
+If the libraries are going to be used dynamically, they need to use the DLL's Runtimes. Otherwise, compile with the static ones.
 
 Setup constants
   GE_ENGINE_PROFILER - Must define to use the profilers
   GE_UTILITIES_EXPORT - This must be defined if the geUtilities lib wants to be used as a DLL
+  GE_CORE_EXPORT - This must be defined if the geCore lib wants to be used as a DLL
+  GE_IS_ENGINEEDITOR - The game editor shoulb be built with this define
 
 Enviromental variables
   %DEVLIBS% - Root folder where the external libraries are located

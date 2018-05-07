@@ -178,7 +178,7 @@ namespace geEngineSDK {
 
           curBlock->m_freePtr -= sizeInBlock;
           if (0 == curBlock->m_freePtr) {
-            numFreedBlocks++;
+            ++numFreedBlocks;
 
             //Reset block counter if we're gonna reallocate this one
             if (1 < numFreedBlocks) {
@@ -191,7 +191,7 @@ namespace geEngineSDK {
         else {
           curBlock->m_freePtr = 0;
           m_nextBlockIdx = i;
-          numFreedBlocks++;
+          ++numFreedBlocks;
         }
       }
 
@@ -256,7 +256,7 @@ namespace geEngineSDK {
       MemBlock* curBlock = m_blocks[m_nextBlockIdx];
       if (blockSize <= curBlock->m_size) {
         newBlock = curBlock;
-        m_nextBlockIdx++;
+        ++m_nextBlockIdx;
         break;
       }
       else {
@@ -277,7 +277,7 @@ namespace geEngineSDK {
       newBlock->m_data = data;
 
       m_blocks.push_back(newBlock);
-      m_nextBlockIdx++;
+      ++m_nextBlockIdx;
     }
 
     //If previous block had some empty space it is lost until next "clear"

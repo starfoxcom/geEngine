@@ -21,6 +21,7 @@
 #include "geResource.h"
 #include "geResourceMetaData.h"
 #include "geResources.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {

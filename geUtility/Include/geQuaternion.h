@@ -41,7 +41,7 @@
 
 namespace geEngineSDK {
 
-  MS_ALIGN(16) class Quaternion
+  class Quaternion
   {
    public:
     /**
@@ -443,6 +443,25 @@ namespace geEngineSDK {
     bool
     containsNaN() const;
 
+    /**
+    * @brief Orients the quaternion so its negative z axis points to the
+    *        provided direction.
+    * @param[in] forwardDir  Direction to orient towards.
+    */
+    GE_UTILITY_EXPORT void
+    lookRotation(const Vector3& forwardDir);
+
+    /**
+    * @brief Orients the quaternion so its negative z axis points to the
+    *        provided direction.
+    * @param[in] forwardDir  Direction to orient towards.
+    * @param[in] upDir       Constrains y axis orientation to a plane this
+    *            vector lies on. This rule might be broken if forward and up
+    *            direction are nearly parallel.
+    */
+    GE_UTILITY_EXPORT void
+    lookRotation(const Vector3& forwardDir, const Vector3& upDir);
+
     static FORCEINLINE void
     vectorQuaternionMultiply(Quaternion& Result,
                              const Quaternion& Q1,
@@ -638,7 +657,7 @@ namespace geEngineSDK {
      * @brief The quaternion's W-component.
      */
     float w;
-  } GCC_ALIGN(16);
+  };
 
   /***************************************************************************/
   /**
@@ -853,7 +872,7 @@ namespace geEngineSDK {
 
   FORCEINLINE Vector3
   Quaternion::getRotationAxis() const {
-    // Ensure we never try to sqrt a neg number
+    //Ensure we never try to sqrt a neg number
     const float S = Math::sqrt(Math::max(1.f - (w * w), 0.f));
 
     if (0.0001f <= S) {

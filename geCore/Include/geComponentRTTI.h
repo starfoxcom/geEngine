@@ -20,6 +20,7 @@
 #include "gePrerequisitesCore.h"
 #include "geComponent.h"
 #include "geGameObjectRTTI.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {
@@ -33,7 +34,7 @@ namespace geEngineSDK {
 
     void
     onDeserializationEnded(IReflectable* obj,
-                           const UnorderedMap<String, uint64>& params) override {
+                           const UnorderedMap<String, uint64>& /*params*/) override {
       Component* comp = static_cast<Component*>(obj);
 
       //It's possible we're just accessing the game object fields, in which

@@ -18,6 +18,7 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
+
 #include <geGPUResourceData.h>
 #include <geRTTIType.h>
 

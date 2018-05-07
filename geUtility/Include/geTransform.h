@@ -558,7 +558,7 @@ namespace geEngineSDK {
     getScaled(float Scale) const;
 
     FORCEINLINE Transform
-    getScaled(Vector3 Scale) const;
+    getScaled(const Vector3& Scale) const;
 
     FORCEINLINE Vector3
     getScaledAxis(AXIS::E InAxis) const;
@@ -1199,6 +1199,51 @@ namespace geEngineSDK {
       m_rotation.normalize();
     }
 
+    /**
+     * @brief Converts the provided world position to a space relative to the
+     *        provided parent, and sets it as the current transform's position.
+     */
+    FORCEINLINE void
+    setWorldTranslation(const Vector3& position, const Transform& parent);
+
+    /**
+     * @brief Converts the provided world rotation to a space relative to the
+     *        provided parent, and sets it as the current transform's rotation.
+     */
+    FORCEINLINE void
+    setWorldRotation(const Quaternion& rotation, const Transform& parent);
+
+    /**
+     * @brief Converts the provided world scale to a space relative to the
+     *        provided parent, and sets it as the current transform's scale.
+     */
+    FORCEINLINE void
+    setWorldScale(const Vector3& scale, const Transform& parent);
+
+    /**
+     * @brief Makes the current transform relative to the provided transform.
+     *        In another words, converts from a world coordinate system to one
+     *        local to the provided transform.
+     */
+    FORCEINLINE void
+    makeLocal(const Transform& parent);
+
+    /**
+     * @brief Makes the current transform absolute. In another words, converts
+     *        from a local coordinate system relative to the provided transform
+     *        to a world coordinate system.
+     */
+    FORCEINLINE void
+    makeWorld(const Transform& parent);
+
+    /**
+     * @brief Orients the object so it is looking at the provided @p location
+     *        (world space) where @p up is used for determining the location
+     *        of the object's Y axis.
+     */
+    FORCEINLINE void
+    lookAt(const Vector3& location, const Vector3& up = Vector3::UP);
+
    private:
     /**
      * @brief Create a new transform: OutTransform = A * B using the matrix
@@ -1417,7 +1462,7 @@ namespace geEngineSDK {
    * @brief Apply Scale to this transform
    */
   FORCEINLINE Transform
-  Transform::getScaled(Vector3 InScale) const {
+  Transform::getScaled(const Vector3& InScale) const {
     Transform A(*this);
     A.m_scale3D *= InScale;
     return A;
@@ -1622,5 +1667,74 @@ namespace geEngineSDK {
     }
 
     return SafeReciprocalScale;
+  }
+
+  FORCEINLINE void
+  Transform::setWorldTranslation(const Vector3& position, const Transform& parent) {
+    Vector3 invScale = parent.getScale3D();
+    if (invScale.x != 0) { invScale.x = 1.0f / invScale.x; }
+    if (invScale.y != 0) { invScale.y = 1.0f / invScale.y; }
+    if (invScale.z != 0) { invScale.z = 1.0f / invScale.z; }
+
+    Quaternion invRotation = parent.getRotation().inverse();
+
+    m_translation = invRotation.rotateVector(position - parent.getTranslation()) *  invScale;
+  }
+
+  FORCEINLINE void
+  Transform::setWorldRotation(const Quaternion& rotation, const Transform& parent) {
+    Quaternion invRotation = parent.getRotation().inverse();
+    m_rotation = invRotation * rotation;
+  }
+
+  FORCEINLINE void
+  Transform::setWorldScale(const Vector3& scale, const Transform& parent) {
+    Matrix4 parentMatrix = parent.toInverseMatrixWithScale();
+    Matrix4 scaleMat = QuatRotationMatrix(Quaternion::IDENTITY);
+    for (uint32 row = 0; row < 3; ++row) {
+      for (uint32 col = 0; col < 3; ++col) {
+        scaleMat.m[row][col] = scale[row] * scaleMat.m[row][col];
+      }
+    }
+
+    scaleMat = parentMatrix * scaleMat;
+    m_scale3D.x = scaleMat.m[0][0];
+    m_scale3D.y = scaleMat.m[1][1];
+    m_scale3D.z = scaleMat.m[1][1];
+  }
+
+  FORCEINLINE void
+  Transform::makeLocal(const Transform& parent) {
+    setWorldTranslation(m_translation, parent);
+    setWorldRotation(m_rotation, parent);
+    setWorldScale(m_scale3D, parent);
+  }
+
+  FORCEINLINE void
+  Transform::makeWorld(const Transform& parent) {
+    //Update orientation
+    const Quaternion& parentOrientation = parent.getRotation();
+    m_rotation = parentOrientation * m_rotation;
+
+    //Update scale
+    const Vector3& parentScale = parent.getScale3D();
+
+    //Scale own position by parent scale, just combine as equivalent axes,
+    //no shearing
+    m_scale3D = parentScale * m_scale3D;
+
+    //Change position vector based on parent's orientation & scale
+    m_translation = parentOrientation.rotateVector(parentScale * m_translation);
+
+    //Add altered position vector to parents
+    m_translation += parent.getTranslation();
+  }
+
+  FORCEINLINE void
+  Transform::lookAt(const Vector3& location, const Vector3& up) {
+    Vector3 forward = location - getTranslation();
+    Quaternion rotation = getRotation();
+    rotation.lookRotation(forward, up);
+    setRotation(rotation);
   }
 }

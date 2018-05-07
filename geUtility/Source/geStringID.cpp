@@ -36,7 +36,7 @@ namespace geEngineSDK {
     m_chunks[0] = reinterpret_cast<InternalData*>
                     (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
     memset(m_chunks[0], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-    m_numChunks++;
+    ++m_numChunks;
   }
 
   template<class T>
@@ -106,7 +106,7 @@ namespace geEngineSDK {
       m_chunks[chunkIdx] = reinterpret_cast<InternalData*>
                              (ge_alloc(sizeof(InternalData) * ELEMENTS_PER_CHUNK));
       memset(m_chunks[chunkIdx], 0, sizeof(InternalData) * ELEMENTS_PER_CHUNK);
-      m_numChunks++;
+      ++m_numChunks;
     }
 
     InternalData* chunk = m_chunks[chunkIdx];

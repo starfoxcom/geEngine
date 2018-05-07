@@ -19,6 +19,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
 #include "geSavedResourceData.h"
+
 #include <geRTTIType.h>
 
 namespace geEngineSDK {

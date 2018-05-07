@@ -106,7 +106,7 @@ namespace geEngineSDK {
       RecursiveLock lock(m_mutex);
 
       conn->deactivate();
-      conn->m_handleLinks--;
+      --conn->m_handleLinks;
 
       if (0 == conn->m_handleLinks) {
         free(conn);
@@ -145,7 +145,7 @@ namespace geEngineSDK {
     freeHandle(BaseConnectionData* conn) {
       RecursiveLock lock(m_mutex);
 
-      conn->m_handleLinks--;
+      --conn->m_handleLinks;
       if (0 == conn->m_handleLinks&& !conn->m_isActive) {
         free(conn);
       }
@@ -208,7 +208,7 @@ namespace geEngineSDK {
     explicit HEvent(SPtr<EventInternalData> eventData, BaseConnectionData* connection)
       : m_connection(connection),
         m_eventData(std::move(eventData)) {
-      connection->m_handleLinks++;
+      ++connection->m_handleLinks;
     }
 
     ~HEvent() {
@@ -249,7 +249,7 @@ namespace geEngineSDK {
       m_eventData = rhs.m_eventData;
 
       if (nullptr != m_connection) {
-        m_connection->m_handleLinks++;
+        ++m_connection->m_handleLinks;
       }
       return *this;
     }

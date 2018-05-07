@@ -174,7 +174,8 @@ namespace geEngineSDK {
      * @brief Needs to be called whenever GameObject deserialization ends.
      *        Must be preceded by startDeserialization() call.
      */
-    void endDeserialization();
+    void
+    endDeserialization();
 
     /**
      * @brief Returns true if GameObject deserialization is currently in

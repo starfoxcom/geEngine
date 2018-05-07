@@ -120,7 +120,7 @@ namespace geEngineSDK {
 
     GameObjectHandleBase handle(object);
     m_objects[m_nextAvailableID] = handle;
-    m_nextAvailableID++;
+    ++m_nextAvailableID;
 
     return handle;
   }
