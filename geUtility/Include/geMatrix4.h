@@ -2328,10 +2328,14 @@ namespace geEngineSDK {
      * @param Q rotation
      * @param Origin translation to apply
      */
-    QuatRotationTranslationMatrix(const Quaternion& Q, const Vector3& Origin);
+    GE_UTILITY_EXPORT QuatRotationTranslationMatrix(const Quaternion& Q,
+                                                    const Vector3& Origin);
 
-    /** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-    static Matrix4
+    /**
+     * @brief Matrix factory. Return an FMatrix so we don't have type
+     *        conversion issues in expressions.
+    */
+    static GE_UTILITY_EXPORT Matrix4
     make(const Quaternion& Q, const Vector3& Origin) {
       return QuatRotationTranslationMatrix(Q, Origin);
     }
@@ -2351,8 +2355,8 @@ namespace geEngineSDK {
       : QuatRotationTranslationMatrix(Q, Vector3::ZERO) {}
 
     /**
-     * @brief Matrix factory. Return an Matrix4 so we don't have type conversion
-     *        issues in expressions.
+     * @brief Matrix factory. Return an Matrix4 so we don't have type
+     *        conversion issues in expressions.
      */
     static Matrix4
     make(const Quaternion& Q) {

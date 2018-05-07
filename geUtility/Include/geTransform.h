@@ -1690,7 +1690,7 @@ namespace geEngineSDK {
   FORCEINLINE void
   Transform::setWorldScale(const Vector3& scale, const Transform& parent) {
     Matrix4 parentMatrix = parent.toInverseMatrixWithScale();
-    Matrix4 scaleMat = QuatRotationMatrix(Quaternion::IDENTITY);
+    Matrix4 scaleMat = QuatRotationMatrix::make(Quaternion::IDENTITY);
     for (uint32 row = 0; row < 3; ++row) {
       for (uint32 col = 0; col < 3; ++col) {
         scaleMat.m[row][col] = scale[row] * scaleMat.m[row][col];

@@ -57,8 +57,8 @@ namespace geEngineSDK {
     return Result;
   }
 
-  FORCEINLINE QuatRotationTranslationMatrix::
-    QuatRotationTranslationMatrix(const Quaternion& Q, const Vector3& Origin) {
+  QuatRotationTranslationMatrix::QuatRotationTranslationMatrix(const Quaternion& Q,
+                                                               const Vector3& Origin) {
 # if GE_DEBUG_MODE
     //Make sure Quaternion is normalized
     GE_ASSERT(Q.isNormalized());
