@@ -21,10 +21,7 @@
 #include "geDynLib.h"
 
 namespace geEngineSDK {
-  static bool
-  operator<(const NPtr<DynLib>& lhs, const NPtr<DynLib>& rhs) {
-    return lhs->getName() < rhs->getName();
-  }
+  using std::move;
 
   static bool
   operator<(const NPtr<DynLib>& lhs, const String& rhs) {
@@ -34,6 +31,12 @@ namespace geEngineSDK {
   static bool
   operator<(const String& lhs, const NPtr<DynLib>& rhs) {
     return lhs < rhs->getName();
+  }
+
+  template<>
+  bool
+  NPtr<DynLib>::operator<(const NPtr<DynLib>& rhs) const {
+    return m_ptr->getName() < rhs->getName();
   }
 
   DynLibManager::~DynLibManager() {
@@ -68,7 +71,7 @@ namespace geEngineSDK {
       return iterFind->get();
     }
 
-    DynLib* newLib = new (ge_alloc<DynLib>()) DynLib(std::move(filename));
+    DynLib* newLib = ge_new<DynLib>(move(filename));
     m_loadedLibraries.emplace_hint(iterFind, newLib);
     return newLib;
   }
