@@ -315,6 +315,36 @@ namespace geEngineSDK {
       return m_ptr;
     }
 
+    bool
+    operator<(const NativePtr& rhs) const {
+      return m_ptr < rhs.m_ptr;
+    }
+
+    bool
+    operator>(const NativePtr& rhs) const {
+      return m_ptr > rhs.m_ptr;
+    }
+
+    bool
+    operator<=(const NativePtr& rhs) const {
+      return m_ptr <= rhs.m_ptr;
+    }
+
+    bool
+    operator>=(const NativePtr& rhs) const {
+      return m_ptr >= rhs.m_ptr;
+    }
+
+    bool
+    operator==(const NativePtr& rhs) const {
+      return m_ptr == rhs.m_ptr;
+    }
+
+    bool
+    operator!=(const NativePtr& rhs) const {
+      return m_ptr != rhs.m_ptr;
+    }
+
    private:
     T* m_ptr;
   };
