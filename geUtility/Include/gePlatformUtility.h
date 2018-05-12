@@ -75,7 +75,7 @@ namespace geEngineSDK {
      * @brief Terminates the current process.
      * @param[in] force True if the process should be forcefully terminated with no cleanup.
      */
-    static void
+    [[noreturn]] static void
     terminate(bool force = false);
 
     /**
