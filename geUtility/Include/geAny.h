@@ -45,9 +45,10 @@ namespace geEngineSDK {
     {
      public:
       Data(const ValueType& value) : m_value(value) {}
-      virtual DataBase*
+
+      DataBase*
       clone() const override {
-        return new Data(m_value);
+        return ge_new<Data>(Data(m_value));
       }
 
       ValueType m_value;
