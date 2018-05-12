@@ -594,7 +594,7 @@ namespace geEngineSDK {
       pIntMemory = rttiWriteElement(data.m_node, pIntMemory);
       pIntMemory = rttiWriteElement(data.m_filename, pIntMemory);
       pIntMemory = rttiWriteElement(data.m_isAbsolute, pIntMemory);
-      pIntMemory = rttiWriteElement(data.m_directories, pIntMemory);
+      rttiWriteElement(data.m_directories, pIntMemory);
     }
 
     static uint32
@@ -608,7 +608,7 @@ namespace geEngineSDK {
       pIntMemory = rttiReadElement(data.m_node, pIntMemory);
       pIntMemory = rttiReadElement(data.m_filename, pIntMemory);
       pIntMemory = rttiReadElement(data.m_isAbsolute, pIntMemory);
-      pIntMemory = rttiReadElement(data.m_directories, pIntMemory);
+      rttiReadElement(data.m_directories, pIntMemory);
 
       return size;
     }
