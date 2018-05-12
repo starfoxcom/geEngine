@@ -197,6 +197,8 @@ namespace geEngineSDK {
    * @see   RTTIPlainType
    */
 #define GE_ALLOW_MEMCPY_SERIALIZATION(type)                                   \
+  static_assert(std::is_trivially_copyable<type>() == true,                   \
+                #type " is not trivially copyable");                          \
   template<> struct RTTIPlainType<type> {                                     \
     enum {kID=0}; enum {kHasDynamicSize = 0};                                 \
     static void                                                               \

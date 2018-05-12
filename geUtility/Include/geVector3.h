@@ -39,11 +39,6 @@ namespace geEngineSDK {
      * @brief Default constructor (no initialization).
      */
     FORCEINLINE Vector3() = default;
-	
-    /**
-     * @brief Copy constructor.
-     */
-    FORCEINLINE Vector3(const Vector3&);
 
     /**
      * @brief Constructor initializing all components to a single float value.
@@ -89,14 +84,6 @@ namespace geEngineSDK {
      * @param Force init enum
      */
     explicit FORCEINLINE Vector3(FORCE_INIT::E);
-
-    /**
-     * @brief Copy another Vector3 into this one
-     * @param other The other vector.
-     * @return Reference to vector after copy.
-     */
-    FORCEINLINE Vector3&
-    operator=(const Vector3& other);
 
     /**
      * @brief Calculate cross product between this and another vector.
@@ -1161,12 +1148,6 @@ namespace geEngineSDK {
   inline Vector3 Vector3::degreesToRadians(const Vector3& degVector) {
     return degVector * Math::DEG2RAD;
   }
-  
-  FORCEINLINE Vector3::Vector3(const Vector3& other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
-  }
 
   FORCEINLINE Vector3::Vector3(float InF) : x(InF), y(InF), z(InF) {}
 
@@ -1183,14 +1164,6 @@ namespace geEngineSDK {
       z(0.f) {}
 
   FORCEINLINE Vector3::Vector3(FORCE_INIT::E) : x(0.0f), y(0.0f), z(0.0f) {}
-
-  FORCEINLINE Vector3&
-  Vector3::operator=(const Vector3& other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
-    return *this;
-  }
 
   FORCEINLINE Vector3
   Vector3::operator^(const Vector3& v) const {

@@ -37,11 +37,6 @@ namespace geEngineSDK {
     Vector2I() = default;
 
     /**
-     * @brief Copy constructor.
-     */
-    Vector2I(const Vector2I& Other) : x(Other.x), y(Other.y) {}
-
-    /**
      * @brief Create and initialize a new instance with the specified coordinates.
      * @param InX The x-coordinate.
      * @param InY The y-coordinate.
@@ -127,14 +122,6 @@ namespace geEngineSDK {
      */
     Vector2I&
     operator/=(const Vector2I& Other);
-
-    /**
-     * @brief Assign another vector to this one.
-     * @param Other The vector to assign this vector from.
-     * @return Reference to this vector after assignment.
-     */
-    Vector2I&
-    operator=(const Vector2I& Other);
 
     /**
      * @brief Get the result of scaling on this vector.
@@ -394,13 +381,6 @@ namespace geEngineSDK {
     Vector2I::operator/=(const Vector2I& Other) {
     x /= Other.x;
     y /= Other.y;
-    return *this;
-  }
-
-  FORCEINLINE Vector2I&
-  Vector2I::operator=(const Vector2I& Other) {
-    x = Other.x;
-    y = Other.y;
     return *this;
   }
 

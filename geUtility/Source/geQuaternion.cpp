@@ -446,9 +446,8 @@ namespace geEngineSDK {
     right.normalize();
     realUp.normalize();
 
-    Quaternion ret;
     w = sqrtf(1.0f + right.x + up.y + forward.z) * 0.5f;
-    float w4_recip = 1.0f / (4.0f * ret.w);
+    float w4_recip = 1.0f / (4.0f * w);
     x = (up.z - forward.y) * w4_recip;
     y = (forward.x - right.z) * w4_recip;
     z = (right.y - up.x) * w4_recip;

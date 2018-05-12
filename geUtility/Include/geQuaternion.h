@@ -67,12 +67,6 @@ namespace geEngineSDK {
     FORCEINLINE Quaternion(float InX, float InY, float InZ, float InW);
 
     /**
-     * @brief Copy constructor.
-     * @param Q A Quaternion object to use to create new quaternion from.
-     */
-    FORCEINLINE Quaternion(const Quaternion& Q);
-
-    /**
      * @brief Creates and initializes a new quaternion from the given matrix.
      * @param M The rotation matrix to initialize from.
      */
@@ -93,13 +87,6 @@ namespace geEngineSDK {
     Quaternion(const Vector3& Axis, float AngleRad);
 
    public:
-    /**
-     * @brief Copy another Quaternion into this one
-     * @return reference to this Quaternion
-     */
-    FORCEINLINE Quaternion&
-    operator=(const Quaternion& Other);
-
     /**
      * @brief Gets the result of adding a Quaternion to this.
      *        This is a component-wise addition; composing quaternions should
@@ -678,22 +665,6 @@ namespace geEngineSDK {
       z(InZ),
       w(InW) {
     diagnosticCheckNaN();
-  }
-
-  FORCEINLINE Quaternion::Quaternion(const Quaternion& Q)
-    : x(Q.x),
-      y(Q.y),
-      z(Q.z),
-      w(Q.w)
-  {}
-
-  FORCEINLINE Quaternion&
-  Quaternion::operator=(const Quaternion& Other) {
-    this->x = Other.x;
-    this->y = Other.y;
-    this->z = Other.z;
-    this->w = Other.w;
-    return *this;
   }
 
   FORCEINLINE Quaternion::Quaternion(const Vector3& Axis, float AngleRad) {

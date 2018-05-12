@@ -32,12 +32,6 @@ namespace geEngineSDK {
     FORCEINLINE Plane() = default;
 
     /**
-     * @brief Copy Constructor.
-     * @param P Plane to copy from.
-     */
-    FORCEINLINE Plane(const Plane& P);
-
-    /**
      * @brief Constructor.
      * @param V 4D vector to set up plane.
      */
@@ -328,8 +322,6 @@ namespace geEngineSDK {
    * Plane inline functions
    */
   /***************************************************************************/
-
-  FORCEINLINE Plane::Plane(const Plane& P) : Vector3(P), w(P.w) {}
 
   FORCEINLINE Plane::Plane(const Vector4& V) : Vector3(V), w(V.w) {}
 

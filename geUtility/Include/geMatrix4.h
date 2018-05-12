@@ -62,10 +62,6 @@ namespace geEngineSDK {
       m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
     }
 
-    FORCEINLINE Matrix4(const Matrix4& mat) {
-      memcpy(m, mat.m, sizeof(Matrix4));
-    }
-
     /**
      * @brief Constructor.
      * @param InX X plane
