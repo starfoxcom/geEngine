@@ -128,7 +128,11 @@ namespace geEngineSDK {
           uint32 empty : 1;
         };
 
-        uint32 index : 3;
+        struct
+        {
+          uint32 index : 3;
+          uint32 empty2 : 1;
+        };
       };
 
       HChildNode()
@@ -143,9 +147,9 @@ namespace geEngineSDK {
       {}
 
       HChildNode(uint32 index)
-        : index(index) {
-        empty = false;
-      }
+        : index(index)
+          empty2(false)
+      {}
     };
 
     /**
