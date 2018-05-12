@@ -295,7 +295,7 @@ namespace geEngineSDK {
     GE_EXCEPT(InvalidParametersException,
               "There is no string data for the provided identifier.");
 
-    return nullptr;
+    //return nullptr; //Unreachable code
   }
 
   HStringTable
