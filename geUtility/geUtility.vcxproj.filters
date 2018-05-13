@@ -385,6 +385,9 @@
     <ClInclude Include="Include\geTransformRTTI.h">
       <Filter>Source Files\RTTI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geBox2DI.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -574,6 +577,9 @@
       <Filter>Source Files\Allocators</Filter>
     </ClCompile>
     <ClCompile Include="Source\geTransform.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBox2DI.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>

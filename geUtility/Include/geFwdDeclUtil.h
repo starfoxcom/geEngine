@@ -89,9 +89,8 @@ namespace geEngineSDK {
   class Vector2I;
   class Vector3I;
   class Vector4I;
-  class Rect2I;
-  class Rect2;
-  class Rect3;
+  class Box2DI;
+  class Box2D;
   class Color;
   class LinearColor;
 
