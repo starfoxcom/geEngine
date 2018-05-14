@@ -147,7 +147,7 @@ namespace geEngineSDK {
       {}
 
       HChildNode(uint32 index)
-        : index(index)
+        : index(index),
           empty2(false)
       {}
     };

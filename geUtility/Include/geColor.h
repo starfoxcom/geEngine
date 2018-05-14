@@ -445,7 +445,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Color
   {
    public:
-    Color() {}
+    Color() = default;
 
     explicit Color(FORCE_INIT::E) {
       //Put these into the body for proper ordering with

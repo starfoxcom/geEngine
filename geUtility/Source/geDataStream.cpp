@@ -165,6 +165,9 @@ namespace geEngineSDK {
     //Read the entire buffer - ideally in one read, but if the size of the
     //buffer is unknown, do multiple fixed size reads.
     SIZE_T bufSize = (m_size > 0 ? m_size : 4096);
+    
+    //TODO: Change this to use the stack allocator, however right now we
+    //haven't initialized the stack yet on the engine
     stringstream::char_type* tempBuffer =
       static_cast<stringstream::char_type*>(ge_alloc(bufSize));
 
@@ -174,7 +177,10 @@ namespace geEngineSDK {
       result.write(tempBuffer, numReadBytes);
     }
 
+    //TODO: Change this to use the stack allocator, however right now we
+    //haven't initialized the stack yet on the engine
     free(tempBuffer);
+
     std::string string = result.str();
 
     switch (dataOffset)
