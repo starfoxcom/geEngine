@@ -48,7 +48,7 @@
 
 namespace geEngineSDK {
   namespace COMPONENT_FLAG {
-    enum class E {
+    enum E {
       /**
        * Ensures that scene manager cannot pause or stop component callbacks
        * from executing. Off by default.

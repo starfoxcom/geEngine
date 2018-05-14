@@ -87,23 +87,23 @@ namespace geEngineSDK {
   void
   PrefabDiff::applyDiff(const SPtr<PrefabObjectDiff>& diff,
                         const HSceneObject& object) {
-    if ((diff->soFlags & static_cast<uint32>(SceneObjectDiffFlags::kName)) != 0) {
+    if ((diff->soFlags & static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kName)) != 0) {
       object->setName(diff->name);
     }
 
-    if ((diff->soFlags & static_cast<uint32>(SceneObjectDiffFlags::kTranslation)) != 0) {
+    if ((diff->soFlags & static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kTranslation)) != 0) {
       object->setTranslation(diff->translation);
     }
 
-    if ((diff->soFlags & static_cast<uint32>(SceneObjectDiffFlags::kRotation)) != 0) {
+    if ((diff->soFlags & static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kRotation)) != 0) {
       object->setRotation(diff->rotation);
     }
 
-    if ((diff->soFlags & static_cast<uint32>(SceneObjectDiffFlags::kScale)) != 0) {
+    if ((diff->soFlags & static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kScale)) != 0) {
       object->setScale(diff->scale);
     }
 
-    if ((diff->soFlags & static_cast<uint32>(SceneObjectDiffFlags::kActive)) != 0) {
+    if ((diff->soFlags & static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kActive)) != 0) {
       object->setActive(diff->isActive);
     }
 
@@ -184,7 +184,7 @@ namespace geEngineSDK {
       }
 
       output->name = instance->getName();
-      output->soFlags |= static_cast<uint32>(SceneObjectDiffFlags::kName);
+      output->soFlags |= static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kName);
     }
 
     const Transform& prefabTfrm = prefab->getLocalTransform();
@@ -195,7 +195,7 @@ namespace geEngineSDK {
       }
 
       output->translation = instanceTfrm.getTranslation();
-      output->soFlags |= static_cast<uint32>(SceneObjectDiffFlags::kTranslation);
+      output->soFlags |= static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kTranslation);
     }
 
     if (prefabTfrm.getRotation() != instanceTfrm.getRotation()) {
@@ -204,7 +204,7 @@ namespace geEngineSDK {
       }
 
       output->rotation = instanceTfrm.getRotation();
-      output->soFlags |= static_cast<uint32>(SceneObjectDiffFlags::kRotation);
+      output->soFlags |= static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kRotation);
     }
 
     if (prefabTfrm.getScale3D() != instanceTfrm.getScale3D())
@@ -214,7 +214,7 @@ namespace geEngineSDK {
       }
 
       output->scale = instanceTfrm.getScale3D();
-      output->soFlags |= static_cast<uint32>(SceneObjectDiffFlags::kScale);
+      output->soFlags |= static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kScale);
     }
 
     if (prefab->getActive() != instance->getActive()) {
@@ -223,7 +223,7 @@ namespace geEngineSDK {
       }
 
       output->isActive = instance->getActive();
-      output->soFlags |= static_cast<uint32>(SceneObjectDiffFlags::kActive);
+      output->soFlags |= static_cast<uint32>(SCENE_OBJECT_DIFF_FLAGS::kActive);
     }
 
     uint32 prefabChildCount = prefab->getNumChildren();

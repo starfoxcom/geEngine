@@ -33,6 +33,7 @@
 #include "geGPUResourceData.h"
 #include "geGPUResourceDataRTTI.h"
 #include "geCoreThread.h"
+
 #include <geException.h>
 
 namespace geEngineSDK {

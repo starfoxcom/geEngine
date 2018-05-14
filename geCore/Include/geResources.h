@@ -27,7 +27,7 @@ namespace geEngineSDK {
    * @brief Flags that can be used to control resource loading.
    */
   namespace RESOURCE_LOAD_FLAG {
-    enum class E {
+    enum E {
       /**
        * No flags.
        */

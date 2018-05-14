@@ -48,13 +48,15 @@ namespace geEngineSDK {
   /**
    * @brief Flags that mark which portion of a scene-object is modified.
    */
-  enum class SceneObjectDiffFlags {
-    kName = 0x01,
-    kTranslation = 0x02,
-    kRotation = 0x04,
-    kScale = 0x08,
-    kActive = 0x10
-  };
+  namespace SCENE_OBJECT_DIFF_FLAGS {
+    enum E {
+      kName = 0x01,
+      kTranslation = 0x02,
+      kRotation = 0x04,
+      kScale = 0x08,
+      kActive = 0x10
+    };
+  }
 
   /**
    * @brief Contains a set of prefab differences for a single scene object.

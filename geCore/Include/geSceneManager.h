@@ -47,22 +47,24 @@ namespace geEngineSDK {
    * @brief Possible states components can be in. Controls which component
    *        callbacks are triggered.
    */
-  enum class ComponentState {
-    /**
-     * All components callbacks are being triggered normally.
-     */
-    kRunning,
+  namespace COMPONENT_STATE {
+    enum E {
+      /**
+       * All components callbacks are being triggered normally.
+       */
+      kRunning,
 
-    /**
-     * All component callbacks except update are being triggered normally.
-     */
-    kPaused,
-    
-    /**
-     * No component callbacks are being triggered.
-     */
-    kStopped
-  };
+      /**
+       * All component callbacks except update are being triggered normally.
+       */
+      kPaused,
+
+      /**
+       * No component callbacks are being triggered.
+       */
+      kStopped
+    };
+  }
 
   class GE_CORE_EXPORT SceneManager : public Module<SceneManager>
   {
@@ -99,14 +101,14 @@ namespace geEngineSDK {
      *        don't have the ComponentFlag::AlwaysRun flag set.
      */
     void
-    setComponentState(ComponentState state);
+    setComponentState(COMPONENT_STATE::E state);
 
     /**
      * @brief Checks are the components currently in the Running state.
      */
     bool
     isRunning() const {
-      return ComponentState::kRunning == m_componentState;
+      return COMPONENT_STATE::kRunning == m_componentState;
     }
 
     /**
@@ -310,7 +312,7 @@ namespace geEngineSDK {
     SPtr<RenderTarget> m_mainRT;
     HEvent m_mainRTResizedConn;
 
-    ComponentState m_componentState = ComponentState::kRunning;
+    COMPONENT_STATE::E m_componentState = COMPONENT_STATE::kRunning;
   };
 
   /**

@@ -643,51 +643,57 @@ namespace geEngineSDK {
    * @brief Suggested queue priority numbers used for sorting objects in the
    * render queue. Objects with higher priority will be renderer sooner.
    */
-  enum class QueuePriority {
-    Opaque      = 100000,
-    Transparent = 90000,
-    Skybox      = 80000,
-    Overlay     = 70000
-  };
+  namespace QUEUE_PRIORITY {
+    enum E {
+      kOpaque = 100000,
+      kTransparent = 90000,
+      kSkybox = 80000,
+      kOverlay = 70000
+    };
+  }
 
   /**
    * @brief Type of sorting to perform on an object when added to a render
    *        queue.
    */
-  enum class QueueSortType {
-    /**
-     * All objects with the same priority will be rendered front to back based
-     * on their center.
-     */
-    FrontToBack,
-    /**
-     * All objects with the same priority will be rendered back to front based
-     * on their center.
-     */
-    BackToFront,
-    /**
-     * Objects will not be sorted and will be processed in the order they were
-     * added to the queue.
-     */
-    None
-  };
+  namespace QUEUE_SORT_TYPE {
+    enum E {
+      /**
+       * All objects with the same priority will be rendered front to back based
+       * on their center.
+       */
+      kFrontToBack,
+      /**
+       * All objects with the same priority will be rendered back to front based
+       * on their center.
+       */
+      kBackToFront,
+      /**
+       * Objects will not be sorted and will be processed in the order they were
+       * added to the queue.
+       */
+      kNone
+    };
+  }
 
   /**
    * @brief Flags that may be assigned to a shader that let the renderer know
    *        how to interpret the shader.
    */
-  enum class ShaderFlags {
-    /**
-     * Signifies that the shader is rendering a transparent object.
-     */
-    Transparent = 0x1,
+  namespace SHADER_FLAGS {
+    enum E {
+      /**
+       * Signifies that the shader is rendering a transparent object.
+       */
+      kTransparent = 0x1,
 
-    /**
-     * Signifies the shader should use the forward rendering pipeline,
-     * if relevant.
-     */
-    Forward = 0x2
-  };
+      /**
+       * Signifies the shader should use the forward rendering pipeline,
+       * if relevant.
+       */
+      kForward = 0x2
+    };
+  }
 
   /**
    * @brief Valid types of a mesh used for physics.
@@ -711,53 +717,57 @@ namespace geEngineSDK {
   /**
    * @brief Determines the type of the source image for generating cubemaps.
    */
-  enum class CubemapSourceType {
-    /**
-     * Source is a single image that will be replicated on all cubemap faces.
-     */
-    Single,
+  namespace CUBEMAP_SOURCE_TYPE {
+    enum E {
+      /**
+       * Source is a single image that will be replicated on all cubemap faces.
+       */
+      kSingle,
 
-    /**
-     * Source is a list of 6 images, either sequentially next to each other or
-     * in a cross format. The system will automatically guess the layout and
-     * orientation based on the aspect ratio.
-     */
-    Faces,
+      /**
+       * Source is a list of 6 images, either sequentially next to each other or
+       * in a cross format. The system will automatically guess the layout and
+       * orientation based on the aspect ratio.
+       */
+      kFaces,
 
-    /**
-     * Source is a single spherical panoramic image.
-     */
-    Spherical,
+      /**
+       * Source is a single spherical panoramic image.
+       */
+      kSpherical,
 
-    /**
-     * Source is a single cylindrical panoramic image.
-     */
-    Cylindrical
-  };
+      /**
+       * Source is a single cylindrical panoramic image.
+       */
+      kCylindrical
+    };
+  }
 
   /**
    * @brief Bits that map to a specific surface of a render target. Combine the
    *        bits to generate a mask that references only specific render target
    *        surfaces.
    */
-  enum RenderSurfaceMaskBits {
-    RT_NONE           = 0,
-    RT_COLOR0         = 1 << 0,
-    RT_COLOR1         = 1 << 1,
-    RT_COLOR2         = 1 << 2,
-    RT_COLOR3         = 1 << 3,
-    RT_COLOR4         = 1 << 4,
-    RT_COLOR5         = 1 << 5,
-    RT_COLOR6         = 1 << 6,
-    RT_COLOR7         = 1 << 7,
-    RT_DEPTH          = 1 << 30,
-    RT_STENCIL        = 1 << 31,
-    RT_DEPTH_STENCIL  = (1 << 30) | (1 << 31),
-    RT_ALL            = 0xFF
-  };
+  namespace RENDER_SURFACE_MASK_BITS {
+    enum E {
+      kNONE = 0,
+      kCOLOR0 = 1 << 0,
+      kCOLOR1 = 1 << 1,
+      kCOLOR2 = 1 << 2,
+      kCOLOR3 = 1 << 3,
+      kCOLOR4 = 1 << 4,
+      kCOLOR5 = 1 << 5,
+      kCOLOR6 = 1 << 6,
+      kCOLOR7 = 1 << 7,
+      kDEPTH = 1 << 30,
+      kSTENCIL = 1 << 31,
+      kDEPTH_STENCIL = (1 << 30) | (1 << 31),
+      kALL = 0xFF
+    };
+  }
 
-  typedef Flags<RenderSurfaceMaskBits> RenderSurfaceMask;
-  GE_FLAGS_OPERATORS(RenderSurfaceMaskBits);
+  typedef Flags<RENDER_SURFACE_MASK_BITS::E> RenderSurfaceMask;
+  GE_FLAGS_OPERATORS(RENDER_SURFACE_MASK_BITS::E);
 
   /**
    * @brief Controls what kind of mobility restrictions a scene object has.

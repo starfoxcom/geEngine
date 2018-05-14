@@ -3,9 +3,9 @@
 * @file    geComponentRTTI.h
 * @author  Samuel Prince (samuel.prince.quezada@gmail.com)
 * @date    2018/04/29
-* @brief   RTTI Objects for geComponentRTTI.
+* @brief   RTTI Objects for geComponent.
 *
-* RTTI Objects for geGameObjectHandle.
+* RTTI Objects for geComponent.
 *
 * @bug     No known bugs.
 */

@@ -222,12 +222,12 @@ namespace geEngineSDK {
   }
 
   void
-  SceneManager::setComponentState(ComponentState state) {
+  SceneManager::setComponentState(COMPONENT_STATE::E state) {
     if (state == m_componentState) {
       return;
     }
 
-    ComponentState oldState = m_componentState;
+    COMPONENT_STATE::E oldState = m_componentState;
 
     //Make sure to change the state before calling any callbacks, so callbacks
     //can query the state
@@ -235,8 +235,8 @@ namespace geEngineSDK {
 
     //Wake up all components with onInitialize/onEnable events if moving to
     //running or paused state
-    if (ComponentState::kRunning == state || ComponentState::kPaused == state) {
-      if (ComponentState::kStopped == oldState) {
+    if (COMPONENT_STATE::kRunning == state || COMPONENT_STATE::kPaused == state) {
+      if (COMPONENT_STATE::kStopped == oldState) {
         //Disable, and then re-enable components that have an AlwaysRun flag
         for (auto& entry : m_activeComponents) {
           if (entry->sceneObject()->getActive()) {
@@ -279,7 +279,7 @@ namespace geEngineSDK {
     }
 
     //Start updates on all active components
-    if (ComponentState::kRunning == state) {
+    if (COMPONENT_STATE::kRunning == state) {
       //Move from inactive to active list
       for (int32 i = 0; i < static_cast<int32>(m_inactiveComponents.size()); ++i) {
         HComponent component = m_inactiveComponents[i];
@@ -299,9 +299,9 @@ namespace geEngineSDK {
       }
     }
     //Stop updates on all active components
-    else if (ComponentState::kPaused == state || ComponentState::kStopped == state) {
+    else if (COMPONENT_STATE::kPaused == state || COMPONENT_STATE::kStopped == state) {
       //Trigger onDisable events if stopping
-      if (ComponentState::kStopped == state) {
+      if (COMPONENT_STATE::kStopped == state) {
         for (int32 i = 0; i < static_cast<int32>(m_activeComponents.size()); ++i) {
           HComponent component = m_activeComponents[i];
 
@@ -340,7 +340,7 @@ namespace geEngineSDK {
     component->onCreated();
 
     bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);
-    if (alwaysRun || ComponentState::kStopped != m_componentState) {
+    if (alwaysRun || COMPONENT_STATE::kStopped != m_componentState) {
       component->onInitialized();
 
       if (parentActive) {
@@ -367,8 +367,8 @@ namespace geEngineSDK {
     bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);
 
     if (alwaysRun ||
-        ComponentState::kRunning == m_componentState ||
-        ComponentState::kPaused == m_componentState) {
+        COMPONENT_STATE::kRunning == m_componentState ||
+        COMPONENT_STATE::kPaused == m_componentState) {
       if (triggerEvent) {
         component->onEnabled();
       }
@@ -386,8 +386,8 @@ namespace geEngineSDK {
     bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);
 
     if (alwaysRun ||
-        ComponentState::kRunning == m_componentState ||
-        ComponentState::kPaused == m_componentState) {
+      COMPONENT_STATE::kRunning == m_componentState ||
+      COMPONENT_STATE::kPaused == m_componentState) {
       if (triggerEvent) {
         component->onDisabled();
       }
@@ -425,7 +425,7 @@ namespace geEngineSDK {
 
     bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);
     bool isEnabled = component->sceneObject()->getActive() &&
-                     (alwaysRun || ComponentState::kStopped != m_componentState);
+                     (alwaysRun || COMPONENT_STATE::kStopped != m_componentState);
 
     if (isEnabled) {
       component->onDisabled();
