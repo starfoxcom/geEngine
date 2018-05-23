@@ -22,6 +22,8 @@
 #include "geSceneObject.h"
 #include "geResources.h"
 
+#include <geNumericLimits.h>
+
 namespace geEngineSDK {
   void
   PrefabUtility::revertToPrefab(const HSceneObject& so) {
@@ -200,17 +202,17 @@ namespace geEngineSDK {
       todo.pop();
 
       for (auto& component : currentSO->m_components) {
-        if (component->getLinkId() != (uint32)-1) {
+        if (component->getLinkId() != NumLimit::MAX_UINT32) {
           startingId = std::max(component->m_linkId + 1, startingId);
         }
       }
 
-      uint32 numChildren = (uint32)currentSO->getNumChildren();
+      uint32 numChildren = currentSO->getNumChildren();
       for (uint32 i = 0; i < numChildren; ++i) {
         HSceneObject child = currentSO->getChild(i);
 
         if (!child->hasFlag(SCENE_OBJECT_FLAGS::kDontSave)) {
-          if (child->getLinkId() != (uint32)-1) {
+          if (child->getLinkId() != NumLimit::MAX_UINT32) {
             startingId = std::max(child->m_linkId + 1, startingId);
           }
           if (child->m_prefabLinkUUID.empty()) {
@@ -228,7 +230,7 @@ namespace geEngineSDK {
       todo.pop();
 
       for (auto& component : currentSO->m_components) {
-        if (component->getLinkId() == (uint32)-1) {
+        if (component->getLinkId() == NumLimit::MAX_UINT32) {
           component->m_linkId = currentId++;
         }
       }
@@ -238,7 +240,7 @@ namespace geEngineSDK {
         HSceneObject child = currentSO->getChild(i);
 
         if (!child->hasFlag(SCENE_OBJECT_FLAGS::kDontSave)) {
-          if (child->getLinkId() == (uint32)-1) {
+          if (child->getLinkId() == NumLimit::MAX_UINT32) {
             child->m_linkId = currentId++;
           }
           if (child->m_prefabLinkUUID.empty()) {
@@ -263,7 +265,7 @@ namespace geEngineSDK {
     todo.push(sceneObject);
 
     if (clearRoot) {
-      sceneObject->m_linkId = (uint32)-1;
+      sceneObject->m_linkId = NumLimit::MAX_UINT32;
     }
 
     while (!todo.empty()) {
@@ -271,14 +273,14 @@ namespace geEngineSDK {
       todo.pop();
 
       for (auto& component : currentSO->m_components) {
-        component->m_linkId = (uint32)-1;
+        component->m_linkId = NumLimit::MAX_UINT32;
       }
 
       if (recursive) {
-        uint32 numChildren = (uint32)currentSO->getNumChildren();
+        uint32 numChildren = currentSO->getNumChildren();
         for (uint32 i = 0; i < numChildren; ++i) {
           HSceneObject child = currentSO->getChild(i);
-          child->m_linkId = (uint32)-1;
+          child->m_linkId = NumLimit::MAX_UINT32;
 
           if (child->m_prefabLinkUUID.empty()) {
             todo.push(child);
@@ -354,7 +356,7 @@ namespace geEngineSDK {
     todo.push({ so, &output });
 
     output.instanceData = so->_getInstanceData();
-    output.linkId = (uint32)-1;
+    output.linkId = NumLimit::MAX_UINT32;
 
     while (!todo.empty()) {
       StackData curData = todo.top();
@@ -362,7 +364,7 @@ namespace geEngineSDK {
 
       const Vector<HComponent>& components = curData.so->getComponents();
       for (auto& component : components) {
-        curData.proxy->components.push_back(ComponentProxy());
+        curData.proxy->components.emplace_back();
 
         ComponentProxy& componentProxy = curData.proxy->components.back();
         componentProxy.instanceData = component->_getInstanceData();
@@ -405,7 +407,7 @@ namespace geEngineSDK {
 
       Vector<HComponent>& components = current->m_components;
       for (auto& component : components) {
-        if (component->getLinkId() != (uint32)-1) {
+        if (component->getLinkId() != NumLimit::MAX_UINT32) {
           auto iterFind = linkedInstanceData.find(component->getLinkId());
           if (iterFind != linkedInstanceData.end()) {
             component->_setInstanceData(iterFind->second);
@@ -418,7 +420,7 @@ namespace geEngineSDK {
       for (uint32 i = 0; i < numChildren; ++i) {
         HSceneObject child = current->getChild(i);
 
-        if (child->getLinkId() != (uint32)-1) {
+        if (child->getLinkId() != NumLimit::MAX_UINT32) {
           auto iterFind = linkedInstanceData.find(child->getLinkId());
           if (iterFind != linkedInstanceData.end()) {
             child->_setInstanceData(iterFind->second);
@@ -452,20 +454,20 @@ namespace geEngineSDK {
       StackEntry current = todo.top();
       todo.pop();
 
-      if (current.proxy->linkId == (uint32)-1) {
+      if (current.proxy->linkId == NumLimit::MAX_UINT32) {
         current.so->_setInstanceData(current.proxy->instanceData);
       }
 
       Vector<HComponent>& components = current.so->m_components;
       uint32 componentProxyIdx = 0;
-      uint32 numComponentProxies = (uint32)current.proxy->components.size();
+      uint32 numComponentProxies = static_cast<uint32>(current.proxy->components.size());
       for (auto& component : components) {
-        if (component->getLinkId() == (uint32)-1) {
+        if (component->getLinkId() == NumLimit::MAX_UINT32) {
           bool foundInstanceData = false;
           (void)foundInstanceData;
 
           for (; componentProxyIdx < numComponentProxies; ++componentProxyIdx) {
-            if (current.proxy->components[componentProxyIdx].linkId != (uint32)-1) {
+            if (NumLimit::MAX_UINT32 != current.proxy->components[componentProxyIdx].linkId) {
               continue;
             }
 
@@ -483,20 +485,20 @@ namespace geEngineSDK {
 
       uint32 numChildren = current.so->getNumChildren();
       uint32 childProxyIdx = 0;
-      uint32 numChildProxies = (uint32)current.proxy->children.size();
+      uint32 numChildProxies = static_cast<uint32>(current.proxy->children.size());
       for (uint32 i = 0; i < numChildren; ++i) {
         HSceneObject child = current.so->getChild(i);
 
-        if (child->getLinkId() == (uint32)-1) {
+        if (child->getLinkId() == NumLimit::MAX_UINT32) {
           bool foundInstanceData = false;
           (void)foundInstanceData;
 
           for (; childProxyIdx < numChildProxies; ++childProxyIdx) {
-            if (current.proxy->children[childProxyIdx].linkId != (uint32)-1) {
+            if (current.proxy->children[childProxyIdx].linkId != NumLimit::MAX_UINT32) {
               continue;
             }
 
-            GE_ASSERT(current.proxy->children[childProxyIdx].linkId == (uint32)-1);
+            GE_ASSERT(NumLimit::MAX_UINT32 == current.proxy->children[childProxyIdx].linkId);
             child->_setInstanceData(current.proxy->children[childProxyIdx].instanceData);
 
             if (child->m_prefabLinkUUID.empty()) {

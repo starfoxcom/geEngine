@@ -60,7 +60,7 @@ namespace geEngineSDK {
   }
 
   using ComponentFlag = COMPONENT_FLAG::E;
-  typedef Flags<ComponentFlag> ComponentFlags;
+  using ComponentFlags = Flags<ComponentFlag>;
   GE_FLAGS_OPERATORS(ComponentFlag);
 
   class GE_CORE_EXPORT Component : public GameObject
@@ -284,7 +284,7 @@ namespace geEngineSDK {
     HComponent m_thisHandle;
     TransformChangedFlags m_notifyFlags = TransformChangedFlags::kNone;
     ComponentFlags m_flags;
-    uint32 m_sceneManagerId = static_cast<uint32>(-1);
+    uint32 m_sceneManagerId = NumLimit::MAX_UINT32;
 
    private:
     HSceneObject m_parent;

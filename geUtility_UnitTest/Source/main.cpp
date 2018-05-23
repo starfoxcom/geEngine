@@ -7,6 +7,7 @@
 
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
+#include <geNumericLimits.h>
 #include <geFileSystem.h>
 #include <geDataStream.h>
 #include <geFloat10.h>
@@ -45,7 +46,8 @@ TEST(geUtility, Basic_Type_Size) {
   EXPECT_EQ(sizeof(float ), 4);
   EXPECT_EQ(sizeof(double), 8);
 
-  EXPECT_EQ(static_cast<uint32>(-1), Math::MAX_UINT32);
+  EXPECT_EQ(static_cast<uint32>(-1), NumLimit::MAX_UINT32);
+  EXPECT_FLOAT_EQ(Math::PI, 3.141592f);
 }
 
 TEST(geUtility, String_Basic) {

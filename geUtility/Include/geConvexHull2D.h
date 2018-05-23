@@ -20,6 +20,7 @@
 #include "gePrerequisitesUtil.h"
 #include "geVector2.h"
 #include "geVector3.h"
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
   namespace ConvexHull2D {
@@ -187,7 +188,7 @@ namespace geEngineSDK {
 
       //Jarvis march implementation
       int32 LeftmostIndex = -1;
-      Vector2 Leftmost(Math::MAX_FLOAT, Math::MAX_FLOAT);
+      Vector2 Leftmost(NumLimit::MAX_FLOAT, NumLimit::MAX_FLOAT);
 
       for (int32 PointIndex = 0; PointIndex < Points.size(); ++PointIndex) {
         if (Points[PointIndex].X < Leftmost.X ||

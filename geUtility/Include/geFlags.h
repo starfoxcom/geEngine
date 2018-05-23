@@ -274,7 +274,7 @@ namespace geEngineSDK {
      * @copydoc RTTIPlainType::getDynamicSize
      */
     static uint32
-    getDynamicSize(const Flags<Enum, Storage>& data) {
+    getDynamicSize(const Flags<Enum, Storage>& /*data*/) {
       GE_ASSERT(false); //This should never be called, but just in case
       return static_cast<uint32>(sizeof(Flags<Enum, Storage>));
     }

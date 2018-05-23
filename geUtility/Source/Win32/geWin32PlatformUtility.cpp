@@ -33,13 +33,13 @@ namespace geEngineSDK {
   GPUInfo PlatformUtility::s_gpuInfo;
 
   typedef LONG NTSTATUS, *PNTSTATUS;
-  typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+  using RtlGetVersionPtr = NTSTATUS(WINAPI*)(PRTL_OSVERSIONINFOW);
 
   RTL_OSVERSIONINFOW getRealOSVersion() {
     HMODULE handle = GetModuleHandleW(L"ntdll.dll");
     if (handle) {
-      RtlGetVersionPtr rtlGetVersionFunc = reinterpret_cast<RtlGetVersionPtr>(
-                                            GetProcAddress(handle, "RtlGetVersion"));
+      auto rtlGetVersionFunc = reinterpret_cast<RtlGetVersionPtr>(
+                                 GetProcAddress(handle, "RtlGetVersion"));
       if (nullptr != rtlGetVersionFunc) {
         RTL_OSVERSIONINFOW rovi = { 0 };
         rovi.dwOSVersionInfoSize = sizeof(rovi);
@@ -96,14 +96,14 @@ namespace geEngineSDK {
     //Get CPU clock speed
     HKEY hKey;
     LSTATUS status = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-                                  "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+                                  R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)",
                                   0,
                                   KEY_READ,
                                   &hKey);
     if (ERROR_SUCCESS == status) {
       DWORD mhz;
       DWORD bufferSize = 4;
-      RegQueryValueEx(hKey, "~MHz", NULL, NULL, reinterpret_cast<LPBYTE>(&mhz), &bufferSize);
+      RegQueryValueEx(hKey, "~MHz", nullptr, nullptr, reinterpret_cast<LPBYTE>(&mhz), &bufferSize);
       output.cpuClockSpeedMhz = static_cast<uint32>(mhz);
     }
     else {
@@ -155,7 +155,7 @@ namespace geEngineSDK {
     buffer[string.size()] = '\0';
     GlobalUnlock(hData);
 
-    if (OpenClipboard(NULL)) {
+    if (OpenClipboard(nullptr)) {
       EmptyClipboard();
       SetClipboardData(CF_UNICODETEXT, hData);
       CloseClipboard();
@@ -166,10 +166,10 @@ namespace geEngineSDK {
 
   WString
   PlatformUtility::copyFromClipboard() {
-    if (OpenClipboard(NULL)) {
+    if (OpenClipboard(nullptr)) {
       HANDLE hData = GetClipboardData(CF_UNICODETEXT);
 
-      if (hData != NULL) {
+      if (nullptr != hData) {
         WString::value_type* buff = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
         WString string(buff);
         GlobalUnlock(hData);
@@ -189,7 +189,7 @@ namespace geEngineSDK {
     static uint8 keyboarState[256];
 
     if (FALSE == GetKeyboardState(keyboarState)) {
-      return 0;
+      return nullptr;
     }
 
     uint32 virtualKey = MapVirtualKeyExW(keyCode, 1, keyboardLayout);

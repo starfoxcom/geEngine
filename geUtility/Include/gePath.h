@@ -19,6 +19,8 @@
  * Includes
  */
 /*****************************************************************************/
+#include "geNumericLimits.h"
+
 namespace geEngineSDK {
   namespace PATH_TYPE {
     enum E {
@@ -616,14 +618,15 @@ namespace geEngineSDK {
     static uint32
     getDynamicSize(const Path& data) {
       uint64 dataSize =
-        rttiGetElementSize(data.m_device) +
-        rttiGetElementSize(data.m_node) +
-        rttiGetElementSize(data.m_filename) +
-        rttiGetElementSize(data.m_isAbsolute) +
-        rttiGetElementSize(data.m_directories) + sizeof(uint32);
+        static_cast<uint64>(rttiGetElementSize(data.m_device)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_node)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_filename)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_isAbsolute)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_directories)) +
+        static_cast<uint64>(sizeof(uint32));
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (NumLimit::MAX_UINT32 < dataSize) {
         __string_throwDataOverflowException();
       }
 #endif

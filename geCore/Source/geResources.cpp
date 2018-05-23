@@ -35,13 +35,13 @@
 #include <geCompression.h>
 #include <geDataStream.h>
 #include <geBinarySerializer.h>
+#include <geNumericLimits.h>
 
 namespace geEngineSDK {
   using std::static_pointer_cast;
   using std::find;
   using std::find_if;
   using std::bind;
-  using std::numeric_limits;
   using std::memory_order_relaxed;
   using std::ofstream;
 
@@ -382,7 +382,7 @@ namespace geEngineSDK {
       return nullptr;
     }
 
-    if (stream->size() > numeric_limits<uint32>::max()) {
+    if (stream->size() > NumLimit::MAX_UINT32) {
       GE_EXCEPT(InternalErrorException,
                 "File size is larger that uint32 can hold. "
                 "Ask a programmer to use a bigger data type.");

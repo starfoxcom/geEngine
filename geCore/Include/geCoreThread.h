@@ -74,7 +74,7 @@ namespace geEngineSDK {
   }
 
   using CTQF = CORE_THREAD_QUEUE_FLAGS::E;
-  typedef Flags<CTQF> CoreThreadQueueFlags;
+  using CoreThreadQueueFlags = Flags<CTQF>;
   GE_FLAGS_OPERATORS(CTQF)
 
   class GE_CORE_EXPORT CoreThread : public Module<CoreThread>

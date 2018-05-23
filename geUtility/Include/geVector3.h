@@ -24,6 +24,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geMath.h"
+#include "geNumericLimits.h"
 #include "geColor.h"
 #include "geVector2.h"
 
@@ -501,7 +502,7 @@ namespace geEngineSDK {
      * @param Radius Half size of the cube.
      */
     void
-    addBounded(const Vector3& V, float Radius = Math::MAX_INT16);
+    addBounded(const Vector3& V, float Radius = NumLimit::MAX_INT16);
 
     /**
      * @brief Gets the reciprocal of this vector, avoiding division by zero.

@@ -8,6 +8,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{9E30FB1A-85C7-4D31-929C-BA3E243E1D7C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742} = {14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geUtility_UnitTest", "geUtility_UnitTest\geUtility_UnitTest.vcxproj", "{79D00812-D540-49D1-97EE-E45AD45FEA87}"
@@ -16,6 +17,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geUtility_UnitTest", "geUti
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geCore", "geCore\geCore.vcxproj", "{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geGraphicsDX11", "geGraphicsDX11\geGraphicsDX11.vcxproj", "{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742} = {14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geCore_UnitTest", "geCore_UnitTest\geCore_UnitTest.vcxproj", "{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E32D479-2E1A-4360-A1F8-920DADC8DAF3} = {6E32D479-2E1A-4360-A1F8-920DADC8DAF3}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +86,26 @@ Global
 		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}.Release|x64.Build.0 = Release|x64
 		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}.Release|x86.ActiveCfg = Release|Win32
 		{14CA93F1-5E5A-4FCF-80FB-B60AE2EDA742}.Release|x86.Build.0 = Release|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Debug|ORBIS.ActiveCfg = Debug|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Debug|x64.ActiveCfg = Debug|x64
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Debug|x64.Build.0 = Debug|x64
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Debug|x86.ActiveCfg = Debug|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Debug|x86.Build.0 = Debug|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Release|ORBIS.ActiveCfg = Release|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Release|x64.ActiveCfg = Release|x64
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Release|x64.Build.0 = Release|x64
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Release|x86.ActiveCfg = Release|Win32
+		{B9D613A2-30B2-4EDE-BD51-B5CDD61A23A1}.Release|x86.Build.0 = Release|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Debug|ORBIS.ActiveCfg = Debug|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Debug|x64.ActiveCfg = Debug|x64
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Debug|x64.Build.0 = Debug|x64
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Debug|x86.ActiveCfg = Debug|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Debug|x86.Build.0 = Debug|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Release|ORBIS.ActiveCfg = Release|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Release|x64.ActiveCfg = Release|x64
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Release|x64.Build.0 = Release|x64
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Release|x86.ActiveCfg = Release|Win32
+		{BF84BE49-BDA9-43FF-A303-9AF9E218EF0F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -142,15 +142,15 @@ namespace geEngineSDK {
     virtual
     ~Module() = default;
 
-    Module(Module&&) = default;
+    Module(Module&&) = delete;
 
-    Module(const Module&) = default;
-
-    Module&
-    operator=(Module&&) = default;
+    Module(const Module&) = delete;
 
     Module&
-    operator=(const Module&) = default;
+    operator=(Module&&) = delete;
+
+    Module&
+    operator=(const Module&) = delete;
 
     /**
      * @brief	Override if you want your module to be notified once it has been

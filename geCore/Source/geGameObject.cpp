@@ -21,9 +21,11 @@
 #include "geGameObjectRTTI.h"
 #include "geGameObjectManager.h"
 
+#include <geNumericLimits.h>
+
 namespace geEngineSDK {
   GameObject::GameObject()
-    : m_linkId((uint32)-1),
+    : m_linkId(NumLimit::MAX_UINT32),
       m_isDestroyed(false)
   {}
 

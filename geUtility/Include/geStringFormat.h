@@ -12,6 +12,13 @@
 /*****************************************************************************/
 #pragma once
 
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
+#include "geNumericLimits.h"
+
 namespace geEngineSDK {
   /***************************************************************************/
   /**
@@ -88,7 +95,7 @@ namespace geEngineSDK {
           //TODO: Test -1 this with PS4 or change for MAX_UINT32
           paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx,
                                                                1,
-                                                               static_cast<uint32>(-1));
+                                                               NumLimit::MAX_UINT32);
           continue;
         }
 
@@ -154,7 +161,7 @@ namespace geEngineSDK {
         copySourceIdx += copySize + rangeInfo.m_identifierSize;
         copyDestIdx += copySize;
 
-        if (static_cast<uint32>(-1) == rangeInfo.m_paramIdx) {
+        if (NumLimit::MAX_UINT32 == rangeInfo.m_paramIdx) {
           continue;
         }
 
@@ -173,9 +180,9 @@ namespace geEngineSDK {
       ge_free(outputBuffer);
 
       //Free the memory of all the parameters buffers
-      for (uint32 i = 0; i < MAX_PARAMS; ++i) {
-        if (nullptr != parameters[i].m_buffer) {
-          ge_free(parameters[i].m_buffer);
+      for (auto& param : parameters) {
+        if (nullptr != param.m_buffer) {
+          ge_free(param.m_buffer);
         }
       }
 

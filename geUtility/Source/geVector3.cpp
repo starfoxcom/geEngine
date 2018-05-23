@@ -216,7 +216,7 @@ namespace geEngineSDK {
                                        int32 NumIterations,
                                        int32 NumConnectionsToBeValid) {
     //Check we have > 0 points and clusters
-    if (Points.size() == 0 || Clusters.size() == 0) {
+    if (Points.empty() || Clusters.empty()) {
       return;
     }
 
@@ -227,9 +227,7 @@ namespace geEngineSDK {
     //Then iterate
     for (int32 ItCount = 0; ItCount < NumIterations; ++ItCount) {
       //Classify each point - find closest cluster center
-      for (SIZE_T i = 0; i < Points.size(); ++i) {
-        const Vector3& Pos = Points[i];
-
+      for (const Vector3& Pos : Points) {
         //Iterate over all clusters to find closes one
         int32 NearestClusterIndex = -1;
         float NearestClusterDistSqr = Math::BIG_NUMBER;

@@ -20,6 +20,8 @@
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
+  using std::ofstream;
+
   class GE_UTILITY_EXPORT FileEncoder
   {
    public:
@@ -45,7 +47,7 @@ namespace geEngineSDK {
     uint8*
     flushBuffer(uint8* bufferStart, uint32 bytesWritten, uint32& newBufferSize);
 
-    std::ofstream m_outputStream;
+    ofstream m_outputStream;
     uint8* m_writeBuffer = nullptr;
 
     static const uint32 WRITE_BUFFER_SIZE = 2048;

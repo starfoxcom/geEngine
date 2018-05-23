@@ -95,7 +95,7 @@ namespace geEngineSDK {
       return;
     }
 
-    if (m_inputStream->size() > std::numeric_limits<uint32>::max()) {
+    if (m_inputStream->size() > NumLimit::MAX_UINT32) {
       GE_EXCEPT(InternalErrorException,
                 "File size is larger that uint32 can hold. Ask a programmer "
                 "to use a bigger data type.");

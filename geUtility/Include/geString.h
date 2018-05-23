@@ -689,13 +689,6 @@ namespace geEngineSDK {
   toWString(const Vector4& val);
 
   /**
-   * @brief Converts a 3x3 matrix to a wide string.
-   * @note  Format is "00 01 02 10 11 12 20 21 22".
-   */
-  GE_UTILITY_EXPORT WString 
-  toWString(const Matrix3& val);
-
-  /**
    * @brief Converts a 4x4 matrix to a wide string.
    * @note  Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
    */
@@ -850,13 +843,6 @@ namespace geEngineSDK {
   toString(const Vector4& val);
 
   /**
-   * @brief Converts a 3x3 matrix to a string.
-   * @note  Format is "00 01 02 10 11 12 20 21 22".
-   */
-  GE_UTILITY_EXPORT String 
-  toString(const Matrix3& val);
-
-  /**
    * @brief Converts a 4x4 matrix to a string.
    * @note  Format is "00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33".
    */
@@ -921,7 +907,7 @@ namespace geEngineSDK {
    *        matches "true", "yes" or "1", false otherwise.
    */
   GE_UTILITY_EXPORT bool 
-  parseBool(const String& val, bool defaultValue = 0);
+  parseBool(const String& val, bool defaultValue = false);
 
   /**
    * @brief Checks the String is a valid number value.
@@ -959,7 +945,7 @@ namespace geEngineSDK {
    *        matches "true", "yes" or "1", false otherwise.
    */
   GE_UTILITY_EXPORT bool 
-  parseBool(const WString& val, bool defaultValue = 0);
+  parseBool(const WString& val, bool defaultValue = false);
 
   /**
    * @brief	Checks the WString is a valid number value.
@@ -1015,7 +1001,7 @@ namespace geEngineSDK {
       uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (dataSize > NumLimit::MAX_UINT32) {
         __string_throwDataOverflowException();
       }
 #endif
@@ -1046,7 +1032,7 @@ namespace geEngineSDK {
 
     static uint32
     fromMemory(WString& data, char* memory) {
-      typedef WString::value_type wcTemp;
+      using wcTemp = WString::value_type;
 
       uint32 size;
       memcpy(&size, memory, sizeof(uint32));
@@ -1072,7 +1058,7 @@ namespace geEngineSDK {
       uint64 dataSize = data.size() * sizeof(WString::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (dataSize > NumLimit::MAX_UINT32) {
         __string_throwDataOverflowException();
       }
 #endif
@@ -1091,8 +1077,8 @@ namespace std {
   {
     size_t operator()(const geEngineSDK::String& string) const {
       size_t hash = 0;
-      for (size_t i = 0; i < string.size(); ++i) {
-        hash = 65599 * hash + string[i];
+      for (char i : string) {
+        hash = 65599 * hash + i;
       }
 
       return hash ^ (hash >> 16);
@@ -1107,8 +1093,8 @@ namespace std {
   {
     size_t operator()(const geEngineSDK::WString& string) const {
       size_t hash = 0;
-      for (size_t i = 0; i < string.size(); ++i) {
-        hash = 65599 * hash + string[i];
+      for (unsigned short i : string) {
+        hash = 65599 * hash + i;
       }
       return hash ^ (hash >> 16);
     }

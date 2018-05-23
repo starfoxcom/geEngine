@@ -21,6 +21,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geVector3.h"
+#include "geVector4.h"
 
 namespace geEngineSDK {
   MS_ALIGN(16) class Plane : public Vector3
@@ -278,12 +279,11 @@ namespace geEngineSDK {
       D = I = Vector3::ZERO;
       return false;
     }
-    else {
-      //Compute intersection.
-      I = (P1.w*(P2^D) + P2.w*(D^P1)) / DD;
-      D.normalize();
-      return 1;
-    }
+
+    //Compute intersection.
+    I = (P1.w*(P2^D) + P2.w*(D^P1)) / DD;
+    D.normalize();
+    return true;
   }
 
   /***************************************************************************/

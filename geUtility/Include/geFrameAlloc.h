@@ -18,15 +18,35 @@
  * Includes
  */
 /*****************************************************************************/
-#include <limits>
 #include <new>
 
 #include "gePlatformDefines.h"
 #include "gePlatformTypes.h"
 #include "geStdHeaders.h"
 #include "geThreadDefines.h"
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
+  using std::forward;
+  using std::atomic;
+  using std::size_t;
+  using std::ptrdiff_t;
+  using std::basic_string;
+  using std::char_traits;
+
+  using std::vector;
+  using std::stack;
+  using std::queue;
+  using std::deque;
+  using std::map;
+  using std::hash;
+  using std::less;
+  using std::equal_to;
+  using std::set;
+  using std::pair;
+  using std::unordered_set;
+  using std::unordered_map;
+
   /**
    * @brief Frame allocator. Performs very fast allocations but can only free all of its
    *        memory at once. Perfect for allocations that last just a single frame.
@@ -94,7 +114,7 @@ namespace geEngineSDK {
     template<class T, class... Args>
 		T*
     construct(Args &&...args) {
-			return new ((T*)alloc(sizeof(T))) T(std::forward<Args>(args)...);
+			return new ((T*)alloc(sizeof(T))) T(forward<Args>(args)...);
 		}
 
     /**
@@ -165,7 +185,7 @@ namespace geEngineSDK {
     Vector<MemBlock*> m_blocks;
     MemBlock* m_freeBlock;
     uint32 m_nextBlockIdx;
-    std::atomic<SIZE_T> m_totalAllocBytes;
+    atomic<SIZE_T> m_totalAllocBytes;
     void* m_lastFrame;
 
 #if GE_DEBUG_MODE
@@ -192,13 +212,13 @@ namespace geEngineSDK {
   class StdFrameAlloc
   {
    public:
-    typedef T value_type;
-    typedef value_type* pointer;
-    typedef const value_type* const_pointer;
-    typedef value_type& reference;
-    typedef const value_type& const_reference;
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
+    using value_type = T;
+    using pointer = value_type * ;
+    using const_pointer = const value_type*;
+    using reference = value_type & ;
+    using const_reference = const value_type&;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
     
     StdFrameAlloc() _NOEXCEPT = default;
     StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
@@ -223,7 +243,8 @@ namespace geEngineSDK {
     template<class U>
     class rebind
     {
-     public: typedef StdFrameAlloc<U> other;
+     public:
+      using other = StdFrameAlloc<U>;
     };
 
     /**
@@ -235,7 +256,7 @@ namespace geEngineSDK {
         return nullptr;
       }
 
-      if (num > (static_cast<size_t>(-1) / sizeof(T))){
+      if (num > (NumLimit::MAX_SIZET / sizeof(T))){
         return nullptr; //Error
       }
 
@@ -260,7 +281,7 @@ namespace geEngineSDK {
 
     size_t
     max_size() const {
-      return std::numeric_limits<size_type>::max() / sizeof(T);
+      return NumLimit::MAX_SIZET / sizeof(T);
     }
 
     void
@@ -276,7 +297,7 @@ namespace geEngineSDK {
     template<class U, class... Args>
     void
     construct(U* p, Args&& ...args) {
-      new(p) U(std::forward<Args>(args)...);
+      new(p) U(forward<Args>(args)...);
     }
   };
 
@@ -380,7 +401,7 @@ namespace geEngineSDK {
     T* data = ge_frame_alloc<T>(count);
 
     for (SIZE_T i = 0; i < count; ++i) {
-      new ((void*)&data[i]) T(std::forward<Args>(args)...);
+      new ((void*)&data[i]) T(forward<Args>(args)...);
     }
     return data;
   }
@@ -426,49 +447,49 @@ namespace geEngineSDK {
   /**
    * @brief String allocated with a frame allocator.
    */
-  typedef std::basic_string<ANSICHAR,
-                            std::char_traits<ANSICHAR>,
-                            StdAlloc<ANSICHAR, FrameAlloc>>
-                            FrameString;
+  typedef basic_string<ANSICHAR,
+                       char_traits<ANSICHAR>,
+                       StdAlloc<ANSICHAR, FrameAlloc>>
+                       FrameString;
 
   /**
    * @brief WString allocated with a frame allocator.
    */
-  typedef std::basic_string<UNICHAR,
-                            std::char_traits<UNICHAR>,
-                            StdAlloc<UNICHAR, FrameAlloc>>
-                            FrameWString;
+  typedef basic_string<UNICHAR,
+                       char_traits<UNICHAR>,
+                       StdAlloc<UNICHAR, FrameAlloc>>
+                       FrameWString;
 
   template<typename T, typename A = StdAlloc<T, FrameAlloc>>
-  using FrameVector = std::vector<T, A>;
+  using FrameVector = vector<T, A>;
 
   template<typename T, typename A = StdAlloc<T, FrameAlloc>>
-  using FrameStack = std::stack<T, std::deque<T, A>>;
+  using FrameStack = stack<T, deque<T, A>>;
 
   template <typename T, typename A = StdAlloc<T, FrameAlloc>>
-  using FrameQueue = std::queue<T, std::deque<T, A>>;
+  using FrameQueue = queue<T, deque<T, A>>;
 
-  template<typename T, typename P = std::less<T>, typename A = StdAlloc<T, FrameAlloc>>
-  using FrameSet = std::set<T, P, A>;
+  template<typename T, typename P = less<T>, typename A = StdAlloc<T, FrameAlloc>>
+  using FrameSet = set<T, P, A>;
 
   template<typename K, 
            typename V,
-           typename P = std::less<K>,
-           typename A = StdAlloc<std::pair<const K, V>, FrameAlloc>>
-  using FrameMap = std::map<K, V, P, A>;
+           typename P = less<K>,
+           typename A = StdAlloc<pair<const K, V>, FrameAlloc>>
+  using FrameMap = map<K, V, P, A>;
 
   template<typename T,
-           typename H = std::hash<T>,
-           typename C = std::equal_to<T>,
+           typename H = hash<T>,
+           typename C = equal_to<T>,
            typename A = StdAlloc<T, FrameAlloc>>
-  using FrameUnorderedSet = std::unordered_set<T, H, C, A>;
+  using FrameUnorderedSet = unordered_set<T, H, C, A>;
 
   template<typename K,
            typename V,
-           typename H = std::hash<K>,
-           typename C = std::equal_to<K>,
-           typename A = StdAlloc<std::pair<const K, V>, FrameAlloc>>
-  using FrameUnorderedMap = std::unordered_map<K, V, H, C, A>;
+           typename H = hash<K>,
+           typename C = equal_to<K>,
+           typename A = StdAlloc<pair<const K, V>, FrameAlloc>>
+  using FrameUnorderedMap = unordered_map<K, V, H, C, A>;
 
   extern GE_THREADLOCAL FrameAlloc* _globalFrameAlloc;
 

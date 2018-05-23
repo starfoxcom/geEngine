@@ -68,15 +68,13 @@ namespace geEngineSDK {
    * Forward declaration of utility classes
    */
   /***************************************************************************/
-  class Angle;
   class AABox;
   class Degree;
   class Math;
-  class Matrix3;
   class Matrix4;
   class RotationTranslationMatrix;
   class Transform;
-  class Plane;
+  
   class Rotator;
   class Quaternion;
   class Radian;
@@ -87,8 +85,7 @@ namespace geEngineSDK {
   class Vector3;
   class Vector4;
   class Vector2I;
-  class Vector3I;
-  class Vector4I;
+  class Plane;
   class Box2DI;
   class Box2D;
   class Color;
@@ -101,22 +98,15 @@ namespace geEngineSDK {
   class MemoryDataStream;
   class FileDataStream;
 
-  class MeshData;
   class FileSystem;
   class Timer;
   class Task;
 
-  class GPUResourceData;
   class PixelData;
 
-  class HString;
-  class StringTable;
-  struct LocalizedStringData;
   class Path;
 
   class HThread;
-  class TestSuite;
-  class TestOutput;
   class AsyncOpSyncData;
 
   struct RTTIField;
@@ -151,13 +141,10 @@ namespace geEngineSDK {
   typedef std::shared_ptr<DataStream> DataStreamPtr;
   typedef std::shared_ptr<MemoryDataStream> MemoryDataStreamPtr;
   typedef std::shared_ptr<FileDataStream> FileDataStreamPtr;
-  typedef std::shared_ptr<MeshData> MeshDataPtr;
   typedef std::shared_ptr<PixelData> PixelDataPtr;
-  typedef std::shared_ptr<GPUResourceData> GPUResourceDataPtr;
   typedef std::shared_ptr<DataStream> DataStreamPtr;
   typedef std::shared_ptr<MemoryDataStream> MemoryDataStreamPtr;
   typedef std::shared_ptr<Task> TaskPtr;
-  typedef std::shared_ptr<TestSuite> TestSuitePtr;
   typedef std::shared_ptr<AsyncOpSyncData> AsyncOpSyncDataPtr;
 
   typedef List<DataStreamPtr> DataStreamList;

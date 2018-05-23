@@ -285,7 +285,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -360,7 +360,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -455,7 +455,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item.second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -552,7 +552,7 @@ namespace geEngineSDK {
         dataSize += RTTIPlainType<Value>::getDynamicSize(item.second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -636,7 +636,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -703,7 +703,7 @@ namespace geEngineSDK {
       dataSize += rttiGetElementSize(data.first);
       dataSize += rttiGetElementSize(data.second);
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }

@@ -25,6 +25,8 @@
 #include "gePrefabUtility.h"
 //#include "geCoreApplication.h"
 
+#include <geNumericLimits.h>
+
 namespace geEngineSDK {
   Prefab::Prefab() : Resource(false), m_hash(0), m_isScene(true) {}
 
@@ -93,7 +95,7 @@ namespace geEngineSDK {
 
     m_root = sceneObject->clone(false);
     m_root->m_parent = nullptr;
-    m_root->m_linkId = (uint32)-1;
+    m_root->m_linkId = NumLimit::MAX_UINT32;
 
     //Remove objects with "don't save" flag
     todo.push(m_root);
@@ -170,7 +172,7 @@ namespace geEngineSDK {
     }
 
     m_root->m_prefabHash = m_hash;
-    m_root->m_linkId = (uint32)-1;
+    m_root->m_linkId = NumLimit::MAX_UINT32;
 
     return m_root->clone(false);
   }

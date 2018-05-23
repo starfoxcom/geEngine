@@ -205,8 +205,8 @@ namespace geEngineSDK {
     }
 
     //Go through the remaining objects (should be only ones with weak refs)
-    for (auto iter = m_objectMap.begin(); iter != m_objectMap.end(); ++iter) {
-      ObjectToDecode& objToDecode = iter->second;
+    for (auto& iter : m_objectMap) {
+      ObjectToDecode& objToDecode = iter.second;
 
       if (objToDecode.isDecoded) {
         continue;
@@ -576,7 +576,7 @@ namespace geEngineSDK {
         output = ge_shared_ptr_new<SerializedObject>();
       }
 
-      output->subObjects.push_back(SerializedSubObject());
+      output->subObjects.emplace_back();
       serializedSubObject = &output->subObjects.back();
       serializedSubObject->typeId = objectTypeId;
     }
@@ -615,7 +615,7 @@ namespace geEngineSDK {
           }
 
           if (nullptr != rtti) {
-            output->subObjects.push_back(SerializedSubObject());
+            output->subObjects.emplace_back();
             serializedSubObject = &output->subObjects.back();
             serializedSubObject->typeId = objTypeId;
           }

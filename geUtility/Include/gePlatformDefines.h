@@ -70,7 +70,7 @@
 #   define GE_COMP_VER __INTEL_COMPILER
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
-#   define BS_FALLTHROUGH
+#   define GE_FALLTHROUGH
 /** 
  * GE_THREADLOCAL define is down below because Intel compiler defines it
  * differently based on platform
@@ -83,7 +83,7 @@
 #   define GE_THREADLOCAL __declspec(thread)
 #   define GE_STDCALL __stdcall
 #   define GE_CDECL __cdecl
-#   define BS_FALLTHROUGH
+#   define GE_FALLTHROUGH
 #   undef __PRETTY_FUNCTION__
 #   define __PRETTY_FUNCTION__ __FUNCSIG__
 #else

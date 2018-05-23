@@ -113,7 +113,7 @@ namespace geEngineSDK {
     //are always at the end.
     const Vector<HComponent>& components = object->getComponents();
     for (auto& removedId : diff->removedComponents) {
-      for (auto component : components) {
+      for (auto& component : components) {
         if (removedId == component->getLinkId()) {
           component->destroy();
           break;
@@ -274,7 +274,7 @@ namespace geEngineSDK {
       }
 
       bool foundMatching = false;
-      if (instanceChild->getLinkId() != (uint32)-1) {
+      if (instanceChild->getLinkId() != NumLimit::MAX_UINT32) {
         for (uint32 j = 0; j < prefabChildCount; ++j) {
           HSceneObject prefabChild = prefab->getChild(j);
 
@@ -358,7 +358,7 @@ namespace geEngineSDK {
       HComponent instanceComponent = instanceComponents[i];
 
       bool foundMatching = false;
-      if (instanceComponent->getLinkId() != (uint32)-1) {
+      if (instanceComponent->getLinkId() != NumLimit::MAX_UINT32) {
         for (uint32 j = 0; j < prefabComponentCount; ++j) {
           HComponent prefabComponent = prefabComponents[j];
 
@@ -423,7 +423,7 @@ namespace geEngineSDK {
 
       const Vector<HComponent>& components = current.so->getComponents();
       for (auto& component : components) {
-        if (component->getLinkId() != (uint32)-1) {
+        if (component->getLinkId() != NumLimit::MAX_UINT32) {
           idMap[component->getLinkId()] = component->getInstanceId();
         }
       }
@@ -432,7 +432,7 @@ namespace geEngineSDK {
       for (uint32 i = 0; i < numChildren; ++i) {
         HSceneObject child = current.so->getChild(i);
 
-        if (child->getLinkId() != (uint32)-1) {
+        if (child->getLinkId() != NumLimit::MAX_UINT32) {
           idMap[child->getLinkId()] = child->getInstanceId();
         }
 
@@ -442,7 +442,7 @@ namespace geEngineSDK {
 
     //Root has link ID from its parent so we handle it separately
     {
-      output.push_back(RenamedGameObject());
+      output.emplace_back();
       RenamedGameObject& renamedGO = output.back();
       renamedGO.instanceData = instance->m_instanceData;
       renamedGO.originalId = instance->getInstanceId();
@@ -470,7 +470,7 @@ namespace geEngineSDK {
         for (auto& component : components) {
           auto iterFind2 = idMap.find(component->getLinkId());
           if (iterFind2 != idMap.end()) {
-            output.push_back(RenamedGameObject());
+            output.emplace_back();
             RenamedGameObject& renamedGO = output.back();
             renamedGO.instanceData = component->m_instanceData;
             renamedGO.originalId = component->getInstanceId();
@@ -485,12 +485,12 @@ namespace geEngineSDK {
         HSceneObject child = current.so->getChild(i);
 
         if (iterFind != linkToInstanceId.end()) {
-          if (child->getLinkId() != (uint32)-1) {
+          if (child->getLinkId() != NumLimit::MAX_UINT32) {
             UnorderedMap<uint32, uint64>& idMap = iterFind->second;
 
             auto iterFind2 = idMap.find(child->getLinkId());
             if (iterFind2 != idMap.end()) {
-              output.push_back(RenamedGameObject());
+              output.emplace_back();
               RenamedGameObject& renamedGO = output.back();
               renamedGO.instanceData = child->m_instanceData;
               renamedGO.originalId = child->getInstanceId();

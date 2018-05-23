@@ -13,4 +13,5 @@ External Dependencies
   GoogleTest - For Unit Test design
   LZ4 - For data compression
   TetGen - For Delaunay tetrahedralization and Voronoi diagrams
+  nvtt - NVIDIA Texture Tools
   

@@ -39,7 +39,7 @@
 #include <geThreadPool.h>
 #include <geTaskScheduler.h>
 #include <geFrameAlloc.h>
-#include <geMath.h>
+#include <geNumericLimits.h>
 
 namespace geEngineSDK {
   using namespace std::placeholders;
@@ -54,9 +54,9 @@ namespace geEngineSDK {
       m_coreThreadStarted(false),
       m_commandQueue(nullptr),
       m_maxCommandNotifyId(0) {
-    for (uint32 i = 0; i < NUM_SYNC_BUFFERS; ++i) {
-      m_frameAllocs[i] = ge_new<FrameAlloc>();
-      m_frameAllocs[i]->setOwnerThread(GE_THREAD_CURRENT_ID); //Sim thread
+    for(auto& frameAlloc : m_frameAllocs) {
+      frameAlloc = ge_new<FrameAlloc>();
+      frameAlloc->setOwnerThread(GE_THREAD_CURRENT_ID); //Sim thread
     }
 
     m_simThreadId = GE_THREAD_CURRENT_ID;
@@ -83,9 +83,9 @@ namespace geEngineSDK {
       m_commandQueue = nullptr;
     }
 
-    for (uint32 i = 0; i < NUM_SYNC_BUFFERS; ++i) {
-      m_frameAllocs[i]->setOwnerThread(GE_THREAD_CURRENT_ID); //Sim thread
-      ge_delete(m_frameAllocs[i]);
+    for (auto& frameAlloc : m_frameAllocs) {
+      frameAlloc->setOwnerThread(GE_THREAD_CURRENT_ID); //Sim thread
+      ge_delete(frameAlloc);
     }
   }
 
@@ -226,7 +226,7 @@ namespace geEngineSDK {
       bool blockUntilComplete = flags.isSet(CTQF::kBlockUntilComplete);
 
       AsyncOp op;
-      uint32 commandId = Math::MAX_UINT32;
+      uint32 commandId = NumLimit::MAX_UINT32;
       {
         Lock lock(m_commandQueueMutex);
         if (blockUntilComplete) {
@@ -260,7 +260,7 @@ namespace geEngineSDK {
     else {
       bool blockUntilComplete = flags.isSet(CTQF::kBlockUntilComplete);
 
-      uint32 commandId = Math::MAX_UINT32;
+      uint32 commandId = NumLimit::MAX_UINT32;
       {
         Lock lock(m_commandQueueMutex);
         if (blockUntilComplete) {
@@ -282,8 +282,8 @@ namespace geEngineSDK {
 
   void
   CoreThread::update() {
-    for (uint32 i = 0; i < NUM_SYNC_BUFFERS; ++i) {
-      m_frameAllocs[i]->setOwnerThread(m_coreThreadId);
+    for (auto& frameAlloc : m_frameAllocs) {
+      frameAlloc->setOwnerThread(m_coreThreadId);
     }
 
     m_activeFrameAlloc = (m_activeFrameAlloc + 1) % 2;

@@ -25,7 +25,6 @@
 /*****************************************************************************/
 #include <new>
 #include <atomic>
-#include <limits>
 #include <utility>
 
 #if GE_PLATFORM == GE_PLATFORM_LINUX
@@ -33,8 +32,13 @@
 #endif
 
 #include "gePlatformTypes.h"
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
+  using std::forward;
+  using std::size_t;
+  using std::ptrdiff_t;
+
   class MemoryAllocatorBase;
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
@@ -287,7 +291,7 @@ namespace geEngineSDK {
   template<class T, class Alloc, class... Args>
   T*
   ge_new(Args&& ...args) {
-    return new (ge_alloc<T, Alloc>()) T(std::forward<Args>(args)...);
+    return new (ge_alloc<T, Alloc>()) T(forward<Args>(args)...);
   }
 
   /**
@@ -390,7 +394,7 @@ namespace geEngineSDK {
   template<class T, class... Args>
   T*
   ge_new(Args&& ...args) {
-    return new (ge_alloc<T, GenAlloc>()) T(std::forward<Args>(args)...);
+    return new (ge_alloc<T, GenAlloc>()) T(forward<Args>(args)...);
   }
 
   /**
@@ -445,8 +449,8 @@ namespace geEngineSDK {
     using const_pointer = const value_type*;
     using reference = value_type&;
     using const_reference = const value_type&;
-    using size_type = std::size_t;
-    using difference_type = std::ptrdiff_t;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
     
     constexpr StdAlloc() = default;
     constexpr StdAlloc(StdAlloc&&) = default;
@@ -483,7 +487,7 @@ namespace geEngineSDK {
         return nullptr;
       }
 
-      if (num > std::numeric_limits<size_t>::max() / sizeof(T)) {
+      if (num > NumLimit::MAX_SIZET / sizeof(T)) {
         throw nullptr;
       }
 
@@ -505,7 +509,7 @@ namespace geEngineSDK {
 
     static constexpr size_t
     max_size() {
-      return std::numeric_limits<size_type>::max() / sizeof(T);
+      return NumLimit::MAX_SIZET / sizeof(T);
     }
 
     static constexpr void
@@ -522,7 +526,7 @@ namespace geEngineSDK {
     template<class... Args>
     static void
     construct(pointer p, Args&& ...args) {
-      new(p) T(std::forward<Args>(args)...);
+      new(p) T(forward<Args>(args)...);
     }
 #else
     static void

@@ -168,22 +168,22 @@ namespace geEngineSDK {
     return outputStream.str();
   }
 
-  typedef bool(WINAPI *EnumProcessModulesType)(HANDLE hProcess,
+  using EnumProcessModulesType = bool(WINAPI*)(HANDLE hProcess,
                                                HMODULE* lphModule,
                                                DWORD cb,
                                                LPDWORD lpcbNeeded);
 
-  typedef DWORD(WINAPI *GetModuleBaseNameType)(HANDLE hProcess,
+  using GetModuleBaseNameType = DWORD(WINAPI*)(HANDLE hProcess,
                                                HMODULE hModule,
                                                LPSTR lpBaseName,
                                                DWORD nSize);
 
-  typedef DWORD(WINAPI *GetModuleFileNameExType)(HANDLE hProcess,
+  using GetModuleFileNameExType = DWORD(WINAPI*)(HANDLE hProcess,
                                                  HMODULE hModule,
                                                  LPSTR lpFilename,
                                                  DWORD nSize);
 
-  typedef bool(WINAPI *GetModuleInformationType)(HANDLE hProcess,
+  using GetModuleInformationType = bool(WINAPI*)(HANDLE hProcess,
                                                  HMODULE hModule,
                                                  LPMODULEINFO lpmodinfo,
                                                  DWORD cb);

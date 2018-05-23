@@ -168,12 +168,12 @@ namespace geEngineSDK {
     if (m_filename.empty()) {
       if (m_directories.empty()) {
         if (!m_isAbsolute) {
-          m_directories.push_back("..");
+          m_directories.emplace_back("..");
         }
       }
       else {
         if (".." == m_directories.back()) {
-          m_directories.push_back("..");
+          m_directories.emplace_back("..");
         }
         else {
           m_directories.pop_back();
@@ -219,7 +219,7 @@ namespace geEngineSDK {
     /** Sometimes a directory name can be interpreted as a file and we're okay with that.
      *  Check for that special case. */
     if (base.isFile()) {
-      if (0 < m_directories.size()) {
+      if (!m_directories.empty()) {
         m_directories.erase(m_directories.begin());
       }
       else {
@@ -412,7 +412,7 @@ namespace geEngineSDK {
     if (isFile()) {
       return m_filename;
     }
-    else if (0 < m_directories.size()) {
+    else if (!m_directories.empty()) {
       return m_directories.back();
     }
     else {

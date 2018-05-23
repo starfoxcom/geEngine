@@ -88,7 +88,7 @@ namespace geEngineSDK {
     {
       Lock activeTaskLock(m_readyMutex);
 
-      while (m_activeTasks.size() > 0) {
+      while (!m_activeTasks.empty()) {
         SPtr<Task> task = m_activeTasks[0];
         activeTaskLock.unlock();
 

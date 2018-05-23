@@ -315,36 +315,6 @@ namespace geEngineSDK {
       return m_ptr;
     }
 
-    bool
-    operator<(const NativePtr& rhs) const {
-      return m_ptr < rhs.m_ptr;
-    }
-
-    bool
-    operator>(const NativePtr& rhs) const {
-      return m_ptr > rhs.m_ptr;
-    }
-
-    bool
-    operator<=(const NativePtr& rhs) const {
-      return m_ptr <= rhs.m_ptr;
-    }
-
-    bool
-    operator>=(const NativePtr& rhs) const {
-      return m_ptr >= rhs.m_ptr;
-    }
-
-    bool
-    operator==(const NativePtr& rhs) const {
-      return m_ptr == rhs.m_ptr;
-    }
-
-    bool
-    operator!=(const NativePtr& rhs) const {
-      return m_ptr != rhs.m_ptr;
-    }
-
    private:
     T* m_ptr;
   };
@@ -357,4 +327,40 @@ namespace geEngineSDK {
    */
   template <typename T>
   using NPtr = NativePtr<T>;
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator<(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() < rhs.get();
+  }
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator>(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() > rhs.get();
+  }
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator<=(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() <= rhs.get();
+  }
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator>=(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() >= rhs.get();
+  }
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator==(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() == rhs.get();
+  }
+
+  template<typename L_T, typename R_T>
+  constexpr bool
+  operator!=(const NPtr<L_T>& lhs, const NPtr<R_T>& rhs) {
+    return lhs.get() != rhs.get();
+  }
 }

@@ -238,7 +238,7 @@ namespace geEngineSDK {
 
         allocBlock(totalBytes);
       }
-      else if (m_blocks.size() > 0) {
+      else if (!m_blocks.empty()) {
         m_blocks[0]->m_freePtr = 0;
       }
     }

@@ -342,6 +342,7 @@
     <ClInclude Include="Include\geMemAllocProfiler.h" />
     <ClInclude Include="Include\geMemoryAllocator.h" />
     <ClInclude Include="Include\geMemorySerializer.h" />
+    <ClInclude Include="Include\geNumericLimits.h" />
     <ClInclude Include="Include\geOctree.h" />
     <ClInclude Include="Include\gePoolAlloc.h" />
     <ClInclude Include="Include\geSIMD.h" />
@@ -421,7 +422,6 @@
     <ClCompile Include="Source\geDegree.cpp" />
     <ClCompile Include="Source\geDynLib.cpp" />
     <ClCompile Include="Source\geDynLibManager.cpp" />
-    <ClCompile Include="Source\geException.cpp" />
     <ClCompile Include="Source\geFileSerializer.cpp" />
     <ClCompile Include="Source\geFileSystem.cpp" />
     <ClCompile Include="Source\geFrameAlloc.cpp" />

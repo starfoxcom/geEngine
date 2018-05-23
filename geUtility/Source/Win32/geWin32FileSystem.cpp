@@ -24,6 +24,9 @@
 #include "Win32/geMinWindows.h"
 
 namespace geEngineSDK {
+  using std::time_t;
+  using std::function;
+
   void
   win32_handleError(DWORD error, const WString& path) {
     switch (error)
@@ -89,7 +92,7 @@ namespace geEngineSDK {
 
   WString
   win32_getCurrentDirectory() {
-    DWORD len = GetCurrentDirectoryW(0, NULL);
+    DWORD len = GetCurrentDirectoryW(0, nullptr);
     if (len > 0) {
       wchar_t* buffer = reinterpret_cast<wchar_t*>(ge_alloc(len * sizeof(wchar_t)));
       DWORD n = GetCurrentDirectoryW(len, buffer);
@@ -112,7 +115,7 @@ namespace geEngineSDK {
 
   WString
   win32_getTempDirectory() {
-    DWORD len = GetTempPathW(0, NULL);
+    DWORD len = GetTempPathW(0, nullptr);
     if (len > 0) {
       wchar_t* buffer = (wchar_t*)ge_alloc(len * sizeof(wchar_t));
       DWORD n = GetTempPathW(len, buffer);
@@ -240,7 +243,7 @@ namespace geEngineSDK {
     return static_cast<uint64>(li.QuadPart);
   }
 
-  std::time_t
+  time_t
   win32_getLastModifiedTime(const WString& path) {
     WIN32_FILE_ATTRIBUTE_DATA fad;
     if (GetFileAttributesExW(path.c_str(), GetFileExInfoStandard, &fad) == 0) {
@@ -251,13 +254,13 @@ namespace geEngineSDK {
     ull.LowPart = fad.ftLastWriteTime.dwLowDateTime;
     ull.HighPart = fad.ftLastWriteTime.dwHighDateTime;
 
-    return static_cast<std::time_t>((ull.QuadPart / 10000000ULL) - 11644473600ULL);
+    return static_cast<time_t>((ull.QuadPart / 10000000ULL) - 11644473600ULL);
   }
 
   SPtr<DataStream>
   FileSystem::openFile(const Path& fullPath, bool readOnly) {
     WString pathWString = UTF8::toWide(fullPath.toString());
-    const wchar_t* pathString = pathWString.c_str();
+    const UNICHAR* pathString = pathWString.c_str();
 
     if (!win32_pathExists(pathString) || !win32_isFile(pathString)) {
       LOGWRN("Attempting to open a file that doesn't exist: " + fullPath.toString());
@@ -369,8 +372,8 @@ namespace geEngineSDK {
 
   bool
   FileSystem::iterate(const Path& dirPath,
-                      const std::function<bool(const Path&)>& fileCallback,
-                      const std::function<bool(const Path&)>& dirCallback,
+                      const function<bool(const Path&)>& fileCallback,
+                      const function<bool(const Path&)>& dirCallback,
                       bool recursive) {
     WString findPath = UTF8::toWide(dirPath.toString());
 
@@ -438,7 +441,7 @@ namespace geEngineSDK {
     return true;
   }
 
-  std::time_t
+  time_t
   FileSystem::getLastModifiedTime(const Path& fullPath) {
     return win32_getLastModifiedTime(UTF8::toWide(fullPath.toString()));
   }

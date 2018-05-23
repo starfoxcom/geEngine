@@ -29,6 +29,8 @@
     <ClInclude Include="Include\geCoreThread.h" />
     <ClInclude Include="Include\geCoreThreadQueue.h" />
     <ClInclude Include="Include\geDeferredCallManager.h" />
+    <ClInclude Include="Include\geDropTarget.h" />
+    <ClInclude Include="Include\geFolderMonitor.h" />
     <ClInclude Include="Include\geGameObject.h" />
     <ClInclude Include="Include\geGameObjectHandle.h" />
     <ClInclude Include="Include\geGameObjectHandleRTTI.h" />
@@ -36,14 +38,24 @@
     <ClInclude Include="Include\geGameObjectRTTI.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
+    <ClInclude Include="Include\geHardwareBuffer.h" />
     <ClInclude Include="Include\geHString.h" />
     <ClInclude Include="Include\geIResourceListener.h" />
+    <ClInclude Include="Include\gePixelData.h" />
+    <ClInclude Include="Include\gePixelDataRTTI.h" />
+    <ClInclude Include="Include\gePixelUtil.h" />
+    <ClInclude Include="Include\gePixelVolume.h" />
     <ClInclude Include="Include\gePrefab.h" />
     <ClInclude Include="Include\gePrefabDiff.h" />
     <ClInclude Include="Include\gePrefabDiffRTTI.h" />
     <ClInclude Include="Include\gePrefabRTTI.h" />
     <ClInclude Include="Include\gePrefabUtility.h" />
     <ClInclude Include="Include\gePrerequisitesCore.h" />
+    <ClInclude Include="Include\geRenderAPI.h" />
+    <ClInclude Include="Include\geRenderAPIFactory.h" />
+    <ClInclude Include="Include\geRenderAPIManager.h" />
+    <ClInclude Include="Include\geRenderTarget.h" />
+    <ClInclude Include="Include\geRenderTexture.h" />
     <ClInclude Include="Include\geResource.h" />
     <ClInclude Include="Include\geResourceHandle.h" />
     <ClInclude Include="Include\geResourceHandleRTTI.h" />
@@ -63,7 +75,15 @@
     <ClInclude Include="Include\geStringTable.h" />
     <ClInclude Include="Include\geStringTableManager.h" />
     <ClInclude Include="Include\geStringTableRTTI.h" />
+    <ClInclude Include="Include\geTexture.h" />
+    <ClInclude Include="Include\geTextureManager.h" />
+    <ClInclude Include="Include\geTextureRTTI.h" />
+    <ClInclude Include="Include\geTextureView.h" />
     <ClInclude Include="Include\geUtility.h" />
+    <ClInclude Include="Include\geVertexDeclaration.h" />
+    <ClInclude Include="Include\geVideoModeInfo.h" />
+    <ClInclude Include="Include\geViewport.h" />
+    <ClInclude Include="Include\geViewportRTTI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geCommandQueue.cpp" />
@@ -74,15 +94,22 @@
     <ClCompile Include="Source\geCoreThread.cpp" />
     <ClCompile Include="Source\geCoreThreadQueue.cpp" />
     <ClCompile Include="Source\geDeferredCallManager.cpp" />
+    <ClCompile Include="Source\geDropTarget.cpp" />
     <ClCompile Include="Source\geGameObject.cpp" />
     <ClCompile Include="Source\geGameObjectHandle.cpp" />
     <ClCompile Include="Source\geGameObjectManager.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
     <ClCompile Include="Source\geIResourceListener.cpp" />
+    <ClCompile Include="Source\gePixelData.cpp" />
+    <ClCompile Include="Source\gePixelUtil.cpp" />
     <ClCompile Include="Source\gePrefab.cpp" />
     <ClCompile Include="Source\gePrefabDiff.cpp" />
     <ClCompile Include="Source\gePrefabUtility.cpp" />
+    <ClCompile Include="Source\geRenderAPI.cpp" />
+    <ClCompile Include="Source\geRenderAPIManager.cpp" />
+    <ClCompile Include="Source\geRenderTarget.cpp" />
+    <ClCompile Include="Source\geRenderTexture.cpp" />
     <ClCompile Include="Source\geResource.cpp" />
     <ClCompile Include="Source\geResourceHandle.cpp" />
     <ClCompile Include="Source\geResourceListenerManager.cpp" />
@@ -95,7 +122,12 @@
     <ClCompile Include="Source\geSceneObject.cpp" />
     <ClCompile Include="Source\geStringTable.cpp" />
     <ClCompile Include="Source\geStringTableManager.cpp" />
+    <ClCompile Include="Source\geTexture.cpp" />
+    <ClCompile Include="Source\geTextureManager.cpp" />
+    <ClCompile Include="Source\geTextureView.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
+    <ClCompile Include="Source\geVideoModeInfo.cpp" />
+    <ClCompile Include="Source\geViewport.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -180,7 +212,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;$(DEVLIBS)nvtt/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -191,8 +223,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtilityd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -205,7 +237,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;$(DEVLIBS)nvtt/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -216,8 +248,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtilityd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -232,7 +264,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;$(DEVLIBS)nvtt/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -245,8 +277,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtility.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -261,7 +293,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>GE_CORE_EXPORTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Include/;$(SolutionDir)geUtility/Include/;$(DEVLIBS)nvtt/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
@@ -274,8 +306,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtility.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

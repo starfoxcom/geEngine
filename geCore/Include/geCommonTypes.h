@@ -19,10 +19,6 @@
 /*****************************************************************************/
 
 namespace geEngineSDK {
-  //Undefine defines from other libs, that conflict with enums below
-# undef None
-# undef Convex
-
   /**
    * @brief Factors used when blending new pixels with existing pixels.
    */
@@ -208,50 +204,58 @@ namespace geEngineSDK {
    * @brief These values represent a hint to the driver when locking a hardware
    *        buffer.
    */
-  enum GpuLockOptions {
-    /**
-     * Allows you to write to the buffer. Can cause a CPU-GPU sync point so
-     * avoid using it often (every frame) as that might limit your performance
-     * significantly.
-     */
-    GBL_READ_WRITE,
-    /**
-     * Allows you to write to the buffer. Tells the driver to completely
-     * discard the contents of the buffer you are writing to. The driver will
-     * (most likely) internally allocate another buffer with same
-     * specifications (which is fairly fast) and you will avoid CPU-GPU stalls.
-     */
-    GBL_WRITE_ONLY_DISCARD,
-    /**
-     * Allows you to write to the buffer. Tells the driver to discard the
-     * contents of the mapped buffer range (but not the entire buffer like
-     * with GBL_WRITE_ONLY_DISCARD). Use this if you plan on overwriting all
-     * of the range. This can help avoid CPU-GPU stalls.
-     */
-    GBL_WRITE_ONLY_DISCARD_RANGE,
-    /** 
-     * Allows you to read from a buffer. Be aware that reading is usually a
-     * very slow operation.
-     */
-    GBL_READ_ONLY,
-    /**
-     * Allows you to write to the buffer. Guarantees the driver that you will
-     * not be updating any part of the buffer that is currently used. This will
-     * also avoid CPU-GPU stalls, without requiring you to discard the entire
-     * buffer. However it is hard to guarantee when GPU has finished using a
-     * buffer.
-     */
-    GBL_WRITE_ONLY_NO_OVERWRITE,
-    /**
-     * Allows you to write to a buffer.
-     */
-    GBL_WRITE_ONLY
-  };
+  namespace GPU_LOCK_OPTIONS {
+    enum E {
+      /**
+       * Allows you to write to the buffer. Can cause a CPU-GPU sync point so
+       * avoid using it often (every frame) as that might limit your
+       * performance significantly.
+       */
+      kREAD_WRITE,
+
+      /**
+       * Allows you to write to the buffer. Tells the driver to completely
+       * discard the contents of the buffer you are writing to. The driver will
+       * (most likely) internally allocate another buffer with same
+       * specifications (which is fairly fast) and you will avoid CPU-GPU
+       * stalls.
+       */
+      kWRITE_ONLY_DISCARD,
+
+      /**
+       * Allows you to write to the buffer. Tells the driver to discard the
+       * contents of the mapped buffer range (but not the entire buffer like
+       * with GBL_WRITE_ONLY_DISCARD). Use this if you plan on overwriting all
+       * of the range. This can help avoid CPU-GPU stalls.
+       */
+      kWRITE_ONLY_DISCARD_RANGE,
+
+      /**
+       * Allows you to read from a buffer. Be aware that reading is usually a
+       * very slow operation.
+       */
+      kREAD_ONLY,
+
+      /**
+       * Allows you to write to the buffer. Guarantees the driver that you will
+       * not be updating any part of the buffer that is currently used. This
+       * will also avoid CPU-GPU stalls, without requiring you to discard the
+       * entire buffer. However it is hard to guarantee when GPU has finished
+       * using a buffer.
+       */
+      kWRITE_ONLY_NO_OVERWRITE,
+
+      /**
+       * Allows you to write to a buffer.
+       */
+      kWRITE_ONLY
+    };
+  }
 
   /**
    * @brief Types of programs that may run on GPU.
    */
-  enum GpuProgramType {
+  enum GPUProgramType {
     GPT_VERTEX_PROGRAM,   //Vertex program.
     GPT_FRAGMENT_PROGRAM, //Fragment (pixel) program.
     GPT_GEOMETRY_PROGRAM, //Geometry program.
@@ -266,7 +270,7 @@ namespace geEngineSDK {
    *        determine in what type of memory is buffer placed in, however that
    *        depends on rendering API.
    */
-  enum GpuBufferUsage {
+  enum GPUBufferUsage {
     /**
      * Signifies that you don't plan on modifying the buffer often (or at all)
      * after creation. Modifying such buffer will involve a larger performance
@@ -283,7 +287,7 @@ namespace geEngineSDK {
   /**
    * @brief Types of generic GPU buffers that may be attached to GPU programs.
    */
-  enum GpuBufferType {
+  enum GPUBufferType {
     /**
      * Buffer containing an array of primitives (e.g. float4's).
      */
@@ -304,7 +308,7 @@ namespace geEngineSDK {
   /**
    * @brief Types of valid formats used for standard GPU buffers.
    */
-  enum GpuBufferFormat {
+  enum GPUBufferFormat {
     BF_16X1F,           //1D 16-bit floating-point format.
     BF_16X2F,           //2D 16-bit floating-point format.
     BF_16X4F,           //4D 16-bit floating-point format.
@@ -347,65 +351,69 @@ namespace geEngineSDK {
    * @brief Different types of GPU views that control how GPU sees a hardware
    *        buffer.
    */
-  enum GpuViewUsage {
-    /**
-     * Buffer is seen as a default shader resource, used primarily for reading.
-     * (for example a texture for sampling)
-     */
-    GVU_DEFAULT = 0x01,
-    /**
-     * Buffer is seen as a render target that color pixels will be written to
-     * after pixel shader stage.
-     */
-    GVU_RENDERTARGET = 0x02,
-    /**
-     * Buffer is seen as a depth stencil target that depth and stencil
-     * information is written to.
-     */
-    GVU_DEPTHSTENCIL = 0x04,
-    /**
-     * Buffer that allows you to write to any part of it from within a GPU
-     * program.
-     */
-    GVU_RANDOMWRITE = 0x08
-  };
+  namespace GPU_VIEW_USAGE {
+    enum E {
+      /**
+       * Buffer is seen as a default shader resource, used primarily for reading.
+       * (for example a texture for sampling)
+       */
+      kDEFAULT = 0x01,
+      /**
+       * Buffer is seen as a render target that color pixels will be written to
+       * after pixel shader stage.
+       */
+      kRENDERTARGET = 0x02,
+      /**
+       * Buffer is seen as a depth stencil target that depth and stencil
+       * information is written to.
+       */
+      kDEPTHSTENCIL = 0x04,
+      /**
+       * Buffer that allows you to write to any part of it from within a GPU
+       * program.
+       */
+      kRANDOMWRITE = 0x08
+    };
+  }
 
   /**
    * @brief Combinable set of bits that describe a set of physical GPU's.
    */
-  enum GpuDeviceFlags {
-    /**
-     * Use the default set of devices. This may be the primary device or
-     * multiple devices. Cannot be used together with other device flags.
-     */
-    GDF_DEFAULT = 0,
-    /**
-     * Use only the primary GPU.
-     */
-    GDF_PRIMARY = 0x01,
-    /**
-     * Use the second GPU.
-     */
-    GDF_GPU2 = 0x02,
-    /**
-     * Use the third GPU.
-     */
-    GDF_GPU3 = 0x04,
-    /**
-     * Use the fourth GPU.
-     */
-    GDF_GPU4 = 0x08,
-    /**
-     * Use the fifth GPU.
-     */
-    GDF_GPU5 = 0x10
-  };
+  namespace GPU_DEVICE_FLAGS {
+    enum E {
+      /**
+       * Use the default set of devices. This may be the primary device or
+       * multiple devices. Cannot be used together with other device flags.
+       */
+      kDEFAULT = 0,
+      /**
+       * Use only the primary GPU.
+       */
+      kPRIMARY = 0x01,
+      /**
+       * Use the second GPU.
+       */
+      kGPU2 = 0x02,
+      /**
+       * Use the third GPU.
+       */
+      kGPU3 = 0x04,
+      /**
+       * Use the fourth GPU.
+       */
+      kGPU4 = 0x08,
+      /**
+       * Use the fifth GPU.
+       */
+      kGPU5 = 0x10
+    };
+  }
 
   /**
    * @brief Type of parameter block usages. Signifies how often will parameter
    *        blocks be changed.
    */
-  enum GpuParamBlockUsage {
+  enum GPUParamBlockUsage {
     GPBU_STATIC,  //Buffer will be rarely, if ever, updated.
     GPBU_DYNAMIC  //Buffer will be updated often (for example every frame).
   };
@@ -413,7 +421,7 @@ namespace geEngineSDK {
   /**
    * @brief Type of a parameter in a GPU program.
    */
-  enum GpuParamType {
+  enum GPUParamType {
     GPT_DATA,     //Raw data type like float, Vector3, Color, etc.
     GPT_TEXTURE,  //Texture type (2D, 3D, cube, etc.)
     GPT_BUFFER,   //Data buffer (raw, structured, etc.)
@@ -424,7 +432,7 @@ namespace geEngineSDK {
    * @brief Type of GPU data parameters that can be used as inputs to a GPU
    *        program.
    */
-  enum GpuParamDataType {
+  enum GPUParamDataType {
     GPDT_FLOAT1 = 1,      //1D floating point value.
     GPDT_FLOAT2 = 2,      //2D floating point value.
     GPDT_FLOAT3 = 3,      //3D floating point value.
@@ -616,28 +624,32 @@ namespace geEngineSDK {
    * @brief These values represent a hint to the driver when writing to a GPU
    *        buffer.
    */
-  enum BufferWriteType {
-    /**
-     * Default flag with least restrictions. Can cause a CPU-GPU sync point so
-     * avoid using it often (every frame) as that might limit your performance
-     * significantly.
-     */
-    BWT_NORMAL,
-    /**
-     * Tells the driver to completely discard the contents of the buffer you
-     * are writing to. The driver will (most likely) internally allocate
-     * another buffer with same specifications (which is fairly fast) and you
-     * will avoid CPU-GPU stalls.
-     */
-    BWT_DISCARD,
-    /**
-     * Guarantees the driver that you will not be updating any part of the
-     * buffer that is currently used. This will also avoid CPU-GPU stalls,
-     * without requiring you to discard the entire buffer. However it is hard
-     * to guarantee when GPU has finished using a buffer.
-     */
-    BTW_NO_OVERWRITE
-  };
+  namespace BUFFER_WRITE_TYPE {
+    enum E {
+      /**
+       * Default flag with least restrictions. Can cause a CPU-GPU sync point
+       * so avoid using it often (every frame) as that might limit your
+       * performance significantly.
+       */
+      kNORMAL,
+
+      /**
+       * Tells the driver to completely discard the contents of the buffer you
+       * are writing to. The driver will (most likely) internally allocate
+       * another buffer with same specifications (which is fairly fast) and you
+       * will avoid CPU-GPU stalls.
+       */
+      kDISCARD,
+
+      /**
+       * Guarantees the driver that you will not be updating any part of the
+       * buffer that is currently used. This will also avoid CPU-GPU stalls,
+       * without requiring you to discard the entire buffer. However it is hard
+       * to guarantee when GPU has finished using a buffer.
+       */
+      kNO_OVERWRITE
+    };
+  }
 
   /**
    * @brief Suggested queue priority numbers used for sorting objects in the
@@ -766,7 +778,7 @@ namespace geEngineSDK {
     };
   }
 
-  typedef Flags<RENDER_SURFACE_MASK_BITS::E> RenderSurfaceMask;
+  using RenderSurfaceMask = Flags<RENDER_SURFACE_MASK_BITS::E>;
   GE_FLAGS_OPERATORS(RENDER_SURFACE_MASK_BITS::E);
 
   /**
@@ -862,14 +874,17 @@ namespace geEngineSDK {
      * Total number of audio samples in the audio data (includes all channels).
      */
     uint32 numSamples;
+
     /**
      * Number of audio samples per second, per channel.
      */
     uint32 sampleRate;
+
     /**
      * Number of channels. Each channel has its own set of samples.
      */
     uint32 numChannels;
+
     /**
      * Number of bits per sample.
      */

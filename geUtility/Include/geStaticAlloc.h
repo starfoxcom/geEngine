@@ -26,8 +26,14 @@
  * Includes
  */
 /*****************************************************************************/
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
+  using std::forward;
+  using std::size_t;
+  using std::ptrdiff_t;
+  using std::vector;
+
   /**
    * @tparam  BlockSize   Size of the initially allocated static block, and
    *                      minimum size of any dynamically allocated memory.
@@ -205,7 +211,7 @@ namespace geEngineSDK {
       T* data = reinterpret_cast<T*>(alloc(sizeof(T) * count));
 
       for (SIZE_T i = 0; i < count; ++i) {
-        new ((void*)(&data[i])) T(std::forward<Args>(args)...);
+        new ((void*)(&data[i])) T(forward<Args>(args)...);
       }
 
       return data;
@@ -261,13 +267,13 @@ namespace geEngineSDK {
   class StdStaticAlloc
   {
    public:
-    typedef T value_type;
-    typedef value_type* pointer;
-    typedef const value_type* const_pointer;
-    typedef value_type& reference;
-    typedef const value_type& const_reference;
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
+    using value_type = T;
+    using pointer = value_type * ;
+    using const_pointer = const value_type*;
+    using reference = value_type & ;
+    using const_reference = const value_type&;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
 
     StdStaticAlloc() = default;
 
@@ -284,7 +290,7 @@ namespace geEngineSDK {
     class rebind
     {
      public:
-      typedef StdStaticAlloc<BlockSize, U> other;
+      using other = StdStaticAlloc<BlockSize, U>;
     };
 
     /**
@@ -296,7 +302,7 @@ namespace geEngineSDK {
         return nullptr;
       }
 
-      if (num > static_cast<size_t>(-1) / sizeof(T)) {
+      if (num > NumLimit::MAX_SIZET / sizeof(T)) {
         return nullptr; //Error
       }
 
@@ -320,7 +326,7 @@ namespace geEngineSDK {
 
     size_t
     max_size() const {
-      return std::numeric_limits<size_type>::max() / sizeof(T);
+      return NumLimit::MAX_SIZET / sizeof(T);
     }
 
     void
@@ -336,7 +342,7 @@ namespace geEngineSDK {
     template<class U, class... Args>
     void
     construct(U* p, Args&&... args) {
-      new(p) U(std::forward<Args>(args)...);
+      new(p) U(forward<Args>(args)...);
     }
 
     template<class T1, int N1, class T2, int N2>
@@ -374,5 +380,5 @@ namespace geEngineSDK {
    * Requires allocator to be explicitly provided.
    */
   template<typename T, int Count>
-  using StaticVector = std::vector<T, StdStaticAlloc<sizeof(T) * Count, T>>;
+  using StaticVector = vector<T, StdStaticAlloc<sizeof(T) * Count, T>>;
 }

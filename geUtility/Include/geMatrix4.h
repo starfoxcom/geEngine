@@ -1339,8 +1339,8 @@ namespace geEngineSDK {
    */
   inline bool
   Matrix4::containsNaN() const {
-    for (int32 i = 0; i<4; ++i) {
-      for (int32 j = 0; j<4; ++j) {
+    for (int32 i = 0; i < 4; ++i) {
+      for (int32 j = 0; j < 4; ++j) {
         if (!Math::isFinite(m[i][j])) {
           return true;
         }
@@ -2372,8 +2372,8 @@ namespace std {
     operator()(const geEngineSDK::Matrix4& matrix) const {
       size_t hash = 0;
 
-      for (size_t i = 0; i < 16; ++i) {
-        geEngineSDK::hash_combine(hash, matrix._m[i]);
+      for (float i : matrix._m) {
+        geEngineSDK::hash_combine(hash, i);
       }
       return hash;
     }

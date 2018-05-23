@@ -60,7 +60,7 @@ namespace geEngineSDK {
       
       static bool
       compare(T const&, ANSICHAR*) {
-        return 0;
+        return false;
       }
     };
 

@@ -66,8 +66,8 @@ namespace geEngineSDK {
               const SPtr<SerializedObject>& diff);
 
    protected:
-    typedef UnorderedMap<SPtr<SerializedObject>, SPtr<SerializedObject>> ObjectMap;
-    typedef UnorderedMap<SPtr<SerializedObject>, SPtr<IReflectable>> DiffObjectMap;
+    using ObjectMap = UnorderedMap<SPtr<SerializedObject>, SPtr<SerializedObject>>;
+    using DiffObjectMap = UnorderedMap<SPtr<SerializedObject>, SPtr<IReflectable>>;
 
     /**
      * @brief A command that is used for delaying writing to an object, it

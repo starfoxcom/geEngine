@@ -20,6 +20,8 @@
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
+  using std::function;
+
   class GE_UTILITY_EXPORT MemorySerializer
   {
     struct BufferPiece

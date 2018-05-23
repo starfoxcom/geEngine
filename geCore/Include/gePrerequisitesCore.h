@@ -70,8 +70,6 @@
 # define GE_CORE_HIDDEN __attribute__ ((visibility ("hidden")))
 #endif
 
-#include "geHString.h"
-
 namespace geEngineSDK {
   static const StringID RenderAPIAny = "AnyRenderAPI";
   static const StringID RendererAny = "AnyRenderer";
@@ -81,13 +79,28 @@ namespace geEngineSDK {
    * Forward declaration of Core classes
    */
    /***************************************************************************/
-  class GpuProgram;
-  class GpuProgramManager;
+  class HString;
+  class StringTable;
+  struct LocalizedStringData;
+  
+  class GPUProgram;
+  class GPUProgramManager;
+  class GPUBuffer;
+  class GPUProgramFactory;
+  class GPUParamBlock;
+  class GPUParamBlockBuffer;
+  class GPUParams;
+  struct GPUParamDesc;
+  struct GPUParamDataDesc;
+  struct GPUParamObjectDesc;
+  class GPUProgramImportOptions;
+  class GPUResourceData;
+  class GPUPipelineParamInfo;
+  class GPUParamsSet;
+  struct GPUParamBlockDesc;
   class IndexBuffer;
   class VertexBuffer;
-  class GpuBuffer;
-  class GpuProgramManager;
-  class GpuProgramFactory;
+
   class IndexData;
   class Pass;
   class Technique;
@@ -98,6 +111,7 @@ namespace geEngineSDK {
   class RenderTexture;
   class RenderWindow;
   class RenderTargetProperties;
+  class RendererFactory;
   class SamplerState;
   class TextureManager;
   class Viewport;
@@ -106,7 +120,6 @@ namespace geEngineSDK {
   class Input;
   struct PointerEvent;
 
-  class RendererFactory;
   class AsyncOp;
   class HardwareBufferManager;
   class FontManager;
@@ -114,24 +127,18 @@ namespace geEngineSDK {
   class RenderStateManager;
   class RasterizerState;
   class BlendState;
-  class GpuParamBlock;
-  class GpuParamBlockBuffer;
-  class GpuParams;
-  struct GpuParamDesc;
-  struct GpuParamDataDesc;
-  struct GpuParamObjectDesc;
-  struct GpuParamBlockDesc;
+  
   class ShaderInclude;
 
   class CoreObject;
   class ImportOptions;
   class TextureImportOptions;
   class FontImportOptions;
-  class GpuProgramImportOptions;
+  
   class MeshImportOptions;
   struct FontBitmap;
   class GameObject;
-  class GPUResourceData;
+  
   struct RenderOperation;
   class RenderQueue;
   struct ProfilerReport;
@@ -198,13 +205,13 @@ namespace geEngineSDK {
   class CBone;
   class CAudioSource;
   class CAudioListener;
-  class GpuPipelineParamInfo;
+  
   class MaterialParams;
   template <class T> class TAnimationCurve;
   struct AnimationCurves;
   class Skeleton;
   class Animation;
-  class GpuParamsSet;
+  
   class Camera;
   class Renderable;
   class MorphShapes;
@@ -295,23 +302,23 @@ namespace geEngineSDK {
     class Texture;
     class MeshHeap;
     class VertexDeclaration;
-    class GpuBuffer;
-    class GpuParamBlockBuffer;
-    class GpuParams;
+    class GPUBuffer;
+    class GPUParamBlockBuffer;
+    class GPUParams;
     class Shader;
     class Viewport;
     class Pass;
-    class GpuParamsSet;
+    class GPUParamsSet;
     class Technique;
     class Material;
-    class GpuProgram;
+    class GPUProgram;
     class Light;
     class ComputePipelineState;
     class GraphicsPipelineState;
     class Camera;
-    class GpuParamsSet;
+    class GPUParamsSet;
     class MaterialParams;
-    class GpuPipelineParamInfo;
+    class GPUPipelineParamInfo;
     class CommandBuffer;
     class EventQuery;
     class TimerQuery;
@@ -325,7 +332,7 @@ namespace geEngineSDK {
     class Skybox;
   }
 
-  typedef TCoreThreadQueue<CommandQueueNoSync> CoreThreadQueue;
+  using CoreThreadQueue = TCoreThreadQueue<CommandQueueNoSync>;
 
   namespace TYPEID_CORE {
     enum E {
@@ -336,7 +343,7 @@ namespace geEngineSDK {
       kID_VertexElementData = 1005,
       kID_Component = 1006,
       kID_ResourceHandle = 1009,
-      kID_GpuProgram = 1010,
+      kID_GPUProgram = 1010,
       kID_ResourceHandleData = 1011,
       kID_CgProgram = 1012,
       kID_Pass = 1014,
@@ -442,15 +449,15 @@ namespace geEngineSDK {
       kID_AudioSource = 1142,
       kID_ShaderVariationParam = 1143,
       kID_ShaderVariation = 1144,
-      kID_GpuProgramBytecode = 1145,
-      kID_GpuParamBlockDesc = 1146,
-      kID_GpuParamDataDesc = 1147,
-      kID_GpuParamObjectDesc = 1148,
-      kID_GpuParamDesc = 1149,
+      kID_GPUProgramBytecode = 1145,
+      kID_GPUParamBlockDesc = 1146,
+      kID_GPUParamDataDesc = 1147,
+      kID_GPUParamObjectDesc = 1148,
+      kID_GPUParamDesc = 1149,
       kID_BlendStateDesc = 1150,
       kID_RasterizerStateDesc = 1151,
       kID_DepthStencilStateDesc = 1152,
-      kID_SerializedGpuProgramData = 1153,
+      kID_SerializedGPUProgramData = 1153,
       kID_SubShader = 1154,
 
       //Moved from Engine layer
@@ -471,6 +478,9 @@ namespace geEngineSDK {
     };
   }
 }
+
+#include "geHString.h"
+
 /*****************************************************************************/
 /**
  * Resource references
@@ -480,52 +490,52 @@ namespace geEngineSDK {
 #include "geResourceHandle.h"
 
 namespace geEngineSDK {
-  typedef ResourceHandle<Resource> HResource;
-  typedef ResourceHandle<StringTable> HStringTable;
-  typedef ResourceHandle<Font> HFont;
-  typedef ResourceHandle<Texture> HTexture;
-  typedef ResourceHandle<Mesh> HMesh;
-  typedef ResourceHandle<Material> HMaterial;
-  typedef ResourceHandle<ShaderInclude> HShaderInclude;
-  typedef ResourceHandle<Shader> HShader;
-  typedef ResourceHandle<Prefab> HPrefab;
-  typedef ResourceHandle<PhysicsMaterial> HPhysicsMaterial;
-  typedef ResourceHandle<PhysicsMesh> HPhysicsMesh;
-  typedef ResourceHandle<AnimationClip> HAnimationClip;
-  typedef ResourceHandle<AudioClip> HAudioClip;
+  using HResource = ResourceHandle<Resource>;
+  using HStringTable = ResourceHandle<StringTable>;
+  using HFont = ResourceHandle<Font>;
+  using HTexture = ResourceHandle<Texture>;
+  using HMesh = ResourceHandle<Mesh>;
+  using HMaterial = ResourceHandle<Material>;
+  using HShaderInclude = ResourceHandle<ShaderInclude>;
+  using HShader = ResourceHandle<Shader>;
+  using HPrefab = ResourceHandle<Prefab>;
+  using HPhysicsMaterial = ResourceHandle<PhysicsMaterial>;
+  using HPhysicsMesh = ResourceHandle<PhysicsMesh>;
+  using HAnimationClip = ResourceHandle<AnimationClip>;
+  using HAudioClip = ResourceHandle<AudioClip>;
 }
 
 #include "geGameObjectHandle.h"
 
 namespace geEngineSDK {
   //Game object handles
-  typedef GameObjectHandle<GameObject> HGameObject;
-  typedef GameObjectHandle<SceneObject> HSceneObject;
-  typedef GameObjectHandle<Component> HComponent;
-  typedef GameObjectHandle<CCamera> HCamera;
-  typedef GameObjectHandle<CRenderable> HRenderable;
-  typedef GameObjectHandle<CLight> HLight;
-  typedef GameObjectHandle<CAnimation> HAnimation;
-  typedef GameObjectHandle<CBone> HBone;
-  typedef GameObjectHandle<CRigidbody> HRigidbody;
-  typedef GameObjectHandle<CCollider> HCollider;
-  typedef GameObjectHandle<CBoxCollider> HBoxCollider;
-  typedef GameObjectHandle<CSphereCollider> HSphereCollider;
-  typedef GameObjectHandle<CCapsuleCollider> HCapsuleCollider;
-  typedef GameObjectHandle<CPlaneCollider> HPlaneCollider;
-  typedef GameObjectHandle<CJoint> HJoint;
-  typedef GameObjectHandle<CHingeJoint> HHingeJoint;
-  typedef GameObjectHandle<CSliderJoint> HSliderJoint;
-  typedef GameObjectHandle<CDistanceJoint> HDistanceJoint;
-  typedef GameObjectHandle<CSphericalJoint> HSphericalJoint;
-  typedef GameObjectHandle<CFixedJoint> HFixedJoint;
-  typedef GameObjectHandle<CD6Joint> HD6Joint;
-  typedef GameObjectHandle<CCharacterController> HCharacterController;
-  typedef GameObjectHandle<CReflectionProbe> HReflectionProbe;
-  typedef GameObjectHandle<CSkybox> HSkybox;
-  typedef GameObjectHandle<CLightProbeVolume> HLightProbeVolume;
-  typedef GameObjectHandle<CAudioSource> HAudioSource;
-  typedef GameObjectHandle<CAudioListener> HAudioListener;
+  using HGameObject = GameObjectHandle<GameObject>;
+  using HSceneObject = GameObjectHandle<SceneObject>;
+  using HComponent = GameObjectHandle<Component>;
+  using HCamera = GameObjectHandle<CCamera>;
+  using HRenderable = GameObjectHandle<CRenderable>;
+  using HLight = GameObjectHandle<CLight>;
+  using HAnimation = GameObjectHandle<CAnimation>;
+  using HBone = GameObjectHandle<CBone>;
+  using HRigidbody = GameObjectHandle<CRigidbody>;
+  using HCollider = GameObjectHandle<CCollider>;
+  using HBoxCollider = GameObjectHandle<CBoxCollider>;
+  using HSphereCollider = GameObjectHandle<CSphereCollider>;
+  using HCapsuleCollider = GameObjectHandle<CCapsuleCollider>;
+  using HPlaneCollider = GameObjectHandle<CPlaneCollider>;
+  using HJoint = GameObjectHandle<CJoint>;
+  using HHingeJoint = GameObjectHandle<CHingeJoint>;
+  using HSliderJoint = GameObjectHandle<CSliderJoint>;
+  using HDistanceJoint = GameObjectHandle<CDistanceJoint>;
+  using HSphericalJoint = GameObjectHandle<CSphericalJoint>;
+  using HFixedJoint = GameObjectHandle<CFixedJoint>;
+  using HD6Joint = GameObjectHandle<CD6Joint>;
+  using HCharacterController = GameObjectHandle<CCharacterController>;
+  using HReflectionProbe = GameObjectHandle<CReflectionProbe>;
+  using HSkybox = GameObjectHandle<CSkybox>;
+  using HLightProbeVolume = GameObjectHandle<CLightProbeVolume>;
+  using HAudioSource = GameObjectHandle<CAudioSource>;
+  using HAudioListener = GameObjectHandle<CAudioListener>;
 }
 
 namespace geEngineSDK {
@@ -551,7 +561,7 @@ namespace geEngineSDK {
   deferredCall(std::function<void()> callback);
 
   //Special types for use by profilers
-  typedef basic_string<char, char_traits<char>, StdAlloc<char, ProfilerAlloc>> ProfilerString;
+  using ProfilerString = basic_string<char, char_traits<char>, StdAlloc<char, ProfilerAlloc>>;
 
   template<typename T, typename A = StdAlloc<T, ProfilerAlloc>>
   using ProfilerVector = std::vector<T, A>;

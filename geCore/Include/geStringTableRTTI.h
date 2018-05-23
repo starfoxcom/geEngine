@@ -20,6 +20,7 @@
 #include "gePrerequisitesCore.h"
 #include "geRTTIType.h"
 #include "geStringTable.h"
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
   class GE_CORE_EXPORT StringTableRTTI
@@ -176,7 +177,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(*entry.second);
       }
 
-      GE_ASSERT(std::numeric_limits<uint32>::max() >= dataSize);
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -249,7 +250,7 @@ namespace geEngineSDK {
         dataSize = rttiGetElementSize(data.parameterOffsets[i]);
       }
 
-      GE_ASSERT(std::numeric_limits<uint32>::max() >= dataSize);
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }

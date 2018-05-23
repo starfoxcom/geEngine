@@ -81,7 +81,7 @@ namespace geEngineSDK {
     template<typename T>
     static bool
     isPow2(T n) {
-      Math::isPowerOfTwo(static_cast<uint32>(n));
+      return Math::isPowerOfTwo(static_cast<uint32>(n));
     }
 
     /**
@@ -179,6 +179,49 @@ namespace geEngineSDK {
     static float
     fixedToFloat(unsigned value, uint32 bits) {
       return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts floating point value in range [0, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    static uint32
+    unormToUint(float value, uint32 bits) {
+      if (value <= 0.0f) {
+        return 0;
+      }
+      else if (value >= 1.0f) {
+        return (1 << bits) - 1;
+      }
+
+      return static_cast<uint32>(value * (1 << bits));
+    }
+
+    /**
+     * @brief Converts floating point value in range [-1, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    static uint32
+    snormToUint(float value, uint32 bits) {
+      return unormToUint((value + 1.0f) * 0.5f, bits);
+    }
+
+    /**
+     * @brief Converts an unsigned integer to a floating point in range [0, 1].
+     */
+    static float
+    uintToUnorm(unsigned value, uint32 bits) {
+      return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts an unsigned int to a floating point in range [-1, 1].
+     */
+    static float
+    uintToSnorm(unsigned value, unsigned int bits) {
+      return uintToUnorm(value, bits) * 2.0f - 1.0f;
     }
 
     /**
