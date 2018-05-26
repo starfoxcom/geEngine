@@ -1,8 +1,12 @@
 #pragma once
 
+#include "gePrerequisitesUtil.h"
+
 #include <d3d11.h>
 #include <vector>
 #include <exception>
+
+using namespace geEngineSDK;
 
 using std::vector;
 using std::exception;
@@ -51,11 +55,11 @@ public:
   }
 
   void createHardwareBuffer(ID3D11Device* pd3dDevice,
-                            unsigned int usage = D3D11_USAGE_DEFAULT) {
+    unsigned int usage = D3D11_USAGE_DEFAULT) {
     D3D11_BUFFER_DESC bd;
     memset(&bd, 0, sizeof(bd));
-    
-    bd.Usage = usage;
+
+    bd.Usage = static_cast<D3D11_USAGE>(usage);
     bd.ByteWidth = static_cast<uint32>(sizeof(TVERTEX) * m_vertexData.size());
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = 0;
@@ -70,7 +74,20 @@ public:
     }
   }
 
-private:
+  void setBuffer(ID3D11DeviceContext* pImmediateContext,
+                 uint32 startSlot = 0,
+                 uint32 numBuffers = 0)
+  {
+    uint32 stride = sizeof(TVERTEX);
+    uint32 offset = 0;
+    pImmediateContext->IASetVertexBuffers(startSlot,
+                                          numBuffers,
+                                          &m_pBuffer,
+                                          &stride,
+                                          &offset);
+  }
+
+ private:
   vector<TVERTEX> m_vertexData;
 };
 
@@ -102,11 +119,11 @@ public:
   }
 
   void createHardwareBuffer(ID3D11Device* pd3dDevice,
-                            unsigned int usage = D3D11_USAGE_DEFAULT) {
+                            uint32 usage = D3D11_USAGE_DEFAULT) {
     D3D11_BUFFER_DESC bd;
     memset(&bd, 0, sizeof(bd));
 
-    bd.Usage = usage;
+    bd.Usage = static_cast<D3D11_USAGE>(usage);
     bd.ByteWidth = static_cast<uint32>(sizeof(ITYPE) * m_indexData.size());
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags = 0;
@@ -121,18 +138,19 @@ public:
     }
   }
 
-  void write(ID3D11DeviceContext* pDeviceContext, void* pData, size_t numBytes)
+  void setBuffer(ID3D11DeviceContext* pImmediateContext,
+                 uint32 offset = 0)
   {
-    D3D11_MAPPED_SUBRESOURCE subRes;
-    memset(&subRes, 0, sizeof(subRes));
+    uint32 format = DXGI_FORMAT_R32_UINT;
+    if (sizeof(ITYPE) == 2) {
+      format = DXGI_FORMAT_R16_UINT;
+    }
 
-    pDeviceContext->Map(m_pBuffer, 0, nullptr, D3D11_MAP_WRITE_DISCARD, &subRes);
-
-
-
-    pDeviceContext->Unmap(m_pBuffer, 0);
+    pImmediateContext->IASetIndexBuffer(m_pBuffer,
+                                        static_cast<DXGI_FORMAT>(format),
+                                        offset);
   }
 
-private:
-  vector<TVERTEX> m_indexData;
+ private:
+  vector<ITYPE> m_indexData;
 };

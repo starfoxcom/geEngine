@@ -11,11 +11,12 @@
 
 //#include <geD3D11Driver.h>
 //#include <geD3D11DriverList.h>
-
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
 #include <vld.h>
+
+#include "GraphicsBuffer.h"
 
 using namespace geEngineSDK;
 
@@ -203,7 +204,7 @@ CompileShaderFromFile(Path fileName,
   dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-  ID3DBlob* pErrorBlob;
+  ID3DBlob* pErrorBlob = nullptr;
   hr = D3DCompileFromFile(fileName.toPlatformString().c_str(),
                           nullptr,
                           nullptr,
@@ -338,7 +339,7 @@ InitDevice() {
     return hr;
   }
 
-  // Create depth stencil texture
+  //Create depth stencil texture
   D3D11_TEXTURE2D_DESC descDepth;
   ZeroMemory(&descDepth, sizeof(descDepth));
   descDepth.Width = width;

@@ -235,6 +235,12 @@
     <ClInclude Include="Include\geVertexDeclaration.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geGPUParam.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRenderWindow.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -361,6 +367,12 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\geRenderAPI.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUParam.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRenderWindow.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

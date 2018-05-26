@@ -36,6 +36,7 @@
     <ClInclude Include="Include\geGameObjectHandleRTTI.h" />
     <ClInclude Include="Include\geGameObjectManager.h" />
     <ClInclude Include="Include\geGameObjectRTTI.h" />
+    <ClInclude Include="Include\geGPUParam.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHardwareBuffer.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Include\geRenderAPIManager.h" />
     <ClInclude Include="Include\geRenderTarget.h" />
     <ClInclude Include="Include\geRenderTexture.h" />
+    <ClInclude Include="Include\geRenderWindow.h" />
     <ClInclude Include="Include\geResource.h" />
     <ClInclude Include="Include\geResourceHandle.h" />
     <ClInclude Include="Include\geResourceHandleRTTI.h" />
@@ -98,6 +100,7 @@
     <ClCompile Include="Source\geGameObject.cpp" />
     <ClCompile Include="Source\geGameObjectHandle.cpp" />
     <ClCompile Include="Source\geGameObjectManager.cpp" />
+    <ClCompile Include="Source\geGPUParam.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
     <ClCompile Include="Source\geIResourceListener.cpp" />
@@ -110,6 +113,7 @@
     <ClCompile Include="Source\geRenderAPIManager.cpp" />
     <ClCompile Include="Source\geRenderTarget.cpp" />
     <ClCompile Include="Source\geRenderTexture.cpp" />
+    <ClCompile Include="Source\geRenderWindow.cpp" />
     <ClCompile Include="Source\geResource.cpp" />
     <ClCompile Include="Source\geResourceHandle.cpp" />
     <ClCompile Include="Source\geResourceListenerManager.cpp" />

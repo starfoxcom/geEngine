@@ -197,11 +197,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GraphicsBuffer.cpp" />
+    <ClCompile Include="Source\GraphicsBuffer.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicsBuffer.h" />
+    <ClInclude Include="Include\GraphicsBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
