@@ -20,9 +20,9 @@
 /*****************************************************************************/
 #include "geRenderWindow.h"
 #include "geCoreThread.h"
-//#include "geRenderWindowManager.h"
+#include "geRenderWindowManager.h"
 #include "geViewport.h"
-//#include "gePlatform.h"
+#include "gePlatform.h"
 
 namespace geEngineSDK {
   using std::function;
@@ -353,7 +353,7 @@ namespace geEngineSDK {
     }
 
     void
-    RenderWindow::setActive(bool state) {
+    RenderWindow::setActive(bool /*state*/) {
       THROW_IF_NOT_CORE_THREAD;
     }
 

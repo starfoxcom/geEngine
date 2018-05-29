@@ -83,6 +83,9 @@ TEST(geUtility, String_Path) {
 
   lastDirectory.append(testPath[testPath.getNumDirectories() - 1]);
   EXPECT_TRUE(lastDirectory.compare("BIN"));
+
+  Path tempPath = FileSystem::getTempDirectoryPath();
+  tempPath = tempPath;
 }
 
 TEST(geUtility, String_Parser) {
@@ -335,19 +338,21 @@ TEST(geUtility, Math_Intersections) {
   EXPECT_FLOAT_EQ(intersectPoint.y, 5.f);
 }
 
+/*
 TEST(geUtility, Platform_Utilities) {
   PlatformUtility::copyToClipboard(L"Esta es una prueba del portapapeles!");
   WString szClipboardContent = PlatformUtility::copyFromClipboard();
   EXPECT_STRCASEEQ(toString(szClipboardContent).c_str(),
                    "Esta es una prueba del portapapeles!");
 }
+*/
 
 TEST(geUtility, Tetrahedron_Utilities) {
   Vector<Vector3> pointList;
-  pointList.push_back(Vector3(-5.0f, 0.0f, 5.0f));
-  pointList.push_back(Vector3( 5.0f, 0.0f, 5.0f));
-  pointList.push_back(Vector3( 0.0f, 0.0f, 0.0f));
-  pointList.push_back(Vector3( 0.0f, 5.0f, 0.0f));
+  pointList.emplace_back(-5.0f, 0.0f, 5.0f);
+  pointList.emplace_back( 5.0f, 0.0f, 5.0f);
+  pointList.emplace_back( 0.0f, 0.0f, 0.0f);
+  pointList.emplace_back( 0.0f, 5.0f, 0.0f);
 
   TetrahedronVolume newVolume = Triangulation::tetrahedralize(pointList);
   EXPECT_TRUE(newVolume.tetrahedra.size() == 1);
@@ -439,7 +444,7 @@ TEST(geUtility, FrameAllocTest) {
   windowDesc.creationParams = nullptr;
   windowDesc.modal = true;
   windowDesc.wndProc = &WndProc;
-  windowDesc.module = GetModuleHandle(NULL);
+  windowDesc.module = GetModuleHandle(nullptr);
   
   SPtr<Win32Window> m_appWnd = ge_shared_ptr_new<Win32Window>(windowDesc);
 }

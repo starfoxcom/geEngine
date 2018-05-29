@@ -126,7 +126,7 @@ namespace geEngineSDK {
      * @brief Optional background image to apply to the window. This must be a buffer of size
      * backgroundWidth * backgroundHeight.
      */
-    Color* backgroundPixels = nullptr;
+    LinearColor* backgroundPixels = nullptr;
 
     /**
      * @brief Width of the background image. Only relevant if backgroundPixels is not null.

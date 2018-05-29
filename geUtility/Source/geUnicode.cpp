@@ -433,9 +433,9 @@ namespace geEngineSDK {
         if (curChar == charIdx) {
           return curByte;
         }
-        curChar++;
+        ++curChar;
       }
-      curByte++;
+      ++curByte;
     }
 
     return input.size();
@@ -450,7 +450,7 @@ namespace geEngineSDK {
       if ((i & 0xc0) != 0x80) {
         break;
       }
-      count++;
+      ++count;
     }
     return count;
   }

@@ -398,13 +398,13 @@ namespace geEngineSDK {
       if (idx < numChars) {
         if ('\\' == pathStr[idx] || '/' == pathStr[idx]) {
           m_isAbsolute = true;
-          idx++;
+          ++idx;
         }
       }
 
       if (idx < numChars) { //Path starts with a node, a drive letter or is relative
         if (m_isAbsolute && ('\\' == pathStr[idx] || '/' ==pathStr[idx])) {//Node
-          idx++;
+          ++idx;
           tempStream.str(BasicString<T>());
           tempStream.clear();
 
@@ -415,12 +415,12 @@ namespace geEngineSDK {
           setNode(tempStream.str());
 
           if (idx < numChars) {
-            idx++;
+            ++idx;
           }
         }
         else {  //A drive letter or not absolute
           T drive = pathStr[idx];
-          idx++;
+          ++idx;
 
           if (idx < numChars && ':' == pathStr[idx]) {
             if (m_isAbsolute 
@@ -433,16 +433,16 @@ namespace geEngineSDK {
             m_isAbsolute = true;
             setDevice(String(1, drive));
 
-            idx++;
+            ++idx;
             if (idx >= numChars || ('\\' != pathStr[idx] && '/' != pathStr[idx])) {
               //The path does not end with a trailing slash
               throwInvalidPathException(BasicString<T>(pathStr, numChars));
             }
 
-            idx++;
+            ++idx;
           }
           else {
-            idx--;
+            --idx;
           }
         }
 
@@ -451,7 +451,7 @@ namespace geEngineSDK {
           tempStream.clear();
           while (idx < numChars && '\\' != pathStr[idx] && '/' != pathStr[idx]) {
             tempStream << pathStr[idx];
-            idx++;
+            ++idx;
           }
 
           if (idx < numChars) {
@@ -461,7 +461,7 @@ namespace geEngineSDK {
             setFilename(tempStream.str());
           }
 
-          idx++;
+          ++idx;
         }
       }
     }
@@ -481,16 +481,16 @@ namespace geEngineSDK {
       if (idx < numChars) {
         if (pathStr[idx] == '/') {
           m_isAbsolute = true;
-          idx++;
+          ++idx;
         }
         else if (pathStr[idx] == '~') {
-          idx++;
+          ++idx;
           if (idx >= numChars || '/' == pathStr[idx]) {
             pushDirectory(String("~"));
             m_isAbsolute = true;
           }
           else {
-            idx--;
+            --idx;
           }
         }
 
@@ -500,7 +500,7 @@ namespace geEngineSDK {
 
           while (idx < numChars && '/' != pathStr[idx]) {
             tempStream << pathStr[idx];
-            idx++;
+            ++idx;
           }
 
           if (idx < numChars) {
@@ -522,7 +522,7 @@ namespace geEngineSDK {
             setFilename(tempStream.str());
           }
 
-          idx++;
+          ++idx;
         }
       }
     }

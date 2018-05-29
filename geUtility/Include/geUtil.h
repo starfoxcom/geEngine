@@ -19,6 +19,7 @@ namespace geEngineSDK {
   using std::is_enum;
   using std::hash;
   using std::memset;
+  using std::swap;
 
   /**
    * @brief Generates a new hash for the provided type using the default hasher
@@ -26,7 +27,7 @@ namespace geEngineSDK {
    * @note  This one came out of boost::hash_combine
   */
   template <class T>
-  inline void
+  void
   hash_combine(size_t& seed, const T& v) {
     using HashType = typename conditional<is_enum<T>::value, EnumClassHash, hash<T>>::type;
     
@@ -81,5 +82,30 @@ namespace geEngineSDK {
   constexpr SIZE_T
   ge_size(const T(&array)[N]) {
     return N;
+  }
+
+  /**
+   * @brief Erases the provided element from the container, but first swaps the
+   *        element so it's located at the end of the container, making the
+   *        erase operation cheaper at the cost of an extra copy.
+   *        Return true if a swap occurred, or false if the element was already
+   *        at the end of the container.
+   */
+  template<class T, class A = StdAlloc<T>>
+  bool
+  ge_swap_and_erase(Vector<T, A>& container,
+                    const typename Vector<T, A>::iterator iter) {
+    GE_ASSERT(!container.empty());
+
+    auto iterLast = container.end() - 1;
+
+    bool swapped = false;
+    if (iter != iterLast) {
+      swap(*iter, *iterLast);
+      swapped = true;
+    }
+
+    container.pop_back();
+    return swapped;
   }
 }

@@ -34,7 +34,7 @@
  */
 /*****************************************************************************/
 #include "geCoreThread.h"
-//#include "geCoreApplication.h"
+#include "geCoreApplication.h"
 
 #include <geThreadPool.h>
 #include <geTaskScheduler.h>

@@ -94,20 +94,18 @@ namespace geEngineSDK {
   win32_getCurrentDirectory() {
     DWORD len = GetCurrentDirectoryW(0, nullptr);
     if (len > 0) {
-      wchar_t* buffer = reinterpret_cast<wchar_t*>(ge_alloc(len * sizeof(wchar_t)));
-      DWORD n = GetCurrentDirectoryW(len, buffer);
+      WString result;
+      result.resize(len);
+
+      DWORD n = GetCurrentDirectoryW(len, &result[0]);
+      result.pop_back();
 
       if (n > 0 && n <= len) {
-        WString result(buffer);
         if ('\\' != result[result.size() - 1]) {
           result.append(L"\\");
         }
-
-        ge_free(buffer);
         return result;
       }
-
-      ge_free(buffer);
     }
 
     return StringUtil::WBLANK;
@@ -117,20 +115,21 @@ namespace geEngineSDK {
   win32_getTempDirectory() {
     DWORD len = GetTempPathW(0, nullptr);
     if (len > 0) {
-      wchar_t* buffer = (wchar_t*)ge_alloc(len * sizeof(wchar_t));
-      DWORD n = GetTempPathW(len, buffer);
+      WString result;
+      result.resize(len);
+
+      DWORD n = GetTempPathW(len, &result[0]);
+
+      //This kind of object doesn't need to finish with a null, so remove it
+      result.pop_back();
 
       if (n > 0 && n <= len) {
-        WString result(buffer);
         if ('\\' != result[result.size() - 1]) {
           result.append(L"\\");
         }
 
-        ge_free(buffer);
         return result;
       }
-
-      ge_free(buffer);
     }
 
     return StringUtil::WBLANK;

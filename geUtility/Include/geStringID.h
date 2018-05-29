@@ -213,6 +213,7 @@ namespace geEngineSDK {
         name[length] = '\0';
 
         data = StringID(name);
+        ge_free(name);
       }
 
       return size;

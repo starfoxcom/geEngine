@@ -105,7 +105,7 @@ namespace geEngineSDK {
             lastBracket = static_cast<int32>(i);
           }
           else {
-            charWriteIdx++;
+            ++charWriteIdx;
           }
         }
         else {
@@ -134,7 +134,7 @@ namespace geEngineSDK {
             if (!processedBracket) {
               //Last bracket wasn't really a parameter
               for (uint32 j = static_cast<uint32>(lastBracket); j <= i; ++j) {
-                charWriteIdx++;
+                ++charWriteIdx;
               }
             }
 

@@ -672,10 +672,10 @@ namespace geEngineSDK {
     float s, c;
     Math::sin_cos(&s, &c, half_a);
 
-    this->x = s * Axis.x;
-    this->y = s * Axis.y;
-    this->z = s * Axis.z;
-    this->w = c;
+    x = s * Axis.x;
+    y = s * Axis.y;
+    z = s * Axis.z;
+    w = c;
 
     diagnosticCheckNaN();
   }
@@ -687,10 +687,10 @@ namespace geEngineSDK {
 
   FORCEINLINE Quaternion
   Quaternion::operator+=(const Quaternion& Q) {
-    this->x += Q.x;
-    this->y += Q.y;
-    this->z += Q.z;
-    this->w += Q.w;
+    x += Q.x;
+    y += Q.y;
+    z += Q.z;
+    w += Q.w;
 
     diagnosticCheckNaN();
     return *this;
@@ -719,10 +719,10 @@ namespace geEngineSDK {
 
   Quaternion
   Quaternion::operator-=(const Quaternion& Q) {
-    this->x -= Q.x;
-    this->y -= Q.y;
-    this->z -= Q.z;
-    this->w -= Q.w;
+    x -= Q.x;
+    y -= Q.y;
+    z -= Q.z;
+    w -= Q.w;
 
     diagnosticCheckNaN();
 

@@ -183,7 +183,7 @@ namespace geEngineSDK {
                                  element.output.x,
                                  element.output.y)) {
           element.output.page = static_cast<uint32>(layouts.size() - 1);
-          remainingCount--;
+          --remainingCount;
         }
         else {
           sizeLimit = element.input.width * element.input.height;

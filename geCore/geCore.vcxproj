@@ -23,6 +23,7 @@
     <ClInclude Include="Include\geCommonTypes.h" />
     <ClInclude Include="Include\geComponent.h" />
     <ClInclude Include="Include\geComponentRTTI.h" />
+    <ClInclude Include="Include\geCoreApplication.h" />
     <ClInclude Include="Include\geCoreObject.h" />
     <ClInclude Include="Include\geCoreObjectCore.h" />
     <ClInclude Include="Include\geCoreObjectManager.h" />
@@ -41,23 +42,28 @@
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHardwareBuffer.h" />
     <ClInclude Include="Include\geHString.h" />
+    <ClInclude Include="Include\geInputFwd.h" />
     <ClInclude Include="Include\geIResourceListener.h" />
     <ClInclude Include="Include\gePixelData.h" />
     <ClInclude Include="Include\gePixelDataRTTI.h" />
     <ClInclude Include="Include\gePixelUtil.h" />
     <ClInclude Include="Include\gePixelVolume.h" />
+    <ClInclude Include="Include\gePlatform.h" />
     <ClInclude Include="Include\gePrefab.h" />
     <ClInclude Include="Include\gePrefabDiff.h" />
     <ClInclude Include="Include\gePrefabDiffRTTI.h" />
     <ClInclude Include="Include\gePrefabRTTI.h" />
     <ClInclude Include="Include\gePrefabUtility.h" />
     <ClInclude Include="Include\gePrerequisitesCore.h" />
+    <ClInclude Include="Include\geProfilerCPU.h" />
+    <ClInclude Include="Include\geProfilingManager.h" />
     <ClInclude Include="Include\geRenderAPI.h" />
     <ClInclude Include="Include\geRenderAPIFactory.h" />
     <ClInclude Include="Include\geRenderAPIManager.h" />
     <ClInclude Include="Include\geRenderTarget.h" />
     <ClInclude Include="Include\geRenderTexture.h" />
     <ClInclude Include="Include\geRenderWindow.h" />
+    <ClInclude Include="Include\geRenderWindowManager.h" />
     <ClInclude Include="Include\geResource.h" />
     <ClInclude Include="Include\geResourceHandle.h" />
     <ClInclude Include="Include\geResourceHandleRTTI.h" />
@@ -86,10 +92,13 @@
     <ClInclude Include="Include\geVideoModeInfo.h" />
     <ClInclude Include="Include\geViewport.h" />
     <ClInclude Include="Include\geViewportRTTI.h" />
+    <ClInclude Include="Include\Win32\geWin32DropTarget.h" />
+    <ClInclude Include="Include\Win32\geWin32Platform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geCommandQueue.cpp" />
     <ClCompile Include="Source\geComponent.cpp" />
+    <ClCompile Include="Source\geCoreApplication.cpp" />
     <ClCompile Include="Source\geCoreObject.cpp" />
     <ClCompile Include="Source\geCoreObjectCore.cpp" />
     <ClCompile Include="Source\geCoreObjectManager.cpp" />
@@ -109,11 +118,14 @@
     <ClCompile Include="Source\gePrefab.cpp" />
     <ClCompile Include="Source\gePrefabDiff.cpp" />
     <ClCompile Include="Source\gePrefabUtility.cpp" />
+    <ClCompile Include="Source\geProfilerCPU.cpp" />
+    <ClCompile Include="Source\geProfilingManager.cpp" />
     <ClCompile Include="Source\geRenderAPI.cpp" />
     <ClCompile Include="Source\geRenderAPIManager.cpp" />
     <ClCompile Include="Source\geRenderTarget.cpp" />
     <ClCompile Include="Source\geRenderTexture.cpp" />
     <ClCompile Include="Source\geRenderWindow.cpp" />
+    <ClCompile Include="Source\geRenderWindowManager.cpp" />
     <ClCompile Include="Source\geResource.cpp" />
     <ClCompile Include="Source\geResourceHandle.cpp" />
     <ClCompile Include="Source\geResourceListenerManager.cpp" />
@@ -132,6 +144,8 @@
     <ClCompile Include="Source\geUtility.cpp" />
     <ClCompile Include="Source\geVideoModeInfo.cpp" />
     <ClCompile Include="Source\geViewport.cpp" />
+    <ClCompile Include="Source\Win32\geWin32DropTarget.cpp" />
+    <ClCompile Include="Source\Win32\geWin32Platform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -228,7 +242,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -253,7 +267,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;geUtilityd.lib;nvttd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -282,7 +296,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -311,7 +325,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)nvtt/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;geUtility.lib;nvtt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

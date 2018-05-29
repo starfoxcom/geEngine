@@ -446,8 +446,12 @@ namespace geEngineSDK {
       setFullscreen(uint32 width,
                     uint32 height,
                     float refreshRate = 60.0f,
-                    uint32 monitorIdx = 0)
-      {}
+                    uint32 monitorIdx = 0) {
+        GE_UNREFERENCED_PARAMETER(width);
+        GE_UNREFERENCED_PARAMETER(height);
+        GE_UNREFERENCED_PARAMETER(refreshRate);
+        GE_UNREFERENCED_PARAMETER(monitorIdx);
+      }
 
       /**
        * @brief Switches the window to fullscreen mode.
@@ -455,7 +459,9 @@ namespace geEngineSDK {
        * @param[in]	videoMode	Mode retrieved from VideoModeInfo in RenderAPI.
        */
       virtual void
-      setFullscreen(const VideoMode& videoMode) {}
+      setFullscreen(const VideoMode& videoMode) {
+        GE_UNREFERENCED_PARAMETER(videoMode);
+      }
 
       /**
        * @brief Switches the window to windowed mode.
@@ -463,7 +469,10 @@ namespace geEngineSDK {
        * @param[in] height  Window height in pixels.
        */
       virtual void
-      setWindowed(uint32 width, uint32 height) {}
+      setWindowed(uint32 width, uint32 height) {
+        GE_UNREFERENCED_PARAMETER(width);
+        GE_UNREFERENCED_PARAMETER(height);
+      }
 
       /**
        * @brief Hide or show the window.

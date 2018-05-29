@@ -21,8 +21,8 @@
 #include "geCoreThread.h"
 #include "geViewport.h"
 #include "geRenderTarget.h"
-/*
 #include "geRenderWindow.h"
+/*
 #include "geMesh.h"
 #include "geGPUParams.h"
 #include "geDepthStencilState.h"
@@ -35,6 +35,8 @@ using std::function;
 using std::bind;
 
 namespace geEngineSDK {
+
+  /*
   void
   RenderAPI::setGPUParams(const SPtr<GPUParams>& gpuParams) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setGPUParams,
@@ -42,7 +44,9 @@ namespace geEngineSDK {
                                      gpuParams->getCore(),
                                      nullptr));
   }
+  /*
 
+  /*
   void
   RenderAPI::setGraphicsPipeline(const SPtr<GraphicsPipelineState>& pipelineState) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setGraphicsPipeline,
@@ -50,7 +54,9 @@ namespace geEngineSDK {
                                      pipelineState->getCore(),
                                      nullptr));
   }
+  */
 
+  /*
   void
   RenderAPI::setComputePipeline(const SPtr<ComputePipelineState>& pipelineState) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setComputePipeline,
@@ -58,7 +64,9 @@ namespace geEngineSDK {
                                      pipelineState->getCore(),
                                      nullptr));
   }
+  */
 
+  /*
   void
   RenderAPI::setVertexBuffers(uint32 index,
                               const Vector<SPtr<VertexBuffer>>& buffers) {
@@ -84,7 +92,9 @@ namespace geEngineSDK {
                                      index,
                                      coreBuffers));
   }
+  */
 
+  /*
   void
   RenderAPI::setIndexBuffer(const SPtr<IndexBuffer>& buffer) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setIndexBuffer,
@@ -92,7 +102,9 @@ namespace geEngineSDK {
                                      buffer->getCore(),
                                      nullptr));
   }
+  */
 
+  /*
   void
   RenderAPI::setVertexDeclaration(const SPtr<VertexDeclaration>& vertexDeclaration) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setVertexDeclaration,
@@ -100,6 +112,7 @@ namespace geEngineSDK {
                                      vertexDeclaration->getCore(),
                                      nullptr));
   }
+  */
 
   void
   RenderAPI::setViewport(const Box2D& vp) {
@@ -255,7 +268,7 @@ namespace geEngineSDK {
     RenderAPI::~RenderAPI() {
       //Base classes need to call virtual destroy_internal method instead of a
       //destructor
-      ge_deleteN(m_currentCapabilities, m_numDevices);
+      //ge_deleteN(m_currentCapabilities, m_numDevices);
       m_currentCapabilities = nullptr;
     }
 
@@ -278,12 +291,10 @@ namespace geEngineSDK {
     }
 
     void
-    RenderAPI::initialize() {
-      //Do nothing
-    }
+    RenderAPI::initialize() {}
 
     void
-    RenderAPI::initializeWithWindow(const SPtr<RenderWindow>& primaryWindow) {
+    RenderAPI::initializeWithWindow(const SPtr<RenderWindow>& /*primaryWindow*/) {
       THROW_IF_NOT_CORE_THREAD;
     }
 
@@ -298,6 +309,7 @@ namespace geEngineSDK {
       m_activeRenderTarget = nullptr;
     }
 
+    /*
     const RenderAPICapabilities&
     RenderAPI::getCapabilities(uint32 deviceIdx) const {
       if (deviceIdx >= m_numDevices) {
@@ -308,6 +320,7 @@ namespace geEngineSDK {
 
       return m_currentCapabilities[deviceIdx];
     }
+    */
 
     uint32
     RenderAPI::vertexCountToPrimCount(DrawOperationType type,

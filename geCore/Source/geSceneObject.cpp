@@ -31,7 +31,7 @@
 #include "geGameObjectManager.h"
 #include "gePrefabUtility.h"
 #include "geMatrix4.h"
-//#include "geCoreApplication.h"
+#include "geCoreApplication.h"
 
 #include <geException.h>
 #include <geDebug.h>
@@ -111,8 +111,8 @@ namespace geEngineSDK {
   void
   SceneObject::destroyInternal(GameObjectHandleBase& handle, bool immediate) {
     if (immediate) {
-      for (auto iter = m_children.begin(); iter != m_children.end(); ++iter) {
-        (*iter)->destroyInternal(*iter, true);
+      for (auto & iter : m_children) {
+        iter->destroyInternal(iter, true);
       }
 
       m_children.clear();
@@ -664,9 +664,7 @@ namespace geEngineSDK {
     //Find scene object referenced by the path
     HSceneObject so = getHandle();
 
-    for (SIZE_T pathIdx = 0; pathIdx < entries.size(); ++pathIdx) {
-      String entry = entries[pathIdx];
-
+    for (String entry : entries) {
       if (entry.empty()) {
         continue;
       }
@@ -759,7 +757,7 @@ namespace geEngineSDK {
       }
     }
 
-    for (auto child : m_children) {
+    for (const auto& child : m_children) {
       child->setActiveHierarchy(m_activeHierarchy, triggerEvents);
     }
   }

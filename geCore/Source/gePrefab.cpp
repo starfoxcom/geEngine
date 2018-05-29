@@ -23,7 +23,7 @@
 #include "geResources.h"
 #include "geSceneObject.h"
 #include "gePrefabUtility.h"
-//#include "geCoreApplication.h"
+#include "geCoreApplication.h"
 
 #include <geNumericLimits.h>
 

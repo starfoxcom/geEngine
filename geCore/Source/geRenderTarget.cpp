@@ -19,7 +19,7 @@
 /*****************************************************************************/
 #include "geRenderTarget.h"
 #include "geViewport.h"
-//#include "gesRenderAPI.h"
+#include "geRenderAPI.h"
 #include "geCoreThread.h"
 
 #include <geException.h>

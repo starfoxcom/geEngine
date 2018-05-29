@@ -1255,6 +1255,7 @@ namespace geEngineSDK {
                int /*depth*/,
                int /*face*/,
                int miplevel) override {
+      GE_UNREFERENCED_PARAMETER(size);
       GE_ASSERT(0 <= miplevel && static_cast<int>(buffers.size()) > miplevel);
       GE_ASSERT(static_cast<uint32>(size) == buffers[miplevel]->getConsecutiveSize());
 

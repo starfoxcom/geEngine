@@ -19,7 +19,7 @@
 /*****************************************************************************/
 #include "geTextureManager.h"
 #include "gePixelUtil.h"
-//#include "geRenderAPI.h"
+#include "geRenderAPI.h"
 
 #include <geException.h>
 

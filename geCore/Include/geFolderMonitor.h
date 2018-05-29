@@ -45,7 +45,7 @@ namespace geEngineSDK {
     };
   }
 
-  typedef Flags<FOLDER_CHANGE_BIT::E> FolderChangeBits;
+  using FolderChangeBits = Flags<FOLDER_CHANGE_BIT::E>;
   GE_FLAGS_OPERATORS(FOLDER_CHANGE_BIT::E);
 
   class GE_CORE_EXPORT FolderMonitor

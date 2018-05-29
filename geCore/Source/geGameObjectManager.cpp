@@ -174,8 +174,7 @@ namespace geEngineSDK {
       isInternalReference = true;
     }
 
-    if (isInternalReference ||
-        (!isInternalReference && (flags & GOHDM::kRestoreExternal) != 0)) {
+    if (isInternalReference || (flags & GOHDM::kRestoreExternal) != 0) {
       auto findIterObj = m_objects.find(instanceId);
 
       if (m_objects.end() != findIterObj) {

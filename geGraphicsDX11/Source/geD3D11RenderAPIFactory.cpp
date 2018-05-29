@@ -18,7 +18,7 @@
 /*****************************************************************************/
 #include "geD3D11RenderAPIFactory.h"
 
-//#include <geRenderAPI.h>
+#include <geRenderAPI.h>
 
 namespace geEngineSDK {
   namespace geCoreThread {

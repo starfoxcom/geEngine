@@ -1001,7 +1001,8 @@ namespace geEngineSDK {
       uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > NumLimit::MAX_UINT32) {
+      uint64 maxSize = static_cast<uint64>(NumLimit::MAX_UINT32);
+      if (dataSize > maxSize) {
         __string_throwDataOverflowException();
       }
 #endif

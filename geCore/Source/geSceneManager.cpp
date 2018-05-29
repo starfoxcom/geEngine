@@ -29,10 +29,9 @@
 #include "geCamera.h"
 #include "geLight.h"
 #include "geLightProbeVolume.h"
-
+*/
 #include "geViewport.h"
 #include "geRenderTarget.h"
-*/
 
 namespace geEngineSDK {
   using std::find_if;
@@ -187,7 +186,7 @@ namespace geEngineSDK {
 
   SPtr<Camera>
   SceneManager::getMainCamera() const {
-    if (m_mainCameras.size() > 0) {
+    if (!m_mainCameras.empty()) {
       return m_mainCameras[0];
     }
     return nullptr;
@@ -302,9 +301,7 @@ namespace geEngineSDK {
     else if (COMPONENT_STATE::kPaused == state || COMPONENT_STATE::kStopped == state) {
       //Trigger onDisable events if stopping
       if (COMPONENT_STATE::kStopped == state) {
-        for (int32 i = 0; i < static_cast<int32>(m_activeComponents.size()); ++i) {
-          HComponent component = m_activeComponents[i];
-
+        for (const HComponent& component : m_activeComponents) {
           bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);
           component->onDisabled();
           if (alwaysRun) {

@@ -145,44 +145,6 @@ namespace geEngineSDK {
     }
   }
 
-  void
-  PlatformUtility::copyToClipboard(const WString& string) {
-    HANDLE hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
-                               (string.size() + 1) * sizeof(WString::value_type));
-
-    WString::value_type* buffer = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
-    string.copy(buffer, string.size());
-    buffer[string.size()] = '\0';
-    GlobalUnlock(hData);
-
-    if (OpenClipboard(nullptr)) {
-      EmptyClipboard();
-      SetClipboardData(CF_UNICODETEXT, hData);
-      CloseClipboard();
-    }
-
-    GlobalFree(hData);
-  }
-
-  WString
-  PlatformUtility::copyFromClipboard() {
-    if (OpenClipboard(nullptr)) {
-      HANDLE hData = GetClipboardData(CF_UNICODETEXT);
-
-      if (nullptr != hData) {
-        WString::value_type* buff = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
-        WString string(buff);
-        GlobalUnlock(hData);
-        CloseClipboard();
-        return string;
-      }
-      
-      CloseClipboard();
-    }
-
-    return L"";
-  }
-
   WString
   PlatformUtility::keyCodeToUnicode(uint32 keyCode) {
     static HKL keyboardLayout = GetKeyboardLayout(0);
@@ -302,7 +264,7 @@ namespace geEngineSDK {
   }
 
   HBITMAP
-  Win32PlatformUtility::createBitmap(const Color* pixels,
+  Win32PlatformUtility::createBitmap(const LinearColor* pixels,
                                      uint32 width,
                                      uint32 height,
                                      bool premultiplyAlpha) {
@@ -329,15 +291,15 @@ namespace geEngineSDK {
     ReleaseDC(nullptr, hDC);
 
     //Select the bitmaps to DC
-    HBITMAP hOldBitmap = static_cast<HBITMAP>(SelectObject(hBitmapDC, hBitmap));
+    auto hOldBitmap = static_cast<HBITMAP>(SelectObject(hBitmapDC, hBitmap));
 
     //Scan each pixel of the source bitmap and create the masks
-    Color pixel;
-    DWORD* dst = (DWORD*)data;
+    LinearColor pixel;
+    auto* dst = reinterpret_cast<DWORD*>(data);
     for (uint32 y = 0; y < height; ++y) {
       for (uint32 x = 0; x < width; ++x) {
         uint32 revY = height - y - 1;
-        pixel = pixels[revY*width + x];
+        pixel = pixels[revY * width + x];
 
         if (premultiplyAlpha) {
           pixel.r *= pixel.a;
@@ -345,8 +307,8 @@ namespace geEngineSDK {
           pixel.b *= pixel.a;
         }
 
-        *dst = pixel.dwColor();
-        dst++;
+        *dst = pixel.toColor(false).dwColor();
+        ++dst;
       }
     }
 
