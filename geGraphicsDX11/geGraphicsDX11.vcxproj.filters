@@ -28,6 +28,12 @@
     <ClCompile Include="Source\geD3D11Plugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11CommandBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11CommandBufferManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -49,6 +55,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\geD3D11RenderAPIFactory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11CommandBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11CommandBufferManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

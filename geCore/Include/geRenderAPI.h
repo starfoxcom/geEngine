@@ -24,7 +24,7 @@
 //#include "geRenderAPICapabilities.h"
 #include "geRenderTarget.h"
 #include "geRenderTexture.h"
-//#include "geRenderWindow.h"
+#include "geRenderWindow.h"
 //#include "geGPUProgram.h"
 #include "geVertexDeclaration.h"
 

@@ -26,9 +26,6 @@
     <Filter Include="Source Files\RTTI">
       <UniqueIdentifier>{3adc3033-b375-4554-b719-11cd73715fb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Managers">
-      <UniqueIdentifier>{9591c317-ad73-4460-9252-41e9390a3f43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\RenderAPI">
       <UniqueIdentifier>{8d0551a3-2125-45c6-88bf-d234f487c961}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,9 @@
     </Filter>
     <Filter Include="Source Files\Profiling">
       <UniqueIdentifier>{15359f44-92ff-4be7-bee5-3492714cdb22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderAPI\Managers">
+      <UniqueIdentifier>{39c198a8-8b68-4440-b3fd-9b6f5b1e47f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,9 +111,6 @@
     </ClInclude>
     <ClInclude Include="Include\geIResourceListener.h">
       <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geResourceListenerManager.h">
-      <Filter>Source Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Include\geUtility.h">
       <Filter>Source Files\Utilities</Filter>
@@ -187,12 +184,6 @@
     <ClInclude Include="Include\geVideoModeInfo.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geRenderAPIFactory.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRenderAPIManager.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Include\gePixelVolume.h">
       <Filter>Source Files\Image</Filter>
     </ClInclude>
@@ -235,9 +226,6 @@
     <ClInclude Include="Include\geRenderTexture.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geTextureManager.h">
-      <Filter>Source Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geRenderAPI.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
@@ -249,9 +237,6 @@
     </ClInclude>
     <ClInclude Include="Include\geRenderWindow.h">
       <Filter>Source Files\RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\geRenderWindowManager.h">
-      <Filter>Source Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Include\gePlatform.h">
       <Filter>Source Files\Platform</Filter>
@@ -273,6 +258,27 @@
     </ClInclude>
     <ClInclude Include="Include\geProfilingManager.h">
       <Filter>Source Files\Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRenderAPIFactory.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRenderAPIManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRenderWindowManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geResourceListenerManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTextureManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCommandBuffer.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geCommandBufferManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -317,9 +323,6 @@
     </ClCompile>
     <ClCompile Include="Source\geIResourceListener.cpp">
       <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geResourceListenerManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\geUtility.cpp">
       <Filter>Source Files\Utilities</Filter>
@@ -369,9 +372,6 @@
     <ClCompile Include="Source\geVideoModeInfo.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geRenderAPIManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\geDropTarget.cpp">
       <Filter>Source Files\Platform</Filter>
     </ClCompile>
@@ -396,9 +396,6 @@
     <ClCompile Include="Source\geRenderTexture.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geTextureManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\geRenderAPI.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
@@ -407,9 +404,6 @@
     </ClCompile>
     <ClCompile Include="Source\geRenderWindow.cpp">
       <Filter>Source Files\RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\geRenderWindowManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\geCoreApplication.cpp">
       <Filter>Source Files</Filter>
@@ -425,6 +419,24 @@
     </ClCompile>
     <ClCompile Include="Source\geProfilingManager.cpp">
       <Filter>Source Files\Profiling</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRenderAPIManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRenderWindowManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geResourceListenerManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTextureManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCommandBuffer.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geCommandBufferManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

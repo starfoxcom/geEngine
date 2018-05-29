@@ -601,24 +601,32 @@ namespace geEngineSDK {
   /**
    * @brief Types of GPU queues.
    */
-  enum GpuQueueType {
-    /**
-     * Queue used for rendering. Allows the use of draw commands, but also all
-     * commands supported by compute or upload buffers.
-     */
-    GQT_GRAPHICS,
-    /**
-     * Discrete queue used for compute operations. Allows the use of dispatch
-     * and upload commands.
-     */
-    GQT_COMPUTE,
-    /**
-     * Queue used for memory transfer operations only. No rendering or compute
-     * dispatch allowed.
-     */
-    GQT_UPLOAD,
-    GQT_COUNT //Keep at end
-  };
+  namespace GPU_QUEUE_TYPE {
+    enum E {
+      /**
+       * Queue used for rendering. Allows the use of draw commands, but also all
+       * commands supported by compute or upload buffers.
+       */
+      kGRAPHICS,
+
+      /**
+       * Discrete queue used for compute operations. Allows the use of dispatch
+       * and upload commands.
+       */
+      kCOMPUTE,
+
+      /**
+       * Queue used for memory transfer operations only. No rendering or compute
+       * dispatch allowed.
+       */
+      kUPLOAD,
+
+      /*
+       * Keep at the end
+       */
+      kCOUNT
+    };
+  }
 
   /**
    * @brief These values represent a hint to the driver when writing to a GPU

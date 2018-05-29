@@ -68,6 +68,6 @@ namespace geEngineSDK {
       };
     }
 
-    typedef Vector<int8*> HLSLMicroCode;
+    using HLSLMicroCode = Vector<int8*>;
   }
 }

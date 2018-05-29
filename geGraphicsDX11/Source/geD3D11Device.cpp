@@ -157,7 +157,7 @@ namespace geEngineSDK {
       default: break;
       }
 
-      if (severityList.size() > 0) {
+      if (!severityList.empty()) {
         filter.AllowList.NumSeverities = static_cast<UINT>(severityList.size());
         filter.AllowList.pSeverityList = &severityList[0];
       }
