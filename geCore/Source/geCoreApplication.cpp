@@ -46,11 +46,14 @@
 #include "geDeferredCallManager.h"
 #include "geStringTableManager.h"
 
-//#include "Importer/geImporter.h"
-//#include "Mesh/geMesh.h"
-//#include "Input/geInput.h"
 //#include "Renderer/geRendererManager.h"
 //#include "Renderer/geRenderer.h"
+//#include "Renderer/geParamBlocks.h"
+
+//#include "Importer/geImporter.h"
+//#include "Mesh/geMesh.h"
+
+//#include "Input/geInput.h"
 
 #include "geProfilerCPU.h"
 #include "geProfilingManager.h"
@@ -64,7 +67,7 @@
 //#include "Audio/geAudioManager.h"
 //#include "Audio/geAudio.h"
 //#include "Animation/geAnimationManager.h"
-//#include "Renderer/geParamBlocks.h"
+
 
 #include <geVector2.h>
 #include <geDynLib.h>

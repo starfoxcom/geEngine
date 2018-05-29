@@ -268,7 +268,7 @@ namespace geEngineSDK {
   ProfilerCPU::ProfiledBlock::ProfiledBlock(FrameAlloc* alloc)
     : basic(alloc),
       precise(alloc),
-    children(alloc)
+      children(alloc)
   {}
 
   ProfilerCPU::ProfiledBlock::~ProfiledBlock() {
@@ -806,8 +806,9 @@ namespace geEngineSDK {
 
       uint64 avgCycles = timerPrecise.m_cycles / reps;
 
-      if (avgCycles < m_preciseTimerOverhead)
+      if (avgCycles < m_preciseTimerOverhead) {
         m_preciseTimerOverhead = avgCycles;
+      }
     }
 
     m_basicSamplingOverheadMs = 1000000.0;
@@ -944,7 +945,7 @@ namespace geEngineSDK {
         endSamplePrecise("TestAvg10");
       }
 
-      for (uint32 i = 0; i < sampleReps * 5; i) {
+      for (uint32 i = 0; i < sampleReps * 5; ++i) {
         beginSamplePrecise(("TestAvg#" + toString(i)).c_str());
         endSamplePrecise(("TestAvg#" + toString(i)).c_str());
       }
