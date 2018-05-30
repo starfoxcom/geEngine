@@ -65,6 +65,7 @@
     <ClInclude Include="Include\geRenderAPI.h" />
     <ClInclude Include="Include\geRenderAPIFactory.h" />
     <ClInclude Include="Include\geRenderAPIManager.h" />
+    <ClInclude Include="Include\geRenderStats.h" />
     <ClInclude Include="Include\geRenderTarget.h" />
     <ClInclude Include="Include\geRenderTexture.h" />
     <ClInclude Include="Include\geRenderWindow.h" />

@@ -187,6 +187,7 @@
     <ClCompile Include="Source\geD3D11Device.cpp" />
     <ClCompile Include="Source\geD3D11Driver.cpp" />
     <ClCompile Include="Source\geD3D11DriverList.cpp" />
+    <ClCompile Include="Source\geD3D11EventQuery.cpp" />
     <ClCompile Include="Source\geD3D11Plugin.cpp" />
     <ClCompile Include="Source\geD3D11RenderAPI.cpp" />
     <ClCompile Include="Source\geD3D11RenderAPIFactory.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Include\geD3D11Device.h" />
     <ClInclude Include="Include\geD3D11Driver.h" />
     <ClInclude Include="Include\geD3D11DriverList.h" />
+    <ClInclude Include="Include\geD3D11EventQuery.h" />
     <ClInclude Include="Include\geD3D11RenderAPI.h" />
     <ClInclude Include="Include\geD3D11RenderAPIFactory.h" />
     <ClInclude Include="Include\geD3D11VideoModeInfo.h" />

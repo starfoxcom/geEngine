@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{47d60525-c398-4d57-9708-ef5b364c1569}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geD3D11DriverList.cpp">
@@ -31,8 +34,11 @@
     <ClCompile Include="Source\geD3D11CommandBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geD3D11CommandBufferManager.cpp">
+    <ClCompile Include="Source\geD3D11EventQuery.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11CommandBufferManager.cpp">
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,8 +66,11 @@
     <ClInclude Include="Include\geD3D11CommandBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geD3D11CommandBufferManager.h">
+    <ClInclude Include="Include\geD3D11EventQuery.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11CommandBufferManager.h">
+      <Filter>Source Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

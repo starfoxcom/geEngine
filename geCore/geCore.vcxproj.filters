@@ -292,6 +292,9 @@
     <ClInclude Include="Include\geOcclusionQuery.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geRenderStats.h">
+      <Filter>Source Files\Profiling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
