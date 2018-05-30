@@ -280,6 +280,18 @@
     <ClInclude Include="Include\geCommandBufferManager.h">
       <Filter>Source Files\RenderAPI\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geEventQuery.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geTimerQuery.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geQueryManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geOcclusionQuery.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -437,6 +449,18 @@
     </ClCompile>
     <ClCompile Include="Source\geCommandBufferManager.cpp">
       <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geEventQuery.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geTimerQuery.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geQueryManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geOcclusionQuery.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

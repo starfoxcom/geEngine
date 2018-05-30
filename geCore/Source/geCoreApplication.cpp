@@ -82,7 +82,7 @@ namespace geEngineSDK {
 
   constexpr uint32 CoreApplication::MAX_FIXED_UPDATES_PER_FRAME;
 
-  CoreApplication::CoreApplication(START_UP_DESC desc)
+  CoreApplication::CoreApplication(const START_UP_DESC& desc)
     : m_primaryWindow(nullptr),
       m_startUpDesc(desc),
       m_rendererPlugin(nullptr),

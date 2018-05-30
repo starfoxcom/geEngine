@@ -50,7 +50,7 @@ namespace geEngineSDK {
         m_driverList.push_back(ge_new<D3D11Driver>(adapterIdx, dxgiAdapter));
 
         SAFE_RELEASE(dxgiAdapter);
-        adapterIdx++;
+        ++adapterIdx;
       }
     }
 

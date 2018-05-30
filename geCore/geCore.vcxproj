@@ -33,6 +33,7 @@
     <ClInclude Include="Include\geCoreThreadQueue.h" />
     <ClInclude Include="Include\geDeferredCallManager.h" />
     <ClInclude Include="Include\geDropTarget.h" />
+    <ClInclude Include="Include\geEventQuery.h" />
     <ClInclude Include="Include\geFolderMonitor.h" />
     <ClInclude Include="Include\geGameObject.h" />
     <ClInclude Include="Include\geGameObjectHandle.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Include\geHString.h" />
     <ClInclude Include="Include\geInputFwd.h" />
     <ClInclude Include="Include\geIResourceListener.h" />
+    <ClInclude Include="Include\geOcclusionQuery.h" />
     <ClInclude Include="Include\gePixelData.h" />
     <ClInclude Include="Include\gePixelDataRTTI.h" />
     <ClInclude Include="Include\gePixelUtil.h" />
@@ -59,6 +61,7 @@
     <ClInclude Include="Include\gePrerequisitesCore.h" />
     <ClInclude Include="Include\geProfilerCPU.h" />
     <ClInclude Include="Include\geProfilingManager.h" />
+    <ClInclude Include="Include\geQueryManager.h" />
     <ClInclude Include="Include\geRenderAPI.h" />
     <ClInclude Include="Include\geRenderAPIFactory.h" />
     <ClInclude Include="Include\geRenderAPIManager.h" />
@@ -89,6 +92,7 @@
     <ClInclude Include="Include\geTextureManager.h" />
     <ClInclude Include="Include\geTextureRTTI.h" />
     <ClInclude Include="Include\geTextureView.h" />
+    <ClInclude Include="Include\geTimerQuery.h" />
     <ClInclude Include="Include\geUtility.h" />
     <ClInclude Include="Include\geVertexDeclaration.h" />
     <ClInclude Include="Include\geVideoModeInfo.h" />
@@ -110,6 +114,7 @@
     <ClCompile Include="Source\geCoreThreadQueue.cpp" />
     <ClCompile Include="Source\geDeferredCallManager.cpp" />
     <ClCompile Include="Source\geDropTarget.cpp" />
+    <ClCompile Include="Source\geEventQuery.cpp" />
     <ClCompile Include="Source\geGameObject.cpp" />
     <ClCompile Include="Source\geGameObjectHandle.cpp" />
     <ClCompile Include="Source\geGameObjectManager.cpp" />
@@ -117,6 +122,7 @@
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
     <ClCompile Include="Source\geIResourceListener.cpp" />
+    <ClCompile Include="Source\geOcclusionQuery.cpp" />
     <ClCompile Include="Source\gePixelData.cpp" />
     <ClCompile Include="Source\gePixelUtil.cpp" />
     <ClCompile Include="Source\gePrefab.cpp" />
@@ -124,6 +130,7 @@
     <ClCompile Include="Source\gePrefabUtility.cpp" />
     <ClCompile Include="Source\geProfilerCPU.cpp" />
     <ClCompile Include="Source\geProfilingManager.cpp" />
+    <ClCompile Include="Source\geQueryManager.cpp" />
     <ClCompile Include="Source\geRenderAPI.cpp" />
     <ClCompile Include="Source\geRenderAPIManager.cpp" />
     <ClCompile Include="Source\geRenderTarget.cpp" />
@@ -145,6 +152,7 @@
     <ClCompile Include="Source\geTexture.cpp" />
     <ClCompile Include="Source\geTextureManager.cpp" />
     <ClCompile Include="Source\geTextureView.cpp" />
+    <ClCompile Include="Source\geTimerQuery.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
     <ClCompile Include="Source\geVideoModeInfo.cpp" />
     <ClCompile Include="Source\geViewport.cpp" />

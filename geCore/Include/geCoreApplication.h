@@ -80,7 +80,7 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT CoreApplication : public Module<CoreApplication>
   {
    public:
-    CoreApplication(START_UP_DESC desc);
+    CoreApplication(const START_UP_DESC& desc);
     virtual ~CoreApplication();
 
     /**
