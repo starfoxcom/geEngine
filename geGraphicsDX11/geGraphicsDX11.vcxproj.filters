@@ -40,6 +40,15 @@
     <ClCompile Include="Source\geD3D11CommandBufferManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11TimerQuery.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11OcclusionQuery.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11QueryManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -70,6 +79,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\geD3D11CommandBufferManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11TimerQuery.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11OcclusionQuery.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11QueryManager.h">
       <Filter>Source Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>

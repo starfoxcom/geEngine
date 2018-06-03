@@ -62,12 +62,6 @@ namespace geEngineSDK {
       }
     }
 
-#define GE_ADD_PLAINFIELD(name, id, parentType)                               \
-  addPlainField(#name,                                                        \
-                id##,                                                         \
-                &##parentType##::get##name,                                   \
-                &##parentType##::set##name);
-
     SPtr<PixelData>
     getPixelData(Texture* obj, uint32 idx) {
       uint32 face = Math::floor(idx /

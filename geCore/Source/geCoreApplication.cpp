@@ -34,7 +34,7 @@
 //#include "geHardwareBufferManager.h"
 //#include "geGPUProgramManager.h"
 //#include "geMeshManager.h"
-//#include "geQueryManager.h"
+#include "geQueryManager.h"
 
 #include "geCoreObjectManager.h"
 #include "geCoreThread.h"
@@ -58,7 +58,7 @@
 #include "geProfilerCPU.h"
 #include "geProfilingManager.h"
 //#include "Profiling/geProfilerGPU.h"
-//#include "Profiling/geRenderStats.h"
+#include "geRenderStats.h"
 
 //#include "Material/geMaterialManager.h"
 //#include "Material/geShaderManager.h"
@@ -305,11 +305,9 @@ namespace geEngineSDK {
                                        this),
                                   CTQF::kInternalQueue);
 
-      /*
       g_coreThread().queueCommand(bind(&geCoreThread::QueryManager::_update,
                                        geCoreThread::QueryManager::instancePtr()),
                                   CTQF::kInternalQueue);
-      */
 
       g_coreThread().queueCommand(bind(&CoreApplication::endCoreProfiling, this),
                                   CTQF::kInternalQueue);
