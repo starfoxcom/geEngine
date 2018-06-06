@@ -295,6 +295,12 @@
     <ClInclude Include="Include\geRenderStats.h">
       <Filter>Source Files\Profiling</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geBlendState.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geBlendStateRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -463,6 +469,9 @@
       <Filter>Source Files\RenderAPI\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\geOcclusionQuery.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geBlendState.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,34 +22,42 @@ namespace geEngineSDK {
   /**
    * @brief Factors used when blending new pixels with existing pixels.
    */
-  enum BlendFactor {
-    BF_ONE,               //Use a value of one for all pixel components.
-    BF_ZERO,              //Use a value of zero for all pixel components.
-    BF_DEST_COLOR,        //Use the existing pixel value.
-    BF_SOURCE_COLOR,      //Use the newly generated pixel value.
-    BF_INV_DEST_COLOR,    //Use the inverse of the existing value.
-    BF_INV_SOURCE_COLOR,  //Use the inverse of the newly generated pixel value.
-    BF_DEST_ALPHA,        //Use the existing alpha value.
-    BF_SOURCE_ALPHA,      //Use the newly generated alpha value.
-    BF_INV_DEST_ALPHA,    //Use the inverse of the existing alpha value.
-    BF_INV_SOURCE_ALPHA   //Use the inverse of the newly generated alpha value.
-  };
+  namespace BLEND_FACTOR {
+    enum E {
+      kONE,               //Use a value of one for all pixel components.
+      kZERO,              //Use a value of zero for all pixel components.
+      kDEST_COLOR,        //Use the existing pixel value.
+      kSOURCE_COLOR,      //Use the newly generated pixel value.
+      kINV_DEST_COLOR,    //Use the inverse of the existing value.
+      kINV_SOURCE_COLOR,  //Use the inverse of the newly generated pixel value.
+      kDEST_ALPHA,        //Use the existing alpha value.
+      kSOURCE_ALPHA,      //Use the newly generated alpha value.
+      kINV_DEST_ALPHA,    //Use the inverse of the existing alpha value.
+      kINV_SOURCE_ALPHA   //Use the inverse of the newly generated alpha value.
+    };
+  }
 
   /**
    * @brief Operations that determines how are blending factors combined.
    */
-  enum BlendOperation {
-    //Blend factors are added together.
-    BO_ADD,
-    //Blend factors are subtracted in "srcFactor - dstFactor" order.
-    BO_SUBTRACT,
-    //Blend factors are subtracted in "dstFactor - srcFactor" order.
-    BO_REVERSE_SUBTRACT,
-    //Minimum of the two factors is chosen.
-    BO_MIN,
-    //Maximum of the two factors is chosen.0
-    BO_MAX
-  };
+  namespace BLEND_OPERATION {
+    enum E {
+      //Blend factors are added together.
+      kADD,
+
+      //Blend factors are subtracted in "srcFactor - dstFactor" order.
+      kSUBTRACT,
+
+      //Blend factors are subtracted in "dstFactor - srcFactor" order.
+      kREVERSE_SUBTRACT,
+
+      //Minimum of the two factors is chosen.
+      kMIN,
+
+      //Maximum of the two factors is chosen.0
+      kMAX
+    };
+  }
 
   /**
    * @brief Comparison functions used for the depth/stencil buffer.

@@ -454,7 +454,6 @@ namespace geEngineSDK {
       kID_GPUParamDataDesc = 1147,
       kID_GPUParamObjectDesc = 1148,
       kID_GPUParamDesc = 1149,
-      kID_BlendStateDesc = 1150,
       kID_RasterizerStateDesc = 1151,
       kID_DepthStencilStateDesc = 1152,
       kID_SerializedGPUProgramData = 1153,

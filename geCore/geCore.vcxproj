@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\geBlendState.h" />
+    <ClInclude Include="Include\geBlendStateRTTI.h" />
     <ClInclude Include="Include\geCommandBuffer.h" />
     <ClInclude Include="Include\geCommandBufferManager.h" />
     <ClInclude Include="Include\geCommandQueue.h" />
@@ -103,6 +105,7 @@
     <ClInclude Include="Include\Win32\geWin32Platform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\geBlendState.cpp" />
     <ClCompile Include="Source\geCommandBuffer.cpp" />
     <ClCompile Include="Source\geCommandBufferManager.cpp" />
     <ClCompile Include="Source\geCommandQueue.cpp" />
