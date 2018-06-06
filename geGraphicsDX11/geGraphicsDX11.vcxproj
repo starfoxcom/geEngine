@@ -182,6 +182,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\geD3D11BlendState.cpp" />
     <ClCompile Include="Source\geD3D11CommandBuffer.cpp" />
     <ClCompile Include="Source\geD3D11CommandBufferManager.cpp" />
     <ClCompile Include="Source\geD3D11Device.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Source\geD3D11VideoModeInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\geD3D11BlendState.h" />
     <ClInclude Include="Include\geD3D11CommandBuffer.h" />
     <ClInclude Include="Include\geD3D11CommandBufferManager.h" />
     <ClInclude Include="Include\geD3D11Device.h" />
