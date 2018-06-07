@@ -177,8 +177,26 @@ namespace geEngineSDK {
      * @brief Fixed point to float.
      */
     static float
-    fixedToFloat(unsigned value, uint32 bits) {
+    fixedToFloat(uint32 value, uint32 bits) {
       return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts floating point value in range [0, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    template<uint32 bits = 8>
+    static uint32
+    unormToUint(float value) {
+      if (0.0f >= value) {
+        return 0;
+      }
+      else if (1.0f <= value) {
+        return (1 << bits) - 1;
+      }
+
+      return Math::round(value * (1 << bits));
     }
 
     /**
@@ -203,6 +221,17 @@ namespace geEngineSDK {
      *        integer of a certain number of bits. Works for any value of bits
      *        between 0 and 31.
      */
+    template<uint32 bits = 8>
+    static uint32
+    snormToUint(float value) {
+      return unormToUint<bits>((value + 1.0f) * 0.5f);
+    }
+
+    /**
+     * @brief Converts floating point value in range [-1, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
     static uint32
     snormToUint(float value, uint32 bits) {
       return unormToUint((value + 1.0f) * 0.5f, bits);
@@ -211,16 +240,34 @@ namespace geEngineSDK {
     /**
      * @brief Converts an unsigned integer to a floating point in range [0, 1].
      */
+    template<uint32 bits = 8>
     static float
-    uintToUnorm(unsigned value, uint32 bits) {
+    uintToUnorm(uint32 value) {
+      return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts an unsigned integer to a floating point in range [0, 1].
+     */
+    static float
+    uintToUnorm(uint32 value, uint32 bits) {
       return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
     }
 
     /**
      * @brief Converts an unsigned int to a floating point in range [-1, 1].
      */
+    template<uint32 bits = 8>
     static float
-    uintToSnorm(unsigned value, unsigned int bits) {
+    uintToSnorm(uint32 value) {
+      return uintToUnorm<bits>(value) * 2.0f - 1.0f;
+    }
+
+    /**
+     * @brief Converts an unsigned int to a floating point in range [-1, 1].
+     */
+    static float
+    uintToSnorm(uint32 value, uint32 bits) {
       return uintToUnorm(value, bits) * 2.0f - 1.0f;
     }
 

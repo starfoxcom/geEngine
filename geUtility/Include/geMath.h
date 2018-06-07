@@ -241,6 +241,18 @@ namespace geEngineSDK {
     }
 
     /**
+     * @brief Determines the position of a value between two other values.
+     * @return 0 if @p value is less or equal than @p min,
+     *         1 if @p value is equal or greater than @p max,
+     *         and value in range (0, 1) otherwise.
+     */
+    template<typename T>
+    static FORCEINLINE float
+    invLerp(T val, T _min, T _max) {
+      return clamp01((val - _min) / max(_max-_min, 0.0001F));
+    }
+
+    /**
      * @brief Performs a cubic interpolation
      * @param  P - end points
      * @param  T - tangent directions at end points
