@@ -62,66 +62,131 @@ namespace geEngineSDK {
   /**
    * @brief Comparison functions used for the depth/stencil buffer.
    */
-  enum CompareFunction {
-    //Operation will always fail.
-    CMPF_ALWAYS_FAIL,
-    //Operation will always pass.
-    CMPF_ALWAYS_PASS,
-    //Operation will pass if the new value is less than existing value.
-    CMPF_LESS,
-    //Operation will pass if the new value is less or equal than existing value
-    CMPF_LESS_EQUAL,    
-    //Operation will pass if the new value is equal to the existing value.
-    CMPF_EQUAL,
-    //Operation will pass if the new value is not equal to the existing value.
-    CMPF_NOT_EQUAL,
-    //Operation will pass if the new value greater or equal than the existing
-    //value.
-    CMPF_GREATER_EQUAL,
-    //Operation will pass if the new value greater than the existing value.
-    CMPF_GREATER
-  };
+  namespace COMPARE_FUNCTION {
+    enum E {
+      /**
+       * Operation will always fail.
+       */
+      kALWAYS_FAIL,
+
+      /**
+       * Operation will always pass.
+       */
+      kALWAYS_PASS,
+
+      /**
+       * Operation will pass if the new value is less than existing value.
+       */
+      kLESS,
+
+      /**
+       * Operation will pass if the new value is less or equal than existing
+       * value
+       */
+      kLESS_EQUAL,
+
+      /**
+       * Operation will pass if the new value is equal to the existing value.
+       */
+      kEQUAL,
+
+      /**
+       * Operation will pass if the new value is not equal to the existing
+       * value.
+       */
+      kNOT_EQUAL,
+
+      /**
+       * Operation will pass if the new value greater or equal than the existing value.
+       */
+      kGREATER_EQUAL,
+
+      /**
+       * Operation will pass if the new value greater than the existing value.
+       */
+      kGREATER
+    };
+  }
 
   /**
    * @brief Types of texture addressing modes that determine what happens when
    *        texture coordinates are outside of the valid range.
    */
-  enum TextureAddressingMode {
-    //Coordinates wrap back to the valid range.
-    TAM_WRAP,
-    //Coordinates flip every time the size of the valid range is passed.
-    TAM_MIRROR,
-    //Coordinates are clamped within the valid range.
-    TAM_CLAMP,
-    //Coordinates outside of the valid range will return a separately set
-    //border color.
-    TAM_BORDER
-  };
+  namespace TEXTURE_ADDRESSING_MODE {
+    enum E {
+      /**
+       * Coordinates wrap back to the valid range.
+       */
+      kWRAP,
+
+      /**
+       * Coordinates flip every time the size of the valid range is passed.
+       */
+      kMIRROR,
+
+      /**
+       * Coordinates are clamped within the valid range.
+       */
+      kCLAMP,
+
+      /**
+       * Coordinates outside of the valid range will return a separately set
+       * border color.
+       */
+      kBORDER
+    };
+  }
 
   /**
    * @brief Types of available filtering situations.
    */
-  enum FilterType {
-    FT_MIN, //The filter used when shrinking a texture.
-    FT_MAG, //The filter used when magnifying a texture.
-    FT_MIP  //The filter used when filtering between mipmaps.
-  };
+  namespace FILTER_TYPE {
+    enum E {
+      /**
+       * The filter used when shrinking a texture.
+       */
+      kMIN,
+
+      /**
+       * The filter used when magnifying a texture.
+       */
+      kMAG,
+
+      /**
+       * The filter used when filtering between mipmaps.
+       */
+      kMIP
+    };
+  }
 
   /**
    * @brief Filtering options for textures.
    */
-  enum FilterOptions {
-    //Use no filtering. Only relevant for mipmap filtering.
-    FO_NONE = 0,
-    //Filter using the nearest found pixel. Most basic filtering.
-    FO_POINT = 1,
-    //Average a 2x2 pixel area, bilinear filtering for texture, trilinear for
-    //mipmaps.
-    FO_LINEAR = 2,
-    //More advanced filtering that improves quality when viewing textures at a
-    //steep angle
-    FO_ANISOTROPIC = 3,
-  };
+  namespace FILTER_OPTIONS {
+    enum E {
+      /**
+       * Use no filtering. Only relevant for mipmap filtering.
+       */
+      kNONE = 0,
+
+      /**
+       * Filter using the nearest found pixel. Most basic filtering.
+       */
+      kPOINT = 1,
+
+      /**
+       * Average a 2x2 pixel area, bilinear filtering for texture, trilinear
+       * for mipmaps.
+       */
+      kLINEAR = 2,
+
+      /**
+       * More advanced filtering that improves quality when viewing textures at
+       * a steep angle
+       */
+      kANISOTROPIC = 3,
+    };
+  }
 
   /**
    * @brief Types of frame buffers.
@@ -138,45 +203,89 @@ namespace geEngineSDK {
    *        determining front or back facing polygons by checking the order of
    *        its vertices from the render perspective.
    */
-  enum CullingMode {
-    //Hardware performs no culling and renders both sides.
-    CULL_NONE = 0,
-    //Hardware culls faces that have a clockwise vertex ordering.
-    CULL_CLOCKWISE = 1,
-    //Hardware culls faces that have a counter-clockwise vertex ordering.
-    CULL_COUNTERCLOCKWISE = 2
-  };
+  namespace CULLING_MODE {
+    enum E {
+      /**
+       * Hardware performs no culling and renders both sides.
+       */
+      kNONE = 0,
+
+      /**
+       * Hardware culls faces that have a clockwise vertex ordering.
+       */
+      kCLOCKWISE = 1,
+      
+      /**
+       * Hardware culls faces that have a counter-clockwise vertex ordering.
+       */
+      kCOUNTERCLOCKWISE = 2
+    };
+  }
 
   /**
    * @brief Polygon mode to use when rasterizing.
    */
-  enum PolygonMode {
-    PM_WIREFRAME = 1, //Render as wireframe showing only polygon outlines.
-    PM_SOLID = 2      //Render as solid showing whole polygons.
-  };
+  namespace POLYGON_MODE {
+    enum E {
+      /**
+       * Render as wireframe showing only polygon outlines.
+       */
+      kWIREFRAME = 1,
+
+      /**
+       * Render as solid showing whole polygons.
+       */
+      kSOLID = 2
+    };
+  }
 
   /**
    * @brief Types of action that can happen on the stencil buffer.
    */
-  enum StencilOperation {
-    //Leave the stencil buffer unchanged.
-    SOP_KEEP,
-    //Set the stencil value to zero.
-    SOP_ZERO,
-    //Replace the stencil value with the reference value.
-    SOP_REPLACE,
-    //Increase the stencil value by 1, clamping at the maximum value.
-    SOP_INCREMENT,
-    //Decrease the stencil value by 1, clamping at 0.
-    SOP_DECREMENT,
-    //Increase the stencil value by 1, wrapping back to 0 when incrementing
-    //past the maximum value.
-    SOP_INCREMENT_WRAP,
-    //Decrease the stencil value by 1, wrapping when decrementing 0.
-    SOP_DECREMENT_WRAP,
-    //Invert the bits of the stencil buffer.
-    SOP_INVERT
-  };
+  namespace STENCIL_OPERATION {
+    enum E {
+      /**
+       * Leave the stencil buffer unchanged.
+       */
+      kKEEP,
+
+      /**
+       * Set the stencil value to zero.
+       */
+      kZERO,
+
+      /**
+       * Replace the stencil value with the reference value.
+       */
+      kREPLACE,
+
+      /**
+       * Increase the stencil value by 1, clamping at the maximum value.
+       */
+      kINCREMENT,
+
+      /**
+       * Decrease the stencil value by 1, clamping at 0.
+       */
+      kDECREMENT,
+
+      /**
+       * Increase the stencil value by 1, wrapping back to 0 when incrementing
+       * past the maximum value.
+       */
+      kINCREMENT_WRAP,
+
+      /**
+       * Decrease the stencil value by 1, wrapping when decrementing 0.
+       */
+      kDECREMENT_WRAP,
+
+      /**
+       * Invert the bits of the stencil buffer.
+       */
+      kINVERT
+    };
+  }
 
   /**
    * @brief Describes operation that will be used for rendering a certain set
@@ -278,19 +387,22 @@ namespace geEngineSDK {
    *        determine in what type of memory is buffer placed in, however that
    *        depends on rendering API.
    */
-  enum GPUBufferUsage {
-    /**
-     * Signifies that you don't plan on modifying the buffer often (or at all)
-     * after creation. Modifying such buffer will involve a larger performance
-     * hit. Mutually exclusive with GBU_DYNAMIC.
-     */
-    GBU_STATIC = 0x01,
-    /**
-     * Signifies that you will modify this buffer fairly often
-     * (e.g. every frame). Mutually exclusive with GBU_STATIC.
-     */
-    GBU_DYNAMIC = 0x02,
-  };
+  namespace GPU_BUFFER_USAGE {
+    enum E {
+      /**
+       * Signifies that you don't plan on modifying the buffer often (or at all)
+       * after creation. Modifying such buffer will involve a larger performance
+       * hit. Mutually exclusive with GBU_DYNAMIC.
+       */
+      kSTATIC = 0x01,
+
+      /**
+       * Signifies that you will modify this buffer fairly often
+       * (e.g. every frame). Mutually exclusive with GBU_STATIC.
+       */
+      kDYNAMIC = 0x02,
+    };
+  }
 
   /**
    * @brief Types of generic GPU buffers that may be attached to GPU programs.
@@ -316,44 +428,47 @@ namespace geEngineSDK {
   /**
    * @brief Types of valid formats used for standard GPU buffers.
    */
-  enum GPUBufferFormat {
-    BF_16X1F,           //1D 16-bit floating-point format.
-    BF_16X2F,           //2D 16-bit floating-point format.
-    BF_16X4F,           //4D 16-bit floating-point format.
-    BF_32X1F,           //1D 32-bit floating-point format.
-    BF_32X2F,           //2D 32-bit floating-point format.
-    BF_32X3F,           //3D 32-bit floating-point format.
-    BF_32X4F,           //4D 32-bit floating-point format.
-    BF_8X1,             //1D 8-bit normalized format.
-    BF_8X2,             //2D 8-bit normalized format.
-    BF_8X4,             //4D 8-bit normalized format.
-    BF_16X1,            //1D 16-bit normalized format.
-    BF_16X2,            //2D 16-bit normalized format.
-    BF_16X4,            //4D 16-bit normalized format.
-    BF_8X1S,            //1D 8-bit signed integer format.
-    BF_8X2S,            //2D 8-bit signed integer format.
-    BF_8X4S,            //4D 8-bit signed integer format.
-    BF_16X1S,           //1D 16-bit signed integer format.
-    BF_16X2S,           //2D 16-bit signed integer format.
-    BF_16X4S,           //4D 16-bit signed integer format.
-    BF_32X1S,           //1D 32-bit signed integer format.
-    BF_32X2S,           //2D 32-bit signed integer format.
-    BF_32X3S,           //3D 32-bit signed integer format.
-    BF_32X4S,           //4D 32-bit signed integer format.
-    BF_8X1U,            //1D 8-bit unsigned integer format.
-    BF_8X2U,            //2D 8-bit unsigned integer format.
-    BF_8X4U,            //4D 8-bit unsigned integer format.
-    BF_16X1U,           //1D 16-bit unsigned integer format.
-    BF_16X2U,           //2D 16-bit unsigned integer format.
-    BF_16X4U,           //4D 16-bit unsigned integer format.
-    BF_32X1U,           //1D 32-bit unsigned integer format.
-    BF_32X2U,           //2D 32-bit unsigned integer format.
-    BF_32X3U,           //3D 32-bit unsigned integer format.
-    BF_32X4U,           //4D 32-bit unsigned integer format.
-    BF_COUNT,           //Not a valid format. Keep just before BF_UNKNOWN.
-    //Unknown format (used for non-standard buffers, like structured or raw.
-    BF_UNKNOWN = 0xffff
-  };
+  namespace GPU_BUFFER_FORMAT {
+    enum E {
+      k16X1F,           //1D 16-bit floating-point format.
+      k16X2F,           //2D 16-bit floating-point format.
+      k16X4F,           //4D 16-bit floating-point format.
+      k32X1F,           //1D 32-bit floating-point format.
+      k32X2F,           //2D 32-bit floating-point format.
+      k32X3F,           //3D 32-bit floating-point format.
+      k32X4F,           //4D 32-bit floating-point format.
+      k8X1,             //1D 8-bit normalized format.
+      k8X2,             //2D 8-bit normalized format.
+      k8X4,             //4D 8-bit normalized format.
+      k16X1,            //1D 16-bit normalized format.
+      k16X2,            //2D 16-bit normalized format.
+      k16X4,            //4D 16-bit normalized format.
+      k8X1S,            //1D 8-bit signed integer format.
+      k8X2S,            //2D 8-bit signed integer format.
+      k8X4S,            //4D 8-bit signed integer format.
+      k16X1S,           //1D 16-bit signed integer format.
+      k16X2S,           //2D 16-bit signed integer format.
+      k16X4S,           //4D 16-bit signed integer format.
+      k32X1S,           //1D 32-bit signed integer format.
+      k32X2S,           //2D 32-bit signed integer format.
+      k32X3S,           //3D 32-bit signed integer format.
+      k32X4S,           //4D 32-bit signed integer format.
+      k8X1U,            //1D 8-bit unsigned integer format.
+      k8X2U,            //2D 8-bit unsigned integer format.
+      k8X4U,            //4D 8-bit unsigned integer format.
+      k16X1U,           //1D 16-bit unsigned integer format.
+      k16X2U,           //2D 16-bit unsigned integer format.
+      k16X4U,           //4D 16-bit unsigned integer format.
+      k32X1U,           //1D 32-bit unsigned integer format.
+      k32X2U,           //2D 32-bit unsigned integer format.
+      k32X3U,           //3D 32-bit unsigned integer format.
+      k32X4U,           //4D 32-bit unsigned integer format.
+      kCOUNT,           //Not a valid format. Keep just before kUNKNOWN.
+
+      //Unknown format (used for non-standard buffers, like structured or raw.
+      kUNKNOWN = 0xffff
+    };
+  }
 
   /**
    * @brief Different types of GPU views that control how GPU sees a hardware
@@ -832,9 +947,9 @@ namespace geEngineSDK {
       return u == rhs.u && v == rhs.v && w == rhs.w;
     }
 
-    TextureAddressingMode u{ TAM_WRAP };
-    TextureAddressingMode v{ TAM_WRAP };
-    TextureAddressingMode w{ TAM_WRAP };
+    TEXTURE_ADDRESSING_MODE::E u{ TEXTURE_ADDRESSING_MODE::kWRAP };
+    TEXTURE_ADDRESSING_MODE::E v{ TEXTURE_ADDRESSING_MODE::kWRAP };
+    TEXTURE_ADDRESSING_MODE::E w{ TEXTURE_ADDRESSING_MODE::kWRAP };
   };
 
   /**

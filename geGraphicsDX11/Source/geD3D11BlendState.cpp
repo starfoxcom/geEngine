@@ -46,17 +46,21 @@ namespace geEngineSDK {
       blendStateDesc.IndependentBlendEnable = m_properties.getIndependantBlendEnable();
 
       for (uint32 i = 0; i < GE_MAX_MULTIPLE_RENDER_TARGETS; ++i) {
-        blendStateDesc.RenderTarget[i].BlendEnable = m_properties.getBlendEnabled(i);
-        blendStateDesc.RenderTarget[i].BlendOp = D3D11Mappings::get(m_properties.getBlendOperation(i));
-        blendStateDesc.RenderTarget[i].BlendOpAlpha = D3D11Mappings::get(m_properties.getAlphaBlendOperation(i));
-        blendStateDesc.RenderTarget[i].DestBlend = D3D11Mappings::get(m_properties.getDstBlend(i));
-        blendStateDesc.RenderTarget[i].DestBlendAlpha = D3D11Mappings::get(m_properties.getAlphaDstBlend(i));
-        blendStateDesc.RenderTarget[i].RenderTargetWriteMask = 0xf & (m_properties.getRenderTargetWriteMask(i)); // Mask out all but last 4 bits
-        blendStateDesc.RenderTarget[i].SrcBlend = D3D11Mappings::get(m_properties.getSrcBlend(i));
-        blendStateDesc.RenderTarget[i].SrcBlendAlpha = D3D11Mappings::get(m_properties.getAlphaSrcBlend(i));
+        D3D11_RENDER_TARGET_BLEND_DESC& bSD = blendStateDesc.RenderTarget[i];
+
+        bSD.BlendEnable     = m_properties.getBlendEnabled(i);
+        bSD.BlendOp         = D3D11Mappings::get(m_properties.getBlendOperation(i));
+        bSD.BlendOpAlpha    = D3D11Mappings::get(m_properties.getAlphaBlendOperation(i));
+        bSD.DestBlend       = D3D11Mappings::get(m_properties.getDstBlend(i));
+        bSD.DestBlendAlpha  = D3D11Mappings::get(m_properties.getAlphaDstBlend(i));
+        bSD.SrcBlend        = D3D11Mappings::get(m_properties.getSrcBlend(i));
+        bSD.SrcBlendAlpha   = D3D11Mappings::get(m_properties.getAlphaSrcBlend(i));
+
+        //Mask out all but last 4 bits
+        bSD.RenderTargetWriteMask = 0xf & (m_properties.getRenderTargetWriteMask(i));        
       }
 
-      D3D11RenderAPI* rs = static_cast<D3D11RenderAPI*>(RenderAPI::instancePtr());
+      auto rs = static_cast<D3D11RenderAPI*>(RenderAPI::instancePtr());
       D3D11Device& device = rs->getPrimaryDevice();
       HRESULT hr = device.getD3D11Device()->CreateBlendState(&blendStateDesc, &m_blendState);
 
