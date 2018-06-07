@@ -19,6 +19,7 @@ namespace geEngineSDK {
   using std::is_enum;
   using std::hash;
   using std::memset;
+  using std::memcpy;
   using std::swap;
 
   /**
@@ -73,6 +74,26 @@ namespace geEngineSDK {
   ge_zero_out(T* arr, SIZE_T count) {
     GE_ASSERT(nullptr != arr);
     memset(arr, 0, sizeof(T) * count);
+  }
+
+  /**
+   * @brief Copies the contents of one array to another.
+   *        Automatically accounts for array element size.
+   */
+  template<class T, size_t N>
+  void
+  ge_copy(T(&dst)[N], T(&src)[N], SIZE_T count) {
+    memcpy(dst, src, sizeof(T) * count);
+  }
+
+  /**
+   * @brief Copies the contents of one array to another.
+   *        Automatically accounts for array element size.
+   */
+  template<class T>
+  void
+  ge_copy(T* dst, T* src, SIZE_T count) {
+    memcpy(dst, src, sizeof(T) * count);
   }
 
   /**
