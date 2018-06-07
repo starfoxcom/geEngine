@@ -44,8 +44,7 @@ namespace geEngineSDK {
   }
 
   uint32
-  VertexElement::getTypeSize(VERTEX_ELEMENT_TYPE::E etype)
-  {
+  VertexElement::getTypeSize(VERTEX_ELEMENT_TYPE::E etype) {
     switch (etype)
     {
     case VERTEX_ELEMENT_TYPE::kCOLOR:
@@ -99,40 +98,40 @@ namespace geEngineSDK {
     return 0;
   }
 
-  unsigned short VertexElement::getTypeCount(VERTEX_ELEMENT_TYPE::E etype)
-  {
+  uint16
+  VertexElement::getTypeCount(VERTEX_ELEMENT_TYPE::E etype) {
     switch (etype)
     {
-    case VERTEX_ELEMENT_TYPE::kCOLOR:
-    case VERTEX_ELEMENT_TYPE::kCOLOR_ABGR:
-    case VERTEX_ELEMENT_TYPE::kCOLOR_ARGB:
-      return 4;
-    case VERTEX_ELEMENT_TYPE::kFLOAT1:
-    case VERTEX_ELEMENT_TYPE::kSHORT1:
-    case VERTEX_ELEMENT_TYPE::kUSHORT1:
-    case VERTEX_ELEMENT_TYPE::kINT1:
-    case VERTEX_ELEMENT_TYPE::kuint1:
-      return 1;
-    case VERTEX_ELEMENT_TYPE::kFLOAT2:
-    case VERTEX_ELEMENT_TYPE::kSHORT2:
-    case VERTEX_ELEMENT_TYPE::kUSHORT2:
-    case VERTEX_ELEMENT_TYPE::kINT2:
-    case VERTEX_ELEMENT_TYPE::kuint2:
-      return 2;
-    case VERTEX_ELEMENT_TYPE::kFLOAT3:
-    case VERTEX_ELEMENT_TYPE::kINT3:
-    case VERTEX_ELEMENT_TYPE::kuint3:
-      return 3;
-    case VERTEX_ELEMENT_TYPE::kFLOAT4:
-    case VERTEX_ELEMENT_TYPE::kSHORT4:
-    case VERTEX_ELEMENT_TYPE::kUSHORT4:
-    case VERTEX_ELEMENT_TYPE::kINT4:
-    case VERTEX_ELEMENT_TYPE::kuint4:
-    case VERTEX_ELEMENT_TYPE::kUBYTE4:
-    case VERTEX_ELEMENT_TYPE::kUBYTE4_NORM:
-      return 4;
-    default:
-      break;
+      case VERTEX_ELEMENT_TYPE::kCOLOR:
+      case VERTEX_ELEMENT_TYPE::kCOLOR_ABGR:
+      case VERTEX_ELEMENT_TYPE::kCOLOR_ARGB:
+        return 4;
+      case VERTEX_ELEMENT_TYPE::kFLOAT1:
+      case VERTEX_ELEMENT_TYPE::kSHORT1:
+      case VERTEX_ELEMENT_TYPE::kUSHORT1:
+      case VERTEX_ELEMENT_TYPE::kINT1:
+      case VERTEX_ELEMENT_TYPE::kuint1:
+        return 1;
+      case VERTEX_ELEMENT_TYPE::kFLOAT2:
+      case VERTEX_ELEMENT_TYPE::kSHORT2:
+      case VERTEX_ELEMENT_TYPE::kUSHORT2:
+      case VERTEX_ELEMENT_TYPE::kINT2:
+      case VERTEX_ELEMENT_TYPE::kuint2:
+        return 2;
+      case VERTEX_ELEMENT_TYPE::kFLOAT3:
+      case VERTEX_ELEMENT_TYPE::kINT3:
+      case VERTEX_ELEMENT_TYPE::kuint3:
+        return 3;
+      case VERTEX_ELEMENT_TYPE::kFLOAT4:
+      case VERTEX_ELEMENT_TYPE::kSHORT4:
+      case VERTEX_ELEMENT_TYPE::kUSHORT4:
+      case VERTEX_ELEMENT_TYPE::kINT4:
+      case VERTEX_ELEMENT_TYPE::kuint4:
+      case VERTEX_ELEMENT_TYPE::kUBYTE4:
+      case VERTEX_ELEMENT_TYPE::kUBYTE4_NORM:
+        return 4;
+      default:
+        break;
     }
 
     GE_EXCEPT(InvalidParametersException, "Invalid type");
@@ -142,33 +141,39 @@ namespace geEngineSDK {
   VERTEX_ELEMENT_TYPE::E
   VertexElement::getBestColorVertexElementType() {
     //Use the current render system to determine if possible
-    if (geCoreThread::RenderAPI::instancePtr() != nullptr) {
-      return geCoreThread::RenderAPI::instance().getAPIInfo().getColorVertexElementType();
+    if (nullptr != geCoreThread::RenderAPI::instancePtr()) {
+      return geCoreThread::RenderAPI::instance().getAPIInfo().
+               getColorVertexElementType();
     }
     else {
-      // We can't know the specific type right now, so pick a type based on platform
+      //We can't know the specific type right now, so pick a type based on
+      //platform
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-      return VERTEX_ELEMENT_TYPE::kCOLOR_ARGB; // prefer D3D format on Windows
+      //Prefer D3D format on Windows
+      return VERTEX_ELEMENT_TYPE::kCOLOR_ARGB;
 #else
-      return VERTEX_ELEMENT_TYPE::kCOLOR_ABGR; // prefer GL format on everything else
+      //Prefer GL format on everything else
+      return VERTEX_ELEMENT_TYPE::kCOLOR_ABGR;
 #endif
-
     }
   }
 
-  bool VertexElement::operator== (const VertexElement& rhs) const
-  {
-    if (m_type != rhs.m_type || m_index != rhs.m_index || m_offset != rhs.m_offset ||
-      m_semantic != rhs.m_semantic || m_source != rhs.m_source || m_instanceStepRate != rhs.m_instanceStepRate)
-    {
+  bool
+  VertexElement::operator== (const VertexElement& rhs) const {
+    if (m_type != rhs.m_type ||
+        m_index != rhs.m_index ||
+        m_offset != rhs.m_offset ||
+        m_semantic != rhs.m_semantic ||
+        m_source != rhs.m_source ||
+        m_instanceStepRate != rhs.m_instanceStepRate) {
       return false;
     }
-    else
-      return true;
+
+    return true;
   }
 
-  bool VertexElement::operator!= (const VertexElement& rhs) const
-  {
+  bool
+  VertexElement::operator!= (const VertexElement& rhs) const {
     return !(*this == rhs);
   }
 
@@ -203,46 +208,48 @@ namespace geEngineSDK {
     }
   }
 
-  bool VertexDeclarationProperties::operator== (const VertexDeclarationProperties& rhs) const
-  {
-    if (m_elementList.size() != rhs.m_elementList.size())
+  bool
+  VertexDeclarationProperties::operator==(const VertexDeclarationProperties& rhs) const {
+    if (m_elementList.size() != rhs.m_elementList.size()) {
       return false;
+    }
 
     auto myIter = m_elementList.begin();
     auto theirIter = rhs.m_elementList.begin();
 
-    for (; myIter != m_elementList.end() && theirIter != rhs.m_elementList.end(); ++myIter, ++theirIter)
-    {
-      if (!(*myIter == *theirIter))
+    for (; myIter != m_elementList.end() && theirIter != rhs.m_elementList.end();
+         ++myIter, ++theirIter) {
+      if (!(*myIter == *theirIter)) {
         return false;
+      }
     }
 
     return true;
   }
 
-  bool VertexDeclarationProperties::operator!= (const VertexDeclarationProperties& rhs) const
-  {
+  bool
+  VertexDeclarationProperties::operator!=(const VertexDeclarationProperties& rhs) const {
     return !(*this == rhs);
   }
 
-  const VertexElement* VertexDeclarationProperties::getElement(uint16 index) const
-  {
-    assert(index < m_elementList.size() && "Index out of bounds");
+  const VertexElement*
+  VertexDeclarationProperties::getElement(uint16 index) const {
+    GE_ASSERT(index < m_elementList.size() && "Index out of bounds");
 
     auto iter = m_elementList.begin();
-    for (uint16 i = 0; i < index; ++i)
+    for (uint16 i = 0; i < index; ++i) {
       ++iter;
+    }
 
     return &(*iter);
 
   }
 
-  const VertexElement* VertexDeclarationProperties::findElementBySemantic(VERTEX_ELEMENT_SEMANTIC::E sem, uint16 index) const
-  {
-    for (auto& elem : m_elementList)
-    {
-      if (elem.getSemantic() == sem && elem.getSemanticIdx() == index)
-      {
+  const VertexElement*
+  VertexDeclarationProperties::findElementBySemantic(VERTEX_ELEMENT_SEMANTIC::E sem,
+                                                     uint16 index) const {
+    for (auto& elem : m_elementList) {
+      if (elem.getSemantic() == sem && elem.getSemanticIdx() == index) {
         return &elem;
       }
     }
@@ -250,26 +257,24 @@ namespace geEngineSDK {
     return nullptr;
   }
 
-  Vector<VertexElement> VertexDeclarationProperties::findElementsBySource(uint16 source) const
-  {
+  Vector<VertexElement>
+  VertexDeclarationProperties::findElementsBySource(uint16 source) const {
     Vector<VertexElement> retList;
-    for (auto& elem : m_elementList)
-    {
-      if (elem.getStreamIdx() == source)
+    for (auto& elem : m_elementList) {
+      if (elem.getStreamIdx() == source) {
         retList.push_back(elem);
+      }
     }
 
     return retList;
   }
 
-  uint32 VertexDeclarationProperties::getVertexSize(uint16 source) const
-  {
+  uint32
+  VertexDeclarationProperties::getVertexSize(uint16 source) const {
     uint32 size = 0;
 
-    for (auto& elem : m_elementList)
-    {
-      if (elem.getStreamIdx() == source)
-      {
+    for (auto& elem : m_elementList) {
+      if (elem.getStreamIdx() == source) {
         size += elem.getSize();
       }
     }
@@ -281,8 +286,8 @@ namespace geEngineSDK {
     : m_properties(elements)
   {}
 
-  SPtr<geCoreThread::VertexDeclaration> VertexDeclaration::getCore() const
-  {
+  SPtr<geCoreThread::VertexDeclaration>
+  VertexDeclaration::getCore() const {
     return static_pointer_cast<geCoreThread::VertexDeclaration>(m_coreSpecific);
   }
 

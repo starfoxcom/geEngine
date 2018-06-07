@@ -18,6 +18,10 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
+#include "geCoreObject.h"
+
+#include <geColor.h>
+
 
 namespace geEngineSDK {
   /**
