@@ -189,6 +189,7 @@
     <ClCompile Include="Source\geD3D11Driver.cpp" />
     <ClCompile Include="Source\geD3D11DriverList.cpp" />
     <ClCompile Include="Source\geD3D11EventQuery.cpp" />
+    <ClCompile Include="Source\geD3D11Mappings.cpp" />
     <ClCompile Include="Source\geD3D11OcclusionQuery.cpp" />
     <ClCompile Include="Source\geD3D11Plugin.cpp" />
     <ClCompile Include="Source\geD3D11QueryManager.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Include\geD3D11Driver.h" />
     <ClInclude Include="Include\geD3D11DriverList.h" />
     <ClInclude Include="Include\geD3D11EventQuery.h" />
+    <ClInclude Include="Include\geD3D11Mappings.h" />
     <ClInclude Include="Include\geD3D11OcclusionQuery.h" />
     <ClInclude Include="Include\geD3D11QueryManager.h" />
     <ClInclude Include="Include\geD3D11RenderAPI.h" />

@@ -391,6 +391,12 @@
     <ClInclude Include="Include\geNumericLimits.h">
       <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geRandom.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geColorGradient.h">
+      <Filter>Source Files\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geMemoryAllocator.cpp">
@@ -581,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="Source\geBox2DI.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geColorGradient.cpp">
+      <Filter>Source Files\Image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

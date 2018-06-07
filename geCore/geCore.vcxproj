@@ -98,6 +98,7 @@
     <ClInclude Include="Include\geTimerQuery.h" />
     <ClInclude Include="Include\geUtility.h" />
     <ClInclude Include="Include\geVertexDeclaration.h" />
+    <ClInclude Include="Include\geVertexDeclarationRTTI.h" />
     <ClInclude Include="Include\geVideoModeInfo.h" />
     <ClInclude Include="Include\geViewport.h" />
     <ClInclude Include="Include\geViewportRTTI.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Source\geTextureView.cpp" />
     <ClCompile Include="Source\geTimerQuery.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
+    <ClCompile Include="Source\geVertexDeclaration.cpp" />
     <ClCompile Include="Source\geVideoModeInfo.cpp" />
     <ClCompile Include="Source\geViewport.cpp" />
     <ClCompile Include="Source\Win32\geWin32DropTarget.cpp" />

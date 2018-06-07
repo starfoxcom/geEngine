@@ -221,6 +221,7 @@
     <ClInclude Include="Include\geBoxSphereBounds.h" />
     <ClInclude Include="Include\geCapsuleShape.h" />
     <ClInclude Include="Include\geColor.h" />
+    <ClInclude Include="Include\geColorGradient.h" />
     <ClInclude Include="Include\geCompression.h" />
     <ClInclude Include="Include\geConvexHull2D.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="Include\geNumericLimits.h" />
     <ClInclude Include="Include\geOctree.h" />
     <ClInclude Include="Include\gePoolAlloc.h" />
+    <ClInclude Include="Include\geRandom.h" />
     <ClInclude Include="Include\geSIMD.h" />
     <ClInclude Include="Include\geStackAlloc.h" />
     <ClInclude Include="Include\geMessageHandler.h" />
@@ -328,6 +330,7 @@
     <ClCompile Include="Source\geBox2DI.cpp" />
     <ClCompile Include="Source\geBoxSphereBounds.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
+    <ClCompile Include="Source\geColorGradient.cpp" />
     <ClCompile Include="Source\geCompression.cpp" />
     <ClCompile Include="Source\geCrashHandler.cpp" />
     <ClCompile Include="Source\geDataStream.cpp" />

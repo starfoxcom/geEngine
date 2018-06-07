@@ -34,12 +34,12 @@ namespace geEngineSDK {
     /**
      * A regular texture that is not often or ever updated from the CPU.
      */
-    TU_STATIC           GE_SCRIPT_EXPORT(n:Default) = GBU_STATIC,
+    TU_STATIC           GE_SCRIPT_EXPORT(n:Default) = GPU_BUFFER_USAGE::kSTATIC,
 
     /**
      * A regular texture that is often updated by the CPU.
      */
-    TU_DYNAMIC          GE_SCRIPT_EXPORT(n:Dynamic) = GBU_DYNAMIC,
+    TU_DYNAMIC          GE_SCRIPT_EXPORT(n:Dynamic) = GPU_BUFFER_USAGE::kDYNAMIC,
 
     /**
      * Texture that can be rendered to by the GPU.

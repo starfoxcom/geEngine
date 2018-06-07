@@ -656,7 +656,7 @@ namespace geEngineSDK {
        * @brief Change the render target into which we want to draw.
        * @param[in] target          Render target to draw to.
        * @param[in] readOnlyFlags   Combination of one or more elements of
-       *            FrameBufferType denoting which buffers will be bound for
+       *            FRAME_BUFFER_TYPE denoting which buffers will be bound for
        *            read-only operations. This is useful for depth or stencil
        *            buffers which need to be bound both for depth/stencil
        *            tests, as well as shader reads.
@@ -684,7 +684,7 @@ namespace geEngineSDK {
       /**
        * @brief Clears the currently active render target.
        * @param[in] buffers     Combination of one or more elements of
-       *                        FrameBufferType denoting which buffers are to
+       *                        FRAME_BUFFER_TYPE denoting which buffers are to
        *                        be cleared.
        * @param[in] color       Color to clear the color buffer with,
        *                        if enabled.
@@ -715,8 +715,8 @@ namespace geEngineSDK {
        *        opposed to clearRenderTarget() which always clears the entire
        *        render target).
        * @param[in] buffers       Combination of one or more elements of
-       *                          FrameBufferType denoting which buffers are to
-       *                          be cleared.
+       *                          FRAME_BUFFER_TYPE denoting which buffers are
+       *                          to be cleared.
        * @param[in] color         Color to clear the color buffer with,
        *                          if enabled.
        * @param[in] depth         Value to initialize the depth buffer with,
@@ -724,9 +724,9 @@ namespace geEngineSDK {
        * @param[in] stencil       Value to initialize the stencil buffer with,
        *                          if enabled.
        * @param[in] targetMask    In case multiple render targets are bound,
-       *                          this allows you to control which ones to clear
-       *                          (0x01 first, 0x02 second, 0x04 third, etc.,
-       *                          and combinations).
+       *                          this allows you to control which ones to
+       *                          clear (0x01 first, 0x02 second, 0x04 third,
+       *                          etc.,and combinations).
        * @param[in] commandBuffer Optional command buffer to queue the
        *                          operation on. If not provided operation is
        *                          executed immediately. Otherwise it is
