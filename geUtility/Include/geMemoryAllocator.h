@@ -522,18 +522,11 @@ namespace geEngineSDK {
      *        seems necessary in order to use some STL data structures from
      *        libstdc++-4.8, but compilation fails on OSX, hence the #if.
      */
-#if GE_PLATFORM == GE_PLATFORM_LINUX || GE_PLATFORM == GE_PLATFORM_WIN32
     template<class... Args>
     static void
     construct(pointer p, Args&& ...args) {
       new(p) T(forward<Args>(args)...);
     }
-#else
-    static void
-    construct(pointer p, const_reference t) {
-      new (p) T(t);
-    }
-#endif
   };
 }
 
