@@ -1377,19 +1377,20 @@ namespace geEngineSDK {
   Matrix4::getScaledAxis(AXIS::E InAxis) const {
     switch (InAxis)
     {
-    case AXIS::kX:
-      return Vector3(m[0][0], m[0][1], m[0][2]);
+      case AXIS::kX:
+        return Vector3(m[0][0], m[0][1], m[0][2]);
 
-    case AXIS::kY:
-      return Vector3(m[1][0], m[1][1], m[1][2]);
+      case AXIS::kY:
+        return Vector3(m[1][0], m[1][1], m[1][2]);
 
-    case AXIS::kZ:
-      return Vector3(m[2][0], m[2][1], m[2][2]);
+      case AXIS::kZ:
+        return Vector3(m[2][0], m[2][1], m[2][2]);
 
-    default:
-      GE_ASSERT(false);
-      return Vector3::ZERO;
+      default:
+        GE_ASSERT(false);
     }
+
+    return Vector3::ZERO;
   }
 
   inline void

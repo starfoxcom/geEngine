@@ -145,7 +145,7 @@ namespace geEngineSDK {
       /**
        * 4D 32-bit unsigned integer value
        */
-      kuint4 = 12,
+      kUINT4 = 12,
 
       /**
        * 4D 32-bit signed integer value
@@ -185,17 +185,17 @@ namespace geEngineSDK {
       /**
        * 1D 32-bit signed integer value
        */
-      kuint1 = 21,
+      kUINT1 = 21,
 
       /**
        * 2D 32-bit signed integer value
        */
-      kuint2 = 22,
+      kUINT2 = 22,
 
       /**
        * 3D 32-bit signed integer value
        */
-      kuint3 = 23,
+      kUINT3 = 23,
 
       /**
        * 4D 8-bit unsigned integer interpreted as a normalized value in [0, 1]

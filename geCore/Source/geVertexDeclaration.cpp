@@ -47,52 +47,52 @@ namespace geEngineSDK {
   VertexElement::getTypeSize(VERTEX_ELEMENT_TYPE::E etype) {
     switch (etype)
     {
-    case VERTEX_ELEMENT_TYPE::kCOLOR:
-    case VERTEX_ELEMENT_TYPE::kCOLOR_ABGR:
-    case VERTEX_ELEMENT_TYPE::kCOLOR_ARGB:
-      return sizeof(RGBA);
-    case VERTEX_ELEMENT_TYPE::kUBYTE4_NORM:
-      return sizeof(uint32);
-    case VERTEX_ELEMENT_TYPE::kFLOAT1:
-      return sizeof(float);
-    case VERTEX_ELEMENT_TYPE::kFLOAT2:
-      return sizeof(float) * 2;
-    case VERTEX_ELEMENT_TYPE::kFLOAT3:
-      return sizeof(float) * 3;
-    case VERTEX_ELEMENT_TYPE::kFLOAT4:
-      return sizeof(float) * 4;
-    case VERTEX_ELEMENT_TYPE::kUSHORT1:
-      return sizeof(uint16);
-    case VERTEX_ELEMENT_TYPE::kUSHORT2:
-      return sizeof(uint16) * 2;
-    case VERTEX_ELEMENT_TYPE::kUSHORT4:
-      return sizeof(uint16) * 4;
-    case VERTEX_ELEMENT_TYPE::kSHORT1:
-      return sizeof(int16);
-    case VERTEX_ELEMENT_TYPE::kSHORT2:
-      return sizeof(int16) * 2;
-    case VERTEX_ELEMENT_TYPE::kSHORT4:
-      return sizeof(int16) * 4;
-    case VERTEX_ELEMENT_TYPE::kuint1:
-      return sizeof(uint32);
-    case VERTEX_ELEMENT_TYPE::kuint2:
-      return sizeof(uint32) * 2;
-    case VERTEX_ELEMENT_TYPE::kuint3:
-      return sizeof(uint32) * 3;
-    case VERTEX_ELEMENT_TYPE::kuint4:
-      return sizeof(uint32) * 4;
-    case VERTEX_ELEMENT_TYPE::kINT4:
-      return sizeof(int32) * 4;
-    case VERTEX_ELEMENT_TYPE::kINT1:
-      return sizeof(int32);
-    case VERTEX_ELEMENT_TYPE::kINT2:
-      return sizeof(int32) * 2;
-    case VERTEX_ELEMENT_TYPE::kINT3:
-      return sizeof(int32) * 3;
-    case VERTEX_ELEMENT_TYPE::kUBYTE4:
-      return sizeof(uint8) * 4;
-    default:
-      break;
+      case VERTEX_ELEMENT_TYPE::kCOLOR:
+      case VERTEX_ELEMENT_TYPE::kCOLOR_ABGR:
+      case VERTEX_ELEMENT_TYPE::kCOLOR_ARGB:
+        return sizeof(RGBA);
+      case VERTEX_ELEMENT_TYPE::kUBYTE4_NORM:
+        return sizeof(uint32);
+      case VERTEX_ELEMENT_TYPE::kFLOAT1:
+        return sizeof(float);
+      case VERTEX_ELEMENT_TYPE::kFLOAT2:
+        return sizeof(float) * 2;
+      case VERTEX_ELEMENT_TYPE::kFLOAT3:
+        return sizeof(float) * 3;
+      case VERTEX_ELEMENT_TYPE::kFLOAT4:
+        return sizeof(float) * 4;
+      case VERTEX_ELEMENT_TYPE::kUSHORT1:
+        return sizeof(uint16);
+      case VERTEX_ELEMENT_TYPE::kUSHORT2:
+        return sizeof(uint16) * 2;
+      case VERTEX_ELEMENT_TYPE::kUSHORT4:
+        return sizeof(uint16) * 4;
+      case VERTEX_ELEMENT_TYPE::kSHORT1:
+        return sizeof(int16);
+      case VERTEX_ELEMENT_TYPE::kSHORT2:
+        return sizeof(int16) * 2;
+      case VERTEX_ELEMENT_TYPE::kSHORT4:
+        return sizeof(int16) * 4;
+      case VERTEX_ELEMENT_TYPE::kuint1:
+        return sizeof(uint32);
+      case VERTEX_ELEMENT_TYPE::kuint2:
+        return sizeof(uint32) * 2;
+      case VERTEX_ELEMENT_TYPE::kuint3:
+        return sizeof(uint32) * 3;
+      case VERTEX_ELEMENT_TYPE::kuint4:
+        return sizeof(uint32) * 4;
+      case VERTEX_ELEMENT_TYPE::kINT4:
+        return sizeof(int32) * 4;
+      case VERTEX_ELEMENT_TYPE::kINT1:
+        return sizeof(int32);
+      case VERTEX_ELEMENT_TYPE::kINT2:
+        return sizeof(int32) * 2;
+      case VERTEX_ELEMENT_TYPE::kINT3:
+        return sizeof(int32) * 3;
+      case VERTEX_ELEMENT_TYPE::kUBYTE4:
+        return sizeof(uint8) * 4;
+      default:
+        break;
     }
 
     return 0;

@@ -1284,23 +1284,24 @@ namespace geEngineSDK {
 
   nvtt::Format
   toNVTTFormat(PixelFormat format) {
-    switch (format) {
-    case PixelFormat::kBC1:
-      return nvtt::Format_BC1;
-    case PixelFormat::kBC1a:
-      return nvtt::Format_BC1a;
-    case PixelFormat::kBC2:
-      return nvtt::Format_BC2;
-    case PixelFormat::kBC3:
-      return nvtt::Format_BC3;
-    case PixelFormat::kBC4:
-      return nvtt::Format_BC4;
-    case PixelFormat::kBC5:
-      return nvtt::Format_BC5;
-    case PixelFormat::kBC6H:
-      return nvtt::Format_BC6;
-    case PixelFormat::kBC7:
-      return nvtt::Format_BC7;
+    switch (format)
+    {
+      case PixelFormat::kBC1:
+        return nvtt::Format_BC1;
+      case PixelFormat::kBC1a:
+        return nvtt::Format_BC1a;
+      case PixelFormat::kBC2:
+        return nvtt::Format_BC2;
+      case PixelFormat::kBC3:
+        return nvtt::Format_BC3;
+      case PixelFormat::kBC4:
+        return nvtt::Format_BC4;
+      case PixelFormat::kBC5:
+        return nvtt::Format_BC5;
+      case PixelFormat::kBC6H:
+        return nvtt::Format_BC6;
+      case PixelFormat::kBC7:
+        return nvtt::Format_BC7;
     }
 
     //Unsupported format
@@ -1309,15 +1310,16 @@ namespace geEngineSDK {
 
   nvtt::Quality
   toNVTTQuality(COMPRESSION_QUALITY::E quality) {
-    switch (quality) {
-    case COMPRESSION_QUALITY::kFastest:
-      return nvtt::Quality_Fastest;
-    case COMPRESSION_QUALITY::kHighest:
-      return nvtt::Quality_Highest;
-    case COMPRESSION_QUALITY::kNormal:
-      return nvtt::Quality_Normal;
-    case COMPRESSION_QUALITY::kProduction:
-      return nvtt::Quality_Normal;
+    switch (quality)
+    {
+      case COMPRESSION_QUALITY::kFastest:
+        return nvtt::Quality_Fastest;
+      case COMPRESSION_QUALITY::kHighest:
+        return nvtt::Quality_Highest;
+      case COMPRESSION_QUALITY::kNormal:
+        return nvtt::Quality_Normal;
+      case COMPRESSION_QUALITY::kProduction:
+        return nvtt::Quality_Normal;
     }
 
     //Unknown quality level
@@ -1326,13 +1328,14 @@ namespace geEngineSDK {
 
   nvtt::AlphaMode
   toNVTTAlphaMode(ALPHA_MODE::E alphaMode) {
-    switch (alphaMode) {
-    case ALPHA_MODE::kNone:
-      return nvtt::AlphaMode_None;
-    case ALPHA_MODE::kPremultiplied:
-      return nvtt::AlphaMode_Premultiplied;
-    case ALPHA_MODE::kTransparency:
-      return nvtt::AlphaMode_Transparency;
+    switch (alphaMode)
+    {
+      case ALPHA_MODE::kNone:
+        return nvtt::AlphaMode_None;
+      case ALPHA_MODE::kPremultiplied:
+        return nvtt::AlphaMode_Premultiplied;
+      case ALPHA_MODE::kTransparency:
+        return nvtt::AlphaMode_Transparency;
     }
 
     //Unknown alpha mode
@@ -1341,13 +1344,14 @@ namespace geEngineSDK {
 
   nvtt::WrapMode
   toNVTTWrapMode(MIPMAP_WRAP_MODE::E wrapMode) {
-    switch (wrapMode) {
-    case MIPMAP_WRAP_MODE::kClamp:
-      return nvtt::WrapMode_Clamp;
-    case MIPMAP_WRAP_MODE::kMirror:
-      return nvtt::WrapMode_Mirror;
-    case MIPMAP_WRAP_MODE::kRepeat:
-      return nvtt::WrapMode_Repeat;
+    switch (wrapMode)
+    {
+      case MIPMAP_WRAP_MODE::kClamp:
+        return nvtt::WrapMode_Clamp;
+      case MIPMAP_WRAP_MODE::kMirror:
+        return nvtt::WrapMode_Mirror;
+      case MIPMAP_WRAP_MODE::kRepeat:
+        return nvtt::WrapMode_Repeat;
     }
 
     //Unknown alpha mode
@@ -1365,24 +1369,25 @@ namespace geEngineSDK {
                            uint32 depth,
                            PixelFormat format) {
     if (isCompressed(format)) {
-      switch (format) {
+      switch (format)
+      {
         //BC formats work by dividing the image into 4x4 blocks, then encoding
         //each 4x4 block with a certain number of bytes.
-      case PixelFormat::kBC1:
-      case PixelFormat::kBC1a:
-      case PixelFormat::kBC4:
-        return ((width + 3) / 4) * ((height + 3) / 4) * 8 * depth;
-      case PixelFormat::kBC2:
-      case PixelFormat::kBC3:
-      case PixelFormat::kBC5:
-      case PixelFormat::kBC6H:
-      case PixelFormat::kBC7:
-        return ((width + 3) / 4) * ((height + 3) / 4) * 16 * depth;
+        case PixelFormat::kBC1:
+        case PixelFormat::kBC1a:
+        case PixelFormat::kBC4:
+          return ((width + 3) / 4) * ((height + 3) / 4) * 8 * depth;
+        case PixelFormat::kBC2:
+        case PixelFormat::kBC3:
+        case PixelFormat::kBC5:
+        case PixelFormat::kBC6H:
+        case PixelFormat::kBC7:
+          return ((width + 3) / 4) * ((height + 3) / 4) * 16 * depth;
 
-      default:
-        GE_EXCEPT(InvalidParametersException,
-                  "Invalid compressed pixel format");
-        //return 0; //Unreachable code
+        default:
+          GE_EXCEPT(InvalidParametersException,
+                    "Invalid compressed pixel format");
+          //return 0; //Unreachable code
       }
     }
 
@@ -1401,21 +1406,21 @@ namespace geEngineSDK {
       {
         //BC formats work by dividing the image into 4x4 blocks, then encoding
         //each 4x4 block with a certain number of bytes.
-      case PixelFormat::kBC1:
-      case PixelFormat::kBC1a:
-      case PixelFormat::kBC4:
-      case PixelFormat::kBC2:
-      case PixelFormat::kBC3:
-      case PixelFormat::kBC5:
-      case PixelFormat::kBC6H:
-      case PixelFormat::kBC7:
-        rowPitch = div(width + 3, 4).quot * 4;
-        depthPitch = div(height + 3, 4).quot * 4 * rowPitch;
-        return;
+        case PixelFormat::kBC1:
+        case PixelFormat::kBC1a:
+        case PixelFormat::kBC4:
+        case PixelFormat::kBC2:
+        case PixelFormat::kBC3:
+        case PixelFormat::kBC5:
+        case PixelFormat::kBC6H:
+        case PixelFormat::kBC7:
+          rowPitch = div(width + 3, 4).quot * 4;
+          depthPitch = div(height + 3, 4).quot * 4 * rowPitch;
+          return;
 
-      default:
-        GE_EXCEPT(InvalidParametersException, "Invalid compressed pixel format");
-        return;
+        default:
+          GE_EXCEPT(InvalidParametersException, "Invalid compressed pixel format");
+          return;
       }
     }
 
@@ -1560,17 +1565,17 @@ namespace geEngineSDK {
     if (isCompressed(format)) {
       switch (format)
       {
-      case PixelFormat::kBC1:
-      case PixelFormat::kBC2:
-      case PixelFormat::kBC1a:
-      case PixelFormat::kBC3:
-      case PixelFormat::kBC4:
-      case PixelFormat::kBC5:
-      case PixelFormat::kBC6H:
-      case PixelFormat::kBC7:
-        return ((width & 3) == 0 && (height & 3) == 0 && depth == 1);
-      default:
-        return true;
+        case PixelFormat::kBC1:
+        case PixelFormat::kBC2:
+        case PixelFormat::kBC1a:
+        case PixelFormat::kBC3:
+        case PixelFormat::kBC4:
+        case PixelFormat::kBC5:
+        case PixelFormat::kBC6H:
+        case PixelFormat::kBC7:
+          return ((width & 3) == 0 && (height & 3) == 0 && depth == 1);
+        default:
+          return true;
       }
     }
 
@@ -1943,23 +1948,23 @@ namespace geEngineSDK {
     uint32 masked = 0;
     switch (format)
     {
-    case PixelFormat::kD24S8:
-      return  static_cast<float>(*color & 0x00FFFFFF) / 16777216.f;
-      break;
-    case PixelFormat::kD16:
-      return static_cast<float>(*color & 0xFFFF) / 65536.f;
-      break;
-    case PixelFormat::kD32:
-      masked = *color & 0xFFFFFFFF;
-      return *reinterpret_cast<float*>(&masked);
-      break;
-    case PixelFormat::kD32_S8X24:
-      masked = *color & 0xFFFFFFFF;
-      return *reinterpret_cast<float*>(&masked);
-      break;
-    default:
-      LOGERR("Cannot unpack from " + getFormatName(format));
-      break;
+      case PixelFormat::kD24S8:
+        return  static_cast<float>(*color & 0x00FFFFFF) / 16777216.f;
+        break;
+      case PixelFormat::kD16:
+        return static_cast<float>(*color & 0xFFFF) / 65536.f;
+        break;
+      case PixelFormat::kD32:
+        masked = *color & 0xFFFFFFFF;
+        return *reinterpret_cast<float*>(&masked);
+        break;
+      case PixelFormat::kD32_S8X24:
+        masked = *color & 0xFFFFFFFF;
+        return *reinterpret_cast<float*>(&masked);
+        break;
+      default:
+        LOGERR("Cannot unpack from " + getFormatName(format));
+        break;
     }
 
     return 0;
@@ -2191,56 +2196,14 @@ namespace geEngineSDK {
     PixelData temp;
     switch (filter)
     {
-    default:
-    case FILTER::kNEAREST:
-      if (src.getFormat() == scaled.getFormat()) {
-        //No intermediate buffer needed
-        temp = scaled;
-      }
-      else {
-        //Allocate temporary buffer of destination size in source format
-        temp = PixelData(scaled.getWidth(),
-                         scaled.getHeight(),
-                         scaled.getDepth(),
-                         src.getFormat());
-        temp.allocateInternalBuffer();
-      }
-
-      //No conversion
-      switch (PixelUtil::getNumElemBytes(src.getFormat()))
-      {
-      case 1: NearestResampler<1>::scale(src, temp); break;
-      case 2: NearestResampler<2>::scale(src, temp); break;
-      case 3: NearestResampler<3>::scale(src, temp); break;
-      case 4: NearestResampler<4>::scale(src, temp); break;
-      case 6: NearestResampler<6>::scale(src, temp); break;
-      case 8: NearestResampler<8>::scale(src, temp); break;
-      case 12: NearestResampler<12>::scale(src, temp); break;
-      case 16: NearestResampler<16>::scale(src, temp); break;
       default:
-        //Never reached
-        GE_ASSERT(false);
-      }
-
-      if (temp.getData() != scaled.getData()) {
-        //Blit temp buffer
-        PixelUtil::bulkPixelConversion(temp, scaled);
-        temp.freeInternalBuffer();
-      }
-      break;
-
-    case FILTER::kLINEAR:
-      switch (src.getFormat())
-      {
-      case PixelFormat::kRG8:
-      case PixelFormat::kRGB8: case PixelFormat::kBGR8:
-      case PixelFormat::kRGBA8: case PixelFormat::kBGRA8:
+      case FILTER::kNEAREST:
         if (src.getFormat() == scaled.getFormat()) {
           //No intermediate buffer needed
           temp = scaled;
         }
         else {
-          //Allocate temp buffer of destination size in source format
+          //Allocate temporary buffer of destination size in source format
           temp = PixelData(scaled.getWidth(),
                            scaled.getHeight(),
                            scaled.getDepth(),
@@ -2251,13 +2214,17 @@ namespace geEngineSDK {
         //No conversion
         switch (PixelUtil::getNumElemBytes(src.getFormat()))
         {
-        case 1: LinearResampler_Byte<1>::scale(src, temp); break;
-        case 2: LinearResampler_Byte<2>::scale(src, temp); break;
-        case 3: LinearResampler_Byte<3>::scale(src, temp); break;
-        case 4: LinearResampler_Byte<4>::scale(src, temp); break;
-        default:
-          //Never reached
-          GE_ASSERT(false);
+          case 1: NearestResampler<1>::scale(src, temp); break;
+          case 2: NearestResampler<2>::scale(src, temp); break;
+          case 3: NearestResampler<3>::scale(src, temp); break;
+          case 4: NearestResampler<4>::scale(src, temp); break;
+          case 6: NearestResampler<6>::scale(src, temp); break;
+          case 8: NearestResampler<8>::scale(src, temp); break;
+          case 12: NearestResampler<12>::scale(src, temp); break;
+          case 16: NearestResampler<16>::scale(src, temp); break;
+          default:
+            //Never reached
+            GE_ASSERT(false);
         }
 
         if (temp.getData() != scaled.getData()) {
@@ -2265,22 +2232,60 @@ namespace geEngineSDK {
           PixelUtil::bulkPixelConversion(temp, scaled);
           temp.freeInternalBuffer();
         }
-
         break;
-      case PixelFormat::kRGB32F:
-      case PixelFormat::kRGBA32F:
-        if (scaled.getFormat() == PixelFormat::kRGB32F ||
-            scaled.getFormat() == PixelFormat::kRGBA32F) {
-          //float32 to float32, avoid unpack/repack overhead
-          LinearResampler_Float32::scale(src, scaled);
-          break;
+
+      case FILTER::kLINEAR:
+        switch (src.getFormat())
+        {
+          case PixelFormat::kRG8:
+          case PixelFormat::kRGB8: case PixelFormat::kBGR8:
+          case PixelFormat::kRGBA8: case PixelFormat::kBGRA8:
+            if (src.getFormat() == scaled.getFormat()) {
+              //No intermediate buffer needed
+              temp = scaled;
+            }
+            else {
+              //Allocate temp buffer of destination size in source format
+              temp = PixelData(scaled.getWidth(),
+                               scaled.getHeight(),
+                               scaled.getDepth(),
+                               src.getFormat());
+              temp.allocateInternalBuffer();
+            }
+
+            //No conversion
+            switch (PixelUtil::getNumElemBytes(src.getFormat()))
+            {
+              case 1: LinearResampler_Byte<1>::scale(src, temp); break;
+              case 2: LinearResampler_Byte<2>::scale(src, temp); break;
+              case 3: LinearResampler_Byte<3>::scale(src, temp); break;
+              case 4: LinearResampler_Byte<4>::scale(src, temp); break;
+              default:
+                //Never reached
+                GE_ASSERT(false);
+            }
+
+            if (temp.getData() != scaled.getData()) {
+              //Blit temp buffer
+              PixelUtil::bulkPixelConversion(temp, scaled);
+              temp.freeInternalBuffer();
+            }
+
+            break;
+          case PixelFormat::kRGB32F:
+          case PixelFormat::kRGBA32F:
+            if (scaled.getFormat() == PixelFormat::kRGB32F ||
+                scaled.getFormat() == PixelFormat::kRGBA32F) {
+              //float32 to float32, avoid unpack/repack overhead
+              LinearResampler_Float32::scale(src, scaled);
+              break;
+            }
+            //Else, fall through
+          default:
+            //Fallback case, slow but works
+            LinearResampler::scale(src, scaled);
         }
-        //Else, fall through
-      default:
-        //Fallback case, slow but works
-        LinearResampler::scale(src, scaled);
-      }
-      break;
+        break;
     }
   }
 

@@ -406,18 +406,18 @@ namespace geEngineSDK {
 
     switch (listType)
     {
-    case LIST_TYPE::kActiveList:
-      removeFromActiveList(component);
-      break;
-    case LIST_TYPE::kInactiveList:
-      removeFromInactiveList(component);
-      break;
-    case LIST_TYPE::kUninitializedList:
-      removeFromUninitializedList(component);
-      break;
-    default:
-      GE_ASSERT(false);
-      break;
+      case LIST_TYPE::kActiveList:
+        removeFromActiveList(component);
+        break;
+      case LIST_TYPE::kInactiveList:
+        removeFromInactiveList(component);
+        break;
+      case LIST_TYPE::kUninitializedList:
+        removeFromUninitializedList(component);
+        break;
+      default:
+        GE_ASSERT(false);
+        break;
     }
 
     bool alwaysRun = component->hasFlag(ComponentFlag::kAlwaysRun);

@@ -185,24 +185,24 @@ namespace geEngineSDK {
 
     switch (dataOffset)
     {
-    default:
-    case 0: //No BOM = assumed UTF-8
-    case 3: //UTF-8
-      return String(string.data(), string.length());
-    case 2: //UTF-16
-      {
-        SIZE_T numElems = string.length() / 2;
-        return UTF8::fromUTF16(U16String(reinterpret_cast<char16_t*>(
-                                          const_cast<char*>(string.data())),
-                                         numElems));
-      }
-    case 4: //UTF-32
-      {
-        SIZE_T numElems = string.length() / 4;
-        return UTF8::fromUTF32(U32String(reinterpret_cast<char32_t*>(
-                                          const_cast<char*>(string.data())),
-                                         numElems));
-      }
+      default:
+      case 0: //No BOM = assumed UTF-8
+      case 3: //UTF-8
+        return String(string.data(), string.length());
+      case 2: //UTF-16
+        {
+          SIZE_T numElems = string.length() / 2;
+          return UTF8::fromUTF16(U16String(reinterpret_cast<char16_t*>(
+                                            const_cast<char*>(string.data())),
+                                           numElems));
+        }
+      case 4: //UTF-32
+        {
+          SIZE_T numElems = string.length() / 4;
+          return UTF8::fromUTF32(U32String(reinterpret_cast<char32_t*>(
+                                            const_cast<char*>(string.data())),
+                                           numElems));
+        }
     }
   }
 

@@ -64,13 +64,13 @@ namespace geEngineSDK {
     output = 0;
     switch (numBytes)
     {
-    case 6: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
-    case 5: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
-    case 4: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
-    case 3: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
-    case 2: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
-    case 1: output += static_cast<uint8>(*begin); ++begin; GE_FALLTHROUGH;
-    default: break;
+      case 6: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
+      case 5: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
+      case 4: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
+      case 3: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
+      case 2: output += static_cast<uint8>(*begin); ++begin; output <<= 6; GE_FALLTHROUGH;
+      case 1: output += static_cast<uint8>(*begin); ++begin; GE_FALLTHROUGH;
+      default: break;
     }
 
     constexpr uint32 offsets[6] = { 0x00000000,
@@ -129,11 +129,16 @@ namespace geEngineSDK {
     char bytes[4];
     switch (numBytes)
     {
-    case 4: bytes[3] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
-    case 3: bytes[2] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
-    case 2: bytes[1] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
-    case 1: bytes[0] = static_cast<char>(input | headers[numBytes]); GE_FALLTHROUGH;
-    default: break;
+      case 4:
+        bytes[3] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
+      case 3:
+        bytes[2] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
+      case 2:
+        bytes[1] = static_cast<char>((input | 0x80) & 0xBF); input >>= 6; GE_FALLTHROUGH;
+      case 1:
+        bytes[0] = static_cast<char>(input | headers[numBytes]); GE_FALLTHROUGH;
+      default:
+        break;
     }
 
     output = std::copy(bytes, bytes + numBytes, output);
