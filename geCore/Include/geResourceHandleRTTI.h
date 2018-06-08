@@ -50,8 +50,7 @@ namespace geEngineSDK {
     void
     onDeserializationEnded(IReflectable* obj,
                            const UnorderedMap<String, uint64>& /*params*/) override {
-      TResourceHandleBase<false>*
-        resourceHandle = static_cast<TResourceHandleBase<false>*>(obj);
+      auto resourceHandle = static_cast<TResourceHandleBase<false>*>(obj);
 
       if (resourceHandle->m_data && !resourceHandle->m_data->m_uuid.empty()) {
         HResource loadedResource =
@@ -76,10 +75,10 @@ namespace geEngineSDK {
 
     SPtr<IReflectable>
     newRTTIObject() override {
-      SPtr<TResourceHandleBase<false>> obj = ge_shared_ptr<TResourceHandleBase<false>>
-        (new (ge_alloc<TResourceHandleBase<false>>()) TResourceHandleBase<false>());
+      auto obj = ge_shared_ptr<TResourceHandleBase<false>>
+        (ge_new<TResourceHandleBase<false>>());
       obj->m_data = ge_shared_ptr_new<ResourceHandleData>();
-      obj->m_data->m_refCount++;
+      ++obj->m_data->m_refCount;
 
       return obj;
     }
@@ -110,8 +109,7 @@ namespace geEngineSDK {
     void
     onDeserializationEnded(IReflectable* obj,
                            const UnorderedMap<String, uint64>& /*params*/) override {
-      TResourceHandleBase<true>*
-        resourceHandle = static_cast<TResourceHandleBase<true>*>(obj);
+      auto resourceHandle = static_cast<TResourceHandleBase<true>*>(obj);
 
       if (resourceHandle->m_data && !resourceHandle->m_data->m_uuid.empty()) {
         HResource loadedResource =
@@ -133,8 +131,8 @@ namespace geEngineSDK {
 
     SPtr<IReflectable>
     newRTTIObject() override {
-      SPtr<TResourceHandleBase<true>> obj = ge_shared_ptr<TResourceHandleBase<true>>
-        (new (ge_alloc<TResourceHandleBase<true>>()) TResourceHandleBase<true>());
+      auto obj = ge_shared_ptr<TResourceHandleBase<true>>
+        (ge_new<TResourceHandleBase<true>>());
       obj->m_data = ge_shared_ptr_new<ResourceHandleData>();
 
       return obj;

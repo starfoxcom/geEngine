@@ -55,9 +55,9 @@ namespace geEngineSDK {
     void
     onDeserializationEnded(IReflectable* obj,
                            const UnorderedMap<String, uint64>& /*params*/) override {
-      GameObjectHandleBase* gameObjectHandle = static_cast<GameObjectHandleBase*>(obj);
+      auto gameObjectHandle = static_cast<GameObjectHandleBase*>(obj);
 
-      uint64 originalInstanceId = any_cast<uint64>(gameObjectHandle->m_rttiData);
+      auto originalInstanceId = any_cast<uint64>(gameObjectHandle->m_rttiData);
       GameObjectManager::instance().registerUnresolvedHandle(originalInstanceId,
                                                              *gameObjectHandle);
       gameObjectHandle->m_rttiData = nullptr;
@@ -77,7 +77,7 @@ namespace geEngineSDK {
     SPtr<IReflectable>
     newRTTIObject() override {
       SPtr<GameObjectHandleBase> obj = ge_shared_ptr<GameObjectHandleBase>
-        (new (ge_alloc<GameObjectHandleBase>()) GameObjectHandleBase());
+        (ge_new<GameObjectHandleBase>());
       return obj;
     }
   };

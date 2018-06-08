@@ -75,10 +75,7 @@ namespace geEngineSDK {
 
   HSceneObject
   SceneObject::createInternal(const String& name, uint32 flags) {
-    SPtr<SceneObject> sceneObjectPtr = SPtr<SceneObject>(
-      new (ge_alloc<SceneObject>()) SceneObject(name, flags),
-      &ge_delete<SceneObject>,
-      StdAlloc<SceneObject>());
+    auto sceneObjectPtr = ge_shared_ptr<SceneObject>(ge_new<SceneObject>(name, flags));
 
     HSceneObject sceneObject = GameObjectManager::instance().registerObject(sceneObjectPtr);
     sceneObject->m_thisHandle = sceneObject;

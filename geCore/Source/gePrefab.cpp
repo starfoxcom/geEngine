@@ -56,7 +56,7 @@ namespace geEngineSDK {
 
   SPtr<Prefab>
   Prefab::createEmpty() {
-    SPtr<Prefab> newPrefab = ge_core_ptr<Prefab>(new (ge_alloc<Prefab>()) Prefab());
+    SPtr<Prefab> newPrefab = ge_core_ptr<Prefab>(ge_new<Prefab>());
     newPrefab->_setThisPtr(newPrefab);
     return newPrefab;
   }
