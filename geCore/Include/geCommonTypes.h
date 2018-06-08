@@ -314,7 +314,7 @@ namespace geEngineSDK {
    */
   enum GE_SCRIPT_EXPORT(m:Rendering) IndexType {
     IT_16BIT  GE_SCRIPT_EXPORT(n:Index16),  //16-bit indices.
-    IT_32BIT  GE_SCRIPT_EXPORT(n:Index32) //32-bit indices.
+    IT_32BIT  GE_SCRIPT_EXPORT(n:Index32)   //32-bit indices.
   };
 
   /**
