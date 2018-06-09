@@ -304,6 +304,21 @@
     <ClInclude Include="Include\geVertexDeclarationRTTI.h">
       <Filter>Source Files\RTTI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geHardwareBufferManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geVertexData.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geVertexBuffer.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geIndexBuffer.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUBuffer.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -478,6 +493,21 @@
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="Source\geVertexDeclaration.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geHardwareBufferManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geVertexData.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geVertexBuffer.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geIndexBuffer.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUBuffer.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

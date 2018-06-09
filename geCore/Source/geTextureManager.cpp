@@ -26,7 +26,7 @@
 namespace geEngineSDK {
   SPtr<Texture>
   TextureManager::createTexture(const TEXTURE_DESC& desc) {
-    auto tex = ge_new<Texture>(desc);
+    auto tex = GE_PVT_NEW(Texture, desc);
     SPtr<Texture> ret = ge_core_ptr<Texture>(tex);
 
     ret->_setThisPtr(ret);
@@ -38,7 +38,7 @@ namespace geEngineSDK {
   SPtr<Texture>
   TextureManager::createTexture(const TEXTURE_DESC& desc,
                                 const SPtr<PixelData>& pixelData) {
-    auto tex = ge_new<Texture>(desc, pixelData);
+    auto tex = GE_PVT_NEW(Texture, desc, pixelData);
     SPtr<Texture> ret = ge_core_ptr<Texture>(tex);
 
     ret->_setThisPtr(ret);
@@ -49,7 +49,7 @@ namespace geEngineSDK {
 
   SPtr<Texture>
   TextureManager::_createEmpty() {
-    auto tex = ge_new<Texture>();
+    auto tex = GE_PVT_NEW(Texture);
     SPtr<Texture> texture = ge_core_ptr<Texture>(tex);
     texture->_setThisPtr(texture);
 

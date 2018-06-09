@@ -424,10 +424,13 @@ namespace geEngineSDK {
   /***************************************************************************/
   /**                     MACRO VERSIONS
    * You will almost always want to use the template versions but in some cases
-   * (private destructor) it is not possible. In which case you may use these
-   * instead.
+   * (private constructor / destructor) it is not possible. In which case you
+   * may use these instead.
    */
   /***************************************************************************/
+#define GE_PVT_NEW(T, ...)                                                    \
+      new (ge_alloc<T, GenAlloc>()) T(##__VA_ARGS__)
+
 #define GE_PVT_DELETE(T, ptr)                                                 \
       (ptr)->~T();                                                            \
       MemoryAllocator<GenAlloc>::free(ptr);

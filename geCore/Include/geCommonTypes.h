@@ -407,23 +407,27 @@ namespace geEngineSDK {
   /**
    * @brief Types of generic GPU buffers that may be attached to GPU programs.
    */
-  enum GPUBufferType {
-    /**
-     * Buffer containing an array of primitives (e.g. float4's).
-     */
-    GBT_STANDARD,
-    /**
-     * Buffer containing an array of structures. Structure parameters can
-     * usually be easily accessed from within the GPU program.
-     */
-    GBT_STRUCTURED,
-    /**
-     * Special type of buffer allowing you to specify arguments for draw
-     * operations inside the buffer instead of providing them directly. Useful
-     * when you want to control drawing directly from GPU.
-     */
-    GBT_INDIRECTARGUMENT
-  };
+  namespace GPU_BUFFER_TYPE {
+    enum E {
+      /**
+       * Buffer containing an array of primitives (e.g. float4's).
+       */
+      kSTANDARD,
+
+      /**
+       * Buffer containing an array of structures. Structure parameters can
+       * usually be easily accessed from within the GPU program.
+       */
+      kSTRUCTURED,
+
+      /**
+       * Special type of buffer allowing you to specify arguments for draw
+       * operations inside the buffer instead of providing them directly.
+       * Useful when you want to control drawing directly from GPU.
+       */
+      kINDIRECTARGUMENT
+    };
+  }
 
   /**
    * @brief Types of valid formats used for standard GPU buffers.
@@ -614,7 +618,7 @@ namespace geEngineSDK {
   /**
    * @brief Contains data about a type used for GPU data parameters.
    */
-  struct GpuParamDataTypeInfo
+  struct GPUParamDataTypeInfo
   {
     uint32 baseTypeSize;
     uint32 size;
@@ -627,9 +631,9 @@ namespace geEngineSDK {
    * @brief Contains a lookup table for various information of all types used
    *        for data GPU parameters. Sizes are in bytes.
    */
-  struct GpuDataParamInfos
+  struct GPUDataParamInfos
   {
-    GpuDataParamInfos() {
+    GPUDataParamInfos() {
       memset(lookup, 0, sizeof(lookup));
       lookup[static_cast<uint32>(GPDT_FLOAT1)] = { 4, 4, 4, 1, 1 };
       lookup[static_cast<uint32>(GPDT_FLOAT2)] = { 4, 8, 8, 1, 2 };
@@ -652,14 +656,14 @@ namespace geEngineSDK {
       lookup[static_cast<uint32>(GPDT_BOOL)] = { 4, 4, 4, 1, 1 };
     }
 
-    GpuParamDataTypeInfo lookup[GPDT_COUNT];
+    GPUParamDataTypeInfo lookup[GPDT_COUNT];
   };
 
   /**
    * @brief Type of GPU object parameters that can be used as inputs to a GPU
    *        program.
    */
-  enum GpuParamObjectType {
+  enum GPUParamObjectType {
     //Sampler state for a 1D texture.
     GPOT_SAMPLER1D                        = 1,
     //Sampler state for a 2D texture.

@@ -144,17 +144,19 @@ namespace geEngineSDK {
       memset(&filter, 0, sizeof(filter));
       Vector<D3D11_MESSAGE_SEVERITY> severityList;
 
-      switch (exceptionsErrorLevel) {
-      case GE_D3D11_ERROR_LEVEL::kINFO:
-        severityList.push_back(D3D11_MESSAGE_SEVERITY_INFO);
-      case GE_D3D11_ERROR_LEVEL::kWARNING:
-        severityList.push_back(D3D11_MESSAGE_SEVERITY_WARNING);
-      case GE_D3D11_ERROR_LEVEL::kERROR:
-        severityList.push_back(D3D11_MESSAGE_SEVERITY_ERROR);
-      case GE_D3D11_ERROR_LEVEL::kCORRUPTION:
-        severityList.push_back(D3D11_MESSAGE_SEVERITY_CORRUPTION);
-      case GE_D3D11_ERROR_LEVEL::kNO_EXCEPTION:
-      default: break;
+      switch (exceptionsErrorLevel)
+      {
+        case GE_D3D11_ERROR_LEVEL::kINFO:
+          severityList.push_back(D3D11_MESSAGE_SEVERITY_INFO);
+        case GE_D3D11_ERROR_LEVEL::kWARNING:
+          severityList.push_back(D3D11_MESSAGE_SEVERITY_WARNING);
+        case GE_D3D11_ERROR_LEVEL::kERROR:
+          severityList.push_back(D3D11_MESSAGE_SEVERITY_ERROR);
+        case GE_D3D11_ERROR_LEVEL::kCORRUPTION:
+          severityList.push_back(D3D11_MESSAGE_SEVERITY_CORRUPTION);
+        case GE_D3D11_ERROR_LEVEL::kNO_EXCEPTION:
+        default:
+          break;
       }
 
       if (!severityList.empty()) {

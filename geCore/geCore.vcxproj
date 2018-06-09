@@ -42,11 +42,14 @@
     <ClInclude Include="Include\geGameObjectHandleRTTI.h" />
     <ClInclude Include="Include\geGameObjectManager.h" />
     <ClInclude Include="Include\geGameObjectRTTI.h" />
+    <ClInclude Include="Include\geGPUBuffer.h" />
     <ClInclude Include="Include\geGPUParam.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHardwareBuffer.h" />
+    <ClInclude Include="Include\geHardwareBufferManager.h" />
     <ClInclude Include="Include\geHString.h" />
+    <ClInclude Include="Include\geIndexBuffer.h" />
     <ClInclude Include="Include\geInputFwd.h" />
     <ClInclude Include="Include\geIResourceListener.h" />
     <ClInclude Include="Include\geOcclusionQuery.h" />
@@ -97,6 +100,8 @@
     <ClInclude Include="Include\geTextureView.h" />
     <ClInclude Include="Include\geTimerQuery.h" />
     <ClInclude Include="Include\geUtility.h" />
+    <ClInclude Include="Include\geVertexBuffer.h" />
+    <ClInclude Include="Include\geVertexData.h" />
     <ClInclude Include="Include\geVertexDeclaration.h" />
     <ClInclude Include="Include\geVertexDeclarationRTTI.h" />
     <ClInclude Include="Include\geVideoModeInfo.h" />
@@ -123,9 +128,12 @@
     <ClCompile Include="Source\geGameObject.cpp" />
     <ClCompile Include="Source\geGameObjectHandle.cpp" />
     <ClCompile Include="Source\geGameObjectManager.cpp" />
+    <ClCompile Include="Source\geGPUBuffer.cpp" />
     <ClCompile Include="Source\geGPUParam.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
+    <ClCompile Include="Source\geHardwareBufferManager.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
+    <ClCompile Include="Source\geIndexBuffer.cpp" />
     <ClCompile Include="Source\geIResourceListener.cpp" />
     <ClCompile Include="Source\geOcclusionQuery.cpp" />
     <ClCompile Include="Source\gePixelData.cpp" />
@@ -159,6 +167,8 @@
     <ClCompile Include="Source\geTextureView.cpp" />
     <ClCompile Include="Source\geTimerQuery.cpp" />
     <ClCompile Include="Source\geUtility.cpp" />
+    <ClCompile Include="Source\geVertexBuffer.cpp" />
+    <ClCompile Include="Source\geVertexData.cpp" />
     <ClCompile Include="Source\geVertexDeclaration.cpp" />
     <ClCompile Include="Source\geVideoModeInfo.cpp" />
     <ClCompile Include="Source\geViewport.cpp" />

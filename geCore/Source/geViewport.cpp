@@ -147,11 +147,11 @@ namespace geEngineSDK {
       targetCore = m_target->getCore();
     }
 
-    auto viewport = ge_new<geCoreThread::Viewport>(targetCore,
-                                                   m_normArea.m_min.x,
-                                                   m_normArea.m_min.y,
-                                                   m_normArea.m_max.x,
-                                                   m_normArea.m_max.y);
+    auto viewport = GE_PVT_NEW(geCoreThread::Viewport, targetCore,
+                                                       m_normArea.m_min.x,
+                                                       m_normArea.m_min.y,
+                                                       m_normArea.m_max.x,
+                                                       m_normArea.m_max.y);
 
     SPtr<geCoreThread::Viewport>
       viewportPtr = ge_shared_ptr<geCoreThread::Viewport>(viewport);
@@ -205,7 +205,7 @@ namespace geEngineSDK {
                    float y,
                    float width,
                    float height) {
-    auto viewport = ge_new<Viewport>(target, x, y, width, height);
+    auto viewport = GE_PVT_NEW(Viewport, target, x, y, width, height);
     SPtr<Viewport> viewportPtr = ge_core_ptr<Viewport>(viewport);
     viewportPtr->_setThisPtr(viewportPtr);
     viewportPtr->initialize();
@@ -215,7 +215,7 @@ namespace geEngineSDK {
 
   SPtr<Viewport>
   Viewport::createEmpty() {
-    auto viewport = ge_new<Viewport>();
+    auto viewport = GE_PVT_NEW(Viewport);
     SPtr<Viewport> viewportPtr = ge_core_ptr<Viewport>(viewport);
     viewportPtr->_setThisPtr(viewportPtr);
     return viewportPtr;
@@ -247,7 +247,7 @@ namespace geEngineSDK {
                      float y,
                      float width,
                      float height) {
-      auto viewport = ge_new<Viewport>(target, x, y, width, height);
+      auto viewport = GE_PVT_NEW(Viewport, target, x, y, width, height);
       SPtr<Viewport> viewportPtr = ge_shared_ptr<Viewport>(viewport);
       viewportPtr->_setThisPtr(viewportPtr);
       viewportPtr->initialize();

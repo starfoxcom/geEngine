@@ -75,7 +75,7 @@ namespace geEngineSDK {
 
   HSceneObject
   SceneObject::createInternal(const String& name, uint32 flags) {
-    auto sceneObjectPtr = ge_shared_ptr<SceneObject>(ge_new<SceneObject>(name, flags));
+    auto sceneObjectPtr = ge_shared_ptr<SceneObject>(GE_PVT_NEW(SceneObject, name, flags));
 
     HSceneObject sceneObject = GameObjectManager::instance().registerObject(sceneObjectPtr);
     sceneObject->m_thisHandle = sceneObject;
@@ -774,7 +774,8 @@ namespace geEngineSDK {
     if (m_mobility != mobility) {
       m_mobility = mobility;
 
-      //If mobility changed to movable, update both the mobility flag and transform, otherwise just mobility
+      //If mobility changed to movable, update both the mobility flag and
+      //transform, otherwise just mobility
       if (ObjectMobility::Movable == m_mobility) {
         notifyTransformChanged(static_cast<TransformChangedFlags>(
                                                        TransformChangedFlags::kTransform |

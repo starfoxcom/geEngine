@@ -22,6 +22,9 @@
 #include "geViewport.h"
 #include "geRenderTarget.h"
 #include "geRenderWindow.h"
+#include "geVertexBuffer.h"
+#include "geIndexBuffer.h"
+
 /*
 #include "geMesh.h"
 #include "geGPUParams.h"
@@ -66,7 +69,6 @@ namespace geEngineSDK {
   }
   */
 
-  /*
   void
   RenderAPI::setVertexBuffers(uint32 index,
                               const Vector<SPtr<VertexBuffer>>& buffers) {
@@ -92,9 +94,7 @@ namespace geEngineSDK {
                                      index,
                                      coreBuffers));
   }
-  */
 
-  /*
   void
   RenderAPI::setIndexBuffer(const SPtr<IndexBuffer>& buffer) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setIndexBuffer,
@@ -102,9 +102,7 @@ namespace geEngineSDK {
                                      buffer->getCore(),
                                      nullptr));
   }
-  */
 
-  /*
   void
   RenderAPI::setVertexDeclaration(const SPtr<VertexDeclaration>& vertexDeclaration) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setVertexDeclaration,
@@ -112,7 +110,6 @@ namespace geEngineSDK {
                                      vertexDeclaration->getCore(),
                                      nullptr));
   }
-  */
 
   void
   RenderAPI::setViewport(const Box2D& vp) {
@@ -328,24 +325,24 @@ namespace geEngineSDK {
       uint32 primCount = 0;
       switch (type)
       {
-      case DOT_POINT_LIST:
-        primCount = elementCount;
-        break;
-      case DOT_LINE_LIST:
-        primCount = elementCount >> 1;
-        break;
-      case DOT_LINE_STRIP:
-        primCount = elementCount - 1;
-        break;
-      case DOT_TRIANGLE_LIST:
-        primCount = elementCount / 3;
-        break;
-      case DOT_TRIANGLE_STRIP:
-        primCount = elementCount - 2;
-        break;
-      case DOT_TRIANGLE_FAN:
-        primCount = elementCount - 2;
-        break;
+        case DOT_POINT_LIST:
+          primCount = elementCount;
+          break;
+        case DOT_LINE_LIST:
+          primCount = elementCount >> 1;
+          break;
+        case DOT_LINE_STRIP:
+          primCount = elementCount - 1;
+          break;
+        case DOT_TRIANGLE_LIST:
+          primCount = elementCount / 3;
+          break;
+        case DOT_TRIANGLE_STRIP:
+          primCount = elementCount - 2;
+          break;
+        case DOT_TRIANGLE_FAN:
+          primCount = elementCount - 2;
+          break;
       }
 
       return primCount;

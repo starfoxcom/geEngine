@@ -43,7 +43,7 @@ namespace geEngineSDK {
 
   SPtr<DropTarget>
   DropTarget::create(const RenderWindow* window, const Box2DI& area) {
-    auto target = ge_new<DropTarget>(window, area);
+    auto target = GE_PVT_NEW(DropTarget, window, area);
     return ge_shared_ptr(target);
   }
 }

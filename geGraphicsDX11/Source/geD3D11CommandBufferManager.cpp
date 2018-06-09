@@ -26,10 +26,10 @@ namespace geEngineSDK {
                                               uint32 deviceIdx,
                                               uint32 queueIdx,
                                               bool secondary) {
-      CommandBuffer* buffer = ge_new<D3D11CommandBuffer>(type,
-                                                         deviceIdx,
-                                                         queueIdx,
-                                                         secondary);
+      CommandBuffer* buffer = GE_PVT_NEW(D3D11CommandBuffer, type,
+                                                             deviceIdx,
+                                                             queueIdx,
+                                                             secondary);
       return ge_shared_ptr(buffer);
     }
   }

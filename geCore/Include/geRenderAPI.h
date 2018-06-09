@@ -77,28 +77,22 @@ namespace geEngineSDK {
      * @see geCoreThread::RenderAPI::setVertexBuffers()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setVertexBuffers(uint32 index, const Vector<SPtr<VertexBuffer>>& buffers);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setIndexBuffer()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setIndexBuffer(const SPtr<IndexBuffer>& buffer);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setVertexDeclaration()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setVertexDeclaration(const SPtr<VertexDeclaration>& vertexDeclaration);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setViewport()

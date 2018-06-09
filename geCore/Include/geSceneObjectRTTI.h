@@ -351,8 +351,9 @@ namespace geEngineSDK {
 
     SPtr<IReflectable>
     newRTTIObject() override {
-      auto sceneObject = ge_shared_ptr(ge_new<SceneObject>("",
-                                         SCENE_OBJECT_FLAGS::kDontInstantiate));
+      auto sceneObject = ge_shared_ptr(GE_PVT_NEW(SceneObject,
+                                                  "",
+                                                  SCENE_OBJECT_FLAGS::kDontInstantiate));
       sceneObject->m_rttiData = sceneObject;
       return sceneObject;
     }
