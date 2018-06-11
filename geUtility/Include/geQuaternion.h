@@ -41,7 +41,7 @@
 
 namespace geEngineSDK {
 
-  MS_ALIGN(16) class Quaternion
+  class Quaternion
   {
    public:
     /**
@@ -67,12 +67,6 @@ namespace geEngineSDK {
     FORCEINLINE Quaternion(float InX, float InY, float InZ, float InW);
 
     /**
-     * @brief Copy constructor.
-     * @param Q A Quaternion object to use to create new quaternion from.
-     */
-    FORCEINLINE Quaternion(const Quaternion& Q);
-
-    /**
      * @brief Creates and initializes a new quaternion from the given matrix.
      * @param M The rotation matrix to initialize from.
      */
@@ -93,13 +87,6 @@ namespace geEngineSDK {
     Quaternion(const Vector3& Axis, float AngleRad);
 
    public:
-    /**
-     * @brief Copy another Quaternion into this one
-     * @return reference to this Quaternion
-     */
-    FORCEINLINE Quaternion&
-    operator=(const Quaternion& Other);
-
     /**
      * @brief Gets the result of adding a Quaternion to this.
      *        This is a component-wise addition; composing quaternions should
@@ -443,6 +430,25 @@ namespace geEngineSDK {
     bool
     containsNaN() const;
 
+    /**
+    * @brief Orients the quaternion so its negative z axis points to the
+    *        provided direction.
+    * @param[in] forwardDir  Direction to orient towards.
+    */
+    GE_UTILITY_EXPORT void
+    lookRotation(const Vector3& forwardDir);
+
+    /**
+    * @brief Orients the quaternion so its negative z axis points to the
+    *        provided direction.
+    * @param[in] forwardDir  Direction to orient towards.
+    * @param[in] upDir       Constrains y axis orientation to a plane this
+    *            vector lies on. This rule might be broken if forward and up
+    *            direction are nearly parallel.
+    */
+    GE_UTILITY_EXPORT void
+    lookRotation(const Vector3& forwardDir, const Vector3& upDir);
+
     static FORCEINLINE void
     vectorQuaternionMultiply(Quaternion& Result,
                              const Quaternion& Q1,
@@ -638,7 +644,7 @@ namespace geEngineSDK {
      * @brief The quaternion's W-component.
      */
     float w;
-  } GCC_ALIGN(16);
+  };
 
   /***************************************************************************/
   /**
@@ -661,31 +667,15 @@ namespace geEngineSDK {
     diagnosticCheckNaN();
   }
 
-  FORCEINLINE Quaternion::Quaternion(const Quaternion& Q)
-    : x(Q.x),
-      y(Q.y),
-      z(Q.z),
-      w(Q.w)
-  {}
-
-  FORCEINLINE Quaternion&
-  Quaternion::operator=(const Quaternion& Other) {
-    this->x = Other.x;
-    this->y = Other.y;
-    this->z = Other.z;
-    this->w = Other.w;
-    return *this;
-  }
-
   FORCEINLINE Quaternion::Quaternion(const Vector3& Axis, float AngleRad) {
     const float half_a = 0.5f * AngleRad;
     float s, c;
     Math::sin_cos(&s, &c, half_a);
 
-    this->x = s * Axis.x;
-    this->y = s * Axis.y;
-    this->z = s * Axis.z;
-    this->w = c;
+    x = s * Axis.x;
+    y = s * Axis.y;
+    z = s * Axis.z;
+    w = c;
 
     diagnosticCheckNaN();
   }
@@ -697,10 +687,10 @@ namespace geEngineSDK {
 
   FORCEINLINE Quaternion
   Quaternion::operator+=(const Quaternion& Q) {
-    this->x += Q.x;
-    this->y += Q.y;
-    this->z += Q.z;
-    this->w += Q.w;
+    x += Q.x;
+    y += Q.y;
+    z += Q.z;
+    w += Q.w;
 
     diagnosticCheckNaN();
     return *this;
@@ -729,10 +719,10 @@ namespace geEngineSDK {
 
   Quaternion
   Quaternion::operator-=(const Quaternion& Q) {
-    this->x -= Q.x;
-    this->y -= Q.y;
-    this->z -= Q.z;
-    this->w -= Q.w;
+    x -= Q.x;
+    y -= Q.y;
+    z -= Q.z;
+    w -= Q.w;
 
     diagnosticCheckNaN();
 
@@ -853,7 +843,7 @@ namespace geEngineSDK {
 
   FORCEINLINE Vector3
   Quaternion::getRotationAxis() const {
-    // Ensure we never try to sqrt a neg number
+    //Ensure we never try to sqrt a neg number
     const float S = Math::sqrt(Math::max(1.f - (w * w), 0.f));
 
     if (0.0001f <= S) {

@@ -30,9 +30,6 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT DynLibManager : public Module<DynLibManager>
   {
    public:
-    DynLibManager() = default;
-    virtual ~DynLibManager();
-
     /**
      * @brief Loads the given file as a dynamic library.
      * @param[in] name  The name of the library. The extension can be omitted.
@@ -47,7 +44,7 @@ namespace geEngineSDK {
     unload(DynLib* lib);
 
    protected:
-    Set<NPtr<DynLib>, std::less<>> m_loadedLibraries;
+    Set<UPtr<DynLib>, std::less<>> m_loadedLibraries;
   };
 
   /** Easy way of accessing DynLibManager. */

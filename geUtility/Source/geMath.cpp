@@ -30,7 +30,6 @@
 # include <intrin.h>
 #endif
 
-
 namespace geEngineSDK {
   /*!< PI constant */
   const float Math::PI = static_cast<float>(4.0f * std::atan(1.0f));
@@ -47,29 +46,6 @@ namespace geEngineSDK {
   /*!< Euler number or Napier constant (1+1/N)^N */
   const float Math::EULERS_NUMBER = (2.71828182845904523536f);
 
-  /*!< Numeric limits constants */
-  const uint8  Math::MIN_UINT8  = std::numeric_limits<uint8 >::min();
-  const uint16 Math::MIN_UINT16 = std::numeric_limits<uint16>::min();
-  const uint32 Math::MIN_UINT32 = std::numeric_limits<uint32>::min();
-  const int8   Math::MIN_INT8   = std::numeric_limits<int8  >::min();
-  const int16  Math::MIN_INT16  = std::numeric_limits<int16 >::min();
-  const int32  Math::MIN_INT32  = std::numeric_limits<int32 >::min();
-  const float	 Math::MIN_FLOAT  = std::numeric_limits<float >::min();
-
-  const uint8  Math::MAX_UINT8  = std::numeric_limits<uint8 >::max();
-  const uint16 Math::MAX_UINT16 = std::numeric_limits<uint16>::max();
-  const uint32 Math::MAX_UINT32 = std::numeric_limits<uint32>::max();
-  const int8   Math::MAX_INT8   = std::numeric_limits<int8  >::max();
-  const int16  Math::MAX_INT16  = std::numeric_limits<int16 >::max();
-  const int32  Math::MAX_INT32  = std::numeric_limits<int32 >::max();
-  const float	 Math::MAX_FLOAT  = std::numeric_limits<float >::max();
-
-  /*!< Positive limit of a float */
-  const float Math::POS_INFINITY =  std::numeric_limits<float>::infinity();
-
-  /*!< Negative limit of a float */
-  const float Math::NEG_INFINITY = -std::numeric_limits<float>::infinity();
-
   const float Math::SMALL_NUMBER        = (1.e-6f);
   const float Math::KINDA_SMALL_NUMBER  = (1.e-4f);
   const float Math::BIG_NUMBER          = (3.4e+38f);
@@ -79,8 +55,6 @@ namespace geEngineSDK {
   const float Math::LOG2 = static_cast<float>(std::log(2.0f));
 
   const float  Math::DELTA = (0.00001f);
-  const float  Math::FLOAT_EPSILON  = std::numeric_limits<float >::epsilon();
-  const double Math::DOUBLE_EPSILON = std::numeric_limits<double>::epsilon();
 
   const float Math::FLOAT_NORMAL_THRESH = (0.0001f);
 

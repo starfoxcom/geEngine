@@ -79,7 +79,7 @@ namespace geEngineSDK {
         continue;
       }
 
-      volume.outerFaces.push_back(TetrahedronFace());
+      volume.outerFaces.emplace_back();
       TetrahedronFace& face = volume.outerFaces.back();
 
       memcpy(face.vertices, &output.trifacelist[i * 3], sizeof(int32) * 3);

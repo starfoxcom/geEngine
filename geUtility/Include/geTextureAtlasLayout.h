@@ -20,6 +20,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geVector2.h"
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
   /**
@@ -46,8 +47,7 @@ namespace geEngineSDK {
       uint32 y = 0;
       uint32 width = 0;
       uint32 height = 0;
-      uint32 children[2] = { std::numeric_limits<uint32>::max(),
-                             std::numeric_limits<uint32>::max() };
+      uint32 children[2] = { NumLimit::MAX_UINT32, NumLimit::MAX_UINT32 };
       bool nodeFull = false;
     };
 
@@ -76,7 +76,7 @@ namespace geEngineSDK {
         m_maxWidth(maxWidth),
         m_maxHeight(maxHeight),
         m_pow2(pow2) {
-      m_nodes.push_back(TexAtlasNode(0, 0, maxWidth, maxHeight));
+      m_nodes.emplace_back(0, 0, maxWidth, maxHeight);
     }
 
     /**

@@ -608,30 +608,30 @@ namespace geEngineSDK {
   Rotator::getComponentForAxis(AXIS::E Axis) const {
     switch (Axis)
     {
-    case AXIS::kX:
-      return roll;
-    case AXIS::kY:
-      return pitch;
-    case AXIS::kZ:
-      return yaw;
-    default:
-      return 0.f;
+      case AXIS::kX:
+        return roll;
+      case AXIS::kY:
+        return pitch;
+      case AXIS::kZ:
+        return yaw;
     }
+
+    return 0.f;
   }
 
   FORCEINLINE void
   Rotator::setComponentForAxis(AXIS::E Axis, float Component) {
     switch (Axis)
     {
-    case AXIS::kX:
-      roll = Component;
-      break;
-    case AXIS::kY:
-      pitch = Component;
-      break;
-    case AXIS::kZ:
-      yaw = Component;
-      break;
+      case AXIS::kX:
+        roll = Component;
+        break;
+      case AXIS::kY:
+        pitch = Component;
+        break;
+      case AXIS::kZ:
+        yaw = Component;
+        break;
     }
   }
 

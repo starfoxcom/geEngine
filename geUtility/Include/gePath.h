@@ -19,6 +19,8 @@
  * Includes
  */
 /*****************************************************************************/
+#include "geNumericLimits.h"
+
 namespace geEngineSDK {
   namespace PATH_TYPE {
     enum E {
@@ -396,13 +398,13 @@ namespace geEngineSDK {
       if (idx < numChars) {
         if ('\\' == pathStr[idx] || '/' == pathStr[idx]) {
           m_isAbsolute = true;
-          idx++;
+          ++idx;
         }
       }
 
       if (idx < numChars) { //Path starts with a node, a drive letter or is relative
         if (m_isAbsolute && ('\\' == pathStr[idx] || '/' ==pathStr[idx])) {//Node
-          idx++;
+          ++idx;
           tempStream.str(BasicString<T>());
           tempStream.clear();
 
@@ -413,12 +415,12 @@ namespace geEngineSDK {
           setNode(tempStream.str());
 
           if (idx < numChars) {
-            idx++;
+            ++idx;
           }
         }
         else {  //A drive letter or not absolute
           T drive = pathStr[idx];
-          idx++;
+          ++idx;
 
           if (idx < numChars && ':' == pathStr[idx]) {
             if (m_isAbsolute 
@@ -431,16 +433,16 @@ namespace geEngineSDK {
             m_isAbsolute = true;
             setDevice(String(1, drive));
 
-            idx++;
+            ++idx;
             if (idx >= numChars || ('\\' != pathStr[idx] && '/' != pathStr[idx])) {
               //The path does not end with a trailing slash
               throwInvalidPathException(BasicString<T>(pathStr, numChars));
             }
 
-            idx++;
+            ++idx;
           }
           else {
-            idx--;
+            --idx;
           }
         }
 
@@ -449,7 +451,7 @@ namespace geEngineSDK {
           tempStream.clear();
           while (idx < numChars && '\\' != pathStr[idx] && '/' != pathStr[idx]) {
             tempStream << pathStr[idx];
-            idx++;
+            ++idx;
           }
 
           if (idx < numChars) {
@@ -459,7 +461,7 @@ namespace geEngineSDK {
             setFilename(tempStream.str());
           }
 
-          idx++;
+          ++idx;
         }
       }
     }
@@ -479,16 +481,16 @@ namespace geEngineSDK {
       if (idx < numChars) {
         if (pathStr[idx] == '/') {
           m_isAbsolute = true;
-          idx++;
+          ++idx;
         }
         else if (pathStr[idx] == '~') {
-          idx++;
+          ++idx;
           if (idx >= numChars || '/' == pathStr[idx]) {
             pushDirectory(String("~"));
             m_isAbsolute = true;
           }
           else {
-            idx--;
+            --idx;
           }
         }
 
@@ -498,7 +500,7 @@ namespace geEngineSDK {
 
           while (idx < numChars && '/' != pathStr[idx]) {
             tempStream << pathStr[idx];
-            idx++;
+            ++idx;
           }
 
           if (idx < numChars) {
@@ -520,7 +522,7 @@ namespace geEngineSDK {
             setFilename(tempStream.str());
           }
 
-          idx++;
+          ++idx;
         }
       }
     }
@@ -594,7 +596,7 @@ namespace geEngineSDK {
       pIntMemory = rttiWriteElement(data.m_node, pIntMemory);
       pIntMemory = rttiWriteElement(data.m_filename, pIntMemory);
       pIntMemory = rttiWriteElement(data.m_isAbsolute, pIntMemory);
-      pIntMemory = rttiWriteElement(data.m_directories, pIntMemory);
+      rttiWriteElement(data.m_directories, pIntMemory);
     }
 
     static uint32
@@ -608,7 +610,7 @@ namespace geEngineSDK {
       pIntMemory = rttiReadElement(data.m_node, pIntMemory);
       pIntMemory = rttiReadElement(data.m_filename, pIntMemory);
       pIntMemory = rttiReadElement(data.m_isAbsolute, pIntMemory);
-      pIntMemory = rttiReadElement(data.m_directories, pIntMemory);
+      rttiReadElement(data.m_directories, pIntMemory);
 
       return size;
     }
@@ -616,14 +618,15 @@ namespace geEngineSDK {
     static uint32
     getDynamicSize(const Path& data) {
       uint64 dataSize =
-        rttiGetElementSize(data.m_device) +
-        rttiGetElementSize(data.m_node) +
-        rttiGetElementSize(data.m_filename) +
-        rttiGetElementSize(data.m_isAbsolute) +
-        rttiGetElementSize(data.m_directories) + sizeof(uint32);
+        static_cast<uint64>(rttiGetElementSize(data.m_device)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_node)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_filename)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_isAbsolute)) +
+        static_cast<uint64>(rttiGetElementSize(data.m_directories)) +
+        static_cast<uint64>(sizeof(uint32));
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (NumLimit::MAX_UINT32 < dataSize) {
         __string_throwDataOverflowException();
       }
 #endif

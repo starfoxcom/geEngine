@@ -60,7 +60,7 @@ namespace geEngineSDK {
       
       static bool
       compare(T const&, ANSICHAR*) {
-        return 0;
+        return false;
       }
     };
 
@@ -213,6 +213,7 @@ namespace geEngineSDK {
         name[length] = '\0';
 
         data = StringID(name);
+        ge_free(name);
       }
 
       return size;

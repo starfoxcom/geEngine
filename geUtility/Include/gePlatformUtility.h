@@ -75,25 +75,8 @@ namespace geEngineSDK {
      * @brief Terminates the current process.
      * @param[in] force True if the process should be forcefully terminated with no cleanup.
      */
-    static void
+    [[noreturn]] static void
     terminate(bool force = false);
-
-    /**
-     * @brief Adds a string to the clipboard.
-     * @note  Thread safe.
-     */
-    static void
-    copyToClipboard(const WString& string);
-
-    /**
-     * @brief Reads a string from the clipboard and returns it. If there is no
-     *        string in the clipboard it returns an empty string.
-     * @note  Both wide and normal strings will be read, but normal strings
-     *        will be converted to a wide string before returning.
-     * @note  Thread safe.
-     */
-    static WString
-    copyFromClipboard();
 
     /**
      * @brief Converts a keyboard key-code to a Unicode character.

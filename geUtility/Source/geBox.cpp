@@ -53,8 +53,8 @@ namespace geEngineSDK {
     : m_min(0, 0, 0),
       m_max(0, 0, 0),
       m_isValid(0) {
-    for (SIZE_T i = 0; i < Points.size(); ++i) {
-      *this += Points[i];
+    for (auto& Point : Points) {
+      *this += Point;
     }
   }
 
@@ -121,8 +121,8 @@ namespace geEngineSDK {
 
     AABox NewBox(FORCE_INIT::kForceInit);
 
-    for (int32 VertexIndex = 0; VertexIndex < 8; ++VertexIndex) {
-      Vector4 ProjectedVertex = M.inverseTransformPosition(Vertices[VertexIndex]);
+    for (auto& Vertice : Vertices) {
+      Vector4 ProjectedVertex = M.inverseTransformPosition(Vertice);
       NewBox += ProjectedVertex;
     }
 
@@ -145,8 +145,8 @@ namespace geEngineSDK {
 
     AABox NewBox(FORCE_INIT::kForceInit);
 
-    for (int32 VertexIndex = 0; VertexIndex < 8; ++VertexIndex) {
-      Vector4 ProjectedVertex = ProjM.transformPosition(Vertices[VertexIndex]);
+    for (auto& Vertice : Vertices) {
+      Vector4 ProjectedVertex = ProjM.transformPosition(Vertice);
       NewBox += (static_cast<Vector3>(ProjectedVertex)) / ProjectedVertex.w;
     }
 

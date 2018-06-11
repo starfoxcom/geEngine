@@ -21,6 +21,7 @@
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
 #include "geVector3.h"
+#include "geVector4.h"
 
 namespace geEngineSDK {
   MS_ALIGN(16) class Plane : public Vector3
@@ -30,12 +31,6 @@ namespace geEngineSDK {
      * @brief Default constructor (no initialization).
      */
     FORCEINLINE Plane() = default;
-
-    /**
-     * @brief Copy Constructor.
-     * @param P Plane to copy from.
-     */
-    FORCEINLINE Plane(const Plane& P);
 
     /**
      * @brief Constructor.
@@ -284,12 +279,11 @@ namespace geEngineSDK {
       D = I = Vector3::ZERO;
       return false;
     }
-    else {
-      //Compute intersection.
-      I = (P1.w*(P2^D) + P2.w*(D^P1)) / DD;
-      D.normalize();
-      return 1;
-    }
+
+    //Compute intersection.
+    I = (P1.w*(P2^D) + P2.w*(D^P1)) / DD;
+    D.normalize();
+    return true;
   }
 
   /***************************************************************************/
@@ -328,8 +322,6 @@ namespace geEngineSDK {
    * Plane inline functions
    */
   /***************************************************************************/
-
-  FORCEINLINE Plane::Plane(const Plane& P) : Vector3(P), w(P.w) {}
 
   FORCEINLINE Plane::Plane(const Vector4& V) : Vector3(V), w(V.w) {}
 

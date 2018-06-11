@@ -83,26 +83,27 @@ namespace geEngineSDK {
 
   void
   Path::assign(const ANSICHAR* pathStr, SIZE_T numChars, PATH_TYPE::E type) {
-    switch (type) {
-    case PATH_TYPE::kWindows:
-      parseWindows(pathStr, numChars);
-      break;
-    case PATH_TYPE::kUnix:
-      parseUnix(pathStr, numChars);
-      break;
-    case PATH_TYPE::kDefault:
-    default:
+    switch (type)
+    {
+      case PATH_TYPE::kWindows:
+        parseWindows(pathStr, numChars);
+        break;
+      case PATH_TYPE::kUnix:
+        parseUnix(pathStr, numChars);
+        break;
+      case PATH_TYPE::kDefault:
+      default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-      parseWindows(pathStr, numChars);
+        parseWindows(pathStr, numChars);
 #elif GE_PLATFORM == GE_PLATFORM_OSX   || \
-      GE_PLATFORM == GE_PLATFORM_LINUX || \
-      GE_PLATFORM == GE_PLATFORM_PS4
-      //TODO: Test parsing with PS4
-      parseUnix(pathStr, numChars);
+        GE_PLATFORM == GE_PLATFORM_LINUX || \
+        GE_PLATFORM == GE_PLATFORM_PS4
+        //TODO: Test parsing with PS4
+        parseUnix(pathStr, numChars);
 #else
-      static_assert(false, "Unsupported platform for path.");
+        static_assert(false, "Unsupported platform for path.");
 #endif
-      break;
+        break;
     }
   }
 
@@ -115,23 +116,24 @@ namespace geEngineSDK {
 
   String
   Path::toString(PATH_TYPE::E type) const {
-    switch (type) {
-    case PATH_TYPE::kWindows:
-      return buildWindows();
-    case PATH_TYPE::kUnix:
-      return buildUnix();
-    case PATH_TYPE::kDefault:
-    default:
+    switch (type)
+    {
+      case PATH_TYPE::kWindows:
+        return buildWindows();
+      case PATH_TYPE::kUnix:
+        return buildUnix();
+      case PATH_TYPE::kDefault:
+      default:
 #if GE_PLATFORM == GE_PLATFORM_WIN32
-      return buildWindows();
+        return buildWindows();
 #elif GE_PLATFORM == GE_PLATFORM_OSX   || \
-      GE_PLATFORM == GE_PLATFORM_LINUX || \
-      GE_PLATFORM == GE_PLATFORM_PS4
-      return buildUnix();
+        GE_PLATFORM == GE_PLATFORM_LINUX || \
+        GE_PLATFORM == GE_PLATFORM_PS4
+        return buildUnix();
 #else
-      static_assert(false, "Unsupported platform for path.");
+        static_assert(false, "Unsupported platform for path.");
 #endif
-      break;
+        break;
     }
   }
 
@@ -168,12 +170,12 @@ namespace geEngineSDK {
     if (m_filename.empty()) {
       if (m_directories.empty()) {
         if (!m_isAbsolute) {
-          m_directories.push_back("..");
+          m_directories.emplace_back("..");
         }
       }
       else {
         if (".." == m_directories.back()) {
-          m_directories.push_back("..");
+          m_directories.emplace_back("..");
         }
         else {
           m_directories.pop_back();
@@ -219,7 +221,7 @@ namespace geEngineSDK {
     /** Sometimes a directory name can be interpreted as a file and we're okay with that.
      *  Check for that special case. */
     if (base.isFile()) {
-      if (0 < m_directories.size()) {
+      if (!m_directories.empty()) {
         m_directories.erase(m_directories.begin());
       }
       else {
@@ -412,7 +414,7 @@ namespace geEngineSDK {
     if (isFile()) {
       return m_filename;
     }
-    else if (0 < m_directories.size()) {
+    else if (!m_directories.empty()) {
       return m_directories.back();
     }
     else {

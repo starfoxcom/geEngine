@@ -74,11 +74,10 @@ namespace geEngineSDK {
 
   TaskScheduler::TaskScheduler()
     : m_taskQueue(&TaskScheduler::taskCompare),
-      m_maxActiveTasks(0),
+      m_maxActiveTasks(GE_THREAD_HARDWARE_CONCURRENCY),
       m_nextTaskId(0),
       m_shutdown(false),
       m_checkTasks(false) {
-    m_maxActiveTasks = GE_THREAD_HARDWARE_CONCURRENCY;
     m_taskSchedulerThread = ThreadPool::instance().run("TaskScheduler",
                                                        bind(&TaskScheduler::runMain, this));
   }
@@ -88,7 +87,7 @@ namespace geEngineSDK {
     {
       Lock activeTaskLock(m_readyMutex);
 
-      while (m_activeTasks.size() > 0) {
+      while (!m_activeTasks.empty()) {
         SPtr<Task> task = m_activeTasks[0];
         activeTaskLock.unlock();
 

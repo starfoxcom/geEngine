@@ -21,7 +21,7 @@
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32
   struct HINSTANCE__;
-  typedef struct HINSTANCE__* hInstance;
+  using hInstance = struct HINSTANCE__*;
 #endif
 
 #if GE_PLATFORM == GE_PLATFORM_WIN32

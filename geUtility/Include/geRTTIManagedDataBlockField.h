@@ -103,7 +103,7 @@ namespace geEngineSDK {
     uint32
     getArraySize(void* /*object*/) override {
       GE_EXCEPT(InternalErrorException, "Data block types don't support arrays.");
-      return 0;
+      //return 0; //Unreachable code
     }
 
     /**

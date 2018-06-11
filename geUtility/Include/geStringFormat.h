@@ -12,13 +12,26 @@
 /*****************************************************************************/
 #pragma once
 
+/*****************************************************************************/
+/**
+ * Includes
+ */
+/*****************************************************************************/
+#include "geNumericLimits.h"
+
 namespace geEngineSDK {
-  /***************************************************************************/
+  using std::forward;
+  using std::basic_string;
+  using std::string;
+  using std::wstring;
+  using std::to_string;
+  using std::to_wstring;
+  using std::is_same;
+
   /**
    * @class StringFormat
    * @brief Helper class used for string formatting operations
    */
-  /***************************************************************************/
   class StringFormat
   {
    private:
@@ -68,7 +81,7 @@ namespace geEngineSDK {
       //Create an array to store the parameters and fill it with the parameters sent
       ParamData<T> parameters[MAX_PARAMS];
       memset(parameters, 0, sizeof(parameters));
-      getParams(parameters, 0U, std::forward<Args>(args)...);
+      getParams(parameters, 0U, forward<Args>(args)...);
 
       //Brackets characters plus NULL terminator
       T bracketChars[MAX_IDENTIFIER_SIZE + 1];
@@ -88,7 +101,7 @@ namespace geEngineSDK {
           //TODO: Test -1 this with PS4 or change for MAX_UINT32
           paramRanges[paramRangeWriteIdx++] = FormatParamRange(charWriteIdx,
                                                                1,
-                                                               static_cast<uint32>(-1));
+                                                               NumLimit::MAX_UINT32);
           continue;
         }
 
@@ -98,7 +111,7 @@ namespace geEngineSDK {
             lastBracket = static_cast<int32>(i);
           }
           else {
-            charWriteIdx++;
+            ++charWriteIdx;
           }
         }
         else {
@@ -127,7 +140,7 @@ namespace geEngineSDK {
             if (!processedBracket) {
               //Last bracket wasn't really a parameter
               for (uint32 j = static_cast<uint32>(lastBracket); j <= i; ++j) {
-                charWriteIdx++;
+                ++charWriteIdx;
               }
             }
 
@@ -154,7 +167,7 @@ namespace geEngineSDK {
         copySourceIdx += copySize + rangeInfo.m_identifierSize;
         copyDestIdx += copySize;
 
-        if (static_cast<uint32>(-1) == rangeInfo.m_paramIdx) {
+        if (NumLimit::MAX_UINT32 == rangeInfo.m_paramIdx) {
           continue;
         }
 
@@ -173,9 +186,9 @@ namespace geEngineSDK {
       ge_free(outputBuffer);
 
       //Free the memory of all the parameters buffers
-      for (uint32 i = 0; i < MAX_PARAMS; ++i) {
-        if (nullptr != parameters[i].m_buffer) {
-          ge_free(parameters[i].m_buffer);
+      for (auto& param : parameters) {
+        if (nullptr != param.m_buffer) {
+          ge_free(param.m_buffer);
         }
       }
 
@@ -221,115 +234,115 @@ namespace geEngineSDK {
      * @brief Helper method for converting any data type to a narrow string.
      */
     template<class T>
-    static std::string
+    static string
     toString(const T& param) {
-      return std::to_string(param);
+      return to_string(param);
     }
 
     /**
      * @brief Helper method that "converts" a narrow string to a narrow string
      *        (simply a pass through).
      */
-    static std::string
-    toString(const std::string& param) {
+    static string
+    toString(const string& param) {
       return param;
     }
 
     /**
      * @brief Helper method that converts a geEngine narrow string to a narrow string.
      */
-    static std::string
+    static string
     toString(const String& param) {
-      return std::string(param.c_str());
+      return string(param.c_str());
     }
 
     /**
      * @brief Helper method that converts a narrow character array to a narrow string.
      */
     template<class T>
-    static std::string
+    static string
     toString(T* param) {
-      static_assert(!std::is_same<T, T>::value, "Invalid pointer type.");
+      static_assert(!is_same<T, T>::value, "Invalid pointer type.");
       return "";
     }
 
     /**
      * @brief Helper method that converts a narrow character array to a narrow string.
      */
-    static std::string
+    static string
     toString(const char* param) {
       if (nullptr == param) {
-        return std::string();
+        return string();
       }
-      return std::string(param);
+      return string(param);
     }
 
     /**
      * @brief Helper method that converts a narrow character array to a narrow string.
      */
-    static std::string
+    static string
     toString(char* param) {
       if (nullptr == param) {
-        return std::string();
+        return string();
       }
-      return std::string(param);
+      return string(param);
     }
 
     /**
      * @brief Helper method for converting any data type to a wide string.
      */
     template<class T>
-    static std::wstring
+    static wstring
     toWString(const T& param) {
-      return std::to_wstring(param);
+      return to_wstring(param);
     }
 
     /**
      * @brief Helper method that "converts" a wide string to a wide string
      *        (simply a pass through).
      */
-    static std::wstring
-    toWString(const std::wstring& param) {
+    static wstring
+    toWString(const wstring& param) {
       return param;
     }
 
     /**
      * @brief Helper method that converts a geEngine wide string to a wide string.
      */
-    static std::wstring
+    static wstring
     toWString(const WString& param) {
-      return std::wstring(param.c_str());
+      return wstring(param.c_str());
     }
 
     /**
      * @brief Helper method that converts a wide character array to a wide string.
      */
     template<class T>
-    static std::wstring toWString(T* param) {
-      static_assert(!std::is_same<T, T>::value, "Invalid pointer type.");
+    static wstring toWString(T* param) {
+      static_assert(!is_same<T, T>::value, "Invalid pointer type.");
       return L"";
     }
 
     /**
      * @brief Helper method that converts a wide character array to a wide string.
      */
-    static std::wstring
+    static wstring
     toWString(const wchar_t* param) {
       if (nullptr == param) {
-        return std::wstring();
+        return wstring();
       }
-      return std::wstring(param);
+      return wstring(param);
     }
 
     /**
      * @brief Helper method that converts a wide character array to a wide string.
      */
-    static std::wstring
+    static wstring
     toWString(wchar_t* param) {
       if (nullptr == param) {
-        return std::wstring();
+        return wstring();
       }
-      return std::wstring(param);
+      return wstring(param);
     }
 
     /**
@@ -343,12 +356,12 @@ namespace geEngineSDK {
         return;
       }
 
-      std::basic_string<ANSICHAR> sourceParam = toString(param);
+      basic_string<ANSICHAR> sourceParam = toString(param);
       parameters[idx].m_buffer = reinterpret_cast<ANSICHAR*>(ge_alloc(sourceParam.size()
                                                                     * sizeof(ANSICHAR)));
       parameters[idx].m_size = sourceParam.size();
       sourceParam.copy(parameters[idx].m_buffer, parameters[idx].m_size, 0);
-      getParams(parameters, idx + 1, std::forward<Args>(args)...);
+      getParams(parameters, idx + 1, forward<Args>(args)...);
     }
 
     /**
@@ -362,12 +375,12 @@ namespace geEngineSDK {
         return;
       }
 
-      std::basic_string<UNICHAR> sourceParam = toWString(param);
+      basic_string<UNICHAR> sourceParam = toWString(param);
       parameters[idx].m_buffer = reinterpret_cast<UNICHAR*>(ge_alloc(sourceParam.size()
                                                                    * sizeof(UNICHAR)));
       parameters[idx].m_size = sourceParam.size();
       sourceParam.copy(parameters[idx].m_buffer, parameters[idx].m_size, 0);
-      getParams(parameters, idx + 1, std::forward<Args>(args)...);
+      getParams(parameters, idx + 1, forward<Args>(args)...);
     }
 
     /**

@@ -91,8 +91,8 @@ namespace geEngineSDK {
     int64	m_upper;  //The upper 64 bits of the 128 bit integer.
   }GCC_ALIGN(16);
 	
-  typedef QWord int128;   //Signed 128 bit integer.
-  typedef QWord uint128;  //Unsigned 128 bit integer.
+  using int128 = QWord;   //Signed 128 bit integer.
+  using uint128 = QWord;  //Unsigned 128 bit integer.
 
   /***************************************************************************/
   /**
@@ -100,24 +100,24 @@ namespace geEngineSDK {
    */
   /***************************************************************************/
 #if GE_COMPILER == GE_COMPILER_MSVC || GE_PLATFORM == GE_PLATFORM_PS4
-  typedef wchar_t         WCHAR;    //Wide Character (used by Visual Studio)
+  using WCHAR = wchar_t;            //Wide Character (used by Visual Studio)
 #else
-  typedef unsigned short  WCHAR;    //Wide Character (Any other compiler)
+  using WCHAR = unsigned short;    //Wide Character (Any other compiler)
 #endif
-  typedef char            ANSICHAR; //ANSI character type
-  typedef WCHAR           UNICHAR;  //UNICODE character type
+  using ANSICHAR = char; //ANSI character type
+  using UNICHAR = WCHAR;  //UNICODE character type
 
   /***************************************************************************/
   /**
    * NULL data type
    */
   /***************************************************************************/
-  typedef int32           TYPE_OF_NULL;
+  using TYPE_OF_NULL = int32;
 
   /***************************************************************************/
   /**
    * SIZE_T is an architecture dependant data type
    */
   /***************************************************************************/
-  typedef size_t SIZE_T;
+  using SIZE_T = size_t;
 }

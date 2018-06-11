@@ -30,17 +30,9 @@ namespace geEngineSDK {
 
     Flags() = default;
 
-    Flags(Enum value) {
-      m_bits = static_cast<Storage>(value);
-    }
-
-    Flags(const Flags<Enum, Storage>& value) {
-      m_bits = value.m_bits;
-    }
-
-    explicit Flags(Storage bits) {
-      m_bits = bits;
-    }
+    Flags(Enum value) : m_bits(static_cast<Storage>(value)) {}
+    Flags(const Flags<Enum, Storage>& value) : m_bits(value.m_bits) {}
+    explicit Flags(Storage bits) : m_bits(bits) {}
 
     /**
      * @brief Checks whether all of the provided bits are set
@@ -274,7 +266,7 @@ namespace geEngineSDK {
      * @copydoc RTTIPlainType::getDynamicSize
      */
     static uint32
-    getDynamicSize(const Flags<Enum, Storage>& data) {
+    getDynamicSize(const Flags<Enum, Storage>& /*data*/) {
       GE_ASSERT(false); //This should never be called, but just in case
       return static_cast<uint32>(sizeof(Flags<Enum, Storage>));
     }

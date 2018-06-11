@@ -136,7 +136,7 @@ namespace geEngineSDK {
 
   uint32
   SerializedObject::getRootTypeId() const {
-    if (subObjects.size() > 0) {
+    if (!subObjects.empty()) {
       return subObjects[0].typeId;
     }
 

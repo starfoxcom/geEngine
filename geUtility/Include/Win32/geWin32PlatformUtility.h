@@ -33,6 +33,9 @@ namespace geEngineSDK {
      *        on the bitmap handle when finished.
      */
     static HBITMAP
-    createBitmap(const Color* pixels, uint32 width, uint32 height, bool premultiplyAlpha);
+    createBitmap(const LinearColor* pixels,
+                 uint32 width,
+                 uint32 height,
+                 bool premultiplyAlpha);
   };
 }
