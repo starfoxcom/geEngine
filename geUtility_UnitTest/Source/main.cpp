@@ -7,6 +7,7 @@
 
 #include <gePrerequisitesUtil.h>
 #include <geMath.h>
+#include <geNumericLimits.h>
 #include <geFileSystem.h>
 #include <geDataStream.h>
 #include <geFloat10.h>
@@ -45,7 +46,8 @@ TEST(geUtility, Basic_Type_Size) {
   EXPECT_EQ(sizeof(float ), 4);
   EXPECT_EQ(sizeof(double), 8);
 
-  EXPECT_EQ(static_cast<uint32>(-1), Math::MAX_UINT32);
+  EXPECT_EQ(static_cast<uint32>(-1), NumLimit::MAX_UINT32);
+  EXPECT_FLOAT_EQ(Math::PI, 3.141592f);
 }
 
 TEST(geUtility, String_Basic) {
@@ -81,6 +83,9 @@ TEST(geUtility, String_Path) {
 
   lastDirectory.append(testPath[testPath.getNumDirectories() - 1]);
   EXPECT_TRUE(lastDirectory.compare("BIN"));
+
+  Path tempPath = FileSystem::getTempDirectoryPath();
+  tempPath = tempPath;
 }
 
 TEST(geUtility, String_Parser) {
@@ -333,19 +338,21 @@ TEST(geUtility, Math_Intersections) {
   EXPECT_FLOAT_EQ(intersectPoint.y, 5.f);
 }
 
+/*
 TEST(geUtility, Platform_Utilities) {
   PlatformUtility::copyToClipboard(L"Esta es una prueba del portapapeles!");
   WString szClipboardContent = PlatformUtility::copyFromClipboard();
   EXPECT_STRCASEEQ(toString(szClipboardContent).c_str(),
                    "Esta es una prueba del portapapeles!");
 }
+*/
 
 TEST(geUtility, Tetrahedron_Utilities) {
   Vector<Vector3> pointList;
-  pointList.push_back(Vector3(-5.0f, 0.0f, 5.0f));
-  pointList.push_back(Vector3( 5.0f, 0.0f, 5.0f));
-  pointList.push_back(Vector3( 0.0f, 0.0f, 0.0f));
-  pointList.push_back(Vector3( 0.0f, 5.0f, 0.0f));
+  pointList.emplace_back(-5.0f, 0.0f, 5.0f);
+  pointList.emplace_back( 5.0f, 0.0f, 5.0f);
+  pointList.emplace_back( 0.0f, 0.0f, 0.0f);
+  pointList.emplace_back( 0.0f, 5.0f, 0.0f);
 
   TetrahedronVolume newVolume = Triangulation::tetrahedralize(pointList);
   EXPECT_TRUE(newVolume.tetrahedra.size() == 1);
@@ -404,17 +411,17 @@ WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
   switch (msg)
   {
-  case WM_LBUTTONDOWN:
-    break;
-  case WM_PAINT:
-    hdc = BeginPaint(hwnd, &ps);
-    EndPaint(hwnd, &ps);
-    return 0;
-  case WM_CLOSE:
-    PostQuitMessage(0);
-    break;
-  default:
-    return DefWindowProc(hwnd, msg, wParam, lParam);
+    case WM_LBUTTONDOWN:
+      break;
+    case WM_PAINT:
+      hdc = BeginPaint(hwnd, &ps);
+      EndPaint(hwnd, &ps);
+      return 0;
+    case WM_CLOSE:
+      PostQuitMessage(0);
+      break;
+    default:
+      return DefWindowProc(hwnd, msg, wParam, lParam);
   }
   return 0;
 }
@@ -437,7 +444,7 @@ TEST(geUtility, FrameAllocTest) {
   windowDesc.creationParams = nullptr;
   windowDesc.modal = true;
   windowDesc.wndProc = &WndProc;
-  windowDesc.module = GetModuleHandle(NULL);
+  windowDesc.module = GetModuleHandle(nullptr);
   
   SPtr<Win32Window> m_appWnd = ge_shared_ptr_new<Win32Window>(windowDesc);
 }
