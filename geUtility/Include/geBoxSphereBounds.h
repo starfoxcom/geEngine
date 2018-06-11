@@ -87,10 +87,10 @@ namespace geEngineSDK {
     /**
      * @brief Creates and initializes a new instance for the given sphere.
      */
-    BoxSphereBounds(const Sphere& sphere) {
-      m_origin = sphere.m_center;
-      m_boxExtent = Vector3(sphere.m_radius);
-      m_sphereRadius = sphere.m_radius;
+    BoxSphereBounds(const Sphere& sphere)
+	    : m_origin(sphere.m_center),
+        m_boxExtent(Vector3(sphere.m_radius)),
+        m_sphereRadius(sphere.m_radius) {
       diagnosticCheckNaN();
     }
 

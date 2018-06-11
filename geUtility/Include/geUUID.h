@@ -62,7 +62,7 @@ namespace geEngineSDK {
 
     constexpr bool
     operator<(const UUID& rhs) const {
-      for (uint32 i = 0; i < 4; i++) {
+      for (uint32 i = 0; i < 4; ++i) {
         if (m_data[i] < rhs.m_data[i]) {
           return true;
         }

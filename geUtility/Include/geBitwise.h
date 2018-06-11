@@ -81,7 +81,7 @@ namespace geEngineSDK {
     template<typename T>
     static bool
     isPow2(T n) {
-      Math::isPowerOfTwo(static_cast<uint32>(n));
+      return Math::isPowerOfTwo(static_cast<uint32>(n));
     }
 
     /**
@@ -177,8 +177,98 @@ namespace geEngineSDK {
      * @brief Fixed point to float.
      */
     static float
-    fixedToFloat(unsigned value, uint32 bits) {
+    fixedToFloat(uint32 value, uint32 bits) {
       return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts floating point value in range [0, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    template<uint32 bits = 8>
+    static uint32
+    unormToUint(float value) {
+      if (0.0f >= value) {
+        return 0;
+      }
+      else if (1.0f <= value) {
+        return (1 << bits) - 1;
+      }
+
+      return Math::round(value * (1 << bits));
+    }
+
+    /**
+     * @brief Converts floating point value in range [0, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    static uint32
+    unormToUint(float value, uint32 bits) {
+      if (value <= 0.0f) {
+        return 0;
+      }
+      else if (value >= 1.0f) {
+        return (1 << bits) - 1;
+      }
+
+      return static_cast<uint32>(value * (1 << bits));
+    }
+
+    /**
+     * @brief Converts floating point value in range [-1, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    template<uint32 bits = 8>
+    static uint32
+    snormToUint(float value) {
+      return unormToUint<bits>((value + 1.0f) * 0.5f);
+    }
+
+    /**
+     * @brief Converts floating point value in range [-1, 1] to an unsigned
+     *        integer of a certain number of bits. Works for any value of bits
+     *        between 0 and 31.
+     */
+    static uint32
+    snormToUint(float value, uint32 bits) {
+      return unormToUint((value + 1.0f) * 0.5f, bits);
+    }
+
+    /**
+     * @brief Converts an unsigned integer to a floating point in range [0, 1].
+     */
+    template<uint32 bits = 8>
+    static float
+    uintToUnorm(uint32 value) {
+      return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts an unsigned integer to a floating point in range [0, 1].
+     */
+    static float
+    uintToUnorm(uint32 value, uint32 bits) {
+      return static_cast<float>(value) / static_cast<float>((1 << bits) - 1);
+    }
+
+    /**
+     * @brief Converts an unsigned int to a floating point in range [-1, 1].
+     */
+    template<uint32 bits = 8>
+    static float
+    uintToSnorm(uint32 value) {
+      return uintToUnorm<bits>(value) * 2.0f - 1.0f;
+    }
+
+    /**
+     * @brief Converts an unsigned int to a floating point in range [-1, 1].
+     */
+    static float
+    uintToSnorm(uint32 value, uint32 bits) {
+      return uintToUnorm(value, bits) * 2.0f - 1.0f;
     }
 
     /**
@@ -186,27 +276,28 @@ namespace geEngineSDK {
      */
     static void
     intWrite(void *dest, const int32 n, const uint32 value) {
-      switch (n) {
-      case 1:
-        (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>(value);
-        break;
-      case 2:
-        (reinterpret_cast<uint16*>(dest))[0] = static_cast<uint16>(value);
-        break;
-      case 3:
+      switch (n)
+      {
+        case 1:
+          (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>(value);
+          break;
+        case 2:
+          (reinterpret_cast<uint16*>(dest))[0] = static_cast<uint16>(value);
+          break;
+        case 3:
 #if GE_ENDIAN == GE_ENDIAN_BIG
-        (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>((value >> 16) & 0xFF);
-        (reinterpret_cast<uint8*>(dest))[1] = static_cast<uint8>((value >> 8) & 0xFF);
-        (reinterpret_cast<uint8*>(dest))[2] = static_cast<uint8>(value & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>((value >> 16) & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[1] = static_cast<uint8>((value >> 8) & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[2] = static_cast<uint8>(value & 0xFF);
 #else
-        (reinterpret_cast<uint8*>(dest))[2] = static_cast<uint8>((value >> 16) & 0xFF);
-        (reinterpret_cast<uint8*>(dest))[1] = static_cast<uint8>((value >> 8) & 0xFF);
-        (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>(value & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[2] = static_cast<uint8>((value >> 16) & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[1] = static_cast<uint8>((value >> 8) & 0xFF);
+          (reinterpret_cast<uint8*>(dest))[0] = static_cast<uint8>(value & 0xFF);
 #endif
-        break;
-      case 4:
-        (reinterpret_cast<uint32*>(dest))[0] = static_cast<uint32>(value);
-        break;
+          break;
+        case 4:
+          (reinterpret_cast<uint32*>(dest))[0] = static_cast<uint32>(value);
+          break;
       }
     }
 
@@ -217,25 +308,26 @@ namespace geEngineSDK {
     intRead(const void *src, int n) {
       uint8* pData = nullptr;
 
-      switch (n) {
-      case 1:
-        return (reinterpret_cast<uint8*>(const_cast<void*>(src)))[0];
-      case 2:
-        return (reinterpret_cast<uint16*>(const_cast<void*>(src)))[0];
-      case 3:
+      switch (n)
+      {
+        case 1:
+          return (reinterpret_cast<uint8*>(const_cast<void*>(src)))[0];
+        case 2:
+          return (reinterpret_cast<uint16*>(const_cast<void*>(src)))[0];
+        case 3:
 #if GE_ENDIAN == GE_ENDIAN_BIG
-        pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
-        return (static_cast<uint32>(pData[0] << 16) |
-                static_cast<uint32>(pData[1] << 8) |
-                static_cast<uint32>(pData[2]));
+          pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
+          return (static_cast<uint32>(pData[0] << 16) |
+                  static_cast<uint32>(pData[1] << 8) |
+                  static_cast<uint32>(pData[2]));
 #else
-        pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
-        return (static_cast<uint32>(pData[0]) | 
-                static_cast<uint32>(pData[1] << 8) | 
-                static_cast<uint32>(pData[2] << 16));
+          pData = reinterpret_cast<uint8*>(const_cast<void*>(src));
+          return (static_cast<uint32>(pData[0]) | 
+                  static_cast<uint32>(pData[1] << 8) | 
+                  static_cast<uint32>(pData[2] << 16));
 #endif
-      case 4:
-        return (reinterpret_cast<uint32*>(const_cast<void*>(src)))[0];
+        case 4:
+          return (reinterpret_cast<uint32*>(const_cast<void*>(src)))[0];
       }
       
       return 0; //This should never happen, exception?, assert?

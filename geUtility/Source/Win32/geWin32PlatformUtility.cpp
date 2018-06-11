@@ -33,13 +33,13 @@ namespace geEngineSDK {
   GPUInfo PlatformUtility::s_gpuInfo;
 
   typedef LONG NTSTATUS, *PNTSTATUS;
-  typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+  using RtlGetVersionPtr = NTSTATUS(WINAPI*)(PRTL_OSVERSIONINFOW);
 
   RTL_OSVERSIONINFOW getRealOSVersion() {
     HMODULE handle = GetModuleHandleW(L"ntdll.dll");
     if (handle) {
-      RtlGetVersionPtr rtlGetVersionFunc = reinterpret_cast<RtlGetVersionPtr>(
-                                            GetProcAddress(handle, "RtlGetVersion"));
+      auto rtlGetVersionFunc = reinterpret_cast<RtlGetVersionPtr>(
+                                 GetProcAddress(handle, "RtlGetVersion"));
       if (nullptr != rtlGetVersionFunc) {
         RTL_OSVERSIONINFOW rovi = { 0 };
         rovi.dwOSVersionInfoSize = sizeof(rovi);
@@ -96,14 +96,14 @@ namespace geEngineSDK {
     //Get CPU clock speed
     HKEY hKey;
     LSTATUS status = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-                                  "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+                                  R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)",
                                   0,
                                   KEY_READ,
                                   &hKey);
     if (ERROR_SUCCESS == status) {
       DWORD mhz;
       DWORD bufferSize = 4;
-      RegQueryValueEx(hKey, "~MHz", NULL, NULL, reinterpret_cast<LPBYTE>(&mhz), &bufferSize);
+      RegQueryValueEx(hKey, "~MHz", nullptr, nullptr, reinterpret_cast<LPBYTE>(&mhz), &bufferSize);
       output.cpuClockSpeedMhz = static_cast<uint32>(mhz);
     }
     else {
@@ -145,51 +145,13 @@ namespace geEngineSDK {
     }
   }
 
-  void
-  PlatformUtility::copyToClipboard(const WString& string) {
-    HANDLE hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
-                               (string.size() + 1) * sizeof(WString::value_type));
-
-    WString::value_type* buffer = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
-    string.copy(buffer, string.size());
-    buffer[string.size()] = '\0';
-    GlobalUnlock(hData);
-
-    if (OpenClipboard(NULL)) {
-      EmptyClipboard();
-      SetClipboardData(CF_UNICODETEXT, hData);
-      CloseClipboard();
-    }
-
-    GlobalFree(hData);
-  }
-
-  WString
-  PlatformUtility::copyFromClipboard() {
-    if (OpenClipboard(NULL)) {
-      HANDLE hData = GetClipboardData(CF_UNICODETEXT);
-
-      if (hData != NULL) {
-        WString::value_type* buff = reinterpret_cast<WString::value_type*>(GlobalLock(hData));
-        WString string(buff);
-        GlobalUnlock(hData);
-        CloseClipboard();
-        return string;
-      }
-      
-      CloseClipboard();
-    }
-
-    return L"";
-  }
-
   WString
   PlatformUtility::keyCodeToUnicode(uint32 keyCode) {
     static HKL keyboardLayout = GetKeyboardLayout(0);
     static uint8 keyboarState[256];
 
     if (FALSE == GetKeyboardState(keyboarState)) {
-      return 0;
+      return nullptr;
     }
 
     uint32 virtualKey = MapVirtualKeyExW(keyCode, 1, keyboardLayout);
@@ -302,7 +264,7 @@ namespace geEngineSDK {
   }
 
   HBITMAP
-  Win32PlatformUtility::createBitmap(const Color* pixels,
+  Win32PlatformUtility::createBitmap(const LinearColor* pixels,
                                      uint32 width,
                                      uint32 height,
                                      bool premultiplyAlpha) {
@@ -329,15 +291,15 @@ namespace geEngineSDK {
     ReleaseDC(nullptr, hDC);
 
     //Select the bitmaps to DC
-    HBITMAP hOldBitmap = static_cast<HBITMAP>(SelectObject(hBitmapDC, hBitmap));
+    auto hOldBitmap = static_cast<HBITMAP>(SelectObject(hBitmapDC, hBitmap));
 
     //Scan each pixel of the source bitmap and create the masks
-    Color pixel;
-    DWORD* dst = (DWORD*)data;
+    LinearColor pixel;
+    auto* dst = reinterpret_cast<DWORD*>(data);
     for (uint32 y = 0; y < height; ++y) {
       for (uint32 x = 0; x < width; ++x) {
         uint32 revY = height - y - 1;
-        pixel = pixels[revY*width + x];
+        pixel = pixels[revY * width + x];
 
         if (premultiplyAlpha) {
           pixel.r *= pixel.a;
@@ -345,8 +307,8 @@ namespace geEngineSDK {
           pixel.b *= pixel.a;
         }
 
-        *dst = pixel.dwColor();
-        dst++;
+        *dst = pixel.toColor(false).dwColor();
+        ++dst;
       }
     }
 

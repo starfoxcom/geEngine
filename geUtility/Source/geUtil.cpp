@@ -34,7 +34,7 @@ namespace geEngineSDK {
     String buf;
     buf.resize(32);
     for (uint32 i = 0; i < 16; ++i) {
-      sprintf(&(buf[0]) + i * 2, "%02x", digest[i]);
+      sprintf(&(buf[0]) + i * 2, "%02x", static_cast<uint32>(digest[i]));
     }
 
     return buf;
@@ -54,7 +54,7 @@ namespace geEngineSDK {
     String buf;
     buf.resize(32);
     for (uint32 i = 0; i < 16; ++i) {
-      sprintf(&(buf[0]) + i * 2, "%02x", digest[i]);
+      sprintf(&(buf[0]) + i * 2, "%02x", static_cast<uint32>(digest[i]));
     }
 
     return buf;

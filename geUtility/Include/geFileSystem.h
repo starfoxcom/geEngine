@@ -20,6 +20,9 @@
 #include "gePrerequisitesUtil.h"
 
 namespace geEngineSDK {
+  using std::time_t;
+  using std::function;
+
   /**
    * @brief Utility class for dealing with files.
    */
@@ -135,15 +138,15 @@ namespace geEngineSDK {
      */
     static bool
     iterate(const Path& dirPath,
-            const std::function<bool(const Path&)>& fileCallback,
-            const std::function<bool(const Path&)>& dirCallback = nullptr,
+            const function<bool(const Path&)>& fileCallback,
+            const function<bool(const Path&)>& dirCallback = nullptr,
             bool recursive = true);
 
     /**
      * @brief Returns the last modified time of a file or a folder at the specified path.
      * @param[in] fullPath  Full path to a file or a folder.
      */
-    static std::time_t
+    static time_t
     getLastModifiedTime(const Path& fullPath);
 
     /**

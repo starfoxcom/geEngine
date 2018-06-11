@@ -241,6 +241,18 @@ namespace geEngineSDK {
     }
 
     /**
+     * @brief Determines the position of a value between two other values.
+     * @return 0 if @p value is less or equal than @p min,
+     *         1 if @p value is equal or greater than @p max,
+     *         and value in range (0, 1) otherwise.
+     */
+    template<typename T>
+    static FORCEINLINE float
+    invLerp(T val, T _min, T _max) {
+      return clamp01((val - _min) / max(_max-_min, 0.0001F));
+    }
+
+    /**
      * @brief Performs a cubic interpolation
      * @param  P - end points
      * @param  T - tangent directions at end points
@@ -1339,25 +1351,6 @@ namespace geEngineSDK {
 
     static const float EULERS_NUMBER;
 
-    static const uint8	MIN_UINT8;
-    static const uint16 MIN_UINT16;
-    static const uint32 MIN_UINT32;
-    static const int8	MIN_INT8;
-    static const int16	MIN_INT16;
-    static const int32	MIN_INT32;
-    static const float	MIN_FLOAT;
-
-    static const uint8	MAX_UINT8;
-    static const uint16 MAX_UINT16;
-    static const uint32 MAX_UINT32;
-    static const int8	MAX_INT8;
-    static const int16	MAX_INT16;
-    static const int32	MAX_INT32;
-    static const float	MAX_FLOAT;
-
-    static const float POS_INFINITY;
-    static const float NEG_INFINITY;
-
     static const float SMALL_NUMBER;
     static const float KINDA_SMALL_NUMBER;
     static const float BIG_NUMBER;
@@ -1367,8 +1360,6 @@ namespace geEngineSDK {
     static const float LOG2;
 
     static const float DELTA;
-    static const float FLOAT_EPSILON;
-    static const double DOUBLE_EPSILON;
 
     /**
      * Lengths of normalized vectors (These are half their maximum values

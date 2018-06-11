@@ -20,22 +20,26 @@
 #include "geDebug.h"
 
 namespace geEngineSDK {
+  using std::tuple;
+  using std::make_tuple;
+  using std::get;
+
   void
   FileSystem::copy(const Path& oldPath, const Path& newPath, bool overwriteExisting) {
-    Stack<std::tuple<Path, Path>> todo;
-    todo.push(std::make_tuple(oldPath, newPath));
+    Stack<tuple<Path, Path>> todo;
+    todo.push(make_tuple(oldPath, newPath));
 
     while (!todo.empty()) {
       auto current = todo.top();
       todo.pop();
 
-      Path sourcePath = std::get<0>(current);
+      Path sourcePath = get<0>(current);
       if (!FileSystem::exists(sourcePath)) {
         continue;
       }
 
       bool srcIsFile = FileSystem::isFile(sourcePath);
-      Path destinationPath = std::get<1>(current);
+      Path destinationPath = get<1>(current);
       bool destExists = FileSystem::exists(destinationPath);
 
       if (destExists) {
@@ -66,13 +70,13 @@ namespace geEngineSDK {
         for (auto& file : files) {
           Path fileDestPath = destinationPath;
           fileDestPath.append(file.getTail());
-          todo.push(std::make_tuple(file, fileDestPath));
+          todo.push(make_tuple(file, fileDestPath));
         }
 
         for (auto& dir : directories) {
           Path dirDestPath = destinationPath;
           dirDestPath.append(dir.getTail());
-          todo.push(std::make_tuple(dir, dirDestPath));
+          todo.push(make_tuple(dir, dirDestPath));
         }
       }
     }

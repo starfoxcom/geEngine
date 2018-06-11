@@ -32,6 +32,9 @@
 #include "geMath.h"
 
 namespace geEngineSDK {
+  using std::endl;
+  using std::ios;
+
   static const char* s_MiniDumpName = "MiniDump.dmp";
 
   /**
@@ -86,7 +89,7 @@ namespace geEngineSDK {
         stackTrace[numEntries] = stackFrame.AddrPC.Offset;
       }
 
-      numEntries++;
+      ++numEntries;
 
       if (0 == stackFrame.AddrPC.Offset || 0 == stackFrame.AddrFrame.Offset) {
         break;
@@ -123,7 +126,7 @@ namespace geEngineSDK {
     StringStream outputStream;
     for (uint32 i = skip; i<numEntries; ++i) {
       if (i > skip) {
-        outputStream << std::endl;
+        outputStream << endl;
       }
 
       DWORD64 funcAddress = rawStackTrace[i];
@@ -138,7 +141,7 @@ namespace geEngineSDK {
       IMAGEHLP_LINE64	lineData;
       lineData.SizeOfStruct = sizeof(lineData);
 
-      String addressString = toString(funcAddress, 0, ' ', std::ios::hex);
+      String addressString = toString(funcAddress, 0, ' ', ios::hex);
 
       DWORD column;
       if (SymGetLineFromAddr64(hProcess, funcAddress, &column, &lineData)) {
@@ -168,22 +171,22 @@ namespace geEngineSDK {
     return outputStream.str();
   }
 
-  typedef bool(WINAPI *EnumProcessModulesType)(HANDLE hProcess,
+  using EnumProcessModulesType = bool(WINAPI*)(HANDLE hProcess,
                                                HMODULE* lphModule,
                                                DWORD cb,
                                                LPDWORD lpcbNeeded);
 
-  typedef DWORD(WINAPI *GetModuleBaseNameType)(HANDLE hProcess,
+  using GetModuleBaseNameType = DWORD(WINAPI*)(HANDLE hProcess,
                                                HMODULE hModule,
                                                LPSTR lpBaseName,
                                                DWORD nSize);
 
-  typedef DWORD(WINAPI *GetModuleFileNameExType)(HANDLE hProcess,
+  using GetModuleFileNameExType = DWORD(WINAPI*)(HANDLE hProcess,
                                                  HMODULE hModule,
                                                  LPSTR lpFilename,
                                                  DWORD nSize);
 
-  typedef bool(WINAPI *GetModuleInformationType)(HANDLE hProcess,
+  using GetModuleInformationType = bool(WINAPI*)(HANDLE hProcess,
                                                  HMODULE hModule,
                                                  LPMODULEINFO lpmodinfo,
                                                  DWORD cb);
@@ -335,153 +338,154 @@ namespace geEngineSDK {
     String exceptionAddress = toString((uint64)record->ExceptionAddress,
                                        0,
                                        ' ',
-                                       std::ios::hex);
+                                       ios::hex);
 
     String format;
-    switch (record->ExceptionCode) {
-    case EXCEPTION_ACCESS_VIOLATION:
+    switch (record->ExceptionCode)
     {
-      DWORD_PTR violatedAddress = 0;
-      if (2 == record->NumberParameters) {
-        if (0 == record->ExceptionInformation[0]) {
-          format = "Unhandled exception at 0x{0}."\
-                   "Access violation reading 0x{1}.";
-        }
-        else if (8 == record->ExceptionInformation[0]) {
-          format = "Unhandled exception at 0x{0}."\
-                   "Access violation DEP 0x{1}.";
+      case EXCEPTION_ACCESS_VIOLATION:
+      {
+        DWORD_PTR violatedAddress = 0;
+        if (2 == record->NumberParameters) {
+          if (0 == record->ExceptionInformation[0]) {
+            format = "Unhandled exception at 0x{0}."\
+                     "Access violation reading 0x{1}.";
+          }
+          else if (8 == record->ExceptionInformation[0]) {
+            format = "Unhandled exception at 0x{0}."\
+                     "Access violation DEP 0x{1}.";
+          }
+          else {
+            format = "Unhandled exception at 0x{0}."\
+                     "Access violation writing 0x{1}.";
+          }
+
+          violatedAddress = record->ExceptionInformation[1];
         }
         else {
           format = "Unhandled exception at 0x{0}."\
-                   "Access violation writing 0x{1}.";
+                   "Access violation.";
         }
 
-        violatedAddress = record->ExceptionInformation[1];
+        String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', ios::hex);
+        return StringUtil::format(format, exceptionAddress, violatedAddressStr);
       }
-      else {
-        format = "Unhandled exception at 0x{0}."\
-                 "Access violation.";
-      }
+      case EXCEPTION_IN_PAGE_ERROR:
+      {
+        DWORD_PTR violatedAddress = 0;
+        DWORD_PTR code = 0;
+        if (3 == record->NumberParameters) {
+          if (0 == record->ExceptionInformation[0]) {
+            format = "Unhandled exception at 0x{0}."\
+                     "Page fault reading 0x{1} with code 0x{2}.";
+          }
+          else if (8 == record->ExceptionInformation[0]) {
+            format = "Unhandled exception at 0x{0}."\
+                     "Page fault DEP 0x{1} with code 0x{2}.";
+          }
+          else {
+            format = "Unhandled exception at 0x{0}."\
+                     "Page fault writing 0x{1} with code 0x{2}.";
+          }
 
-      String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', std::ios::hex);
-      return StringUtil::format(format, exceptionAddress, violatedAddressStr);
-    }
-    case EXCEPTION_IN_PAGE_ERROR:
-    {
-      DWORD_PTR violatedAddress = 0;
-      DWORD_PTR code = 0;
-      if (3 == record->NumberParameters) {
-        if (0 == record->ExceptionInformation[0]) {
-          format = "Unhandled exception at 0x{0}."\
-                   "Page fault reading 0x{1} with code 0x{2}.";
-        }
-        else if (8 == record->ExceptionInformation[0]) {
-          format = "Unhandled exception at 0x{0}."\
-                   "Page fault DEP 0x{1} with code 0x{2}.";
+          violatedAddress = record->ExceptionInformation[1];
+          code = record->ExceptionInformation[3];
         }
         else {
           format = "Unhandled exception at 0x{0}."\
-                   "Page fault writing 0x{1} with code 0x{2}.";
+                   "Page fault.";
         }
 
-        violatedAddress = record->ExceptionInformation[1];
-        code = record->ExceptionInformation[3];
+        String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', ios::hex);
+        String codeStr = toString((uint64)code, 0, ' ', ios::hex);
+        return StringUtil::format(format, exceptionAddress, violatedAddressStr, codeStr);
       }
-      else {
+      case STATUS_ARRAY_BOUNDS_EXCEEDED:
+      {
         format = "Unhandled exception at 0x{0}."\
-                 "Page fault.";
+                 "Attempting to access an out of range array element.";
+        return StringUtil::format(format, exceptionAddress);
       }
+      case EXCEPTION_DATATYPE_MISALIGNMENT:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Attempting to access missaligned data.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_DENORMAL_OPERAND:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point operand too small.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point operation attempted to divide by zero.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_INVALID_OPERATION:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point invalid operation.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_OVERFLOW:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point overflow.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_UNDERFLOW:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point underflow.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_FLT_STACK_CHECK:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Floating point stack overflow/underflow.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_ILLEGAL_INSTRUCTION:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Attempting to execute an illegal instruction.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_PRIV_INSTRUCTION:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Attempting to execute a private instruction.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_INT_DIVIDE_BY_ZERO:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Integer operation attempted to divide by zero.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_INT_OVERFLOW:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Integer operation result has overflown.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      case EXCEPTION_STACK_OVERFLOW:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Stack overflow.";
+        return StringUtil::format(format, exceptionAddress);
+      }
+      default:
+      {
+        format = "Unhandled exception at 0x{0}."\
+                 "Code 0x{1}.";
 
-      String violatedAddressStr = toString((uint64)violatedAddress, 0, ' ', std::ios::hex);
-      String codeStr = toString((uint64)code, 0, ' ', std::ios::hex);
-      return StringUtil::format(format, exceptionAddress, violatedAddressStr, codeStr);
-    }
-    case STATUS_ARRAY_BOUNDS_EXCEEDED:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Attempting to access an out of range array element.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_DATATYPE_MISALIGNMENT:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Attempting to access missaligned data.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_DENORMAL_OPERAND:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point operand too small.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point operation attempted to divide by zero.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_INVALID_OPERATION:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point invalid operation.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_OVERFLOW:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point overflow.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_UNDERFLOW:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point underflow.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_FLT_STACK_CHECK:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Floating point stack overflow/underflow.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_ILLEGAL_INSTRUCTION:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Attempting to execute an illegal instruction.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_PRIV_INSTRUCTION:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Attempting to execute a private instruction.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_INT_DIVIDE_BY_ZERO:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Integer operation attempted to divide by zero.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_INT_OVERFLOW:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Integer operation result has overflown.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    case EXCEPTION_STACK_OVERFLOW:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Stack overflow.";
-      return StringUtil::format(format, exceptionAddress);
-    }
-    default:
-    {
-      format = "Unhandled exception at 0x{0}."\
-               "Code 0x{1}.";
-
-      String exceptionCode = toString((uint32)record->ExceptionCode, 0, ' ', std::ios::hex);
-      return StringUtil::format(format, exceptionAddress, exceptionCode);
-    }
+        String exceptionCode = toString((uint32)record->ExceptionCode, 0, ' ', ios::hex);
+        return StringUtil::format(format, exceptionAddress, exceptionCode);
+      }
 
     } //switch
   }

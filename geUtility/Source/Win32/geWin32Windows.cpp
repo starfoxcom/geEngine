@@ -184,15 +184,15 @@ namespace geEngineSDK {
 
       //Register the window class
       WNDCLASSA wc = { classStyle,
-                      desc.wndProc,
-                      0,
-                      0,
-                      desc.module,
-                      LoadIcon(nullptr, IDI_APPLICATION),
-                      LoadCursor(nullptr, IDC_ARROW),
-                      static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
-                      0,
-                      "GE_WIN32_WINDOW" };
+                       desc.wndProc,
+                       0,
+                       0,
+                       desc.module,
+                       LoadIcon(nullptr, IDI_APPLICATION),
+                       LoadCursor(nullptr, IDC_ARROW),
+                       static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
+                       nullptr,
+                       "GE_WIN32_WINDOW" };
 
       RegisterClassA(&wc);
 
@@ -563,7 +563,7 @@ namespace geEngineSDK {
   void
   Win32Window::_restoreModalWindows() {
     FrameVector<HWND> windowsToDisable;
-    HWND bringToFrontHwnd = 0;
+    HWND bringToFrontHwnd = nullptr;
 
     {
       Lock lock(s_windowsMutex);

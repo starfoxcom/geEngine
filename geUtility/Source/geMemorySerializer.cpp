@@ -59,10 +59,10 @@ namespace geEngineSDK {
     }
 
     SIZE_T offset = 0;
-    for (auto iter = m_bufferPieces.begin(); iter != m_bufferPieces.end(); ++iter) {
-      if (iter->size > 0) {
-        memcpy(resultBuffer + offset, iter->buffer, iter->size);
-        offset += iter->size;
+    for (auto& bufferPiece : m_bufferPieces) {
+      if (bufferPiece.size > 0) {
+        memcpy(resultBuffer + offset, bufferPiece.buffer, bufferPiece.size);
+        offset += bufferPiece.size;
       }
     }
 

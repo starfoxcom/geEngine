@@ -40,7 +40,7 @@ namespace geEngineSDK {
       m_unreadEntries.pop();
     }
 
-    m_hash++;
+    ++m_hash;
   }
 
   void
@@ -71,7 +71,7 @@ namespace geEngineSDK {
     }
 
     m_unreadEntries = newUnreadEntries;
-    m_hash++;
+    ++m_hash;
   }
 
   bool
@@ -85,7 +85,7 @@ namespace geEngineSDK {
     entry = m_unreadEntries.front();
     m_unreadEntries.pop();
     m_entries.push_back(entry);
-    m_hash++;
+    ++m_hash;
 
     return true;
   }

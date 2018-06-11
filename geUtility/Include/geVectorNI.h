@@ -28,6 +28,7 @@ namespace geEngineSDK {
   template<int N>
   class VectorNI
   {
+   public:
     VectorNI() {
       memset(v, 0, sizeof(v));
     }
@@ -72,6 +73,6 @@ namespace geEngineSDK {
     int32 v[N];
   };
 
-  typedef VectorNI<3> Vector3I;
-  typedef VectorNI<4> Vector4I;
+  using Vector3I = VectorNI<3>;
+  using Vector4I = VectorNI<4>;
 }

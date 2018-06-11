@@ -62,10 +62,6 @@ namespace geEngineSDK {
       m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
     }
 
-    FORCEINLINE Matrix4(const Matrix4& mat) {
-      memcpy(m, mat.m, sizeof(Matrix4));
-    }
-
     /**
      * @brief Constructor.
      * @param InX X plane
@@ -532,10 +528,10 @@ namespace geEngineSDK {
   template<uint32 NumRows, uint32 NumColumns>
   FORCEINLINE Matrix<NumRows, NumColumns>::Matrix(const Matrix4& InMatrix)
   {
-    for (uint32 RowIndex = 0; (RowIndex < NumRows) && (RowIndex < 4); RowIndex++) {
+    for (uint32 RowIndex = 0; (RowIndex < NumRows) && (RowIndex < 4); ++RowIndex) {
       for (uint32 ColumnIndex = 0;
            (ColumnIndex < NumColumns) && (ColumnIndex < 4);
-           ColumnIndex++) {
+           ++ColumnIndex) {
         m[RowIndex][ColumnIndex] = InMatrix.m[RowIndex][ColumnIndex];
       }
     }
@@ -1343,8 +1339,8 @@ namespace geEngineSDK {
    */
   inline bool
   Matrix4::containsNaN() const {
-    for (int32 i = 0; i<4; ++i) {
-      for (int32 j = 0; j<4; ++j) {
+    for (int32 i = 0; i < 4; ++i) {
+      for (int32 j = 0; j < 4; ++j) {
         if (!Math::isFinite(m[i][j])) {
           return true;
         }
@@ -1381,19 +1377,20 @@ namespace geEngineSDK {
   Matrix4::getScaledAxis(AXIS::E InAxis) const {
     switch (InAxis)
     {
-    case AXIS::kX:
-      return Vector3(m[0][0], m[0][1], m[0][2]);
+      case AXIS::kX:
+        return Vector3(m[0][0], m[0][1], m[0][2]);
 
-    case AXIS::kY:
-      return Vector3(m[1][0], m[1][1], m[1][2]);
+      case AXIS::kY:
+        return Vector3(m[1][0], m[1][1], m[1][2]);
 
-    case AXIS::kZ:
-      return Vector3(m[2][0], m[2][1], m[2][2]);
+      case AXIS::kZ:
+        return Vector3(m[2][0], m[2][1], m[2][2]);
 
-    default:
-      GE_ASSERT(false);
-      return Vector3::ZERO;
+      default:
+        GE_ASSERT(false);
     }
+
+    return Vector3::ZERO;
   }
 
   inline void
@@ -2328,10 +2325,14 @@ namespace geEngineSDK {
      * @param Q rotation
      * @param Origin translation to apply
      */
-    QuatRotationTranslationMatrix(const Quaternion& Q, const Vector3& Origin);
+    GE_UTILITY_EXPORT QuatRotationTranslationMatrix(const Quaternion& Q,
+                                                    const Vector3& Origin);
 
-    /** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-    static Matrix4
+    /**
+     * @brief Matrix factory. Return an FMatrix so we don't have type
+     *        conversion issues in expressions.
+    */
+    static GE_UTILITY_EXPORT Matrix4
     make(const Quaternion& Q, const Vector3& Origin) {
       return QuatRotationTranslationMatrix(Q, Origin);
     }
@@ -2351,8 +2352,8 @@ namespace geEngineSDK {
       : QuatRotationTranslationMatrix(Q, Vector3::ZERO) {}
 
     /**
-     * @brief Matrix factory. Return an Matrix4 so we don't have type conversion
-     *        issues in expressions.
+     * @brief Matrix factory. Return an Matrix4 so we don't have type
+     *        conversion issues in expressions.
      */
     static Matrix4
     make(const Quaternion& Q) {
@@ -2372,8 +2373,8 @@ namespace std {
     operator()(const geEngineSDK::Matrix4& matrix) const {
       size_t hash = 0;
 
-      for (size_t i = 0; i < 16; ++i) {
-        geEngineSDK::hash_combine(hash, matrix._m[i]);
+      for (float i : matrix._m) {
+        geEngineSDK::hash_combine(hash, i);
       }
       return hash;
     }

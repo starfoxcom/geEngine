@@ -22,6 +22,8 @@
 #include "geDebug.h"
 
 namespace geEngineSDK {
+  using std::sort;
+
   bool
   TextureAtlasLayout::addElement(uint32 width, uint32 height, uint32& x, uint32& y) {
     if (0 == width || 0 == height) {
@@ -52,7 +54,7 @@ namespace geEngineSDK {
   void
   TextureAtlasLayout::clear() {
     m_nodes.clear();
-    m_nodes.push_back(TexAtlasNode(0, 0, m_width, m_height));
+    m_nodes.emplace_back(0, 0, m_width, m_height);
 
     m_width = m_initialWidth;
     m_height = m_initialHeight;
@@ -68,7 +70,7 @@ namespace geEngineSDK {
     TexAtlasNode* node = &m_nodes[nodeIdx];
     float aspect = static_cast<float>(node->width) / static_cast<float>(node->height);
 
-    if (Math::MAX_UINT32 != node->children[0]) {
+    if (NumLimit::MAX_UINT32 != node->children[0]) {
       if (addToNode(node->children[0], width, height, x, y, allowGrowth)) {
         return true;
       }
@@ -137,34 +139,33 @@ namespace geEngineSDK {
       elements[i].output.page = -1;
     }
 
-    std::sort(elements.begin(), elements.end(), [](const Element& a, const Element& b) {
+    sort(elements.begin(), elements.end(), [](const Element& a, const Element& b) {
       return a.input.width * a.input.height > b.input.width * b.input.height;
     });
 
     Vector<TextureAtlasLayout> layouts;
     SIZE_T remainingCount = elements.size();
     while (remainingCount > 0) {
-      layouts.push_back(TextureAtlasLayout(width, height, maxWidth, maxHeight, pow2));
+      layouts.emplace_back(width, height, maxWidth, maxHeight, pow2);
       TextureAtlasLayout& curLayout = layouts.back();
 
       //Find largest unassigned element that fits
-      uint32 sizeLimit = Math::MAX_UINT32;
-      while (true)
-      {
-        uint32 largestId = Math::MAX_UINT32;
+      uint32 sizeLimit = NumLimit::MAX_UINT32;
+      while (true) {
+        uint32 largestId = NumLimit::MAX_UINT32;
 
         // Assumes elements are sorted from largest to smallest
         for (SIZE_T i = 0; i < elements.size(); ++i) {
           if (-1 == elements[i].output.page) {
             uint32 size = elements[i].input.width * elements[i].input.height;
-            if (Math::MAX_UINT32 > size) {
+            if (NumLimit::MAX_UINT32 > size) {
               largestId = static_cast<uint32>(i);
               break;
             }
           }
         }
 
-        if (Math::MAX_UINT32 == largestId){
+        if (NumLimit::MAX_UINT32 == largestId){
           break;  //Nothing fits, start a new page
         }
 
@@ -182,7 +183,7 @@ namespace geEngineSDK {
                                  element.output.x,
                                  element.output.y)) {
           element.output.page = static_cast<uint32>(layouts.size() - 1);
-          remainingCount--;
+          --remainingCount;
         }
         else {
           sizeLimit = element.input.width * element.input.height;

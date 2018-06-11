@@ -552,9 +552,9 @@ namespace geEngineSDK {
     if (Point.x >= Box.m_min.x && Point.x <= Box.m_max.x &&
         Point.y >= Box.m_min.y && Point.y <= Box.m_max.y &&
         Point.z >= Box.m_min.z && Point.z <= Box.m_max.z) {
-      return 1;
+      return true;
     }
-    return 0;
+    return false;
   }
 
   inline bool

@@ -117,7 +117,7 @@ namespace geEngineSDK {
           uint32 remainingBytes = bmpBytesPerPixel - bytesPerPixel;
           while (0 < remainingBytes) {
             memcpy(outputPtr + (bmpBytesPerPixel - remainingBytes), input, 1);
-            remainingBytes--;
+            --remainingBytes;
           }
 
           outputPtr += bmpBytesPerPixel;

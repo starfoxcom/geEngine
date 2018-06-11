@@ -24,17 +24,24 @@
 #include <string>
 
 namespace geEngineSDK {
+  using std::char_traits;
+  using std::basic_string;
+  using std::basic_stringstream;
+  using std::min;
+  using std::forward;
+  using std::ios;
+
   /**
    * @brief Basic string that uses geEngine memory allocators.
    */
   template<typename T>
-  using BasicString = std::basic_string<T, std::char_traits<T>, StdAlloc<T>>;
+  using BasicString = basic_string<T, char_traits<T>, StdAlloc<T>>;
 
   /**
    * @brief Basic string stream that uses geEngine memory allocators.
    */
   template<typename T>
-  using BasicStringStream = std::basic_stringstream<T, std::char_traits<T>, StdAlloc<T>>;
+  using BasicStringStream = basic_stringstream<T, char_traits<T>, StdAlloc<T>>;
 
   /**
    * @brief Wide string used primarily for handling Unicode text.
@@ -84,7 +91,7 @@ namespace geEngineSDK {
    */
   //TODO: Currently equivalent to String, need to implement the allocator
   template <int Count>
-  using SmallString = std::basic_string<char, std::char_traits<char>, StdAlloc<char>>;
+  using SmallString = basic_string<char, char_traits<char>, StdAlloc<char>>;
 }
 
 #include "geStringFormat.h"
@@ -289,7 +296,7 @@ namespace geEngineSDK {
         return lhs.compare(rhs);
       }
 
-      SIZE_T size = std::min(lhs.size(), rhs.size());
+      SIZE_T size = min(lhs.size(), rhs.size());
       for (SIZE_T i = 0; i < size; ++i) {
         if (toupper(lhs[i]) < toupper(rhs[i])) return -1;
         if (toupper(lhs[i]) > toupper(rhs[i])) return 1;
@@ -304,7 +311,7 @@ namespace geEngineSDK {
     template<class T, class... Args>
     static BasicString<T>
     format(const BasicString<T>& source, Args&&... args) {
-      return StringFormat::format(source.c_str(), std::forward<Args>(args)...);
+      return StringFormat::format(source.c_str(), forward<Args>(args)...);
     }
 
     /**
@@ -313,7 +320,7 @@ namespace geEngineSDK {
     template<class T, class... Args>
     static BasicString<T>
     format(const T* source, Args&&... args) {
-      return StringFormat::format(source, std::forward<Args>(args)...);
+      return StringFormat::format(source, forward<Args>(args)...);
     }
 
     /**
@@ -565,7 +572,7 @@ namespace geEngineSDK {
             uint16 precision = 6,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a double to a wide string.
@@ -575,7 +582,7 @@ namespace geEngineSDK {
             uint16 precision = 6,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a Radian to a wide string.
@@ -585,7 +592,7 @@ namespace geEngineSDK {
             uint16 precision = 6,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a Degree to a wide string.
@@ -595,7 +602,7 @@ namespace geEngineSDK {
             uint16 precision = 6,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an int to a wide string.
@@ -604,7 +611,7 @@ namespace geEngineSDK {
   toWString(int32 val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an unsigned int to a wide string.
@@ -613,7 +620,7 @@ namespace geEngineSDK {
   toWString(uint32 val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an 64bit integer to a wide string.
@@ -622,7 +629,7 @@ namespace geEngineSDK {
   toWString(int64 val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an 64bit unsigned to a wide string.
@@ -631,7 +638,7 @@ namespace geEngineSDK {
   toWString(uint64 val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an narrow char unsigned to a wide string.
@@ -640,7 +647,7 @@ namespace geEngineSDK {
   toWString(ANSICHAR val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an wide bit char unsigned to a wide string.
@@ -649,7 +656,7 @@ namespace geEngineSDK {
   toWString(UNICHAR val,
             uint16 width = 0,
             char fill = ' ',
-            std::ios::fmtflags flags = std::ios::fmtflags(0));
+            ios::fmtflags flags = ios::fmtflags(0));
 
   /**
    * @brief	Converts a boolean to a wide string.
@@ -687,13 +694,6 @@ namespace geEngineSDK {
    */
   GE_UTILITY_EXPORT WString 
   toWString(const Vector4& val);
-
-  /**
-   * @brief Converts a 3x3 matrix to a wide string.
-   * @note  Format is "00 01 02 10 11 12 20 21 22".
-   */
-  GE_UTILITY_EXPORT WString 
-  toWString(const Matrix3& val);
 
   /**
    * @brief Converts a 4x4 matrix to a wide string.
@@ -744,7 +744,7 @@ namespace geEngineSDK {
            uint16 precision = 6,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
 
   /**
    * @brief Converts a double to a string.
@@ -754,7 +754,7 @@ namespace geEngineSDK {
            uint16 precision = 6,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a Radian to a string.
@@ -764,7 +764,7 @@ namespace geEngineSDK {
            uint16 precision = 6,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a Degree to a string.
@@ -774,7 +774,7 @@ namespace geEngineSDK {
            uint16 precision = 6,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an int to a string.
@@ -783,7 +783,7 @@ namespace geEngineSDK {
   toString(int32 val,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an unsigned int to a string.
@@ -792,7 +792,7 @@ namespace geEngineSDK {
   toString(uint32 val,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts a 64bit int to a string.
@@ -801,7 +801,7 @@ namespace geEngineSDK {
   toString(int64 val,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
   
   /**
    * @brief Converts an 64bit unsigned int to a string.
@@ -810,7 +810,7 @@ namespace geEngineSDK {
   toString(uint64 val,
            uint16 width = 0,
            char fill = ' ',
-           std::ios::fmtflags flags = std::ios::fmtflags(0));
+           ios::fmtflags flags = ios::fmtflags(0));
 
   /**
    * @brief Converts a boolean to a string.
@@ -848,13 +848,6 @@ namespace geEngineSDK {
    */
   GE_UTILITY_EXPORT String 
   toString(const Vector4& val);
-
-  /**
-   * @brief Converts a 3x3 matrix to a string.
-   * @note  Format is "00 01 02 10 11 12 20 21 22".
-   */
-  GE_UTILITY_EXPORT String 
-  toString(const Matrix3& val);
 
   /**
    * @brief Converts a 4x4 matrix to a string.
@@ -921,7 +914,7 @@ namespace geEngineSDK {
    *        matches "true", "yes" or "1", false otherwise.
    */
   GE_UTILITY_EXPORT bool 
-  parseBool(const String& val, bool defaultValue = 0);
+  parseBool(const String& val, bool defaultValue = false);
 
   /**
    * @brief Checks the String is a valid number value.
@@ -959,7 +952,7 @@ namespace geEngineSDK {
    *        matches "true", "yes" or "1", false otherwise.
    */
   GE_UTILITY_EXPORT bool 
-  parseBool(const WString& val, bool defaultValue = 0);
+  parseBool(const WString& val, bool defaultValue = false);
 
   /**
    * @brief	Checks the WString is a valid number value.
@@ -1015,7 +1008,8 @@ namespace geEngineSDK {
       uint64 dataSize = data.size() * sizeof(String::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      uint64 maxSize = static_cast<uint64>(NumLimit::MAX_UINT32);
+      if (dataSize > maxSize) {
         __string_throwDataOverflowException();
       }
 #endif
@@ -1046,7 +1040,7 @@ namespace geEngineSDK {
 
     static uint32
     fromMemory(WString& data, char* memory) {
-      typedef WString::value_type wcTemp;
+      using wcTemp = WString::value_type;
 
       uint32 size;
       memcpy(&size, memory, sizeof(uint32));
@@ -1072,7 +1066,7 @@ namespace geEngineSDK {
       uint64 dataSize = data.size() * sizeof(WString::value_type) + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (dataSize > NumLimit::MAX_UINT32) {
         __string_throwDataOverflowException();
       }
 #endif
@@ -1091,8 +1085,8 @@ namespace std {
   {
     size_t operator()(const geEngineSDK::String& string) const {
       size_t hash = 0;
-      for (size_t i = 0; i < string.size(); ++i) {
-        hash = 65599 * hash + string[i];
+      for (char i : string) {
+        hash = 65599 * hash + i;
       }
 
       return hash ^ (hash >> 16);
@@ -1107,8 +1101,8 @@ namespace std {
   {
     size_t operator()(const geEngineSDK::WString& string) const {
       size_t hash = 0;
-      for (size_t i = 0; i < string.size(); ++i) {
-        hash = 65599 * hash + string[i];
+      for (unsigned short i : string) {
+        hash = 65599 * hash + i;
       }
       return hash ^ (hash >> 16);
     }

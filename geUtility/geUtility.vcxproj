@@ -1,17 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|ORBIS">
-      <Configuration>Debug</Configuration>
-      <Platform>ORBIS</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|ORBIS">
-      <Configuration>Release</Configuration>
-      <Platform>ORBIS</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
@@ -52,20 +44,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -86,13 +65,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -108,13 +81,6 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Bin\$(PlatformName)\</OutDir>
-    <PrxStubOutputDir>$(SolutionDir)Lib\$(PlatformName)\</PrxStubOutputDir>
-    <TargetName>$(ProjectName)d</TargetName>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(PlatformShortName)\</OutDir>
@@ -124,12 +90,6 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(PlatformShortName)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
-    <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)Bin\$(PlatformName)\</OutDir>
-    <PrxStubOutputDir>$(SolutionDir)Lib\$(PlatformName)\</PrxStubOutputDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -181,27 +141,6 @@
       <ImportLibrary>$(SolutionDir)Lib\$(PlatformShortName)\$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>DbgHelp.lib;IPHLPAPI.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>GE_UTILITY_EXPORTS;_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <CppExceptions>true</CppExceptions>
-      <ExtraWarnings>true</ExtraWarnings>
-      <MsExtensions>true</MsExtensions>
-      <ExtendedDiagnostics>true</ExtendedDiagnostics>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -264,32 +203,6 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>GE_UTILITY_EXPORTS;NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Include;$(DEVLIBS)Snappy/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <OptimizationLevel>Level2</OptimizationLevel>
-      <CppExceptions>true</CppExceptions>
-      <ExtraWarnings>true</ExtraWarnings>
-      <MsExtensions>true</MsExtensions>
-      <ExtendedDiagnostics>true</ExtendedDiagnostics>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\Externals\json.hpp" />
     <ClInclude Include="Include\Externals\lz4.h" />
@@ -304,9 +217,11 @@
     <ClInclude Include="Include\geBitwise.h" />
     <ClInclude Include="Include\geBox.h" />
     <ClInclude Include="Include\geBox2D.h" />
+    <ClInclude Include="Include\geBox2DI.h" />
     <ClInclude Include="Include\geBoxSphereBounds.h" />
     <ClInclude Include="Include\geCapsuleShape.h" />
     <ClInclude Include="Include\geColor.h" />
+    <ClInclude Include="Include\geColorGradient.h" />
     <ClInclude Include="Include\geCompression.h" />
     <ClInclude Include="Include\geConvexHull2D.h" />
     <ClInclude Include="Include\geCrashHandler.h" />
@@ -341,8 +256,10 @@
     <ClInclude Include="Include\geMemAllocProfiler.h" />
     <ClInclude Include="Include\geMemoryAllocator.h" />
     <ClInclude Include="Include\geMemorySerializer.h" />
+    <ClInclude Include="Include\geNumericLimits.h" />
     <ClInclude Include="Include\geOctree.h" />
     <ClInclude Include="Include\gePoolAlloc.h" />
+    <ClInclude Include="Include\geRandom.h" />
     <ClInclude Include="Include\geSIMD.h" />
     <ClInclude Include="Include\geStackAlloc.h" />
     <ClInclude Include="Include\geMessageHandler.h" />
@@ -410,8 +327,10 @@
     <ClCompile Include="Source\geBitmapWriter.cpp" />
     <ClCompile Include="Source\geBox.cpp" />
     <ClCompile Include="Source\geBox2D.cpp" />
+    <ClCompile Include="Source\geBox2DI.cpp" />
     <ClCompile Include="Source\geBoxSphereBounds.cpp" />
     <ClCompile Include="Source\geColor.cpp" />
+    <ClCompile Include="Source\geColorGradient.cpp" />
     <ClCompile Include="Source\geCompression.cpp" />
     <ClCompile Include="Source\geCrashHandler.cpp" />
     <ClCompile Include="Source\geDataStream.cpp" />
@@ -419,7 +338,6 @@
     <ClCompile Include="Source\geDegree.cpp" />
     <ClCompile Include="Source\geDynLib.cpp" />
     <ClCompile Include="Source\geDynLibManager.cpp" />
-    <ClCompile Include="Source\geException.cpp" />
     <ClCompile Include="Source\geFileSerializer.cpp" />
     <ClCompile Include="Source\geFileSystem.cpp" />
     <ClCompile Include="Source\geFrameAlloc.cpp" />
@@ -473,22 +391,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Source\Win32\geWin32CrashHandler.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Source\Win32\geWin32FileSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Source\Win32\geWin32PlatformUtility.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Source\Win32\geWin32Windows.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Source\Win32\geWin32CrashHandler.cpp" />
+    <ClCompile Include="Source\Win32\geWin32FileSystem.cpp" />
+    <ClCompile Include="Source\Win32\geWin32PlatformUtility.cpp" />
+    <ClCompile Include="Source\Win32\geWin32Windows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

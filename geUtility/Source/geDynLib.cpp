@@ -28,12 +28,14 @@
 #endif
 
 namespace geEngineSDK {
-  DynLib::DynLib(String name) : m_name(std::move(name)) {
+  DynLib::DynLib(String name)
+    : m_name(std::move(name)),
 #if GE_PLATFORM == GE_PLATFORM_PS4
-    m_hInst = 0;
+    m_hInst(0)
 #else
-    m_hInst = nullptr;
+    m_hInst(nullptr)
 #endif
+  {
     load();
   }
 
@@ -120,12 +122,12 @@ namespace geEngineSDK {
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | 
                   FORMAT_MESSAGE_FROM_SYSTEM | 
                   FORMAT_MESSAGE_IGNORE_INSERTS, 
-                  NULL, 
+                  nullptr, 
                   GetLastError(),
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                  (LPTSTR)&lpMsgBuf,
+                  reinterpret_cast<LPTSTR>(&lpMsgBuf),
                   0,
-                  NULL);
+                  nullptr);
 
     String ret = static_cast<char*>(lpMsgBuf);
     LocalFree(lpMsgBuf);  //Free the buffer.

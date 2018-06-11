@@ -90,13 +90,13 @@ namespace geEngineSDK {
 
               if (nullptr != childObj) {
                 if (nullptr == subObjectData) {
-                  referenceData.subObjectData.push_back(SubObjectReferenceData());
+                  referenceData.subObjectData.emplace_back();
                   subObjectData = &referenceData.subObjectData
                                   [referenceData.subObjectData.size() - 1];
                   subObjectData->rtti = rtti;
                 }
 
-                subObjectData->references.push_back(ObjectReference());
+                subObjectData->references.emplace_back();
                 ObjectReference& reference = subObjectData->references.back();
                 reference.fieldId = fieldId;
                 reference.object = childObj;
@@ -108,13 +108,13 @@ namespace geEngineSDK {
               IReflectable* childObj = &curField->getArrayValue(object, j);
 
               if (nullptr == subObjectData) {
-                referenceData.subObjectData.push_back(SubObjectReferenceData());
+                referenceData.subObjectData.emplace_back();
                 subObjectData = &referenceData.subObjectData
                                 [referenceData.subObjectData.size() - 1];
                 subObjectData->rtti = rtti;
               }
 
-              subObjectData->children.push_back(ObjectReferenceData());
+              subObjectData->children.emplace_back();
               ObjectReferenceData& childData = subObjectData->children.back();
               childData.fieldId = fieldId;
 
@@ -130,13 +130,13 @@ namespace geEngineSDK {
 
             if (nullptr != childObj) {
               if (nullptr == subObjectData) {
-                referenceData.subObjectData.push_back(SubObjectReferenceData());
+                referenceData.subObjectData.emplace_back();
                 subObjectData = &referenceData.subObjectData
                                 [referenceData.subObjectData.size() - 1];
                 subObjectData->rtti = rtti;
               }
 
-              subObjectData->references.push_back(ObjectReference());
+              subObjectData->references.emplace_back();
               ObjectReference& reference = subObjectData->references.back();
               reference.fieldId = fieldId;
               reference.object = childObj;
@@ -148,13 +148,13 @@ namespace geEngineSDK {
             IReflectable* childObj = &curField->getValue(object);
 
             if (nullptr == subObjectData) {
-              referenceData.subObjectData.push_back(SubObjectReferenceData());
+              referenceData.subObjectData.emplace_back();
               subObjectData = &referenceData.subObjectData
                               [referenceData.subObjectData.size() - 1];
               subObjectData->rtti = rtti;
             }
 
-            subObjectData->children.push_back(ObjectReferenceData());
+            subObjectData->children.emplace_back();
             ObjectReferenceData& childData = subObjectData->children.back();
             childData.fieldId = fieldId;
 
@@ -184,7 +184,7 @@ namespace geEngineSDK {
          ++iter) {
       const SubObjectReferenceData& subObject = *iter;
 
-      if (subObject.references.size() > 0) {
+      if (!subObject.references.empty()) {
         subObject.rtti->onDeserializationStarted(object, dummyParams);
 
         for (auto& reference : subObject.references) {
@@ -204,7 +204,7 @@ namespace geEngineSDK {
     }
 
     for (auto& subObject : referenceData.subObjectData) {
-      if (subObject.children.size() > 0) {
+      if (!subObject.children.empty()) {
         subObject.rtti->onSerializationStarted(object, dummyParams);
 
         for (auto& childObjectData : subObject.children) {

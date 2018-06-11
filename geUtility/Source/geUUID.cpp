@@ -99,7 +99,7 @@ namespace geEngineSDK {
       m_data[0] |= hexVal << (i * 4);
     }
 
-    idx++;
+    ++idx;
 
     //Second group: 4 digits
     for (int32 i = 7; i >= 4; --i) {
@@ -108,7 +108,7 @@ namespace geEngineSDK {
       m_data[1] |= hexVal << (i * 4);
     }
 
-    idx++;
+    ++idx;
 
     //Third group: 4 digits
     for (int32 i = 3; i >= 0; --i)
@@ -118,7 +118,7 @@ namespace geEngineSDK {
       m_data[1] |= hexVal << (i * 4);
     }
 
-    idx++;
+    ++idx;
 
     //Fourth group: 4 digits
     for (int32 i = 7; i >= 4; --i)
@@ -128,7 +128,7 @@ namespace geEngineSDK {
       m_data[2] |= hexVal << (i * 4);
     }
 
-    idx++;
+    ++idx;
 
     //Fifth group: 12 digits
     for (int32 i = 3; i >= 0; --i)

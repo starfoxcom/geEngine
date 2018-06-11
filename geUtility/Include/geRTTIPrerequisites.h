@@ -197,6 +197,8 @@ namespace geEngineSDK {
    * @see   RTTIPlainType
    */
 #define GE_ALLOW_MEMCPY_SERIALIZATION(type)                                   \
+  static_assert(std::is_trivially_copyable<type>() == true,                   \
+                #type " is not trivially copyable");                          \
   template<> struct RTTIPlainType<type> {                                     \
     enum {kID=0}; enum {kHasDynamicSize = 0};                                 \
     static void                                                               \
@@ -283,7 +285,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -358,7 +360,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -453,7 +455,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item.second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -550,7 +552,7 @@ namespace geEngineSDK {
         dataSize += RTTIPlainType<Value>::getDynamicSize(item.second);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -634,7 +636,7 @@ namespace geEngineSDK {
         dataSize += rttiGetElementSize(item);
       }
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }
@@ -701,7 +703,7 @@ namespace geEngineSDK {
       dataSize += rttiGetElementSize(data.first);
       dataSize += rttiGetElementSize(data.second);
 
-      GE_ASSERT(dataSize <= std::numeric_limits<uint32>::max());
+      GE_ASSERT(NumLimit::MAX_UINT32 >= dataSize);
 
       return static_cast<uint32>(dataSize);
     }

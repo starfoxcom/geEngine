@@ -81,9 +81,12 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief Reserves the specified amount of bytes to allocate. Multiple calls to reserve()
-     *        are cumulative. After all needed memory is reserved, call init(), followed by
-     *        actual allocation via construct() or alloc() methods.
+     * @brief Reserves the specified amount of bytes to allocate. Multiple
+     *        calls to reserve() are cumulative. After all needed memory is
+     *        reserved, call init(), followed by actual allocation via
+     *        construct() or alloc() methods. If you need to change the size of
+     *        your allocation, free your memory by using free(), followed by a
+     *        call to clear(). Then reserve(), init() and alloc() again.
      */
     GroupAlloc&
     reserve(SIZE_T amount) {
@@ -93,9 +96,12 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief Reserves the specified amount of bytes to allocate. Multiple calls to reserve()
-     *        are cumulative. After all needed memory is reserved, call init(), followed by
-     *        actual allocation via construct() or alloc() methods.
+     * @brief Reserves the specified amount of bytes to allocate. Multiple
+     *        calls to reserve() are cumulative. After all needed memory is
+     *        reserved, call init(), followed by actual allocation via
+     *        construct() or alloc() methods. If you need to change the size of
+     *        your allocation, free your memory by using free(), followed by a
+     *        call to clear(). Then reserve(), init() and alloc() again.
      */
     template<class T>
     GroupAlloc&
@@ -133,6 +139,22 @@ namespace geEngineSDK {
     void
     free(void* data) {
       //Do nothing
+    }
+
+    /**
+     * @brief Frees any internally allocated buffers. All elements must be
+     *        previously freed by calling free().
+     */
+    void
+    clear() {
+      //NOTE: A debug check if user actually freed the memory could be helpful
+      if (m_data) {
+        ge_free(m_data);
+      }
+
+      m_numBytes = 0;
+      m_data = nullptr;
+      m_dataPtr = nullptr;
     }
 
     /**

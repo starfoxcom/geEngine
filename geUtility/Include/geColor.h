@@ -432,10 +432,10 @@ namespace geEngineSDK {
     return color.operator*(Scalar);
   }
 
-  typedef uint32 RGBA;
-  typedef uint32 ARGB;
-  typedef uint32 ABGR;
-  typedef uint32 BGRA;
+  using RGBA = uint32;
+  using ARGB = uint32;
+  using ABGR = uint32;
+  using BGRA = uint32;
 
   /**
    * @brief Color represented as 4 components, each being a floating point
@@ -445,7 +445,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT Color
   {
    public:
-    Color() {}
+    Color() = default;
 
     explicit Color(FORCE_INIT::E) {
       //Put these into the body for proper ordering with
@@ -484,7 +484,7 @@ namespace geEngineSDK {
 
     const uint32&
     dwColor(void) const {
-      return *((uint32*)this);
+      return *(reinterpret_cast<uint32*>(const_cast<Color*>(this)));
     }
 
     bool

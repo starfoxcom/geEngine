@@ -21,30 +21,27 @@
 #include "geDynLib.h"
 
 namespace geEngineSDK {
-  static bool
-  operator<(const NPtr<DynLib>& lhs, const NPtr<DynLib>& rhs) {
-    return lhs->getName() < rhs->getName();
+  using std::move;
+
+  static
+  void dynlib_delete(DynLib* lib) {
+    lib->unload();
+    ge_delete(lib);
   }
 
   static bool
-  operator<(const NPtr<DynLib>& lhs, const String& rhs) {
+  operator<(const UPtr<DynLib>& lhs, const String& rhs) {
     return lhs->getName() < rhs;
   }
 
   static bool
-  operator<(const String& lhs, const NPtr<DynLib>& rhs) {
+  operator<(const String& lhs, const UPtr<DynLib>& rhs) {
     return lhs < rhs->getName();
   }
 
-  DynLibManager::~DynLibManager() {
-    //Unload & delete resources in turn
-    for (auto& entry : m_loadedLibraries) {
-      entry->unload();
-      ge_delete(entry.get());
-    }
-
-    //Empty the list
-    m_loadedLibraries.clear();
+  static bool
+  operator<(const UPtr<DynLib>& lhs, const UPtr<DynLib>& rhs) {
+    return lhs->getName() < rhs->getName();
   }
 
   DynLib*
@@ -68,8 +65,8 @@ namespace geEngineSDK {
       return iterFind->get();
     }
 
-    DynLib* newLib = new (ge_alloc<DynLib>()) DynLib(std::move(filename));
-    m_loadedLibraries.emplace_hint(iterFind, newLib);
+    DynLib* newLib = ge_new<DynLib>(move(filename));
+    m_loadedLibraries.emplace_hint(iterFind, newLib, &dynlib_delete);
     return newLib;
   }
 
@@ -80,8 +77,7 @@ namespace geEngineSDK {
       m_loadedLibraries.erase(iterFind);
     }
 
-    lib->unload();
-    ge_delete(lib);
+    dynlib_delete(lib);
   }
 
   DynLibManager&

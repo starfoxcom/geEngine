@@ -62,7 +62,7 @@ namespace geEngineSDK {
       uint64 dataSize = data.size + sizeof(uint32);
 
 #if GE_DEBUG_MODE
-      if (dataSize > std::numeric_limits<uint32>::max()) {
+      if (dataSize > NumLimit::MAX_UINT32) {
         GE_EXCEPT(InternalErrorException,
                   "Data overflow! Size doesn't fit into 32 bits.");
       }

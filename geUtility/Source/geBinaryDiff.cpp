@@ -419,7 +419,7 @@ namespace geEngineSDK {
           }
 
           if (nullptr == diffSubObject) {
-            output->subObjects.push_back(SerializedSubObject());
+            output->subObjects.emplace_back();
             diffSubObject = &output->subObjects.back();
             diffSubObject->typeId = rtti->getRTTIId();
           }

@@ -48,8 +48,8 @@ namespace geEngineSDK {
     /**
      * @brief Adds a log entry in the "Debug" channel.
      */
-     void
-     logDebug(const String& msg);
+    void
+    logDebug(const String& msg);
 
     /**
      * @brief Adds a log entry in the "Warning" channel.
