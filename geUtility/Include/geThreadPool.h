@@ -151,7 +151,7 @@ namespace geEngineSDK {
 
     time_t m_idleTime = 0;
 
-    Thread* m_thread;
+    Thread* m_thread = nullptr;
     mutable Mutex m_mutex;
 
     Signal m_startedCond;

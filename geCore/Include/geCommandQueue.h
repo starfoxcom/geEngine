@@ -137,14 +137,13 @@ namespace geEngineSDK {
 
     ~QueuedCommand() = default;
 
-    QueuedCommand(const QueuedCommand& source) {
-      callback = source.callback;
-      callbackWithReturnValue = source.callbackWithReturnValue;
-      asyncOp = source.asyncOp;
-      returnsValue = source.returnsValue;
-      callbackId = source.callbackId;
-      notifyWhenComplete = source.notifyWhenComplete;
-
+    QueuedCommand(const QueuedCommand& source)
+      : callback(source.callback),
+        callbackWithReturnValue(source.callbackWithReturnValue),
+        asyncOp(source.asyncOp),
+        returnsValue(source.returnsValue),
+        callbackId(source.callbackId),
+        notifyWhenComplete(source.notifyWhenComplete) {
 # if GE_DEBUG_MODE
       debugId = source.debugId;
 # endif

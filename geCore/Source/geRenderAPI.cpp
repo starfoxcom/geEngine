@@ -28,16 +28,18 @@
 /*
 #include "geMesh.h"
 #include "geGPUParams.h"
+*/
 #include "geDepthStencilState.h"
 #include "geRasterizerState.h"
 #include "geGPUBuffer.h"
+/*
 #include "geGPUPipelineState.h"
 */
-using namespace std::placeholders;
-using std::function;
-using std::bind;
 
 namespace geEngineSDK {
+  using namespace std::placeholders;
+  using std::function;
+  using std::bind;
 
   /*
   void

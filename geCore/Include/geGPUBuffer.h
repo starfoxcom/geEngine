@@ -33,17 +33,21 @@ namespace geEngineSDK {
     uint32 elementCount;
 
     /**
-     * @brief Size of each individual element in the buffer, in bytes. Only needed if using non-standard buffer. If using standard buffers element size is calculated from format and this must be zero.
+     * @brief Size of each individual element in the buffer, in bytes. Only
+     *        needed if using non-standard buffer. If using standard buffers
+     *        element size is calculated from format and this must be zero.
      */
     uint32 elementSize;
 
     /**
-     * @brief Type of the buffer. Determines how is buffer seen by the GPU program and in what ways can it be used.
+     * @brief Type of the buffer. Determines how is buffer seen by the GPU
+     *        program and in what ways can it be used.
      */
     GPU_BUFFER_TYPE::E type;
 
     /**
-     * @brief Format if the data in the buffer. Only relevant for standard buffers, must be BF_UNKNOWN otherwise.
+     * @brief Format if the data in the buffer. Only relevant for standard
+     *        buffers, must be BF_UNKNOWN otherwise.
      */
     GPU_BUFFER_FORMAT::E format;
 
@@ -53,105 +57,149 @@ namespace geEngineSDK {
     GPU_BUFFER_USAGE::E usage = GPU_BUFFER_USAGE::kSTATIC;
 
     /**
-     * @brief When true allows the GPU to write to the resource. Must be enabled if buffer type is GBT_APPENDCONSUME.
+     * @brief When true allows the GPU to write to the resource.
+     *        Must be enabled if buffer type is kAPPENDCONSUME.
      */
     bool randomGPUWrite = false;
 
     /**
-     * @brief When true binds a counter that can be used from a GPU program on the buffer. Can only be used in combination with GBT_STRUCTURED and randomGPUWrite must be enabled.
+     * @brief When true binds a counter that can be used from a GPU program on
+     *        the buffer. Can only be used in combination with kSTRUCTURED
+     *        and randomGPUWrite must be enabled.
      */
     bool useCounter = false;
   };
 
   /**
-  * @brief Information about a GPUBuffer. Allows core and non-core versions of GPUBuffer to share the same structure for properties.
-  */
+   * @brief Information about a GPUBuffer. Allows core and non-core versions of
+   *        GPUBuffer to share the same structure for properties.
+   */
   class GE_CORE_EXPORT GPUBufferProperties
   {
-  public:
+   public:
     GPUBufferProperties(const GPU_BUFFER_DESC& desc);
 
     /**
-    * @brief Returns the type of the GPU buffer. Type determines which kind of views (if any) can be created for the buffer, and how is data read or modified in it.
-    */
-    GPU_BUFFER_TYPE::E getType() const { return mDesc.type; }
+     * @brief Returns the type of the GPU buffer. Type determines which kind of
+     *        views (if any) can be created for the buffer, and how is data
+     *        read or modified in it.
+     */
+    GPU_BUFFER_TYPE::E
+    getType() const {
+      return m_desc.type;
+    }
 
     /**
-     * @brief Returns format used by the buffer. Only relevant for standard buffers.
+     * @brief Returns format used by the buffer. Only relevant for standard
+     *        buffers.
      */
-    GPU_BUFFER_FORMAT::E getFormat() const { return mDesc.format; }
+    GPU_BUFFER_FORMAT::E
+    getFormat() const {
+      return m_desc.format;
+    }
 
     /**
-     * @brief Returns buffer usage which determines how are planning on updating the buffer contents.
+     * @brief Returns buffer usage which determines how are planning on
+     *        updating the buffer contents.
      */
-    GPU_BUFFER_USAGE::E getUsage() const { return mDesc.usage; }
+    GPU_BUFFER_USAGE::E
+    getUsage() const {
+      return m_desc.usage;
+    }
 
     /**
-     * @brief Return whether the buffer supports random reads and writes within the GPU programs.
+     * @brief Return whether the buffer supports random reads and writes within
+     *        the GPU programs.
      */
-    bool getRandomGPUWrite() const { return mDesc.randomGPUWrite; }
+    bool
+    getRandomGPUWrite() const {
+      return m_desc.randomGPUWrite;
+    }
 
     /**
-     * @brief Returns whether the buffer supports counter use within GPU programs.
+     * @brief Returns whether the buffer supports counter use within GPU
+     *        programs.
      */
-    bool getUseCounter() const { return mDesc.useCounter; }
+    bool
+    getUseCounter() const {
+      return m_desc.useCounter;
+    }
 
     /**
      * @brief Returns number of elements in the buffer.
      */
-    uint32 getElementCount() const { return mDesc.elementCount; }
+    uint32
+    getElementCount() const {
+      return m_desc.elementCount;
+    }
 
     /**
      * @brief Returns size of a single element in the buffer in bytes.
      */
-    uint32 getElementSize() const { return mDesc.elementSize; }
+    uint32
+    getElementSize() const {
+      return m_desc.elementSize;
+    }
 
-   protected:
+    protected:
     friend class GPUBuffer;
 
-    GPU_BUFFER_DESC mDesc;
+    GPU_BUFFER_DESC m_desc;
   };
 
   /**
-  * @brief Handles a generic GPU buffer that you may use for storing any kind of data you wish to be accessible to the GPU.
-  * These buffers may be bounds to GPU program binding slots and accessed from a GPU program, or may be used by fixed pipeline in some way.
-  *
-  * Buffer types:
-  *  - Raw buffers containing a block of bytes that are up to the GPU program to interpret.
-  *	- Structured buffer containing an array of structures compliant to a certain layout. Similar to raw buffer but
-  *    easier to interpret the data.
-  *	- Random read/write buffers that allow you to write to random parts of the buffer from within the GPU program, and
-  *    then read it later. These can only be bound to pixel and compute stages.
-  *	- Append/Consume buffers also allow you to write to them, but in a stack-like fashion, usually where one set of
-  *    programs produces data while other set consumes it from the same buffer. Append/Consume buffers are structured
-  *	  by default.
-  *
-  * @note	Sim thread only.
-  */
+   * @brief Handles a generic GPU buffer that you may use for storing any kind
+   *        of data you wish to be accessible to the GPU.
+   * These buffers may be bounds to GPU program binding slots and accessed from
+   * a GPU program, or may be used by fixed pipeline in some way.
+   *
+   * Buffer types:
+   *  - Raw buffers containing a block of bytes that are up to the GPU program
+   *    to interpret.
+   *	- Structured buffer containing an array of structures compliant to a
+   *    certain layout. Similar to raw buffer but easier to interpret the data.
+   *	- Random read/write buffers that allow you to write to random parts of
+   *    the buffer from within the GPU program, and then read it later.
+   *    These can only be bound to pixel and compute stages.
+   *	- Append/Consume buffers also allow you to write to them, but in a
+   *    stack-like fashion, usually where one set of programs produces data
+   *    while other set consumes it from the same buffer.
+   *    Append/Consume buffers are structured by default.
+   *
+   * @note  Sim thread only.
+   */
   class GE_CORE_EXPORT GPUBuffer : public CoreObject
   {
-  public:
-    virtual ~GPUBuffer() { }
+   public:
+    virtual ~GPUBuffer() = default;
 
     /**
      * @brief Returns properties describing the buffer.
      */
-    const GPUBufferProperties& getProperties() const { return mProperties; }
+    const GPUBufferProperties&
+    getProperties() const {
+      return m_properties;
+    }
 
     /**
-     * @brief Retrieves a core implementation of a GPU buffer usable only from the core thread.
+     * @brief Retrieves a core implementation of a GPU buffer usable only from
+     *        the core thread.
      */
-    SPtr<geCoreThread::GPUBuffer> getCore() const;
+    SPtr<geCoreThread::GPUBuffer>
+    getCore() const;
 
     /**
-     * @brief Returns the size of a single element in the buffer, of the provided format, in bytes.
+     * @brief Returns the size of a single element in the buffer, of the
+     *        provided format, in bytes.
      */
-    static uint32 getFormatSize(GPU_BUFFER_FORMAT::E format);
+    static uint32
+    getFormatSize(GPU_BUFFER_FORMAT::E format);
 
     /**
      * @copydoc HardwareBufferManager::createGPUBuffer
      */
-    static SPtr<GPUBuffer> create(const GPU_BUFFER_DESC& desc);
+    static SPtr<GPUBuffer>
+    create(const GPU_BUFFER_DESC& desc);
 
    protected:
     friend class HardwareBufferManager;
@@ -161,9 +209,10 @@ namespace geEngineSDK {
     /**
      * @copydoc CoreObject::createCore
      */
-    SPtr<geCoreThread::CoreObject> createCore() const override;
+    SPtr<geCoreThread::CoreObject>
+    createCore() const override;
 
-    GPUBufferProperties mProperties;
+    GPUBufferProperties m_properties;
   };
 
   namespace geCoreThread {
@@ -179,17 +228,22 @@ namespace geEngineSDK {
       /**
        * @brief Returns properties describing the buffer.
        */
-      const GPUBufferProperties& getProperties() const { return mProperties; }
+      const GPUBufferProperties&
+      getProperties() const {
+        return m_properties;
+      }
 
       /**
        * @copydoc HardwareBufferManager::createGPUBuffer
        */
-      static SPtr<GPUBuffer> create(const GPU_BUFFER_DESC& desc, GPU_DEVICE_FLAGS::E deviceMask = GPU_DEVICE_FLAGS::kDEFAULT);
+      static SPtr<GPUBuffer>
+      create(const GPU_BUFFER_DESC& desc,
+             GPU_DEVICE_FLAGS::E deviceMask = GPU_DEVICE_FLAGS::kDEFAULT);
 
      protected:
       GPUBuffer(const GPU_BUFFER_DESC& desc, uint32 deviceMask);
 
-      GPUBufferProperties mProperties;
+      GPUBufferProperties m_properties;
     };
   }
 }

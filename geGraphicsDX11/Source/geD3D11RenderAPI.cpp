@@ -21,7 +21,7 @@
 #include "geD3D11DriverList.h"
 #include "geD3D11Driver.h"
 #include "geD3D11Device.h"
-/*
+
 #include "geD3D11TextureManager.h"
 #include "geD3D11Texture.h"
 #include "geD3D11HardwareBufferManager.h"
@@ -40,16 +40,14 @@
 #include "geD3D11InputLayoutManager.h"
 #include "geD3D11TextureView.h"
 #include "geD3D11RenderUtility.h"
-*/
+
 #include "geD3D11QueryManager.h"
-/*
 #include "geD3D11GPUBuffer.h"
-*/
 #include "geD3D11CommandBuffer.h"
 #include "geD3D11CommandBufferManager.h"
 
-//#include <geGPUParams.h>
-//#include <geGPUParamDesc.h>
+#include <geGPUParams.h>
+#include <geGPUParamDesc.h>
 #include <geCoreThread.h>
 
 #include <geRenderStats.h>
@@ -689,7 +687,7 @@ namespace geEngineSDK {
         uint32 strides[GE_MAX_BOUND_VERTEX_BUFFERS];
         uint32 offsets[GE_MAX_BOUND_VERTEX_BUFFERS];
 
-        for (uint32 i = 0; i < numBuffers; i++)
+        for (uint32 i = 0; i < numBuffers; ++i)
         {
           SPtr<D3D11VertexBuffer> vertexBuffer = std::static_pointer_cast<D3D11VertexBuffer>(buffers[i]);
           const VertexBufferProperties& vbProps = vertexBuffer->getProperties();
@@ -1024,7 +1022,7 @@ namespace geEngineSDK {
           clearColor[2] = color.b;
           clearColor[3] = color.a;
 
-          for (uint32 i = 0; i < maxRenderTargets; i++)
+          for (uint32 i = 0; i < maxRenderTargets; ++i)
           {
             if (views[i] != nullptr && ((1 << i) & targetMask) != 0)
               mDevice->getImmediateContext()->ClearRenderTargetView(views[i], clearColor);
@@ -1362,7 +1360,7 @@ namespace geEngineSDK {
           else
           {
             // Drop samples
-            multisampleCount--;
+            --multisampleCount;
 
             if (multisampleCount == 1)
             {

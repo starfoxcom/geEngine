@@ -429,7 +429,7 @@ namespace geEngineSDK {
    */
   /***************************************************************************/
 #define GE_PVT_NEW(T, ...)                                                    \
-      new (ge_alloc<T, GenAlloc>()) T(##__VA_ARGS__)
+      new (ge_alloc<T, GenAlloc>()) T(__VA_ARGS__)
 
 #define GE_PVT_DELETE(T, ptr)                                                 \
       (ptr)->~T();                                                            \

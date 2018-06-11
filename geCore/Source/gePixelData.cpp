@@ -55,12 +55,13 @@ namespace geEngineSDK {
     PixelUtil::getPitch(width, height, depth, pixelFormat, m_rowPitch, m_slicePitch);
   }
 
-  PixelData::PixelData(const PixelData& copy) : GPUResourceData(copy) {
-    m_format = copy.m_format;
-    m_rowPitch = copy.m_rowPitch;
-    m_slicePitch = copy.m_slicePitch;
-    m_extents = copy.m_extents;
-  }
+  PixelData::PixelData(const PixelData& copy)
+    : GPUResourceData(copy),
+      m_format(copy.m_format),
+      m_rowPitch(copy.m_rowPitch),
+      m_slicePitch(copy.m_slicePitch),
+      m_extents(copy.m_extents)
+  {}
 
   PixelData&
   PixelData::operator=(const PixelData& rhs) {

@@ -94,7 +94,7 @@ namespace geEngineSDK {
     class ProfilerTimerPrecise
     {
      public:
-      ProfilerTimerPrecise();
+      ProfilerTimerPrecise() = default;
 
       /**
        * @brief Starts the counter marking the current number of executed CPU
@@ -116,7 +116,7 @@ namespace geEngineSDK {
       void
       reset();
 
-      uint64 m_cycles;
+      uint64 m_cycles = 0;
      private:
       uint64 m_startCycles;
 
@@ -257,7 +257,7 @@ namespace geEngineSDK {
       ProfiledBlock*
       findChild(const char* _name) const;
 
-      char* name;
+      char* name = nullptr;
       ProfileData basic;
       PreciseProfileData precise;
       Vector<ProfiledBlock*, StdFrameAlloc<ProfiledBlock*>> children;

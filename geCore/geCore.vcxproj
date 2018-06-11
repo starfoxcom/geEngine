@@ -34,6 +34,8 @@
     <ClInclude Include="Include\geCoreThread.h" />
     <ClInclude Include="Include\geCoreThreadQueue.h" />
     <ClInclude Include="Include\geDeferredCallManager.h" />
+    <ClInclude Include="Include\geDepthStencilState.h" />
+    <ClInclude Include="Include\geDepthStencilStateRTTI.h" />
     <ClInclude Include="Include\geDropTarget.h" />
     <ClInclude Include="Include\geEventQuery.h" />
     <ClInclude Include="Include\geFolderMonitor.h" />
@@ -44,6 +46,8 @@
     <ClInclude Include="Include\geGameObjectRTTI.h" />
     <ClInclude Include="Include\geGPUBuffer.h" />
     <ClInclude Include="Include\geGPUParam.h" />
+    <ClInclude Include="Include\geGPUParamDesc.h" />
+    <ClInclude Include="Include\geGPUPipelineState.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHardwareBuffer.h" />
@@ -67,9 +71,12 @@
     <ClInclude Include="Include\geProfilerCPU.h" />
     <ClInclude Include="Include\geProfilingManager.h" />
     <ClInclude Include="Include\geQueryManager.h" />
+    <ClInclude Include="Include\geRasterizerState.h" />
+    <ClInclude Include="Include\geRasterizerStateRTTI.h" />
     <ClInclude Include="Include\geRenderAPI.h" />
     <ClInclude Include="Include\geRenderAPIFactory.h" />
     <ClInclude Include="Include\geRenderAPIManager.h" />
+    <ClInclude Include="Include\geRenderStateManager.h" />
     <ClInclude Include="Include\geRenderStats.h" />
     <ClInclude Include="Include\geRenderTarget.h" />
     <ClInclude Include="Include\geRenderTexture.h" />
@@ -85,6 +92,8 @@
     <ClInclude Include="Include\geResourceMetaDataRTTI.h" />
     <ClInclude Include="Include\geResourceRTTI.h" />
     <ClInclude Include="Include\geResources.h" />
+    <ClInclude Include="Include\geSamplerState.h" />
+    <ClInclude Include="Include\geSamplerStateRTTI.h" />
     <ClInclude Include="Include\geSavedResourceData.h" />
     <ClInclude Include="Include\geSavedResourceDataRTTI.h" />
     <ClInclude Include="Include\geSceneActor.h" />
@@ -102,6 +111,8 @@
     <ClInclude Include="Include\geUtility.h" />
     <ClInclude Include="Include\geVertexBuffer.h" />
     <ClInclude Include="Include\geVertexData.h" />
+    <ClInclude Include="Include\geVertexDataDesc.h" />
+    <ClInclude Include="Include\geVertexDataDescRTTI.h" />
     <ClInclude Include="Include\geVertexDeclaration.h" />
     <ClInclude Include="Include\geVertexDeclarationRTTI.h" />
     <ClInclude Include="Include\geVideoModeInfo.h" />
@@ -123,6 +134,7 @@
     <ClCompile Include="Source\geCoreThread.cpp" />
     <ClCompile Include="Source\geCoreThreadQueue.cpp" />
     <ClCompile Include="Source\geDeferredCallManager.cpp" />
+    <ClCompile Include="Source\geDepthStencilState.cpp" />
     <ClCompile Include="Source\geDropTarget.cpp" />
     <ClCompile Include="Source\geEventQuery.cpp" />
     <ClCompile Include="Source\geGameObject.cpp" />
@@ -130,6 +142,8 @@
     <ClCompile Include="Source\geGameObjectManager.cpp" />
     <ClCompile Include="Source\geGPUBuffer.cpp" />
     <ClCompile Include="Source\geGPUParam.cpp" />
+    <ClCompile Include="Source\geGPUParamDesc.cpp" />
+    <ClCompile Include="Source\geGPUPipelineState.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHardwareBufferManager.cpp" />
     <ClCompile Include="Source\geHString.cpp" />
@@ -144,8 +158,10 @@
     <ClCompile Include="Source\geProfilerCPU.cpp" />
     <ClCompile Include="Source\geProfilingManager.cpp" />
     <ClCompile Include="Source\geQueryManager.cpp" />
+    <ClCompile Include="Source\geRasterizerState.cpp" />
     <ClCompile Include="Source\geRenderAPI.cpp" />
     <ClCompile Include="Source\geRenderAPIManager.cpp" />
+    <ClCompile Include="Source\geRenderStateManager.cpp" />
     <ClCompile Include="Source\geRenderTarget.cpp" />
     <ClCompile Include="Source\geRenderTexture.cpp" />
     <ClCompile Include="Source\geRenderWindow.cpp" />
@@ -156,6 +172,7 @@
     <ClCompile Include="Source\geResourceManifest.cpp" />
     <ClCompile Include="Source\geResourceMetaData.cpp" />
     <ClCompile Include="Source\geResources.cpp" />
+    <ClCompile Include="Source\geSamplerState.cpp" />
     <ClCompile Include="Source\geSavedResourceData.cpp" />
     <ClCompile Include="Source\geSceneActor.cpp" />
     <ClCompile Include="Source\geSceneManager.cpp" />
@@ -169,6 +186,7 @@
     <ClCompile Include="Source\geUtility.cpp" />
     <ClCompile Include="Source\geVertexBuffer.cpp" />
     <ClCompile Include="Source\geVertexData.cpp" />
+    <ClCompile Include="Source\geVertexDataDesc.cpp" />
     <ClCompile Include="Source\geVertexDeclaration.cpp" />
     <ClCompile Include="Source\geVideoModeInfo.cpp" />
     <ClCompile Include="Source\geViewport.cpp" />

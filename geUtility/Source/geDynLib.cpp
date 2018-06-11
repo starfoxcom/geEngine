@@ -28,12 +28,14 @@
 #endif
 
 namespace geEngineSDK {
-  DynLib::DynLib(String name) : m_name(std::move(name)) {
+  DynLib::DynLib(String name)
+    : m_name(std::move(name)),
 #if GE_PLATFORM == GE_PLATFORM_PS4
-    m_hInst = 0;
+    m_hInst(0)
 #else
-    m_hInst = nullptr;
+    m_hInst(nullptr)
 #endif
+  {
     load();
   }
 

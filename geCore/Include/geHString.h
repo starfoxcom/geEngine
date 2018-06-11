@@ -25,7 +25,7 @@
 /*****************************************************************************/
 
 namespace geEngineSDK {
-  class GE_CORE_EXPORT HString
+  class GE_CORE_EXPORT HString final
   {
    public:
     /**

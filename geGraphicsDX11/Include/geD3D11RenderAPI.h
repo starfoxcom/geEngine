@@ -120,22 +120,18 @@ namespace geEngineSDK {
       /**
        * @copydoc RenderAPI::setVertexBuffers
        */
-      /*
       void
       setVertexBuffers(uint32 index,
                        SPtr<VertexBuffer>* buffers,
                        uint32 numBuffers,
                        const SPtr<CommandBuffer>& commandBuffer = nullptr) override;
-      */
 
       /**
        * @copydoc RenderAPI::setIndexBuffer
        */
-      /*
       void
       setIndexBuffer(const SPtr<IndexBuffer>& buffer,
                      const SPtr<CommandBuffer>& commandBuffer = nullptr) override;
-      */
 
       /**
        * @copydoc RenderAPI::setVertexDeclaration

@@ -56,11 +56,10 @@ namespace geEngineSDK {
     }
   }
 
-  HString::HString(const HString& copy) {
-    m_stringData = copy.m_stringData;
-    m_isDirty = copy.m_isDirty;
-    m_cachedString = copy.m_cachedString;
-
+  HString::HString(const HString& copy)
+    : m_stringData(copy.m_stringData),
+      m_isDirty(copy.m_isDirty),
+      m_cachedString(copy.m_cachedString) {
     if (copy.m_stringData->numParameters > 0) {
       m_parameters = ge_newN<String>(m_stringData->numParameters);
       if (nullptr != copy.m_parameters) {

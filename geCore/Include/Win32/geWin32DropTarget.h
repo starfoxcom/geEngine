@@ -56,15 +56,14 @@ namespace geEngineSDK {
     {
       DropTargetOp(DROP_OP_TYPE::E _type, const Vector2I& _pos)
         : type(_type),
-          position(_pos),
-          dataType(DROP_OP_DATA_TYPE::kNone)
+          position(_pos)
       {}
 
       DROP_OP_TYPE::E type;
       Vector2I position;
 
-      DROP_OP_DATA_TYPE::E dataType;
-      Vector<Path>* fileList;
+      DROP_OP_DATA_TYPE::E dataType = DROP_OP_DATA_TYPE::kNone;
+      Vector<Path>* fileList = nullptr;
     };
 
    public:

@@ -46,9 +46,9 @@ namespace geEngineSDK {
     };
   }
 
-  SceneManager::SceneManager() {
-    m_rootNode = SceneObject::createInternal("SceneRoot");
-  }
+  SceneManager::SceneManager()
+    : m_rootNode(SceneObject::createInternal("SceneRoot"))
+  {}
 
   SceneManager::~SceneManager() {
     if (nullptr != m_rootNode && !m_rootNode.isDestroyed()) {

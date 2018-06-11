@@ -430,13 +430,14 @@ namespace geEngineSDK {
 
     GlobalUnlock(hData);
 
-    if (OpenClipboard(nullptr)) {
-      EmptyClipboard();
-      SetClipboardData(CF_UNICODETEXT, hData);
-      CloseClipboard();
+    if (!OpenClipboard(nullptr)) {
+      GlobalFree(hData);
+      return;
     }
 
-    GlobalFree(hData);
+    EmptyClipboard();
+    SetClipboardData(CF_UNICODETEXT, hData);
+    CloseClipboard();
   }
 
   String Platform::copyFromClipboard()

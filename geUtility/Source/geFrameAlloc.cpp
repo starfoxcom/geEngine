@@ -326,7 +326,7 @@ namespace geEngineSDK {
 
   GE_UTILITY_EXPORT void
   ge_frame_free_aligned(void* data) {
-    g_frameAlloc().free((uint8*)data);
+    g_frameAlloc().free(reinterpret_cast<uint8*>(data));
   }
 
   GE_UTILITY_EXPORT void

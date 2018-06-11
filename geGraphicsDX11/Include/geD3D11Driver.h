@@ -103,7 +103,7 @@ namespace geEngineSDK {
 
      private:
       uint32 m_adapterNumber;
-      uint32 m_numOutputs;
+      uint32 m_numOutputs = 0;
       DXGI_ADAPTER_DESC m_adapterIdentifier;
       IDXGIAdapter* m_dxgiAdapter;
       SPtr<VideoModeInfo> m_videoModeInfo;

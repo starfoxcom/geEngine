@@ -447,15 +447,4 @@ TEST(geUtility, FrameAllocTest) {
   windowDesc.module = GetModuleHandle(nullptr);
   
   SPtr<Win32Window> m_appWnd = ge_shared_ptr_new<Win32Window>(windowDesc);
-
-  Vector<int> requestedLevels = {
-    10,
-    8,
-    6,
-    4,
-    2,
-    0
-  };
-
-  requestedLevels.size();
 }

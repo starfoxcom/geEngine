@@ -108,7 +108,7 @@ namespace geEngineSDK {
       SPtr<Resource> loadedData;
       uint32 remainingDependencies;
       Vector<HResource> dependencies;
-      bool notifyImmediately;
+      bool notifyImmediately = false;
     };
 
    public:

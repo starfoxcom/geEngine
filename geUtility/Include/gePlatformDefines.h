@@ -319,15 +319,15 @@
    * Disable: decorated name length exceeded, name was truncated. Happens with
    * really long type names. Even fairly standard use of std::unordered_map
    * with custom parameters, meaning I can't really do much to avoid it.
-   * It shouldn't effect execution but might cause problems if you compile library
-   * with one compiler and use it in another.
+   * It shouldn't effect execution but might cause problems if you compile
+   * library with one compiler and use it in another.
    */
 # pragma warning(disable: 4503)
-	
+
   /**
    * Disable: nonstandard extension used: override specifier 'keyword'.
-   * Happens when a keyword was used that is not in the C++ standard, for example,
-   * one of the override specifiers that also works under /clr.
+   * Happens when a keyword was used that is not in the C++ standard, for
+   * example, one of the override specifiers that also works under /clr.
    */
-# pragma warning(disable : 4481)
+//# pragma warning(disable : 4481)
 #endif

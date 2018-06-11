@@ -559,30 +559,32 @@ namespace geEngineSDK {
    * @brief Type of GPU data parameters that can be used as inputs to a GPU
    *        program.
    */
-  enum GPUParamDataType {
-    GPDT_FLOAT1 = 1,      //1D floating point value.
-    GPDT_FLOAT2 = 2,      //2D floating point value.
-    GPDT_FLOAT3 = 3,      //3D floating point value.
-    GPDT_FLOAT4 = 4,      //4D floating point value.
-    GPDT_MATRIX_2X2 = 11, //2x2 matrix.
-    GPDT_MATRIX_2X3 = 12, //2x3 matrix.
-    GPDT_MATRIX_2X4 = 13, //2x4 matrix.
-    GPDT_MATRIX_3X2 = 14, //3x2 matrix.
-    GPDT_MATRIX_3X3 = 15, //3x3 matrix.
-    GPDT_MATRIX_3X4 = 16, //3x4 matrix.
-    GPDT_MATRIX_4X2 = 17, //4x2 matrix.
-    GPDT_MATRIX_4X3 = 18, //4x3 matrix.
-    GPDT_MATRIX_4X4 = 19, //4x4 matrix.
-    GPDT_INT1 = 20,       //1D signed integer value.
-    GPDT_INT2 = 21,       //2D signed integer value.
-    GPDT_INT3 = 22,       //3D signed integer value.
-    GPDT_INT4 = 23,       //4D signed integer value.
-    GPDT_BOOL = 24,       //Boolean value.
-    GPDT_STRUCT = 25,     //Variable size structure.
-    GPDT_COLOR = 26,      //Same as GPDT_FLOAT4, but easier to deduct usage.
-    GPDT_COUNT = 27,      //Keep at end before GPDT_UNKNOWN
-    GPDT_UNKNOWN = 0xffff
-  };
+  namespace GPU_PARAM_DATA_TYPE {
+    enum E {
+      kFLOAT1 = 1,      //1D floating point value.
+      kFLOAT2 = 2,      //2D floating point value.
+      kFLOAT3 = 3,      //3D floating point value.
+      kFLOAT4 = 4,      //4D floating point value.
+      kMATRIX_2X2 = 11, //2x2 matrix.
+      kMATRIX_2X3 = 12, //2x3 matrix.
+      kMATRIX_2X4 = 13, //2x4 matrix.
+      kMATRIX_3X2 = 14, //3x2 matrix.
+      kMATRIX_3X3 = 15, //3x3 matrix.
+      kMATRIX_3X4 = 16, //3x4 matrix.
+      kMATRIX_4X2 = 17, //4x2 matrix.
+      kMATRIX_4X3 = 18, //4x3 matrix.
+      kMATRIX_4X4 = 19, //4x4 matrix.
+      kINT1 = 20,       //1D signed integer value.
+      kINT2 = 21,       //2D signed integer value.
+      kINT3 = 22,       //3D signed integer value.
+      kINT4 = 23,       //4D signed integer value.
+      kBOOL = 24,       //Boolean value.
+      kSTRUCT = 25,     //Variable size structure.
+      kCOLOR = 26,      //Same as GPDT_FLOAT4, but easier to deduct usage.
+      kCOUNT = 27,      //Keep at end before GPDT_UNKNOWN
+      kUNKNOWN = 0xffff
+    };
+  }
 
   /**
    * @brief Available texture types.
@@ -635,95 +637,97 @@ namespace geEngineSDK {
   {
     GPUDataParamInfos() {
       memset(lookup, 0, sizeof(lookup));
-      lookup[static_cast<uint32>(GPDT_FLOAT1)] = { 4, 4, 4, 1, 1 };
-      lookup[static_cast<uint32>(GPDT_FLOAT2)] = { 4, 8, 8, 1, 2 };
-      lookup[static_cast<uint32>(GPDT_FLOAT3)] = { 4, 16, 16, 1, 3 };
-      lookup[static_cast<uint32>(GPDT_FLOAT4)] = { 4, 16, 16, 1, 4 };
-      lookup[static_cast<uint32>(GPDT_COLOR)] = { 4, 16, 16, 1, 4 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_2X2)] = { 4, 16, 8, 2, 2 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_2X3)] = { 4, 32, 16, 2, 3 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_2X4)] = { 4, 32, 16, 2, 4 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_3X2)] = { 4, 24, 8, 3, 2 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_3X3)] = { 4, 48, 16, 3, 3 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_3X4)] = { 4, 48, 16, 3, 4 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_4X2)] = { 4, 32, 8, 4, 2 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_4X3)] = { 4, 64, 16, 4, 3 };
-      lookup[static_cast<uint32>(GPDT_MATRIX_4X4)] = { 4, 64, 16, 4, 4 };
-      lookup[static_cast<uint32>(GPDT_INT1)] = { 4, 4, 4, 1, 1 };
-      lookup[static_cast<uint32>(GPDT_INT2)] = { 4, 8, 8, 1, 2 };
-      lookup[static_cast<uint32>(GPDT_INT3)] = { 4, 12, 16, 1, 3 };
-      lookup[static_cast<uint32>(GPDT_INT4)] = { 4, 16, 16, 1, 4 };
-      lookup[static_cast<uint32>(GPDT_BOOL)] = { 4, 4, 4, 1, 1 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kFLOAT1)] = { 4, 4, 4, 1, 1 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kFLOAT2)] = { 4, 8, 8, 1, 2 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kFLOAT3)] = { 4, 16, 16, 1, 3 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kFLOAT4)] = { 4, 16, 16, 1, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kCOLOR)] = { 4, 16, 16, 1, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_2X2)] = { 4, 16, 8, 2, 2 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_2X3)] = { 4, 32, 16, 2, 3 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_2X4)] = { 4, 32, 16, 2, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_3X2)] = { 4, 24, 8, 3, 2 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_3X3)] = { 4, 48, 16, 3, 3 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_3X4)] = { 4, 48, 16, 3, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_4X2)] = { 4, 32, 8, 4, 2 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_4X3)] = { 4, 64, 16, 4, 3 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kMATRIX_4X4)] = { 4, 64, 16, 4, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kINT1)] = { 4, 4, 4, 1, 1 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kINT2)] = { 4, 8, 8, 1, 2 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kINT3)] = { 4, 12, 16, 1, 3 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kINT4)] = { 4, 16, 16, 1, 4 };
+      lookup[static_cast<uint32>(GPU_PARAM_DATA_TYPE::kBOOL)] = { 4, 4, 4, 1, 1 };
     }
 
-    GPUParamDataTypeInfo lookup[GPDT_COUNT];
+    GPUParamDataTypeInfo lookup[GPU_PARAM_DATA_TYPE::kCOUNT];
   };
 
   /**
    * @brief Type of GPU object parameters that can be used as inputs to a GPU
    *        program.
    */
-  enum GPUParamObjectType {
-    //Sampler state for a 1D texture.
-    GPOT_SAMPLER1D                        = 1,
-    //Sampler state for a 2D texture.
-    GPOT_SAMPLER2D                        = 2,
-    //Sampler state for a 3D texture.
-    GPOT_SAMPLER3D                        = 3,
-    //Sampler state for a cube texture.
-    GPOT_SAMPLERCUBE                      = 4,
-    //Sampler state for a 2D texture with multiple samples.
-    GPOT_SAMPLER2DMS                      = 5,
-    //1D texture.
-    GPOT_TEXTURE1D                        = 11,
-    //2D texture.
-    GPOT_TEXTURE2D                        = 12,
-    //3D texture.
-    GPOT_TEXTURE3D                        = 13,
-    //Cube texture.
-    GPOT_TEXTURECUBE                      = 14,
-    //2D texture with multiple samples.
-    GPOT_TEXTURE2DMS                      = 15,
-    //Buffer containing raw bytes (no interpretation).
-    GPOT_BYTE_BUFFER                      = 32,
-    //Buffer containing a set of structures.
-    GPOT_STRUCTURED_BUFFER                = 33,
-    //Read-write buffer containing a set of primitives.
-    GPOT_RWTYPED_BUFFER                   = 41,
-    //Read-write buffer containing raw bytes (no interpretation).
-    GPOT_RWBYTE_BUFFER                    = 42,
-    //Read-write buffer containing a set of structures.
-    GPOT_RWSTRUCTURED_BUFFER              = 43,
-    //Read-write buffer containing a set of structures, with a counter.
-    GPOT_RWSTRUCTURED_BUFFER_WITH_COUNTER = 44,
-    //Buffer that can be used for appending data in a stack-like fashion.
-    GPOT_RWAPPEND_BUFFER                  = 45,
-    //Buffer that can be used for consuming data in a stack-like fashion.
-    GPOT_RWCONSUME_BUFFER                 = 46,
-    //1D texture with unordered read/writes.
-    GPOT_RWTEXTURE1D                      = 50,
-    //2D texture with unordered read/writes.
-    GPOT_RWTEXTURE2D                      = 51,
-    //3D texture with unordered read/writes.
-    GPOT_RWTEXTURE3D                      = 52,
-    //2D texture with multiple samples and unordered read/writes.
-    GPOT_RWTEXTURE2DMS                    = 53,
-    //1D texture with multiple array entries.
-    GPOT_TEXTURE1DARRAY                   = 54,
-    //2D texture with multiple array entries.
-    GPOT_TEXTURE2DARRAY                   = 55,
-    //Cubemap texture with multiple array entries.
-    GPOT_TEXTURECUBEARRAY                 = 56,
-    //2D texture with multiple samples and array entries.
-    GPOT_TEXTURE2DMSARRAY                 = 57,
-    //1D texture with multiple array entries and unordered read/writes.
-    GPOT_RWTEXTURE1DARRAY                 = 58,
-    //2D texture with multiple array entries and unordered read/writes.
-    GPOT_RWTEXTURE2DARRAY                 = 59,
-    //2D texture with multiple array entries, samples and unordered read/writes.
-    GPOT_RWTEXTURE2DMSARRAY               = 60,
-    GPOT_UNKNOWN                          = 0xffff
-  };
+  namespace GPU_PARAM_OBJECT_TYPE {
+    enum E {
+      //Sampler state for a 1D texture.
+      kSAMPLER1D = 1,
+      //Sampler state for a 2D texture.
+      kSAMPLER2D = 2,
+      //Sampler state for a 3D texture.
+      kSAMPLER3D = 3,
+      //Sampler state for a cube texture.
+      kSAMPLERCUBE = 4,
+      //Sampler state for a 2D texture with multiple samples.
+      kSAMPLER2DMS = 5,
+      //1D texture.
+      kTEXTURE1D = 11,
+      //2D texture.
+      kTEXTURE2D = 12,
+      //3D texture.
+      kTEXTURE3D = 13,
+      //Cube texture.
+      kTEXTURECUBE = 14,
+      //2D texture with multiple samples.
+      kTEXTURE2DMS = 15,
+      //Buffer containing raw bytes (no interpretation).
+      kBYTE_BUFFER = 32,
+      //Buffer containing a set of structures.
+      kSTRUCTURED_BUFFER = 33,
+      //Read-write buffer containing a set of primitives.
+      kRWTYPED_BUFFER = 41,
+      //Read-write buffer containing raw bytes (no interpretation).
+      kRWBYTE_BUFFER = 42,
+      //Read-write buffer containing a set of structures.
+      kRWSTRUCTURED_BUFFER = 43,
+      //Read-write buffer containing a set of structures, with a counter.
+      kRWSTRUCTURED_BUFFER_WITH_COUNTER = 44,
+      //Buffer that can be used for appending data in a stack-like fashion.
+      kRWAPPEND_BUFFER = 45,
+      //Buffer that can be used for consuming data in a stack-like fashion.
+      kRWCONSUME_BUFFER = 46,
+      //1D texture with unordered read/writes.
+      kRWTEXTURE1D = 50,
+      //2D texture with unordered read/writes.
+      kRWTEXTURE2D = 51,
+      //3D texture with unordered read/writes.
+      kRWTEXTURE3D = 52,
+      //2D texture with multiple samples and unordered read/writes.
+      kRWTEXTURE2DMS = 53,
+      //1D texture with multiple array entries.
+      kTEXTURE1DARRAY = 54,
+      //2D texture with multiple array entries.
+      kTEXTURE2DARRAY = 55,
+      //Cubemap texture with multiple array entries.
+      kTEXTURECUBEARRAY = 56,
+      //2D texture with multiple samples and array entries.
+      kTEXTURE2DMSARRAY = 57,
+      //1D texture with multiple array entries and unordered read/writes.
+      kRWTEXTURE1DARRAY = 58,
+      //2D texture with multiple array entries and unordered read/writes.
+      kRWTEXTURE2DARRAY = 59,
+      //2D texture with multiple array entries, samples and unordered read/writes.
+      kRWTEXTURE2DMSARRAY = 60,
+      kUNKNOWN = 0xffff
+    };
+  }
 
   /**
    * @brief Types of GPU queues.

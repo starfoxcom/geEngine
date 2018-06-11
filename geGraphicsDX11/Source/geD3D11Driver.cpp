@@ -24,11 +24,10 @@
 
 namespace geEngineSDK {
   namespace geCoreThread {
-    D3D11Driver::D3D11Driver(const D3D11Driver &ob) {
-      m_adapterNumber = ob.m_adapterNumber;
-      m_adapterIdentifier = ob.m_adapterIdentifier;
-      m_dxgiAdapter = ob.m_dxgiAdapter;
-
+    D3D11Driver::D3D11Driver(const D3D11Driver &ob)
+      : m_adapterNumber(ob.m_adapterNumber),
+        m_adapterIdentifier(ob.m_adapterIdentifier),
+        m_dxgiAdapter(ob.m_dxgiAdapter) {
       if (m_dxgiAdapter) {
         m_dxgiAdapter->AddRef();
       }
@@ -36,10 +35,9 @@ namespace geEngineSDK {
       construct();
     }
 
-    D3D11Driver::D3D11Driver(uint32 adapterNumber, IDXGIAdapter* pDXGIAdapter) {
-      m_adapterNumber = adapterNumber;
-      m_dxgiAdapter = pDXGIAdapter;
-
+    D3D11Driver::D3D11Driver(uint32 adapterNumber, IDXGIAdapter* pDXGIAdapter)
+      : m_adapterNumber(adapterNumber),
+        m_dxgiAdapter(pDXGIAdapter) {
       if (m_dxgiAdapter) {
         m_dxgiAdapter->AddRef();
       }
@@ -84,7 +82,7 @@ namespace geEngineSDK {
     String
     D3D11Driver::getDriverName() const {
       SIZE_T size = wcslen(m_adapterIdentifier.Description);
-      char* str = (char*)ge_alloc((uint32)(size + 1));
+      auto str = reinterpret_cast<char*>(ge_alloc(size + 1));
 
       wcstombs(str, m_adapterIdentifier.Description, size);
       str[size] = '\0';
@@ -97,7 +95,7 @@ namespace geEngineSDK {
     String D3D11Driver::getDriverDescription() const
     {
       SIZE_T size = wcslen(m_adapterIdentifier.Description);
-      ANSICHAR* str = reinterpret_cast<ANSICHAR*>(ge_alloc(size + 1));
+      auto str = reinterpret_cast<ANSICHAR*>(ge_alloc(size + 1));
 
       wcstombs(str, m_adapterIdentifier.Description, size);
       str[size] = '\0';

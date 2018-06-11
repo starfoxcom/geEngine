@@ -68,10 +68,6 @@ namespace geEngineSDK {
     return timeNowNs.count() * 0.000001;
   }
 
-  ProfilerCPU::ProfilerTimerPrecise::ProfilerTimerPrecise() {
-    m_cycles = 0;
-  }
-
   void
   ProfilerCPU::ProfilerTimerPrecise::start() {
     m_startCycles = getNumCycles();

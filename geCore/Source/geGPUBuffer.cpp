@@ -23,45 +23,49 @@
 #include <geException.h>
 
 namespace geEngineSDK {
-  uint32 getBufferSize(const GPU_BUFFER_DESC& desc)
-  {
+  using std::static_pointer_cast;
+
+  uint32
+  getBufferSize(const GPU_BUFFER_DESC& desc) {
     uint32 elementSize;
 
-    if (desc.type == GPU_BUFFER_TYPE::kSTANDARD)
+    if (GPU_BUFFER_TYPE::kSTANDARD == desc.type) {
       elementSize = GPUBuffer::getFormatSize(desc.format);
-    else
+    }
+    else {
       elementSize = desc.elementSize;
+    }
 
     return elementSize * desc.elementCount;
   }
 
   GPUBufferProperties::GPUBufferProperties(const GPU_BUFFER_DESC& desc)
-    : mDesc(desc)
-  {
-    if (mDesc.type == GPU_BUFFER_TYPE::kSTANDARD)
-      mDesc.elementSize = GPUBuffer::getFormatSize(mDesc.format);
+    : m_desc(desc) {
+    if (GPU_BUFFER_TYPE::kSTANDARD == m_desc.type) {
+      m_desc.elementSize = GPUBuffer::getFormatSize(m_desc.format);
+    }
   }
 
   GPUBuffer::GPUBuffer(const GPU_BUFFER_DESC& desc)
-    :mProperties(desc)
-  {
+    : m_properties(desc)
+  {}
+
+  SPtr<geCoreThread::GPUBuffer>
+  GPUBuffer::getCore() const {
+    return static_pointer_cast<geCoreThread::GPUBuffer>(m_coreSpecific);
   }
 
-  SPtr<geCoreThread::GPUBuffer> GPUBuffer::getCore() const
-  {
-    return std::static_pointer_cast<geCoreThread::GPUBuffer>(m_coreSpecific);
+  SPtr<geCoreThread::CoreObject>
+  GPUBuffer::createCore() const {
+    return geCoreThread::HardwareBufferManager::instance().
+             createGPUBufferInternal(m_properties.m_desc);
   }
 
-  SPtr<geCoreThread::CoreObject> GPUBuffer::createCore() const
-  {
-    return geCoreThread::HardwareBufferManager::instance().createGPUBufferInternal(mProperties.mDesc);
-  }
-
-  uint32 GPUBuffer::getFormatSize(GPU_BUFFER_FORMAT::E format)
-  {
+  uint32
+  GPUBuffer::getFormatSize(GPU_BUFFER_FORMAT::E format) {
     static bool lookupInitialized = false;
-
     static uint32 lookup[GPU_BUFFER_FORMAT::kCOUNT];
+
     if (!lookupInitialized) {
       lookup[GPU_BUFFER_FORMAT::k16X1F] = 2;
       lookup[GPU_BUFFER_FORMAT::k16X2F] = 4;
@@ -96,34 +100,35 @@ namespace geEngineSDK {
       lookup[GPU_BUFFER_FORMAT::k32X2U] = 8;
       lookup[GPU_BUFFER_FORMAT::k32X3U] = 12;
       lookup[GPU_BUFFER_FORMAT::k32X4U] = 16;
-
       lookupInitialized = true;
     }
 
-    if (format >= GPU_BUFFER_FORMAT::kCOUNT)
+    if (GPU_BUFFER_FORMAT::kCOUNT <= format) {
       return 0;
+    }
 
-    return lookup[(uint32)format];
+    return lookup[static_cast<uint32>(format)];
   }
 
-  SPtr<GPUBuffer> GPUBuffer::create(const GPU_BUFFER_DESC& desc)
-  {
+  SPtr<GPUBuffer>
+  GPUBuffer::create(const GPU_BUFFER_DESC& desc) {
     return HardwareBufferManager::instance().createGPUBuffer(desc);
   }
 
   namespace geCoreThread {
-    GPUBuffer::GPUBuffer(const GPU_BUFFER_DESC& desc, uint32 deviceMask)
-      :HardwareBuffer(getBufferSize(desc)), mProperties(desc)
-    {
-    }
+    GPUBuffer::GPUBuffer(const GPU_BUFFER_DESC& desc, uint32 /*deviceMask*/)
+      : HardwareBuffer(getBufferSize(desc)),
+        m_properties(desc)
+    {}
 
     GPUBuffer::~GPUBuffer() {
-      // Make sure that derived classes call clearBufferViews
-      // I can't call it here since it needs a virtual method call
+      //Make sure that derived classes call clearBufferViews
+      //I can't call it here since it needs a virtual method call
     }
 
     SPtr<GPUBuffer>
-    GPUBuffer::create(const GPU_BUFFER_DESC& desc, GPU_DEVICE_FLAGS::E deviceMask) {
+    GPUBuffer::create(const GPU_BUFFER_DESC& desc,
+                      GPU_DEVICE_FLAGS::E deviceMask) {
       return HardwareBufferManager::instance().createGPUBuffer(desc, deviceMask);
     }
   }
