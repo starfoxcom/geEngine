@@ -46,7 +46,10 @@
     <ClInclude Include="Include\geGameObjectRTTI.h" />
     <ClInclude Include="Include\geGPUBuffer.h" />
     <ClInclude Include="Include\geGPUParam.h" />
+    <ClInclude Include="Include\geGPUParamBlockBuffer.h" />
     <ClInclude Include="Include\geGPUParamDesc.h" />
+    <ClInclude Include="Include\geGPUParams.h" />
+    <ClInclude Include="Include\geGPUPipelineParamInfo.h" />
     <ClInclude Include="Include\geGPUPipelineState.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
@@ -142,7 +145,10 @@
     <ClCompile Include="Source\geGameObjectManager.cpp" />
     <ClCompile Include="Source\geGPUBuffer.cpp" />
     <ClCompile Include="Source\geGPUParam.cpp" />
+    <ClCompile Include="Source\geGPUParamBlockBuffer.cpp" />
     <ClCompile Include="Source\geGPUParamDesc.cpp" />
+    <ClCompile Include="Source\geGPUParams.cpp" />
+    <ClCompile Include="Source\geGPUPipelineParamInfo.cpp" />
     <ClCompile Include="Source\geGPUPipelineState.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHardwareBufferManager.cpp" />

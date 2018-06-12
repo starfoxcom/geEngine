@@ -352,6 +352,15 @@
     <ClInclude Include="Include\geGPUParamDesc.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geGPUParamBlockBuffer.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUPipelineParamInfo.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUParams.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -562,6 +571,15 @@
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="Source\geGPUParamDesc.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUParamBlockBuffer.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUPipelineParamInfo.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUParams.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

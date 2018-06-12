@@ -137,7 +137,7 @@ namespace geEngineSDK {
      * @brief Deallocates a previously allocated piece of memory.
      */
     void
-    free(void* data) {
+    free(void* /*data*/) {
       //Do nothing
     }
 

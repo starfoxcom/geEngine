@@ -47,14 +47,6 @@ namespace geEngineSDK {
     }
 
     /**
-     * @brief Changes the seed of the generator to a random value.
-     */
-    void
-    setRandomSeed() {
-      setSeed(rand());
-    }
-
-    /**
      * @brief Returns a random value in range [0, NumLimits::MAX_UINT32].
      */
     uint32

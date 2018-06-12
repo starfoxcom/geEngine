@@ -23,6 +23,7 @@
 
 namespace geEngineSDK {
   using std::atomic;
+  using std::nullptr_t;
 
   /**
    * @brief Thread synchronization primitives used by AsyncOps and their callers.
@@ -127,7 +128,29 @@ namespace geEngineSDK {
     _completeOperation();
 
    private:
+    friend bool
+    operator==(const AsyncOp&, nullptr_t);
+    
+    friend bool
+    operator!=(const AsyncOp&, nullptr_t);
+
     SPtr<AsyncOpData> m_data;
     SPtr<AsyncOpSyncData> m_syncData;
   };
+
+  /**
+   * @brief Checks if an AsyncOp is null.
+   */
+  inline bool
+  operator==(const AsyncOp& lhs, nullptr_t) {
+    return nullptr == lhs.m_data;
+  }
+
+  /**
+   * @brief Checks if an AsyncOp is not null.
+   */
+  inline bool
+  operator!=(const AsyncOp& lhs, nullptr_t) {
+    return nullptr != lhs.m_data;
+  }
 }

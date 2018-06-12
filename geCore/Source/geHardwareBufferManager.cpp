@@ -58,7 +58,8 @@ namespace geEngineSDK {
   }
 
   SPtr<GPUParamBlockBuffer>
-  HardwareBufferManager::createGPUParamBlockBuffer(uint32 size, GPUParamBlockUsage usage) {
+  HardwareBufferManager::createGPUParamBlockBuffer(uint32 size,
+                                                   GPU_PARAM_BLOCK_USAGE::E usage) {
     SPtr<GPUParamBlockBuffer> paramBlockPtr =
       ge_core_ptr<GPUParamBlockBuffer>(ge_new<GPUParamBlockBuffer>(size, usage));
 
@@ -181,7 +182,7 @@ namespace geEngineSDK {
 
     SPtr<GPUParamBlockBuffer>
     HardwareBufferManager::createGPUParamBlockBuffer(uint32 size,
-                                                     GPUParamBlockUsage usage,
+                                                     GPU_PARAM_BLOCK_USAGE::E usage,
                                                      GPU_DEVICE_FLAGS::E deviceMask) {
       auto paramBlockPtr = createGPUParamBlockBufferInternal(size, usage, deviceMask);
       paramBlockPtr->initialize();

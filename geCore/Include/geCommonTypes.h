@@ -372,15 +372,17 @@ namespace geEngineSDK {
   /**
    * @brief Types of programs that may run on GPU.
    */
-  enum GPUProgramType {
-    GPT_VERTEX_PROGRAM,   //Vertex program.
-    GPT_FRAGMENT_PROGRAM, //Fragment (pixel) program.
-    GPT_GEOMETRY_PROGRAM, //Geometry program.
-    GPT_DOMAIN_PROGRAM,   //Domain (tesselation evaluation) program.
-    GPT_HULL_PROGRAM,     //Hull (tesselation control) program.
-    GPT_COMPUTE_PROGRAM,  //Compute program.
-    GPT_COUNT             //Keep at end
-  };
+  namespace GPU_PROGRAM_TYPE {
+    enum E {
+      kVERTEX_PROGRAM,   //Vertex program.
+      kFRAGMENT_PROGRAM, //Fragment (pixel) program.
+      kGEOMETRY_PROGRAM, //Geometry program.
+      kDOMAIN_PROGRAM,   //Domain (tessellation evaluation) program.
+      kHULL_PROGRAM,     //Hull (tessellation control) program.
+      kCOMPUTE_PROGRAM,  //Compute program.
+      kCOUNT             //Keep at end
+    };
+  }
 
   /**
    * @brief Values that represent hardware buffer usage. These usually
@@ -540,10 +542,12 @@ namespace geEngineSDK {
    * @brief Type of parameter block usages. Signifies how often will parameter
    *        blocks be changed.
    */
-  enum GPUParamBlockUsage {
-    GPBU_STATIC,  //Buffer will be rarely, if ever, updated.
-    GPBU_DYNAMIC  //Buffer will be updated often (for example every frame).
-  };
+  namespace GPU_PARAM_BLOCK_USAGE {
+    enum E {
+      kSTATIC,  //Buffer will be rarely, if ever, updated.
+      kDYNAMIC  //Buffer will be updated often (for example every frame).
+    };
+  }
 
   /**
    * @brief Type of a parameter in a GPU program.

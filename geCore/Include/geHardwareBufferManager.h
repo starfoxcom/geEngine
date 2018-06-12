@@ -70,7 +70,8 @@ namespace geEngineSDK {
      */
     SPtr<GPUParamBlockBuffer>
     createGPUParamBlockBuffer(uint32 size,
-                              GPUParamBlockUsage usage = GPBU_DYNAMIC);
+                              GPU_PARAM_BLOCK_USAGE::E usage =
+                                GPU_PARAM_BLOCK_USAGE::kDYNAMIC);
 
     /**
      * @brief Creates a generic buffer that can be passed as a parameter to a
@@ -153,8 +154,10 @@ namespace geEngineSDK {
        */
       SPtr<GPUParamBlockBuffer>
       createGPUParamBlockBuffer(uint32 size,
-                                GPUParamBlockUsage usage = GPBU_DYNAMIC,
-                                GPU_DEVICE_FLAGS::E deviceMask = GPU_DEVICE_FLAGS::kDEFAULT);
+                                GPU_PARAM_BLOCK_USAGE::E usage =
+                                  GPU_PARAM_BLOCK_USAGE::kDYNAMIC,
+                                GPU_DEVICE_FLAGS::E deviceMask =
+                                  GPU_DEVICE_FLAGS::kDEFAULT);
 
       /**
        * @copydoc geEngineSDK::HardwareBufferManager::createGPUBuffer
@@ -229,7 +232,8 @@ namespace geEngineSDK {
        */
       virtual SPtr<GPUParamBlockBuffer>
       createGPUParamBlockBufferInternal(uint32 size,
-                                        GPUParamBlockUsage usage = GPBU_DYNAMIC,
+                                        GPU_PARAM_BLOCK_USAGE::E usage =
+                                          GPU_PARAM_BLOCK_USAGE::kDYNAMIC,
                                         GPU_DEVICE_FLAGS::E deviceMask =
                                           GPU_DEVICE_FLAGS::kDEFAULT) = 0;
 
