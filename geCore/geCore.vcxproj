@@ -51,6 +51,8 @@
     <ClInclude Include="Include\geGPUParams.h" />
     <ClInclude Include="Include\geGPUPipelineParamInfo.h" />
     <ClInclude Include="Include\geGPUPipelineState.h" />
+    <ClInclude Include="Include\geGPUProgram.h" />
+    <ClInclude Include="Include\geGPUProgramRTTI.h" />
     <ClInclude Include="Include\geGPUResourceData.h" />
     <ClInclude Include="Include\geGPUResourceDataRTTI.h" />
     <ClInclude Include="Include\geHardwareBuffer.h" />
@@ -150,6 +152,7 @@
     <ClCompile Include="Source\geGPUParams.cpp" />
     <ClCompile Include="Source\geGPUPipelineParamInfo.cpp" />
     <ClCompile Include="Source\geGPUPipelineState.cpp" />
+    <ClCompile Include="Source\geGPUProgram.cpp" />
     <ClCompile Include="Source\geGPUResourceData.cpp" />
     <ClCompile Include="Source\geHardwareBufferManager.cpp" />
     <ClCompile Include="Source\geHString.cpp" />

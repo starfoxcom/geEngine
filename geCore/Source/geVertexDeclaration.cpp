@@ -73,13 +73,13 @@ namespace geEngineSDK {
         return sizeof(int16) * 2;
       case VERTEX_ELEMENT_TYPE::kSHORT4:
         return sizeof(int16) * 4;
-      case VERTEX_ELEMENT_TYPE::kuint1:
+      case VERTEX_ELEMENT_TYPE::kUINT1:
         return sizeof(uint32);
-      case VERTEX_ELEMENT_TYPE::kuint2:
+      case VERTEX_ELEMENT_TYPE::kUINT2:
         return sizeof(uint32) * 2;
-      case VERTEX_ELEMENT_TYPE::kuint3:
+      case VERTEX_ELEMENT_TYPE::kUINT3:
         return sizeof(uint32) * 3;
-      case VERTEX_ELEMENT_TYPE::kuint4:
+      case VERTEX_ELEMENT_TYPE::kUINT4:
         return sizeof(uint32) * 4;
       case VERTEX_ELEMENT_TYPE::kINT4:
         return sizeof(int32) * 4;
@@ -110,23 +110,23 @@ namespace geEngineSDK {
       case VERTEX_ELEMENT_TYPE::kSHORT1:
       case VERTEX_ELEMENT_TYPE::kUSHORT1:
       case VERTEX_ELEMENT_TYPE::kINT1:
-      case VERTEX_ELEMENT_TYPE::kuint1:
+      case VERTEX_ELEMENT_TYPE::kUINT1:
         return 1;
       case VERTEX_ELEMENT_TYPE::kFLOAT2:
       case VERTEX_ELEMENT_TYPE::kSHORT2:
       case VERTEX_ELEMENT_TYPE::kUSHORT2:
       case VERTEX_ELEMENT_TYPE::kINT2:
-      case VERTEX_ELEMENT_TYPE::kuint2:
+      case VERTEX_ELEMENT_TYPE::kUINT2:
         return 2;
       case VERTEX_ELEMENT_TYPE::kFLOAT3:
       case VERTEX_ELEMENT_TYPE::kINT3:
-      case VERTEX_ELEMENT_TYPE::kuint3:
+      case VERTEX_ELEMENT_TYPE::kUINT3:
         return 3;
       case VERTEX_ELEMENT_TYPE::kFLOAT4:
       case VERTEX_ELEMENT_TYPE::kSHORT4:
       case VERTEX_ELEMENT_TYPE::kUSHORT4:
       case VERTEX_ELEMENT_TYPE::kINT4:
-      case VERTEX_ELEMENT_TYPE::kuint4:
+      case VERTEX_ELEMENT_TYPE::kUINT4:
       case VERTEX_ELEMENT_TYPE::kUBYTE4:
       case VERTEX_ELEMENT_TYPE::kUBYTE4_NORM:
         return 4;
@@ -135,7 +135,7 @@ namespace geEngineSDK {
     }
 
     GE_EXCEPT(InvalidParametersException, "Invalid type");
-    return 0;
+    //return 0; //Unreachable code
   }
 
   VERTEX_ELEMENT_TYPE::E
@@ -350,7 +350,7 @@ namespace geEngineSDK {
     uint32 VertexDeclaration::s_nextFreeId = 0;
 
     VertexDeclaration::VertexDeclaration(const Vector<VertexElement>& elements,
-                                         GPU_DEVICE_FLAGS::E deviceMask)
+                                         GPU_DEVICE_FLAGS::E /*deviceMask*/)
       : m_properties(elements)
     {}
 

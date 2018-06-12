@@ -21,7 +21,6 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
-
 #include "geGPUParam.h"
 #include "geCoreObject.h"
 #include "geIResourceListener.h"

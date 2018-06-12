@@ -28,7 +28,7 @@
 namespace geEngineSDK {
   SPtr<VertexDeclaration>
   HardwareBufferManager::createVertexDeclaration(const SPtr<VertexDataDesc>& desc) {
-    VertexDeclaration* decl = ge_new<VertexDeclaration>(desc->createElements());
+    VertexDeclaration* decl = GE_PVT_NEW(VertexDeclaration, desc->createElements());
     SPtr<VertexDeclaration> declPtr = ge_core_ptr<VertexDeclaration>(decl);
 
     declPtr->_setThisPtr(declPtr);
@@ -39,7 +39,7 @@ namespace geEngineSDK {
 
   SPtr<VertexBuffer>
   HardwareBufferManager::createVertexBuffer(const VERTEX_BUFFER_DESC& desc) {
-    SPtr<VertexBuffer> vbuf = ge_core_ptr<VertexBuffer>(ge_new<VertexBuffer>(desc));
+    SPtr<VertexBuffer> vbuf = ge_core_ptr<VertexBuffer>(GE_PVT_NEW(VertexBuffer, desc));
 
     vbuf->_setThisPtr(vbuf);
     vbuf->initialize();
@@ -49,7 +49,7 @@ namespace geEngineSDK {
 
   SPtr<IndexBuffer>
   HardwareBufferManager::createIndexBuffer(const INDEX_BUFFER_DESC& desc) {
-    SPtr<IndexBuffer> ibuf = ge_core_ptr<IndexBuffer>(ge_new<IndexBuffer>(desc));
+    SPtr<IndexBuffer> ibuf = ge_core_ptr<IndexBuffer>(GE_PVT_NEW(IndexBuffer, desc));
 
     ibuf->_setThisPtr(ibuf);
     ibuf->initialize();
@@ -71,7 +71,7 @@ namespace geEngineSDK {
 
   SPtr<GPUBuffer>
   HardwareBufferManager::createGPUBuffer(const GPU_BUFFER_DESC& desc) {
-    SPtr<GPUBuffer> gbuf = ge_core_ptr<GPUBuffer>(ge_new<GPUBuffer>(desc));
+    SPtr<GPUBuffer> gbuf = ge_core_ptr<GPUBuffer>(GE_PVT_NEW(GPUBuffer, desc));
     gbuf->_setThisPtr(gbuf);
     gbuf->initialize();
 
@@ -80,7 +80,7 @@ namespace geEngineSDK {
 
   SPtr<GPUParams>
   HardwareBufferManager::createGPUParams(const SPtr<GPUPipelineParamInfo>& paramInfo) {
-    auto params = ge_new<GPUParams>(paramInfo);
+    auto params = GE_PVT_NEW(GPUParams, paramInfo);
     SPtr<GPUParams> paramsPtr = ge_core_ptr<GPUParams>(params);
 
     paramsPtr->_setThisPtr(paramsPtr);
@@ -203,7 +203,7 @@ namespace geEngineSDK {
     HardwareBufferManager::createVertexDeclarationInternal(
                                                         const Vector<VertexElement>& elements,
                                                         GPU_DEVICE_FLAGS::E deviceMask) {
-      auto decl = ge_new<VertexDeclaration>(elements, deviceMask);
+      auto decl = GE_PVT_NEW(VertexDeclaration, elements, deviceMask);
       SPtr<VertexDeclaration> ret = ge_shared_ptr<VertexDeclaration>(decl);
       ret->_setThisPtr(ret);
 
@@ -214,7 +214,7 @@ namespace geEngineSDK {
     HardwareBufferManager::createGPUParamsInternal(
                                                   const SPtr<GPUPipelineParamInfo>& paramInfo,
                                                   GPU_DEVICE_FLAGS::E deviceMask) {
-      auto params = ge_new<GPUParams>(paramInfo, deviceMask);
+      auto params = GE_PVT_NEW(GPUParams, paramInfo, deviceMask);
       SPtr<GPUParams> paramsPtr = ge_shared_ptr<GPUParams>(params);
       paramsPtr->_setThisPtr(paramsPtr);
 

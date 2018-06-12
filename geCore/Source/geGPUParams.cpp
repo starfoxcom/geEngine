@@ -823,108 +823,112 @@ namespace geEngineSDK {
 
     auto sampledSurfaces = reinterpret_cast<TextureSurface*>(data + sampledSurfaceOffset);
     auto loadStoreSurfaces = reinterpret_cast<TextureSurface*>(data + loadStoreSurfaceOffset);
-    auto paramBuffers = reinterpret_cast<SPtr<geCoreThread::GPUParamBlockBuffer>*>(data + paramBufferOffset);
-    auto textures = reinterpret_cast<<SPtr<geCoreThread::Texture>*>(data + textureArrayOffset);
-    auto loadStoreTextures = (SPtr<geCoreThread::Texture>*)(data + loadStoreTextureArrayOffset);
+    auto paramBuffers = reinterpret_cast<SPtr<geCoreThread::GPUParamBlockBuffer>*>
+                          (data + paramBufferOffset);
+    auto textures = (SPtr<geCoreThread::Texture>*)(data + textureArrayOffset);
+    auto loadStoreTextures = (SPtr<geCoreThread::Texture>*)
+                               (data + loadStoreTextureArrayOffset);
     auto buffers = (SPtr<geCoreThread::GPUBuffer>*)(data + bufferArrayOffset);
     auto samplers = (SPtr<geCoreThread::SamplerState>*)(data + samplerArrayOffset);
 
-    // Construct & copy
-    for (uint32 i = 0; i < numParamBlocks; i++)
-    {
+    //Construct & copy
+    for (uint32 i = 0; i < numParamBlocks; ++i) {
       new (&paramBuffers[i]) SPtr<geCoreThread::GPUParamBlockBuffer>();
 
-      if (m_paramBlockBuffers[i] != nullptr)
+      if (nullptr != m_paramBlockBuffers[i]) {
         paramBuffers[i] = m_paramBlockBuffers[i]->getCore();
+      }
     }
 
-    for (uint32 i = 0; i < numTextures; i++)
-    {
+    for (uint32 i = 0; i < numTextures; ++i) {
       new (&sampledSurfaces[i]) TextureSurface();
       sampledSurfaces[i] = m_sampledTextureData[i].surface;
 
       new (&textures[i]) SPtr<geCoreThread::Texture>();
 
-      if (m_sampledTextureData[i].texture.isLoaded())
+      if (m_sampledTextureData[i].texture.isLoaded()) {
         textures[i] = m_sampledTextureData[i].texture->getCore();
-      else
+      }
+      else {
         textures[i] = nullptr;
+      }
     }
 
-    for (uint32 i = 0; i < numStorageTextures; i++)
-    {
+    for (uint32 i = 0; i < numStorageTextures; ++i) {
       new (&loadStoreSurfaces[i]) TextureSurface();
       loadStoreSurfaces[i] = m_loadStoreTextureData[i].surface;
 
       new (&loadStoreTextures[i]) SPtr<geCoreThread::Texture>();
 
-      if (m_loadStoreTextureData[i].texture.isLoaded())
+      if (m_loadStoreTextureData[i].texture.isLoaded()) {
         loadStoreTextures[i] = m_loadStoreTextureData[i].texture->getCore();
-      else
+      }
+      else {
         loadStoreTextures[i] = nullptr;
+      }
     }
 
-    for (uint32 i = 0; i < numBuffers; i++)
-    {
+    for (uint32 i = 0; i < numBuffers; ++i) {
       new (&buffers[i]) SPtr<geCoreThread::GPUBuffer>();
 
-      if (m_buffers[i] != nullptr)
+      if (nullptr != m_buffers[i]) {
         buffers[i] = m_buffers[i]->getCore();
-      else
+      }
+      else {
         buffers[i] = nullptr;
+      }
     }
 
-    for (uint32 i = 0; i < numSamplers; i++)
-    {
+    for (uint32 i = 0; i < numSamplers; ++i) {
       new (&samplers[i]) SPtr<geCoreThread::SamplerState>();
 
-      if (m_samplerStates[i] != nullptr)
+      if (nullptr != m_samplerStates[i]) {
         samplers[i] = m_samplerStates[i]->getCore();
-      else
+      }
+      else {
         samplers[i] = nullptr;
+      }
     }
 
     return CoreSyncData(data, totalSize);
   }
 
-  void GPUParams::getListenerResources(Vector<HResource>& resources)
-  {
+  void
+  GPUParams::getListenerResources(Vector<HResource>& resources) {
     uint32 numTextures = m_paramInfo->getNumElements(PARAM_TYPE::kTexture);
     uint32 numStorageTextures = m_paramInfo->getNumElements(PARAM_TYPE::kLoadStoreTexture);
 
-    for (uint32 i = 0; i < numTextures; i++)
-    {
-      if (m_sampledTextureData[i].texture != nullptr)
+    for (uint32 i = 0; i < numTextures; ++i) {
+      if (nullptr != m_sampledTextureData[i].texture) {
         resources.push_back(m_sampledTextureData[i].texture);
+      }
     }
 
-    for (uint32 i = 0; i < numStorageTextures; i++)
-    {
-      if (m_loadStoreTextureData[i].texture != nullptr)
+    for (uint32 i = 0; i < numStorageTextures; ++i) {
+      if (nullptr != m_loadStoreTextureData[i].texture) {
         resources.push_back(m_loadStoreTextureData[i].texture);
+      }
     }
   }
 
-  namespace geCoreThread
-  {
-    GPUParams::GPUParams(const SPtr<GPUPipelineParamInfo>& paramInfo, GPU_DEVICE_FLAGS::E /*deviceMask*/)
+  namespace geCoreThread {
+    GPUParams::GPUParams(const SPtr<GPUPipelineParamInfo>& paramInfo,
+                         GPU_DEVICE_FLAGS::E /*deviceMask*/)
       : TGPUParams(paramInfo)
-    {
+    {}
 
+    SPtr<GPUParams>
+    GPUParams::_getThisPtr() const {
+      return static_pointer_cast<GPUParams>(getThisPtr());
     }
 
-    SPtr<GPUParams> GPUParams::_getThisPtr() const
-    {
-      return std::static_pointer_cast<GPUParams>(getThisPtr());
-    }
-
-    void GPUParams::syncToCore(const CoreSyncData& data)
-    {
-      uint32 numParamBlocks = m_paramInfo->getNumElements(PARAM_TYPE::kParamBlock);
-      uint32 numTextures = m_paramInfo->getNumElements(PARAM_TYPE::kTexture);
+    void
+    GPUParams::syncToCore(const CoreSyncData& data) {
+      uint32 numParamBlocks     = m_paramInfo->getNumElements(PARAM_TYPE::kParamBlock);
+      uint32 numTextures        = m_paramInfo->getNumElements(PARAM_TYPE::kTexture);
       uint32 numStorageTextures = m_paramInfo->getNumElements(PARAM_TYPE::kLoadStoreTexture);
-      uint32 numBuffers = m_paramInfo->getNumElements(PARAM_TYPE::kBuffer);
-      uint32 numSamplers = m_paramInfo->getNumElements(PARAM_TYPE::kSamplerState);
+      uint32 numBuffers         = m_paramInfo->getNumElements(PARAM_TYPE::kBuffer);
+      uint32 numSamplers        = m_paramInfo->getNumElements(PARAM_TYPE::kSamplerState);
 
       uint32 sampledSurfacesSize = numTextures * sizeof(TextureSurface);
       uint32 loadStoreSurfacesSize = numStorageTextures * sizeof(TextureSurface);
@@ -934,8 +938,13 @@ namespace geEngineSDK {
       uint32 bufferArraySize = numBuffers * sizeof(SPtr<GPUBuffer>);
       uint32 samplerArraySize = numSamplers * sizeof(SPtr<SamplerState>);
 
-      uint32 totalSize = sampledSurfacesSize + loadStoreSurfacesSize + paramBufferSize + textureArraySize
-        + loadStoreTextureArraySize + bufferArraySize + samplerArraySize;
+      uint32 totalSize = sampledSurfacesSize +
+                         loadStoreSurfacesSize +
+                         paramBufferSize +
+                         textureArraySize +
+                         loadStoreTextureArraySize +
+                         bufferArraySize +
+                         samplerArraySize;
 
       uint32 sampledSurfacesOffset = 0;
       uint32 loadStoreSurfaceOffset = sampledSurfacesOffset + sampledSurfacesSize;
@@ -945,27 +954,28 @@ namespace geEngineSDK {
       uint32 bufferArrayOffset = loadStoreTextureArrayOffset + loadStoreTextureArraySize;
       uint32 samplerArrayOffset = bufferArrayOffset + bufferArraySize;
 
-      assert(data.getBufferSize() == totalSize);
+      GE_ASSERT(data.getBufferSize() == totalSize);
 
       uint8* dataPtr = data.getBuffer();
 
-      TextureSurface* sampledSurfaces = (TextureSurface*)(dataPtr + sampledSurfacesOffset);
-      TextureSurface* loadStoreSurfaces = (TextureSurface*)(dataPtr + loadStoreSurfaceOffset);
-      SPtr<GPUParamBlockBuffer>* paramBuffers = (SPtr<GPUParamBlockBuffer>*)(dataPtr + paramBufferOffset);
+      auto sampledSurfaces = reinterpret_cast<TextureSurface*>
+                               (dataPtr + sampledSurfacesOffset);
+      auto loadStoreSurfaces = reinterpret_cast<TextureSurface*>
+                                 (dataPtr + loadStoreSurfaceOffset);
+      auto paramBuffers = reinterpret_cast<SPtr<GPUParamBlockBuffer>*>
+                            (dataPtr + paramBufferOffset);
       SPtr<Texture>* textures = (SPtr<Texture>*)(dataPtr + textureArrayOffset);
       SPtr<Texture>* loadStoreTextures = (SPtr<Texture>*)(dataPtr + loadStoreTextureArrayOffset);
-      SPtr<GPUBuffer>* buffers = (SPtr<GPUBuffer>*)(dataPtr + bufferArrayOffset);
-      SPtr<SamplerState>* samplers = (SPtr<SamplerState>*)(dataPtr + samplerArrayOffset);
+      auto buffers = reinterpret_cast<SPtr<GPUBuffer>*>(dataPtr + bufferArrayOffset);
+      auto samplers = reinterpret_cast<SPtr<SamplerState>*>(dataPtr + samplerArrayOffset);
 
-      // Copy & destruct
-      for (uint32 i = 0; i < numParamBlocks; i++)
-      {
+      //Copy & destruct
+      for (uint32 i = 0; i < numParamBlocks; ++i) {
         m_paramBlockBuffers[i] = paramBuffers[i];
         paramBuffers[i].~SPtr<GPUParamBlockBuffer>();
       }
 
-      for (uint32 i = 0; i < numTextures; i++)
-      {
+      for (uint32 i = 0; i < numTextures; ++i) {
         m_sampledTextureData[i].surface = sampledSurfaces[i];
         loadStoreSurfaces[i].~TextureSurface();
 
@@ -973,8 +983,7 @@ namespace geEngineSDK {
         textures[i].~SPtr<Texture>();
       }
 
-      for (uint32 i = 0; i < numStorageTextures; i++)
-      {
+      for (uint32 i = 0; i < numStorageTextures; ++i) {
         m_loadStoreTextureData[i].surface = loadStoreSurfaces[i];
         loadStoreSurfaces[i].~TextureSurface();
 
@@ -982,31 +991,34 @@ namespace geEngineSDK {
         loadStoreTextures[i].~SPtr<Texture>();
       }
 
-      for (uint32 i = 0; i < numBuffers; i++)
-      {
+      for (uint32 i = 0; i < numBuffers; ++i) {
         m_buffers[i] = buffers[i];
         buffers[i].~SPtr<GPUBuffer>();
       }
 
-      for (uint32 i = 0; i < numSamplers; i++)
-      {
+      for (uint32 i = 0; i < numSamplers; ++i) {
         m_samplerStates[i] = samplers[i];
         samplers[i].~SPtr<SamplerState>();
       }
     }
 
-    SPtr<GPUParams> GPUParams::create(const SPtr<GraphicsPipelineState>& pipelineState, GPU_DEVICE_FLAGS::E deviceMask)
-    {
-      return HardwareBufferManager::instance().createGPUParams(pipelineState->getParamInfo(), deviceMask);
+    SPtr<GPUParams>
+    GPUParams::create(const SPtr<GraphicsPipelineState>& pipelineState,
+                      GPU_DEVICE_FLAGS::E deviceMask) {
+      return HardwareBufferManager::instance().createGPUParams(pipelineState->getParamInfo(),
+                                                               deviceMask);
     }
 
-    SPtr<GPUParams> GPUParams::create(const SPtr<ComputePipelineState>& pipelineState, GPU_DEVICE_FLAGS::E deviceMask)
-    {
-      return HardwareBufferManager::instance().createGPUParams(pipelineState->getParamInfo(), deviceMask);
+    SPtr<GPUParams>
+    GPUParams::create(const SPtr<ComputePipelineState>& pipelineState,
+                      GPU_DEVICE_FLAGS::E deviceMask) {
+      return HardwareBufferManager::instance().createGPUParams(pipelineState->getParamInfo(),
+                                                               deviceMask);
     }
 
-    SPtr<GPUParams> GPUParams::create(const SPtr<GPUPipelineParamInfo>& paramInfo, GPU_DEVICE_FLAGS::E deviceMask)
-    {
+    SPtr<GPUParams>
+    GPUParams::create(const SPtr<GPUPipelineParamInfo>& paramInfo,
+                      GPU_DEVICE_FLAGS::E deviceMask) {
       return HardwareBufferManager::instance().createGPUParams(paramInfo, deviceMask);
     }
   }

@@ -50,28 +50,22 @@ namespace geEngineSDK {
      * @see geCoreThread::RenderAPI::setGPUParams()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setGPUParams(const SPtr<GPUParams>& gpuParams);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setGraphicsPipeline()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setGraphicsPipeline(const SPtr<GraphicsPipelineState>& pipelineState);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setComputePipeline()
      * @note This is an @ref asyncMethod "asynchronous method".
      */
-    /*
     static void
     setComputePipeline(const SPtr<ComputePipelineState>& pipelineState);
-    */
 
     /**
      * @see geCoreThread::RenderAPI::setVertexBuffers()
@@ -406,11 +400,9 @@ namespace geEngineSDK {
        *        ensure the provided parameters actually match the currently
        *        bound programs.
        */
-      /*
       virtual void
       setGPUParams(const SPtr<GPUParams>& gpuParams,
                    const SPtr<CommandBuffer>& commandBuffer = nullptr) = 0;
-      */
 
       /**
        * @brief Sets a pipeline state that controls how will subsequent draw
@@ -423,11 +415,9 @@ namespace geEngineSDK {
        *            operations.
        * @see GraphicsPipelineState
        */
-      /*
       virtual void
       setGraphicsPipeline(const SPtr<GraphicsPipelineState>& pipelineState,
                           const SPtr<CommandBuffer>& commandBuffer = nullptr) = 0;
-      */
 
       /**
        * @brief Sets a pipeline state that controls how will subsequent
@@ -439,12 +429,9 @@ namespace geEngineSDK {
        *            executeCommands() is called.
        *            Buffer must support graphics operations.
        */
-
-      /*
       virtual void
       setComputePipeline(const SPtr<ComputePipelineState>& pipelineState,
                          const SPtr<CommandBuffer>& commandBuffer = nullptr) = 0;
-      */
 
       /**
        * Sets the active viewport that will be used for all render operations.

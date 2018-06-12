@@ -50,7 +50,7 @@ namespace geEngineSDK {
 
     void
     onDeserializationEnded(IReflectable* obj,
-                           const UnorderedMap<String, uint64>& params) override {
+                           const UnorderedMap<String, uint64>& /*params*/) override {
       auto samplerState = static_cast<SamplerState*>(obj);
       samplerState->initialize();
     }

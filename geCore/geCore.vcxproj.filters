@@ -361,6 +361,12 @@
     <ClInclude Include="Include\geGPUParams.h">
       <Filter>Source Files\RenderAPI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geGPUProgram.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geGPUProgramRTTI.h">
+      <Filter>Source Files\RTTI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -580,6 +586,9 @@
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="Source\geGPUParams.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUProgram.cpp">
       <Filter>Source Files\RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

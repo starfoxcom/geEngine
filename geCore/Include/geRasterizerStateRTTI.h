@@ -48,7 +48,7 @@ namespace geEngineSDK {
 
     void
     onDeserializationEnded(IReflectable* obj,
-                           const UnorderedMap<String, uint64>& params) override {
+                           const UnorderedMap<String, uint64>& /*params*/) override {
       auto rasterizerState = static_cast<RasterizerState*>(obj);
       rasterizerState->initialize();
     }

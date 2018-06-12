@@ -30,8 +30,8 @@
 
 #include "geRenderWindowManager.h"
 #include "geResourceListenerManager.h"
-//#include "geRenderStateManager.h"
-//#include "geHardwareBufferManager.h"
+#include "geRenderStateManager.h"
+#include "geHardwareBufferManager.h"
 //#include "geGPUProgramManager.h"
 //#include "geMeshManager.h"
 #include "geQueryManager.h"
@@ -67,7 +67,6 @@
 //#include "Audio/geAudioManager.h"
 //#include "Audio/geAudio.h"
 //#include "Animation/geAnimationManager.h"
-
 
 #include <geVector2.h>
 #include <geDynLib.h>

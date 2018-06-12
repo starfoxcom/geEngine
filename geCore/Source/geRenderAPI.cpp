@@ -27,21 +27,18 @@
 
 /*
 #include "geMesh.h"
-#include "geGPUParams.h"
 */
+#include "geGPUParams.h"
 #include "geDepthStencilState.h"
 #include "geRasterizerState.h"
 #include "geGPUBuffer.h"
-/*
 #include "geGPUPipelineState.h"
-*/
 
 namespace geEngineSDK {
   using namespace std::placeholders;
   using std::function;
   using std::bind;
 
-  /*
   void
   RenderAPI::setGPUParams(const SPtr<GPUParams>& gpuParams) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setGPUParams,
@@ -49,9 +46,7 @@ namespace geEngineSDK {
                                      gpuParams->getCore(),
                                      nullptr));
   }
-  /*
 
-  /*
   void
   RenderAPI::setGraphicsPipeline(const SPtr<GraphicsPipelineState>& pipelineState) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setGraphicsPipeline,
@@ -59,9 +54,7 @@ namespace geEngineSDK {
                                      pipelineState->getCore(),
                                      nullptr));
   }
-  */
 
-  /*
   void
   RenderAPI::setComputePipeline(const SPtr<ComputePipelineState>& pipelineState) {
     g_coreThread().queueCommand(bind(&geCoreThread::RenderAPI::setComputePipeline,
@@ -69,7 +62,6 @@ namespace geEngineSDK {
                                      pipelineState->getCore(),
                                      nullptr));
   }
-  */
 
   void
   RenderAPI::setVertexBuffers(uint32 index,

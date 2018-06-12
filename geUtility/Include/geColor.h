@@ -627,6 +627,21 @@ namespace geEngineSDK {
 }
 
 namespace std {
+  /** Hash value generator for LinearColor. */
+  template<>
+  struct hash<geEngineSDK::LinearColor>
+  {
+    size_t operator()(const geEngineSDK::LinearColor& color) const {
+      size_t hash = 0;
+      geEngineSDK::hash_combine(hash, color.r);
+      geEngineSDK::hash_combine(hash, color.g);
+      geEngineSDK::hash_combine(hash, color.b);
+      geEngineSDK::hash_combine(hash, color.a);
+
+      return hash;
+    }
+  };
+  
   /** Hash value generator for Color. */
   template<>
   struct hash<geEngineSDK::Color>
