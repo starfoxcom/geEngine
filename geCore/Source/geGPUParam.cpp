@@ -17,8 +17,8 @@
  */
 /*****************************************************************************/
 #include "geGPUParam.h"
-//#include "geGPUParams.h"
-//#include "geGPUParamBlockBuffer.h"
+#include "geGPUParams.h"
+#include "geGPUParamBlockBuffer.h"
 #include "geGPUParamDesc.h"
 #include "geRenderAPI.h"
 
@@ -390,7 +390,7 @@ namespace geEngineSDK {
 
   template class TGPUDataParam<float, false>;
   template class TGPUDataParam<int, false>;
-  template class TGPUDataParam<Color, false>;
+  template class TGPUDataParam<LinearColor, false>;
   template class TGPUDataParam<Vector2, false>;
   template class TGPUDataParam<Vector3, false>;
   template class TGPUDataParam<Vector4, false>;
@@ -401,7 +401,7 @@ namespace geEngineSDK {
 
   template class TGPUDataParam<float, true>;
   template class TGPUDataParam<int, true>;
-  template class TGPUDataParam<Color, true>;
+  template class TGPUDataParam<LinearColor, true>;
   template class TGPUDataParam<Vector2, true>;
   template class TGPUDataParam<Vector3, true>;
   template class TGPUDataParam<Vector4, true>;

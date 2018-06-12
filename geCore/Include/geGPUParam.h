@@ -119,7 +119,7 @@ namespace geEngineSDK {
     }
 
     static bool
-    transposeEnabled(bool enabled) {
+    transposeEnabled(bool /*enabled*/) {
       return false;
     }
   };
@@ -165,8 +165,8 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT TGPUDataParam
   {
    private:
-    typedef typename TGPUParamBufferType<Core>::Type GPUParamBufferType;
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
+    using GPUParamBufferType = typename TGPUParamBufferType<Core>::Type;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
 
    public:
     TGPUDataParam();
@@ -219,8 +219,8 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT TGPUParamStruct
   {
    public:
-    typedef typename TGPUParamBufferType<Core>::Type GPUParamBufferType;
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
+    using GPUParamBufferType = typename TGPUParamBufferType<Core>::Type;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
 
     TGPUParamStruct();
     TGPUParamStruct(GPUParamDataDesc* paramDesc, const GPUParamsType& parent);
@@ -274,8 +274,8 @@ namespace geEngineSDK {
     friend class GPUParams;
     friend class geCoreThread::GPUParams;
 
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
-    typedef typename TGPUParamTextureType<Core>::Type TextureType;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
+    using TextureType = typename TGPUParamTextureType<Core>::Type;
 
    public:
     TGPUParamTexture();
@@ -326,8 +326,8 @@ namespace geEngineSDK {
     friend class GPUParams;
     friend class geCoreThread::GPUParams;
 
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
-    typedef typename TGPUParamTextureType<Core>::Type TextureType;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
+    using TextureType = typename TGPUParamTextureType<Core>::Type;
 
    public:
     TGPUParamLoadStoreTexture();
@@ -378,8 +378,8 @@ namespace geEngineSDK {
     friend class GPUParams;
     friend class geCoreThread::GPUParams;
 
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
-    typedef typename TGPUBufferType<Core>::Type BufferType;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
+    using BufferType = typename TGPUBufferType<Core>::Type;
 
    public:
     TGPUParamBuffer();
@@ -428,8 +428,8 @@ namespace geEngineSDK {
     friend class GPUParams;
     friend class geCoreThread::GPUParams;
 
-    typedef typename TGPUParamsPtrType<Core>::Type GPUParamsType;
-    typedef typename TGPUParamSamplerStateType<Core>::Type SamplerStateType;
+    using GPUParamsType = typename TGPUParamsPtrType<Core>::Type;
+    using SamplerStateType = typename TGPUParamSamplerStateType<Core>::Type;
 
    public:
     TGPUParamSampState();

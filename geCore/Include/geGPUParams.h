@@ -241,11 +241,11 @@ namespace geEngineSDK {
   class GE_CORE_EXPORT TGPUParams : public GPUParamsBase
   {
    public:
-    typedef typename TGPUParamsTypes<Core>::GPUParamsType    GPUParamsType;
-    typedef typename TGPUParamsTypes<Core>::TextureType      TextureType;
-    typedef typename TGPUParamsTypes<Core>::BufferType       BufferType;
-    typedef typename TGPUParamsTypes<Core>::SamplerType      SamplerType;
-    typedef typename TGPUParamsTypes<Core>::ParamsBufferType ParamsBufferType;
+    using GPUParamsType = typename TGPUParamsTypes<Core>::GPUParamsType;
+    using TextureType = typename TGPUParamsTypes<Core>::TextureType;
+    using BufferType = typename TGPUParamsTypes<Core>::BufferType;
+    using SamplerType = typename TGPUParamsTypes<Core>::SamplerType;
+    using ParamsBufferType = typename TGPUParamsTypes<Core>::ParamsBufferType;
 
     virtual ~TGPUParams();
 
