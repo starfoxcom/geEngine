@@ -23,7 +23,7 @@
 #include "geRenderAPIManager.h"
 #include "geRenderWindow.h"
 #include "geViewport.h"
-//#include "geGPUProgram.h"
+#include "geGPUProgram.h"
 
 #include "gePlatform.h"
 #include "geResources.h"
@@ -32,7 +32,7 @@
 #include "geResourceListenerManager.h"
 #include "geRenderStateManager.h"
 #include "geHardwareBufferManager.h"
-//#include "geGPUProgramManager.h"
+#include "geGPUProgramManager.h"
 //#include "geMeshManager.h"
 #include "geQueryManager.h"
 

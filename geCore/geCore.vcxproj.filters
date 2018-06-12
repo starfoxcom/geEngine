@@ -367,6 +367,18 @@
     <ClInclude Include="Include\geGPUProgramRTTI.h">
       <Filter>Source Files\RTTI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\geGPUProgramManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geRenderAPICapabilities.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geSubMesh.h">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geMeshManager.h">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\geHString.cpp">
@@ -590,6 +602,15 @@
     </ClCompile>
     <ClCompile Include="Source\geGPUProgram.cpp">
       <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geGPUProgramManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geRenderAPICapabilities.cpp">
+      <Filter>Source Files\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geMeshManager.cpp">
+      <Filter>Source Files\RenderAPI\Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

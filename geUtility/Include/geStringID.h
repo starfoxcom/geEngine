@@ -208,7 +208,7 @@ namespace geEngineSDK {
         uint32 length = (size - sizeof(uint32) - sizeof(bool)) / sizeof(ANSICHAR);
 
         ANSICHAR* name = reinterpret_cast<ANSICHAR*>
-                         (ge_alloc(static_cast<SIZE_T>(length + 1)));
+                         (ge_alloc(static_cast<SIZE_T>(length) + 1));
         memcpy(name, memory, static_cast<SIZE_T>(length));
         name[length] = '\0';
 

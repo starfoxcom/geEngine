@@ -151,14 +151,14 @@ namespace geEngineSDK {
       getFactory(const String& language);
 
      protected:
-      Mutex mMutex;
+      Mutex m_mutex;
 
-      UnorderedMap<String, GPUProgramFactory*> mFactories;
+      UnorderedMap<String, GPUProgramFactory*> m_factories;
 
       /**
        * @brief Factory for dealing with GPU programs that can't be created.
        */
-      GPUProgramFactory* mNullFactory;
+      GPUProgramFactory* m_nullFactory;
     };
   }
 }

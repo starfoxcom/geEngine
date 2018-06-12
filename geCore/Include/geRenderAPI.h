@@ -21,11 +21,11 @@
 #include "gePrerequisitesCore.h"
 #include "geCommandQueue.h"
 #include "geSamplerState.h"
-//#include "geRenderAPICapabilities.h"
+#include "geRenderAPICapabilities.h"
 #include "geRenderTarget.h"
 #include "geRenderTexture.h"
 #include "geRenderWindow.h"
-//#include "geGPUProgram.h"
+#include "geGPUProgram.h"
 #include "geVertexDeclaration.h"
 
 #include <gePlane.h>

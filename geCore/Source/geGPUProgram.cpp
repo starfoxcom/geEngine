@@ -108,7 +108,7 @@ namespace geEngineSDK {
 
   namespace geCoreThread {
     GPUProgram::GPUProgram(const GPU_PROGRAM_DESC& desc,
-                           GPU_DEVICE_FLAGS::E deviceMask)
+                           GPU_DEVICE_FLAGS::E /*deviceMask*/)
       : m_needsAdjacencyInfo(desc.requiresAdjacency),
         m_type(desc.type),
         m_entryPoint(desc.entryPoint),

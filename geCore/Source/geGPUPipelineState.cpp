@@ -175,7 +175,7 @@ namespace geEngineSDK {
       }
 
       if (nullptr != m_data.fragmentProgram) {
-        paramsDesc.fragmentParams = mData.fragmentProgram->getParamDesc();
+        paramsDesc.fragmentParams = m_data.fragmentProgram->getParamDesc();
       }
 
       if (nullptr != m_data.geometryProgram) {

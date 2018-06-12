@@ -18,9 +18,6 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
-
-#include "geVertexDeclaration.h"
-
 #include "geVertexBuffer.h"
 #include "geHardwareBufferManager.h"
 #include "geVertexDataDesc.h"

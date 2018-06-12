@@ -993,7 +993,7 @@ namespace geEngineSDK {
       memory += sizeof(uint32);
 
       uint32 stringSize = size - sizeof(uint32);
-      char* buffer = reinterpret_cast<char*>(ge_alloc(static_cast<SIZE_T>(stringSize + 1)));
+      char* buffer = reinterpret_cast<char*>(ge_alloc(static_cast<SIZE_T>(stringSize) + 1));
       memcpy(buffer, memory, static_cast<SIZE_T>(stringSize));
       buffer[stringSize] = '\0';
       data = String(buffer);

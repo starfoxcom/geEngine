@@ -46,7 +46,7 @@ namespace geEngineSDK {
   class GE_UTILITY_EXPORT LinearColor
   {
    public:
-    LinearColor() {}
+    LinearColor() = default;
     explicit LinearColor(FORCE_INIT::E) : r(0), g(0), b(0), a(0) {}
     LinearColor(float InR, float InG, float InB, float InA = 1.0f) 
       : r(InR),
