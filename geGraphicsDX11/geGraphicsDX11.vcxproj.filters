@@ -61,6 +61,12 @@
     <ClCompile Include="Source\geD3D11Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11TextureManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -113,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="Include\geD3D11Texture.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11RenderTexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11TextureManager.h">
+      <Filter>Source Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

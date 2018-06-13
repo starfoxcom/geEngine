@@ -195,7 +195,9 @@
     <ClCompile Include="Source\geD3D11QueryManager.cpp" />
     <ClCompile Include="Source\geD3D11RenderAPI.cpp" />
     <ClCompile Include="Source\geD3D11RenderAPIFactory.cpp" />
+    <ClCompile Include="Source\geD3D11RenderTexture.cpp" />
     <ClCompile Include="Source\geD3D11Texture.cpp" />
+    <ClCompile Include="Source\geD3D11TextureManager.cpp" />
     <ClCompile Include="Source\geD3D11TextureView.cpp" />
     <ClCompile Include="Source\geD3D11TimerQuery.cpp" />
     <ClCompile Include="Source\geD3D11VideoModeInfo.cpp" />
@@ -213,7 +215,9 @@
     <ClInclude Include="Include\geD3D11QueryManager.h" />
     <ClInclude Include="Include\geD3D11RenderAPI.h" />
     <ClInclude Include="Include\geD3D11RenderAPIFactory.h" />
+    <ClInclude Include="Include\geD3D11RenderTexture.h" />
     <ClInclude Include="Include\geD3D11Texture.h" />
+    <ClInclude Include="Include\geD3D11TextureManager.h" />
     <ClInclude Include="Include\geD3D11TextureView.h" />
     <ClInclude Include="Include\geD3D11TimerQuery.h" />
     <ClInclude Include="Include\geD3D11VideoModeInfo.h" />
