@@ -26,22 +26,24 @@
 #include "geD3D11Texture.h"
 #include "geD3D11HardwareBufferManager.h"
 #include "geD3D11RenderWindowManager.h"
+#include "geD3D11RenderStateManager.h"
+#include "geD3D11InputLayoutManager.h"
+#include "geD3D11QueryManager.h"
+
+#include "geD3D11Mappings.h"
 #include "geD3D11HLSLProgramFactory.h"
+#include "geD3D11RenderUtility.h"
+
 #include "geD3D11BlendState.h"
 #include "geD3D11RasterizerState.h"
 #include "geD3D11DepthStencilState.h"
 #include "geD3D11SamplerState.h"
 #include "geD3D11GPUProgram.h"
-#include "geD3D11Mappings.h"
 #include "geD3D11VertexBuffer.h"
 #include "geD3D11IndexBuffer.h"
-#include "geD3D11RenderStateManager.h"
 #include "geD3D11GPUParamBlockBuffer.h"
-#include "geD3D11InputLayoutManager.h"
 #include "geD3D11TextureView.h"
-#include "geD3D11RenderUtility.h"
 
-#include "geD3D11QueryManager.h"
 #include "geD3D11GPUBuffer.h"
 #include "geD3D11CommandBuffer.h"
 #include "geD3D11CommandBufferManager.h"
@@ -57,21 +59,22 @@
 namespace geEngineSDK {
   using std::min;
   using std::ref;
+  using std::static_pointer_cast;
 
   namespace geCoreThread {
     D3D11RenderAPI::D3D11RenderAPI()
-      : mDXGIFactory(nullptr),
-        mDevice(nullptr),
-        mDriverList(nullptr),
-        mActiveD3DDriver(nullptr),
-        mFeatureLevel(D3D_FEATURE_LEVEL_11_0),
-        mHLSLFactory(nullptr),
-        mIAManager(nullptr),
-        mPSUAVsBound(false),
-        mCSUAVsBound(false),
-        mStencilRef(0),
-        mActiveDrawOp(DOT_TRIANGLE_LIST),
-        mViewportNorm(Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f))
+      : m_dxgiFactory(nullptr),
+        m_device(nullptr),
+        m_driverList(nullptr),
+        m_activeD3DDriver(nullptr),
+        m_featureLevel(D3D_FEATURE_LEVEL_11_0),
+        m_hlslFactory(nullptr),
+        m_iaManager(nullptr),
+        m_psUAVsBound(false),
+        m_csUAVsBound(false),
+        m_stencilRef(0),
+        m_activeDrawOp(DOT_TRIANGLE_LIST),
+        m_viewportNorm(Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f))
     {}
 
     const StringID&
@@ -85,28 +88,28 @@ namespace geEngineSDK {
       THROW_IF_NOT_CORE_THREAD;
 
       HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory),
-                                     reinterpret_cast<void**>(&mDXGIFactory));
+                                     reinterpret_cast<void**>(&m_dxgiFactory));
       if (FAILED(hr)) {
         GE_EXCEPT(RenderingAPIException,
                   "Failed to create Direct3D 11 DXGIFactory");
       }
 
-      mDriverList = ge_new<D3D11DriverList>(mDXGIFactory);
+      m_driverList = ge_new<D3D11DriverList>(m_dxgiFactory);
       
       //TODO: Always get first driver, for now
-      mActiveD3DDriver = mDriverList->item(0);
-      m_videoModeInfo = mActiveD3DDriver->getVideoModeInfo();
+      m_activeD3DDriver = m_driverList->item(0);
+      m_videoModeInfo = m_activeD3DDriver->getVideoModeInfo();
 
       GPUInfo gpuInfo;
-      gpuInfo.numGPUs = min(5U, mDriverList->count());
+      gpuInfo.numGPUs = min(5U, m_driverList->count());
 
       for (uint32 i = 0; i < gpuInfo.numGPUs; ++i) {
-        gpuInfo.names[i] = mDriverList->item(i)->getDriverName();
+        gpuInfo.names[i] = m_driverList->item(i)->getDriverName();
       }
 
       PlatformUtility::_setGPUInfo(gpuInfo);
 
-      IDXGIAdapter* selectedAdapter = mActiveD3DDriver->getDeviceAdapter();
+      IDXGIAdapter* selectedAdapter = m_activeD3DDriver->getDeviceAdapter();
 
       Vector<D3D_FEATURE_LEVEL> requestedLevels = {
         D3D_FEATURE_LEVEL_11_0,
@@ -130,7 +133,7 @@ namespace geEngineSDK {
                              static_cast<UINT>(requestedLevels.size()),
                              D3D11_SDK_VERSION,
                              &device,
-                             &mFeatureLevel,
+                             &m_featureLevel,
                              nullptr);
 
       if (FAILED(hr)) {
@@ -139,7 +142,7 @@ namespace geEngineSDK {
                   "returned this error code: " + toString(hr));
       }
 
-      mDevice = ge_new<D3D11Device>(device);
+      m_device = ge_new<D3D11Device>(device);
 
       CommandBufferManager::startUp<D3D11CommandBufferManager>();
 
@@ -149,14 +152,14 @@ namespace geEngineSDK {
 
       //Create hardware buffer manager
       geEngineSDK::HardwareBufferManager::startUp();
-      HardwareBufferManager::startUp<D3D11HardwareBufferManager>(ref(*mDevice));
+      HardwareBufferManager::startUp<D3D11HardwareBufferManager>(ref(*m_device));
 
       //Create render window manager
       geEngineSDK::RenderWindowManager::startUp<geEngineSDK::D3D11RenderWindowManager>(this);
       RenderWindowManager::startUp();
 
       //Create & register HLSL factory
-      mHLSLFactory = ge_new<D3D11HLSLProgramFactory>();
+      m_hlslFactory = ge_new<D3D11HLSLProgramFactory>();
 
       //Create render state manager
       RenderStateManager::startUp<D3D11RenderStateManager>();
@@ -165,16 +168,16 @@ namespace geEngineSDK {
       m_currentCapabilities = ge_newN<RenderAPICapabilities>(m_numDevices);
       initCapabilites(selectedAdapter, m_currentCapabilities[0]);
 
-      GPUProgramManager::instance().addFactory("hlsl", mHLSLFactory);
+      GPUProgramManager::instance().addFactory("hlsl", m_hlslFactory);
 
-      mIAManager = ge_new<D3D11InputLayoutManager>();
+      m_iaManager = ge_new<D3D11InputLayoutManager>();
 
       RenderAPI::initialize();
     }
 
     void
     D3D11RenderAPI::initializeWithWindow(const SPtr<RenderWindow>& primaryWindow) {
-      D3D11RenderUtility::startUp(mDevice);
+      D3D11RenderUtility::startUp(m_device);
       QueryManager::startUp<D3D11QueryManager>();
       RenderAPI::initializeWithWindow(primaryWindow);
     }
@@ -186,7 +189,7 @@ namespace geEngineSDK {
       //Ensure that all GPU commands finish executing before shutting down the
       //device. If we don't do this a crash on shutdown may occur as the driver
       //is still executing the commands, and we unload this library.
-      mDevice->getImmediateContext()->Flush();
+      m_device->getImmediateContext()->Flush();
       SPtr<EventQuery> query = EventQuery::create();
       query->begin();
       while (!query->isReady()) { /* Spin */ }
@@ -195,20 +198,20 @@ namespace geEngineSDK {
       QueryManager::shutDown();
       D3D11RenderUtility::shutDown();
 
-      if (nullptr != mIAManager) {
-        ge_delete(mIAManager);
-        mIAManager = nullptr;
+      if (nullptr != m_iaManager) {
+        ge_delete(m_iaManager);
+        m_iaManager = nullptr;
       }
 
-      if (nullptr != mHLSLFactory) {
-        ge_delete(mHLSLFactory);
-        mHLSLFactory = nullptr;
+      if (nullptr != m_hlslFactory) {
+        ge_delete(m_hlslFactory);
+        m_hlslFactory = nullptr;
       }
 
-      mActiveVertexDeclaration = nullptr;
-      mActiveVertexShader = nullptr;
+      m_activeVertexDeclaration = nullptr;
+      m_activeVertexShader = nullptr;
       m_activeRenderTarget = nullptr;
-      mActiveDepthStencilState = nullptr;
+      m_activeDepthStencilState = nullptr;
 
       RenderStateManager::shutDown();
       RenderWindowManager::shutDown();
@@ -219,19 +222,19 @@ namespace geEngineSDK {
       geEngineSDK::TextureManager::shutDown();
       CommandBufferManager::shutDown();
 
-      SAFE_RELEASE(mDXGIFactory);
+      SAFE_RELEASE(m_dxgiFactory);
 
-      if (nullptr != mDevice) {
-        ge_delete(mDevice);
-        mDevice = nullptr;
+      if (nullptr != m_device) {
+        ge_delete(m_device);
+        m_device = nullptr;
       }
 
-      if (nullptr != mDriverList) {
-        ge_delete(mDriverList);
-        mDriverList = nullptr;
+      if (nullptr != m_driverList) {
+        ge_delete(m_driverList);
+        m_driverList = nullptr;
       }
 
-      mActiveD3DDriver = nullptr;
+      m_activeD3DDriver = nullptr;
 
       RenderAPI::destroyCore();
     }
@@ -245,21 +248,21 @@ namespace geEngineSDK {
         D3D11BlendState* d3d11BlendState;
         D3D11RasterizerState* d3d11RasterizerState;
 
-        D3D11GpuFragmentProgram* d3d11FragmentProgram;
-        D3D11GpuGeometryProgram* d3d11GeometryProgram;
-        D3D11GpuDomainProgram* d3d11DomainProgram;
-        D3D11GpuHullProgram* d3d11HullProgram;
+        D3D11GPUFragmentProgram* d3d11FragmentProgram;
+        D3D11GPUGeometryProgram* d3d11GeometryProgram;
+        D3D11GPUDomainProgram* d3d11DomainProgram;
+        D3D11GPUHullProgram* d3d11HullProgram;
 
         if (nullptr != pipelineState) {
           d3d11BlendState = static_cast<D3D11BlendState*>(pipelineState->getBlendState().get());
           d3d11RasterizerState = static_cast<D3D11RasterizerState*>(pipelineState->getRasterizerState().get());
-          mActiveDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(pipelineState->getDepthStencilState());
+          m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(pipelineState->getDepthStencilState());
 
-          mActiveVertexShader = std::static_pointer_cast<D3D11GpuVertexProgram>(pipelineState->getVertexProgram());
-          d3d11FragmentProgram = static_cast<D3D11GpuFragmentProgram*>(pipelineState->getFragmentProgram().get());
-          d3d11GeometryProgram = static_cast<D3D11GpuGeometryProgram*>(pipelineState->getGeometryProgram().get());
-          d3d11DomainProgram = static_cast<D3D11GpuDomainProgram*>(pipelineState->getDomainProgram().get());
-          d3d11HullProgram = static_cast<D3D11GpuHullProgram*>(pipelineState->getHullProgram().get());
+          m_activeVertexShader = std::static_pointer_cast<D3D11GPUVertexProgram>(pipelineState->getVertexProgram());
+          d3d11FragmentProgram = static_cast<D3D11GPUFragmentProgram*>(pipelineState->getFragmentProgram().get());
+          d3d11GeometryProgram = static_cast<D3D11GPUGeometryProgram*>(pipelineState->getGeometryProgram().get());
+          d3d11DomainProgram = static_cast<D3D11GPUDomainProgram*>(pipelineState->getDomainProgram().get());
+          d3d11HullProgram = static_cast<D3D11GPUHullProgram*>(pipelineState->getHullProgram().get());
 
           if (d3d11BlendState == nullptr)
             d3d11BlendState = static_cast<D3D11BlendState*>(BlendState::getDefault().get());
@@ -267,29 +270,29 @@ namespace geEngineSDK {
           if (d3d11RasterizerState == nullptr)
             d3d11RasterizerState = static_cast<D3D11RasterizerState*>(RasterizerState::getDefault().get());
 
-          if (mActiveDepthStencilState == nullptr)
-            mActiveDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
+          if (m_activeDepthStencilState == nullptr)
+            m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
         }
         else
         {
           d3d11BlendState = static_cast<D3D11BlendState*>(BlendState::getDefault().get());
           d3d11RasterizerState = static_cast<D3D11RasterizerState*>(RasterizerState::getDefault().get());
-          mActiveDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
+          m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
 
-          mActiveVertexShader = nullptr;
+          m_activeVertexShader = nullptr;
           d3d11FragmentProgram = nullptr;
           d3d11GeometryProgram = nullptr;
           d3d11DomainProgram = nullptr;
           d3d11HullProgram = nullptr;
         }
 
-        ID3D11DeviceContext* d3d11Context = mDevice->getImmediateContext();
+        ID3D11DeviceContext* d3d11Context = m_device->getImmediateContext();
         d3d11Context->OMSetBlendState(d3d11BlendState->getInternal(), nullptr, 0xFFFFFFFF);
         d3d11Context->RSSetState(d3d11RasterizerState->getInternal());
-        d3d11Context->OMSetDepthStencilState(mActiveDepthStencilState->getInternal(), mStencilRef);
+        d3d11Context->OMSetDepthStencilState(m_activeDepthStencilState->getInternal(), m_stencilRef);
 
-        if (nullptr != mActiveVertexShader) {
-          D3D11GpuVertexProgram* vertexProgram = static_cast<D3D11GpuVertexProgram*>(mActiveVertexShader.get());
+        if (nullptr != m_activeVertexShader) {
+          D3D11GPUVertexProgram* vertexProgram = static_cast<D3D11GPUVertexProgram*>(m_activeVertexShader.get());
           d3d11Context->VSSetShader(vertexProgram->getVertexShader(), nullptr, 0);
         }
         else
@@ -337,17 +340,17 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        SPtr<GpuProgram> program;
+        SPtr<GPUProgram> program;
         if (pipelineState != nullptr)
           program = pipelineState->getProgram();
 
         if (program != nullptr && program->getType() == GPT_COMPUTE_PROGRAM)
         {
-          D3D11GpuComputeProgram *d3d11ComputeProgram = static_cast<D3D11GpuComputeProgram*>(program.get());
-          mDevice->getImmediateContext()->CSSetShader(d3d11ComputeProgram->getComputeShader(), nullptr, 0);
+          D3D11GPUComputeProgram *d3d11ComputeProgram = static_cast<D3D11GPUComputeProgram*>(program.get());
+          m_device->getImmediateContext()->CSSetShader(d3d11ComputeProgram->getComputeShader(), nullptr, 0);
         }
         else
-          mDevice->getImmediateContext()->CSSetShader(nullptr, nullptr, 0);
+          m_device->getImmediateContext()->CSSetShader(nullptr, nullptr, 0);
       };
 
       if (commandBuffer == nullptr)
@@ -363,35 +366,35 @@ namespace geEngineSDK {
       GE_INC_RENDER_STAT(NumPipelineStateChanges);
     }
 
-    void D3D11RenderAPI::setGpuParams(const SPtr<GpuParams>& gpuParams, const SPtr<CommandBuffer>& commandBuffer)
+    void D3D11RenderAPI::setGPUParams(const SPtr<GPUParams>& gpuParams, const SPtr<CommandBuffer>& commandBuffer)
     {
-      auto executeRef = [&](const SPtr<GpuParams>& gpuParams)
+      auto executeRef = [&](const SPtr<GPUParams>& gpuParams)
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        ID3D11DeviceContext* context = mDevice->getImmediateContext();
+        ID3D11DeviceContext* context = m_device->getImmediateContext();
 
         // Clear any previously bound UAVs (otherwise shaders attempting to read resources viewed by those views will
         // be unable to)
-        if (mPSUAVsBound || mCSUAVsBound)
+        if (m_psUAVsBound || m_csUAVsBound)
         {
           ID3D11UnorderedAccessView* emptyUAVs[D3D11_PS_CS_UAV_REGISTER_COUNT];
           ge_zero_out(emptyUAVs);
 
-          if (mPSUAVsBound)
+          if (m_psUAVsBound)
           {
             context->OMSetRenderTargetsAndUnorderedAccessViews(
               D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, nullptr, nullptr, 0,
               D3D11_PS_CS_UAV_REGISTER_COUNT, emptyUAVs, nullptr);
 
-            mPSUAVsBound = false;
+            m_psUAVsBound = false;
           }
 
-          if (mCSUAVsBound)
+          if (m_csUAVsBound)
           {
             context->CSSetUnorderedAccessViews(0, D3D11_PS_CS_UAV_REGISTER_COUNT, emptyUAVs, nullptr);
 
-            mCSUAVsBound = false;
+            m_csUAVsBound = false;
           }
         }
 
@@ -508,7 +511,7 @@ namespace geEngineSDK {
             for (auto iter = paramDesc->paramBlocks.begin(); iter != paramDesc->paramBlocks.end(); ++iter)
             {
               uint32 slot = iter->second.slot;
-              SPtr<GpuParamBlockBuffer> buffer = gpuParams->getParamBlockBuffer(iter->second.set, slot);
+              SPtr<GPUParamBlockBuffer> buffer = gpuParams->getParamBlockBuffer(iter->second.set, slot);
 
               while (slot >= (uint32)constBuffers.size())
                 constBuffers.push_back(nullptr);
@@ -517,8 +520,8 @@ namespace geEngineSDK {
               {
                 buffer->flushToGPU();
 
-                const D3D11GpuParamBlockBuffer* d3d11paramBlockBuffer =
-                  static_cast<const D3D11GpuParamBlockBuffer*>(buffer.get());
+                const D3D11GPUParamBlockBuffer* d3d11paramBlockBuffer =
+                  static_cast<const D3D11GPUParamBlockBuffer*>(buffer.get());
                 constBuffers[slot] = d3d11paramBlockBuffer->getD3D11Buffer();
               }
             }
@@ -556,7 +559,7 @@ namespace geEngineSDK {
           {
             context->OMSetRenderTargetsAndUnorderedAccessViews(
               D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, nullptr, nullptr, 0, numUAVs, uavs.data(), nullptr);
-            mPSUAVsBound = true;
+            m_psUAVsBound = true;
           }
 
           if (numConstBuffers > 0)
@@ -619,7 +622,7 @@ namespace geEngineSDK {
           if (numUAVs > 0)
           {
             context->CSSetUnorderedAccessViews(0, numUAVs, uavs.data(), nullptr);
-            mCSUAVsBound = true;
+            m_csUAVsBound = true;
           }
 
           if (numConstBuffers > 0)
@@ -631,8 +634,8 @@ namespace geEngineSDK {
         }
         ge_frame_clear();
 
-        if (mDevice->hasError())
-          GE_EXCEPT(RenderingAPIException, "Failed to set GPU parameters: " + mDevice->getErrorDescription());
+        if (m_device->hasError())
+          GE_EXCEPT(RenderingAPIException, "Failed to set GPU parameters: " + m_device->getErrorDescription());
       };
 
       if (commandBuffer == nullptr)
@@ -645,7 +648,7 @@ namespace geEngineSDK {
         cb->queueCommand(execute);
       }
 
-      GE_INC_RENDER_STAT(NumGpuParamBinds);
+      GE_INC_RENDER_STAT(NumGPUParamBinds);
     }
 
     void D3D11RenderAPI::setViewport(const Rect2& vp, const SPtr<CommandBuffer>& commandBuffer)
@@ -654,7 +657,7 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mViewportNorm = vp;
+        m_viewportNorm = vp;
         applyViewport();
       };
 
@@ -698,7 +701,7 @@ namespace geEngineSDK {
           offsets[i] = 0;
         }
 
-        mDevice->getImmediateContext()->IASetVertexBuffers(index, numBuffers, dx11buffers, strides, offsets);
+        m_device->getImmediateContext()->IASetVertexBuffers(index, numBuffers, dx11buffers, strides, offsets);
       };
 
       if (commandBuffer == nullptr)
@@ -707,7 +710,7 @@ namespace geEngineSDK {
       {
         auto execute = [=]() { executeRef(index, buffers, numBuffers); };
 
-        SPtr<D3D11CommandBuffer> cb = std::static_pointer_cast<D3D11CommandBuffer>(commandBuffer);
+        SPtr<D3D11CommandBuffer> cb = static_pointer_cast<D3D11CommandBuffer>(commandBuffer);
         cb->queueCommand(execute);
       }
 
@@ -720,17 +723,17 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        SPtr<D3D11IndexBuffer> indexBuffer = std::static_pointer_cast<D3D11IndexBuffer>(buffer);
+        SPtr<D3D11IndexBuffer> indexBuffer = static_pointer_cast<D3D11IndexBuffer>(buffer);
 
-        DXGI_FORMAT indexFormat = DXGI_FORMAT_R16_uint;
+        DXGI_FORMAT indexFormat = DXGI_FORMAT_R16_UINT;
         if (indexBuffer->getProperties().getType() == IT_16BIT)
-          indexFormat = DXGI_FORMAT_R16_uint;
+          indexFormat = DXGI_FORMAT_R16_UINT;
         else if (indexBuffer->getProperties().getType() == IT_32BIT)
-          indexFormat = DXGI_FORMAT_R32_uint;
+          indexFormat = DXGI_FORMAT_R32_UINT;
         else
           GE_EXCEPT(InternalErrorException, "Unsupported index format: " + toString(indexBuffer->getProperties().getType()));
 
-        mDevice->getImmediateContext()->IASetIndexBuffer(indexBuffer->getD3DIndexBuffer(), indexFormat, 0);
+        m_device->getImmediateContext()->IASetIndexBuffer(indexBuffer->getD3DIndexBuffer(), indexFormat, 0);
       };
 
       if (commandBuffer == nullptr)
@@ -753,7 +756,7 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mActiveVertexDeclaration = vertexDeclaration;
+        m_activeVertexDeclaration = vertexDeclaration;
       };
 
       if (commandBuffer == nullptr)
@@ -773,8 +776,8 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mDevice->getImmediateContext()->IASetPrimitiveTopology(D3D11Mappings::getPrimitiveType(op));
-        mActiveDrawOp = op;
+        m_device->getImmediateContext()->IASetPrimitiveTopology(D3D11Mappings::getPrimitiveType(op));
+        m_activeDrawOp = op;
       };
 
       if (commandBuffer == nullptr)
@@ -800,13 +803,13 @@ namespace geEngineSDK {
         applyInputLayout();
 
         if (instanceCount <= 1)
-          mDevice->getImmediateContext()->Draw(vertexCount, vertexOffset);
+          m_device->getImmediateContext()->Draw(vertexCount, vertexOffset);
         else
-          mDevice->getImmediateContext()->DrawInstanced(vertexCount, instanceCount, vertexOffset, 0);
+          m_device->getImmediateContext()->DrawInstanced(vertexCount, instanceCount, vertexOffset, 0);
 
 #if GE_DEBUG_MODE
-        if (mDevice->hasError())
-          LOGWRN(mDevice->getErrorDescription());
+        if (m_device->hasError())
+          LOGWRN(m_device->getErrorDescription());
 #endif
       };
 
@@ -814,7 +817,7 @@ namespace geEngineSDK {
       if (commandBuffer == nullptr)
       {
         executeRef(vertexOffset, vertexCount, instanceCount);
-        primCount = vertexCountToPrimCount(mActiveDrawOp, vertexCount);
+        primCount = vertexCountToPrimCount(m_activeDrawOp, vertexCount);
       }
       else
       {
@@ -842,13 +845,13 @@ namespace geEngineSDK {
         applyInputLayout();
 
         if (instanceCount <= 1)
-          mDevice->getImmediateContext()->DrawIndexed(indexCount, startIndex, vertexOffset);
+          m_device->getImmediateContext()->DrawIndexed(indexCount, startIndex, vertexOffset);
         else
-          mDevice->getImmediateContext()->DrawIndexedInstanced(indexCount, instanceCount, startIndex, vertexOffset, 0);
+          m_device->getImmediateContext()->DrawIndexedInstanced(indexCount, instanceCount, startIndex, vertexOffset, 0);
 
 #if GE_DEBUG_MODE
-        if (mDevice->hasError())
-          LOGWRN(mDevice->getErrorDescription());
+        if (m_device->hasError())
+          LOGWRN(m_device->getErrorDescription());
 #endif
       };
 
@@ -856,7 +859,7 @@ namespace geEngineSDK {
       if (commandBuffer == nullptr)
       {
         executeRef(startIndex, indexCount, vertexOffset, vertexCount, instanceCount);
-        primCount = vertexCountToPrimCount(mActiveDrawOp, indexCount);
+        primCount = vertexCountToPrimCount(m_activeDrawOp, indexCount);
       }
       else
       {
@@ -868,9 +871,9 @@ namespace geEngineSDK {
         primCount = vertexCountToPrimCount(cb->mActiveDrawOp, indexCount);
       }
 
-      BS_INC_RENDER_STAT(NumDrawCalls);
-      BS_ADD_RENDER_STAT(NumVertices, vertexCount);
-      BS_ADD_RENDER_STAT(NumPrimitives, primCount);
+      GE_INC_RENDER_STAT(NumDrawCalls);
+      GE_ADD_RENDER_STAT(NumVertices, vertexCount);
+      GE_ADD_RENDER_STAT(NumPrimitives, primCount);
     }
 
     void D3D11RenderAPI::dispatchCompute(uint32 numGroupsX, uint32 numGroupsY, uint32 numGroupsZ,
@@ -880,11 +883,11 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mDevice->getImmediateContext()->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
+        m_device->getImmediateContext()->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
 #if GE_DEBUG_MODE
-        if (mDevice->hasError())
-          LOGWRN(mDevice->getErrorDescription());
+        if (m_device->hasError())
+          LOGWRN(m_device->getErrorDescription());
 #endif
       };
 
@@ -908,12 +911,12 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mScissorRect.left = static_cast<LONG>(left);
-        mScissorRect.top = static_cast<LONG>(top);
-        mScissorRect.bottom = static_cast<LONG>(bottom);
-        mScissorRect.right = static_cast<LONG>(right);
+        m_scissorRect.left = static_cast<LONG>(left);
+        m_scissorRect.top = static_cast<LONG>(top);
+        m_scissorRect.bottom = static_cast<LONG>(bottom);
+        m_scissorRect.right = static_cast<LONG>(right);
 
-        mDevice->getImmediateContext()->RSSetScissorRects(1, &mScissorRect);
+        m_device->getImmediateContext()->RSSetScissorRects(1, &m_scissorRect);
       };
 
       if (commandBuffer == nullptr)
@@ -933,12 +936,12 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mStencilRef = value;
+        m_stencilRef = value;
 
-        if (mActiveDepthStencilState != nullptr)
-          mDevice->getImmediateContext()->OMSetDepthStencilState(mActiveDepthStencilState->getInternal(), mStencilRef);
+        if (nullptr != m_activeDepthStencilState)
+          m_device->getImmediateContext()->OMSetDepthStencilState(m_activeDepthStencilState->getInternal(), m_stencilRef);
         else
-          mDevice->getImmediateContext()->OMSetDepthStencilState(nullptr, mStencilRef);
+          m_device->getImmediateContext()->OMSetDepthStencilState(nullptr, m_stencilRef);
       };
 
       if (commandBuffer == nullptr)
@@ -952,19 +955,19 @@ namespace geEngineSDK {
       }
     }
 
-    void D3D11RenderAPI::clearViewport(uint32 buffers, const Color& color, float depth, uint16 stencil, uint8 targetMask,
+    void D3D11RenderAPI::clearViewport(uint32 buffers, const LinearColor& color, float depth, uint16 stencil, uint8 targetMask,
       const SPtr<CommandBuffer>& commandBuffer)
     {
       auto executeRef = [&](uint32 buffers, const Color& color, float depth, uint16 stencil, uint8 targetMask)
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        if (mActiveRenderTarget == nullptr)
+        if (nullptr == m_activeRenderTarget)
           return;
 
-        const RenderTargetProperties& rtProps = mActiveRenderTarget->getProperties();
+        const RenderTargetProperties& rtProps = m_activeRenderTarget->getProperties();
 
-        Rect2I clearArea((int)mViewport.TopLeftX, (int)mViewport.TopLeftY, (int)mViewport.Width, (int)mViewport.Height);
+        Box2DI clearArea((int)m_viewport.TopLeftX, (int)m_viewport.TopLeftY, (int)m_viewport.Width, (int)m_viewport.Height);
 
         bool clearEntireTarget = clearArea.width == 0 || clearArea.height == 0;
         clearEntireTarget |= (clearArea.x == 0 && clearArea.y == 0 && clearArea.width == rtProps.width &&
@@ -974,7 +977,7 @@ namespace geEngineSDK {
         {
           // TODO - Ignoring targetMask here
           D3D11RenderUtility::instance().drawClearQuad(buffers, color, depth, stencil);
-          BS_INC_RENDER_STAT(NumClears);
+          GE_INC_RENDER_STAT(NumClears);
         }
         else
           clearRenderTarget(buffers, color, depth, stencil, targetMask);
@@ -991,28 +994,29 @@ namespace geEngineSDK {
       }
     }
 
-    void D3D11RenderAPI::clearRenderTarget(uint32 buffers, const Color& color, float depth, uint16 stencil,
+    void D3D11RenderAPI::clearRenderTarget(uint32 buffers, const LinearColor& color, float depth, uint16 stencil,
       uint8 targetMask, const SPtr<CommandBuffer>& commandBuffer)
     {
       auto executeRef = [&](uint32 buffers, const Color& color, float depth, uint16 stencil, uint8 targetMask)
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        if (mActiveRenderTarget == nullptr)
+        if (nullptr == m_activeRenderTarget) {
           return;
+        }
 
         // Clear render surfaces
         if (buffers & FBT_COLOR)
         {
-          uint32 maxRenderTargets = mCurrentCapabilities[0].getNumMultiRenderTargets();
+          uint32 maxRenderTargets = m_currentCapabilities[0].getNumMultiRenderTargets();
 
-          ID3D11RenderTargetView** views = bs_newN<ID3D11RenderTargetView*>(maxRenderTargets);
+          ID3D11RenderTargetView** views = ge_newN<ID3D11RenderTargetView*>(maxRenderTargets);
           memset(views, 0, sizeof(ID3D11RenderTargetView*) * maxRenderTargets);
 
-          mActiveRenderTarget->getCustomAttribute("RTV", views);
+          m_activeRenderTarget->getCustomAttribute("RTV", views);
           if (!views[0])
           {
-            bs_deleteN(views, maxRenderTargets);
+            ge_deleteN(views, maxRenderTargets);
             return;
           }
 
@@ -1025,17 +1029,17 @@ namespace geEngineSDK {
           for (uint32 i = 0; i < maxRenderTargets; ++i)
           {
             if (views[i] != nullptr && ((1 << i) & targetMask) != 0)
-              mDevice->getImmediateContext()->ClearRenderTargetView(views[i], clearColor);
+              m_device->getImmediateContext()->ClearRenderTargetView(views[i], clearColor);
           }
 
-          bs_deleteN(views, maxRenderTargets);
+          ge_deleteN(views, maxRenderTargets);
         }
 
         // Clear depth stencil
         if ((buffers & FBT_DEPTH) != 0 || (buffers & FBT_STENCIL) != 0)
         {
           ID3D11DepthStencilView* depthStencilView = nullptr;
-          mActiveRenderTarget->getCustomAttribute("DSV", &depthStencilView);
+          m_activeRenderTarget->getCustomAttribute("DSV", &depthStencilView);
 
           D3D11_CLEAR_FLAG clearFlag;
 
@@ -1047,7 +1051,7 @@ namespace geEngineSDK {
             clearFlag = D3D11_CLEAR_DEPTH;
 
           if (depthStencilView != nullptr)
-            mDevice->getImmediateContext()->ClearDepthStencilView(depthStencilView, clearFlag, depth, (uint8)stencil);
+            m_device->getImmediateContext()->ClearDepthStencilView(depthStencilView, clearFlag, depth, (uint8)stencil);
         }
       };
 
@@ -1071,10 +1075,10 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        mActiveRenderTarget = target;
+        m_activeRenderTarget = target;
 
-        uint32 maxRenderTargets = mCurrentCapabilities[0].getNumMultiRenderTargets();
-        ID3D11RenderTargetView** views = bs_newN<ID3D11RenderTargetView*>(maxRenderTargets);
+        uint32 maxRenderTargets = m_currentCapabilities[0].getNumMultiRenderTargets();
+        ID3D11RenderTargetView** views = ge_newN<ID3D11RenderTargetView*>(maxRenderTargets);
         memset(views, 0, sizeof(ID3D11RenderTargetView*) * maxRenderTargets);
 
         ID3D11DepthStencilView* depthStencilView = nullptr;
@@ -1100,9 +1104,9 @@ namespace geEngineSDK {
         }
 
         // Bind render targets
-        mDevice->getImmediateContext()->OMSetRenderTargets(maxRenderTargets, views, depthStencilView);
-        if (mDevice->hasError())
-          GE_EXCEPT(RenderingAPIException, "Failed to setRenderTarget : " + mDevice->getErrorDescription());
+        m_device->getImmediateContext()->OMSetRenderTargets(maxRenderTargets, views, depthStencilView);
+        if (m_device->hasError())
+          GE_EXCEPT(RenderingAPIException, "Failed to setRenderTarget : " + m_device->getErrorDescription());
 
         ge_deleteN(views, maxRenderTargets);
         applyViewport();
@@ -1149,27 +1153,28 @@ namespace geEngineSDK {
 
     void D3D11RenderAPI::applyViewport()
     {
-      if (mActiveRenderTarget == nullptr)
+      if (nullptr == m_activeRenderTarget) {
         return;
+      }
 
-      const RenderTargetProperties& rtProps = mActiveRenderTarget->getProperties();
+      const RenderTargetProperties& rtProps = m_activeRenderTarget->getProperties();
 
       // Set viewport dimensions
-      mViewport.TopLeftX = (FLOAT)(rtProps.width * mViewportNorm.x);
-      mViewport.TopLeftY = (FLOAT)(rtProps.height * mViewportNorm.y);
-      mViewport.Width = (FLOAT)(rtProps.width * mViewportNorm.width);
-      mViewport.Height = (FLOAT)(rtProps.height * mViewportNorm.height);
+      m_viewport.TopLeftX = (FLOAT)(rtProps.width * m_viewportNorm.x);
+      m_viewport.TopLeftY = (FLOAT)(rtProps.height * m_viewportNorm.y);
+      m_viewport.Width = (FLOAT)(rtProps.width * m_viewportNorm.width);
+      m_viewport.Height = (FLOAT)(rtProps.height * m_viewportNorm.height);
 
       if (rtProps.requiresTextureFlipping)
       {
         // Convert "top-left" to "bottom-left"
-        mViewport.TopLeftY = rtProps.height - mViewport.Height - mViewport.TopLeftY;
+        m_viewport.TopLeftY = rtProps.height - m_viewport.Height - m_viewport.TopLeftY;
       }
 
-      mViewport.MinDepth = 0.0f;
-      mViewport.MaxDepth = 1.0f;
+      m_viewport.MinDepth = 0.0f;
+      m_viewport.MaxDepth = 1.0f;
 
-      mDevice->getImmediateContext()->RSSetViewports(1, &mViewport);
+      m_device->getImmediateContext()->RSSetViewports(1, &m_viewport);
     }
 
     void D3D11RenderAPI::initCapabilites(IDXGIAdapter* adapter, RenderAPICapabilities& caps) const
@@ -1188,84 +1193,84 @@ namespace geEngineSDK {
       }
 
       caps.setDriverVersion(driverVersion);
-      caps.setDeviceName(mActiveD3DDriver->getDriverDescription());
+      caps.setDeviceName(m_activeD3DDriver->getDriverDescription());
       caps.setRenderAPIName(getName());
 
-      caps.setCapability(RSC_TEXTURE_COMPRESSION_BC);
+      caps.setCapability(CAPABILITIES::RSC_TEXTURE_COMPRESSION_BC);
       caps.addShaderProfile("hlsl");
 
-      if (mFeatureLevel >= D3D_FEATURE_LEVEL_10_1)
+      if (m_featureLevel >= D3D_FEATURE_LEVEL_10_1)
         caps.setMaxBoundVertexBuffers(32);
       else
         caps.setMaxBoundVertexBuffers(16);
 
-      if (mFeatureLevel >= D3D_FEATURE_LEVEL_10_0)
+      if (m_featureLevel >= D3D_FEATURE_LEVEL_10_0)
       {
-        caps.setCapability(RSC_GEOMETRY_PROGRAM);
+        caps.setCapability(CAPABILITIES::RSC_GEOMETRY_PROGRAM);
 
-        caps.setNumTextureUnits(GPT_FRAGMENT_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-        caps.setNumTextureUnits(GPT_VERTEX_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-        caps.setNumTextureUnits(GPT_GEOMETRY_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
 
-        caps.setNumCombinedTextureUnits(caps.getNumTextureUnits(GPT_FRAGMENT_PROGRAM)
-          + caps.getNumTextureUnits(GPT_VERTEX_PROGRAM) + caps.getNumTextureUnits(GPT_GEOMETRY_PROGRAM));
+        caps.setNumCombinedTextureUnits(caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM)
+          + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM) + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM));
 
-        caps.setNumGpuParamBlockBuffers(GPT_FRAGMENT_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-        caps.setNumGpuParamBlockBuffers(GPT_VERTEX_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-        caps.setNumGpuParamBlockBuffers(GPT_GEOMETRY_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
 
-        caps.setNumCombinedGpuParamBlockBuffers(caps.getNumGpuParamBlockBuffers(GPT_FRAGMENT_PROGRAM)
-          + caps.getNumGpuParamBlockBuffers(GPT_VERTEX_PROGRAM) + caps.getNumGpuParamBlockBuffers(GPT_GEOMETRY_PROGRAM));
+        caps.setNumCombinedGPUParamBlockBuffers(caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM)
+          + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM) + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM));
       }
 
-      if (mFeatureLevel >= D3D_FEATURE_LEVEL_11_0)
+      if (m_featureLevel >= D3D_FEATURE_LEVEL_11_0)
       {
-        caps.setCapability(RSC_TESSELLATION_PROGRAM);
-        caps.setCapability(RSC_COMPUTE_PROGRAM);
+        caps.setCapability(CAPABILITIES::RSC_TESSELLATION_PROGRAM);
+        caps.setCapability(CAPABILITIES::RSC_COMPUTE_PROGRAM);
 
-        caps.setNumTextureUnits(GPT_HULL_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
-        caps.setNumTextureUnits(GPT_DOMAIN_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
-        caps.setNumTextureUnits(GPT_COMPUTE_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kHULL_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kDOMAIN_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
+        caps.setNumTextureUnits(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM, D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT);
 
-        caps.setNumCombinedTextureUnits(caps.getNumTextureUnits(GPT_FRAGMENT_PROGRAM)
-          + caps.getNumTextureUnits(GPT_VERTEX_PROGRAM) + caps.getNumTextureUnits(GPT_GEOMETRY_PROGRAM)
-          + caps.getNumTextureUnits(GPT_HULL_PROGRAM) + caps.getNumTextureUnits(GPT_DOMAIN_PROGRAM)
-          + caps.getNumTextureUnits(GPT_COMPUTE_PROGRAM));
+        caps.setNumCombinedTextureUnits(caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM)
+          + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM) + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM)
+          + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kHULL_PROGRAM) + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kDOMAIN_PROGRAM)
+          + caps.getNumTextureUnits(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM));
 
-        caps.setNumGpuParamBlockBuffers(GPT_HULL_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-        caps.setNumGpuParamBlockBuffers(GPT_DOMAIN_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-        caps.setNumGpuParamBlockBuffers(GPT_COMPUTE_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kHULL_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kDOMAIN_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        caps.setNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
 
-        caps.setNumCombinedGpuParamBlockBuffers(caps.getNumGpuParamBlockBuffers(GPT_FRAGMENT_PROGRAM)
-          + caps.getNumGpuParamBlockBuffers(GPT_VERTEX_PROGRAM) + caps.getNumGpuParamBlockBuffers(GPT_GEOMETRY_PROGRAM)
-          + caps.getNumGpuParamBlockBuffers(GPT_HULL_PROGRAM) + caps.getNumGpuParamBlockBuffers(GPT_DOMAIN_PROGRAM)
-          + caps.getNumGpuParamBlockBuffers(GPT_COMPUTE_PROGRAM));
+        caps.setNumCombinedGPUParamBlockBuffers(caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM)
+          + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM) + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM)
+          + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kHULL_PROGRAM) + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kDOMAIN_PROGRAM)
+          + caps.getNumGPUParamBlockBuffers(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM));
 
-        caps.setNumLoadStoreTextureUnits(GPT_FRAGMENT_PROGRAM, D3D11_PS_CS_UAV_REGISTER_COUNT);
-        caps.setNumLoadStoreTextureUnits(GPT_COMPUTE_PROGRAM, D3D11_PS_CS_UAV_REGISTER_COUNT);
+        caps.setNumLoadStoreTextureUnits(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM, D3D11_PS_CS_UAV_REGISTER_COUNT);
+        caps.setNumLoadStoreTextureUnits(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM, D3D11_PS_CS_UAV_REGISTER_COUNT);
 
-        caps.setNumCombinedLoadStoreTextureUnits(caps.getNumLoadStoreTextureUnits(GPT_FRAGMENT_PROGRAM)
-          + caps.getNumLoadStoreTextureUnits(GPT_COMPUTE_PROGRAM));
+        caps.setNumCombinedLoadStoreTextureUnits(caps.getNumLoadStoreTextureUnits(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM)
+          + caps.getNumLoadStoreTextureUnits(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM));
       }
 
       // Adapter details
-      const DXGI_ADAPTER_DESC& adapterID = mActiveD3DDriver->getAdapterIdentifier();
+      const DXGI_ADAPTER_DESC& adapterID = m_activeD3DDriver->getAdapterIdentifier();
 
       // Determine vendor
       switch (adapterID.VendorId)
       {
       case 0x10DE:
-        caps.setVendor(GPU_NVIDIA);
+        caps.setVendor(GPU_VENDOR::kNVIDIA);
         break;
       case 0x1002:
-        caps.setVendor(GPU_AMD);
+        caps.setVendor(GPU_VENDOR::kAMD);
         break;
       case 0x163C:
       case 0x8086:
-        caps.setVendor(GPU_INTEL);
+        caps.setVendor(GPU_VENDOR::kINTEL);
         break;
       default:
-        caps.setVendor(GPU_UNKNOWN);
+        caps.setVendor(GPU_VENDOR::kUNKNOWN);
         break;
       };
 
@@ -1330,7 +1335,7 @@ namespace geEngineSDK {
 
         HRESULT hr;
         uint outQuality;
-        hr = mDevice->getD3D11Device()->CheckMultisampleQualityLevels(format, outputSampleDesc->Count, &outQuality);
+        hr = m_device->getD3D11Device()->CheckMultisampleQualityLevels(format, outputSampleDesc->Count, &outQuality);
 
         if (SUCCEEDED(hr) && (!tryCSAA || outQuality > outputSampleDesc->Quality))
         {
@@ -1387,20 +1392,20 @@ namespace geEngineSDK {
     const RenderAPIInfo& D3D11RenderAPI::getAPIInfo() const
     {
       RenderAPIFeatures featureFlags =
-        RenderAPIFeatureFlag::TextureViews |
-        RenderAPIFeatureFlag::Compute |
-        RenderAPIFeatureFlag::LoadStore |
-        RenderAPIFeatureFlag::ByteCodeCaching |
-        RenderAPIFeatureFlag::RenderTargetLayers;
+        RENDER_API_FEATURE_FLAG::kTextureViews |
+        RENDER_API_FEATURE_FLAG::kCompute |
+        RENDER_API_FEATURE_FLAG::kLoadStore |
+        RENDER_API_FEATURE_FLAG::kByteCodeCaching |
+        RENDER_API_FEATURE_FLAG::kRenderTargetLayers;
 
-      static RenderAPIInfo info(0.0f, 0.0f, 0.0f, 1.0f, VET_COLOR_ABGR, featureFlags);
+      static RenderAPIInfo info(0.0f, 0.0f, 0.0f, 1.0f, VERTEX_ELEMENT_TYPE::kCOLOR_ABGR, featureFlags);
 
       return info;
     }
 
-    GpuParamBlockDesc D3D11RenderAPI::generateParamBlockDesc(const String& name, Vector<GpuParamDataDesc>& params)
+    GPUParamBlockDesc D3D11RenderAPI::generateParamBlockDesc(const String& name, Vector<GPUParamDataDesc>& params)
     {
-      GpuParamBlockDesc block;
+      GPUParamBlockDesc block;
       block.blockSize = 0;
       block.isShareable = true;
       block.name = name;
@@ -1409,16 +1414,18 @@ namespace geEngineSDK {
 
       for (auto& param : params)
       {
-        const GpuParamDataTypeInfo& typeInfo = bs::GpuParams::PARAM_SIZES.lookup[param.type];
+        const GPUParamDataTypeInfo& typeInfo = geEngineSDK::GPUParams::PARAM_SIZES.lookup[param.type];
 
         if (param.arraySize > 1)
         {
           // Arrays perform no packing and their elements are always padded and aligned to four component vectors
           uint32 size;
-          if (param.type == GPDT_STRUCT)
+          if (GPU_PARAM_DATA_TYPE::kSTRUCT == param.type) {
             size = Math::divideAndRoundUp(param.elementSize, 16U) * 4;
-          else
+          }
+          else {
             size = Math::divideAndRoundUp(typeInfo.size, 16U) * 4;
+          }
 
           block.blockSize = Math::divideAndRoundUp(block.blockSize, 4U) * 4;
 
@@ -1428,7 +1435,7 @@ namespace geEngineSDK {
           param.gpuMemOffset = 0;
 
           // Last array element isn't rounded up to four component vectors unless it's a struct
-          if (param.type != GPDT_STRUCT)
+          if (GPU_PARAM_DATA_TYPE::kSTRUCT != param.type)
           {
             block.blockSize += size * (param.arraySize - 1);
             block.blockSize += typeInfo.size / 4;
@@ -1439,7 +1446,7 @@ namespace geEngineSDK {
         else
         {
           uint32 size;
-          if (param.type == GPDT_STRUCT)
+          if (GPU_PARAM_DATA_TYPE::kSTRUCT == param.type)
           {
             // Structs are always aligned and arounded up to 4 component vectors
             size = Math::divideAndRoundUp(param.elementSize, 16U) * 4;
@@ -1483,21 +1490,21 @@ namespace geEngineSDK {
 
     void D3D11RenderAPI::applyInputLayout()
     {
-      if (mActiveVertexDeclaration == nullptr)
+      if (m_activeVertexDeclaration == nullptr)
       {
         LOGWRN("Cannot apply input layout without a vertex declaration. Set vertex declaration before calling this method.");
         return;
       }
 
-      if (mActiveVertexShader == nullptr)
+      if (m_activeVertexShader == nullptr)
       {
         LOGWRN("Cannot apply input layout without a vertex shader. Set vertex shader before calling this method.");
         return;
       }
 
-      ID3D11InputLayout* ia = mIAManager->retrieveInputLayout(mActiveVertexShader->getInputDeclaration(), mActiveVertexDeclaration, *mActiveVertexShader);
+      ID3D11InputLayout* ia = m_iaManager->retrieveInputLayout(m_activeVertexShader->getInputDeclaration(), m_activeVertexDeclaration, *m_activeVertexShader);
 
-      mDevice->getImmediateContext()->IASetInputLayout(ia);
+      m_device->getImmediateContext()->IASetInputLayout(ia);
     }
   }
 }

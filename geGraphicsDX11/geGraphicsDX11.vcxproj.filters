@@ -55,6 +55,12 @@
     <ClCompile Include="Source\geD3D11Mappings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11TextureView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -100,6 +106,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\geD3D11Mappings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11TextureView.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11Texture.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

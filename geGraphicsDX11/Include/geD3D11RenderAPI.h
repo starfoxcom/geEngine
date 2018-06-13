@@ -39,29 +39,23 @@ namespace geEngineSDK {
       /**
        * @copydoc RenderAPI::setGraphicsPipeline
        */
-      /*
       void
       setGraphicsPipeline(const SPtr<GraphicsPipelineState>& pipelineState,
                           const SPtr<CommandBuffer>& commandBuffer = nullptr) override;
-      */
 
       /**
        * @copydoc RenderAPI::setComputePipeline
        */
-      /*
       void
       setComputePipeline(const SPtr<ComputePipelineState>& pipelineState,
                          const SPtr<CommandBuffer>& commandBuffer = nullptr) override;
-      */
 
       /**
-       * @copydoc RenderAPI::setGpuParams
+       * @copydoc RenderAPI::setGPUParams
        */
-      /*
       void
       setGPUParams(const SPtr<GPUParams>& gpuParams,
                    const SPtr<CommandBuffer>& commandBuffer = nullptr) override;
-      */
 
       /**
        * @copydoc RenderAPI::clearRenderTarget
@@ -241,7 +235,7 @@ namespace geEngineSDK {
        */
       IDXGIFactory*
       getDXGIFactory() const {
-        return mDXGIFactory;
+        return m_dxgiFactory;
       }
 
       /**
@@ -249,7 +243,7 @@ namespace geEngineSDK {
        */
       D3D11Device&
       getPrimaryDevice() const {
-        return *mDevice;
+        return *m_device;
       }
 
       /**
@@ -257,7 +251,7 @@ namespace geEngineSDK {
        */
       D3D11DriverList*
       getDriverList() const {
-        return mDriverList;
+        return m_driverList;
       }
 
      protected:
@@ -306,30 +300,30 @@ namespace geEngineSDK {
                       RenderAPICapabilities& caps) const;
 
      private:
-      IDXGIFactory * mDXGIFactory;
-      D3D11Device* mDevice;
+      IDXGIFactory * m_dxgiFactory;
+      D3D11Device* m_device;
 
-      D3D11DriverList* mDriverList;
-      D3D11Driver* mActiveD3DDriver;
+      D3D11DriverList* m_driverList;
+      D3D11Driver* m_activeD3DDriver;
 
-      D3D_FEATURE_LEVEL mFeatureLevel;
+      D3D_FEATURE_LEVEL m_featureLevel;
 
-      D3D11HLSLProgramFactory* mHLSLFactory;
-      D3D11InputLayoutManager* mIAManager;
+      D3D11HLSLProgramFactory* m_hlslFactory;
+      D3D11InputLayoutManager* m_iaManager;
 
-      bool mPSUAVsBound;
-      bool mCSUAVsBound;
+      bool m_psUAVsBound;
+      bool m_csUAVsBound;
 
-      uint32 mStencilRef;
-      Box2D mViewportNorm;
-      D3D11_VIEWPORT mViewport;
-      D3D11_RECT mScissorRect;
+      uint32 m_stencilRef;
+      Box2D m_viewportNorm;
+      D3D11_VIEWPORT m_viewport;
+      D3D11_RECT m_scissorRect;
 
-      SPtr<VertexDeclaration> mActiveVertexDeclaration;
-      SPtr<D3D11GPUProgram> mActiveVertexShader;
-      SPtr<D3D11DepthStencilState> mActiveDepthStencilState;
+      SPtr<VertexDeclaration> m_activeVertexDeclaration;
+      SPtr<D3D11GPUProgram> m_activeVertexShader;
+      SPtr<D3D11DepthStencilState> m_activeDepthStencilState;
 
-      DrawOperationType mActiveDrawOp;
+      DrawOperationType m_activeDrawOp;
     };
   }
 }

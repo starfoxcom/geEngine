@@ -1053,7 +1053,7 @@ namespace geEngineSDK {
                 "Invalid lock option. No DX11 equivalent of: " +
                 toString(lockOptions));
 
-      return D3D11_MAP_WRITE;
+      //return D3D11_MAP_WRITE; //Unreachable code
     }
   }
 }
