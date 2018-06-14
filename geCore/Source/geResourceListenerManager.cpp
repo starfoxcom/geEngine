@@ -179,7 +179,7 @@ namespace geEngineSDK {
           listeners.erase(iterFind3);
         }
 
-        if (listeners.size() == 0) {
+        if (listeners.empty()) {
           m_resourceToListenerMap.erase(iterFind2);
         }
       }
@@ -192,11 +192,11 @@ namespace geEngineSDK {
   ResourceListenerManager::addDependencies(IResourceListener* listener) {
     listener->getListenerResources(m_tempResourceBuffer);
 
-    if (m_tempResourceBuffer.size() > 0) {
+    if (!m_tempResourceBuffer.empty()) {
       Vector<uint64> resourceHandleIds(m_tempResourceBuffer.size());
       uint32 idx = 0;
       for (auto& resource : m_tempResourceBuffer) {
-        uint64 handleId = (uint64)resource.getHandleData().get();
+        auto handleId = reinterpret_cast<uint64>(resource.getHandleData().get());
         resourceHandleIds[idx] = handleId;
         m_resourceToListenerMap[handleId].push_back(listener);
         ++idx;

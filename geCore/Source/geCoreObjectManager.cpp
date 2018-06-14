@@ -84,9 +84,9 @@ namespace geEngineSDK {
         if (nullptr != coreObject) {
           CoreSyncData objSyncData = object->syncToCore(g_coreThread().getFrameAlloc());
 
-          m_destroyedSyncData.push_back(CoreStoredSyncObjData(coreObject,
-                                                              internalId,
-                                                              objSyncData));
+          m_destroyedSyncData.emplace_back(coreObject,
+                                           internalId,
+                                           objSyncData);
 
           DirtyObjectData& dirtyObjData = m_dirtyObjects[internalId];
           dirtyObjData.syncDataId = static_cast<int32>(m_destroyedSyncData.size()) - 1;
@@ -121,7 +121,7 @@ namespace geEngineSDK {
               dependencies.erase(iterFind3);
             }
 
-            if (dependencies.size() == 0) {
+            if (dependencies.empty()) {
               m_dependencies.erase(iterFind2);
             }
           }
@@ -199,13 +199,13 @@ namespace geEngineSDK {
               auto findIter3 = find(dependants.begin(), dependants.end(), object);
               dependants.erase(findIter3);
 
-              if (dependants.size() == 0) {
+              if (dependants.empty()) {
                 m_dependants.erase(iterFind2);
               }
             }
           }
 
-          if (nullptr != dependencies && dependencies->size() > 0) {
+          if (nullptr != dependencies && !dependencies->empty()) {
             m_dependencies[id] = *dependencies;
           }
           else {
@@ -213,7 +213,7 @@ namespace geEngineSDK {
           }
         }
         else {
-          if (nullptr != dependencies && dependencies->size() > 0) {
+          if (nullptr != dependencies && !dependencies->empty()) {
             for (auto& dependency : *dependencies) {
               toAdd.push_back(dependency);
             }
@@ -280,7 +280,7 @@ namespace geEngineSDK {
         return;
       }
 
-      syncData.push_back(IndividualCoreSyncData());
+      syncData.emplace_back();
       IndividualCoreSyncData& data = syncData.back();
       data.allocator = allocator;
       data.destination = objectCore;
@@ -307,7 +307,7 @@ namespace geEngineSDK {
       }
     };
 
-    if (syncData.size() > 0) {
+    if (!syncData.empty()) {
       g_coreThread().queueCommand(bind(callback, syncData));
     }
   }
@@ -316,7 +316,7 @@ namespace geEngineSDK {
   CoreObjectManager::syncDownload(FrameAlloc* allocator) {
     Lock lock(m_objectsMutex);
 
-    m_coreSyncData.push_back(CoreStoredSyncData());
+    m_coreSyncData.emplace_back();
     CoreStoredSyncData& syncData = m_coreSyncData.back();
 
     syncData.alloc = allocator;
@@ -380,9 +380,9 @@ namespace geEngineSDK {
         CoreSyncData objSyncData = curObj->syncToCore(allocator);
         curObj->markCoreClean();
 
-        syncData.entries.push_back(CoreStoredSyncObjData(objectCore,
-                                                         curObj->getInternalID(),
-                                                         objSyncData));
+        syncData.entries.emplace_back(objectCore,
+                                      curObj->getInternalID(),
+                                      objSyncData);
       };
 
       CoreObject* object = objectData.second.object;
@@ -406,7 +406,7 @@ namespace geEngineSDK {
   CoreObjectManager::syncUpload() {
     Lock lock(m_objectsMutex);
 
-    if (m_coreSyncData.size() == 0) {
+    if (m_coreSyncData.empty()) {
       return;
     }
 

@@ -69,7 +69,7 @@ namespace geEngineSDK {
   }
 
   using RLF = RESOURCE_LOAD_FLAG::E;
-  typedef Flags<RLF> ResourceLoadFlags;
+  using ResourceLoadFlags = Flags<RLF>;
   GE_FLAGS_OPERATORS(RLF);
 
   /**

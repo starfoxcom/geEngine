@@ -21,12 +21,9 @@
 
 #include <geTexture.h>
 #include <gePixelData.h>
-//#include <geIndexBuffer.h>
-
-#include "geVertexDeclaration.h"
-//#include <geVertexData.h>
-
-//#include <geSamplerState.h>
+#include <geIndexBuffer.h>
+#include <geVertexData.h>
+#include <geSamplerState.h>
 
 namespace geEngineSDK {
   namespace geCoreThread {

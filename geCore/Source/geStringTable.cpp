@@ -127,7 +127,7 @@ namespace geEngineSDK {
             //+2 for open and closed brackets
             numRemovedChars += numParamChars + 2;
             uint32 paramIdx = parseUnsignedInt(bracketChars.str());
-            paramOffsets.push_back(ParamOffset(paramIdx, i + 1 - numRemovedChars));
+            paramOffsets.emplace_back(paramIdx, i + 1 - numRemovedChars);
           }
           else {
             //Last bracket wasn't really a parameter
@@ -156,7 +156,7 @@ namespace geEngineSDK {
            return a.paramIdx < b.paramIdx;
          });
 
-    if (paramOffsets.size() > 0) {
+    if (!paramOffsets.empty()) {
       uint32 sequentialIdx = 0;
       uint32 lastParamIdx = paramOffsets[0].paramIdx;
       for (uint32 i = 0; i < numParameters; ++i) {

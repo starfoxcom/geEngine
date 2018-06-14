@@ -188,7 +188,7 @@ namespace geEngineSDK {
   CoreObject::executeGPUCommand(const SPtr<geCoreThread::CoreObject>& obj,
                                 function<void()> func) {
     //Makes sure obj isn't optimized out?
-    volatile SPtr<geCoreThread::CoreObject> objParam = obj;
+    volatile const SPtr<geCoreThread::CoreObject>& objParam = obj;
     func();
   }
 
@@ -197,7 +197,7 @@ namespace geEngineSDK {
                                       function<void(AsyncOp&)> func,
                                       AsyncOp& op) {
     //Makes sure obj isn't optimized out?
-    volatile SPtr<geCoreThread::CoreObject> objParam = obj;
+    volatile const SPtr<geCoreThread::CoreObject>& objParam = obj;
     func(op);
   }
 }

@@ -127,8 +127,8 @@ namespace geEngineSDK {
            .reserve<PARAM_TYPE::E>(totalNumSlots)
            .reserve<uint32>(totalNumSlots);
 
-    for (uint32 i = 0; i < static_cast<uint32>(PARAM_TYPE::kCount); ++i) {
-      m_alloc.reserve<ResourceInfo>(m_numElementsPerType[i]);
+    for (uint32 i : m_numElementsPerType) {
+      m_alloc.reserve<ResourceInfo>(i);
     }
 
     m_alloc.init();

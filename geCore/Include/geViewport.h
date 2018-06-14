@@ -40,7 +40,7 @@ namespace geEngineSDK {
     kStencil = 1 << 2
   };
 
-  typedef Flags<ClearFlagBits> ClearFlags;
+  using ClearFlags = Flags<ClearFlagBits>;
   GE_FLAGS_OPERATORS(ClearFlagBits);
 
   class GE_CORE_EXPORT ViewportBase

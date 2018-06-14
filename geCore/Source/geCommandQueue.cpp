@@ -171,7 +171,7 @@ namespace geEngineSDK {
 
   bool
   CommandQueueBase::isEmpty() {
-    if (nullptr != m_commands && m_commands->size() > 0) {
+    if (nullptr != m_commands && !m_commands->empty()) {
       return false;
     }
     return true;

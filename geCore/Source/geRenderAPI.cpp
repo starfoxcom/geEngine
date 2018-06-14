@@ -259,7 +259,7 @@ namespace geEngineSDK {
     RenderAPI::~RenderAPI() {
       //Base classes need to call virtual destroy_internal method instead of a
       //destructor
-      //ge_deleteN(m_currentCapabilities, m_numDevices);
+      ge_deleteN(m_currentCapabilities, m_numDevices);
       m_currentCapabilities = nullptr;
     }
 
@@ -300,7 +300,6 @@ namespace geEngineSDK {
       m_activeRenderTarget = nullptr;
     }
 
-    /*
     const RenderAPICapabilities&
     RenderAPI::getCapabilities(uint32 deviceIdx) const {
       if (deviceIdx >= m_numDevices) {
@@ -311,7 +310,6 @@ namespace geEngineSDK {
 
       return m_currentCapabilities[deviceIdx];
     }
-    */
 
     uint32
     RenderAPI::vertexCountToPrimCount(DrawOperationType type,

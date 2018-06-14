@@ -756,10 +756,8 @@ namespace geEngineSDK {
        * @param[in] deviceIdx Index of the device to get the capabilities for.
        * @note  Thread safe.
        */
-      /*
       const RenderAPICapabilities&
       getCapabilities(uint32 deviceIdx) const;
-      */
 
       /**
        * @brief Returns the number of devices supported by this render API.

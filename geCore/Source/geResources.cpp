@@ -489,8 +489,8 @@ namespace geEngineSDK {
     Vector<HResource> resourcesToUnload;
     {
       Lock lock(m_loadedResourceMutex);
-      for (auto iter = m_loadedResources.begin(); iter != m_loadedResources.end(); ++iter) {
-        const LoadedResourceData& resData = iter->second;
+      for (auto& loadedResource : m_loadedResources) {
+        const LoadedResourceData& resData = loadedResource.second;
 
         uint32 refCount = resData.resource.m_data->m_refCount.load(memory_order_relaxed);
         GE_ASSERT(refCount > 0); //No references but kept in m_loadedResources list?
@@ -504,8 +504,8 @@ namespace geEngineSDK {
     //NOTE: When unloading multiple resources it's possible that unloading one
     //will also unload another resource in "resourcesToUnload". This is fine
     //because "unload" deals with invalid handles gracefully.
-    for (auto iter = resourcesToUnload.begin(); iter != resourcesToUnload.end(); ++iter) {
-      release(*iter);
+    for (auto & iter : resourcesToUnload) {
+      release(iter);
     }
   }
 

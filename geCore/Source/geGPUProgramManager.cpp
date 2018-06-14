@@ -63,7 +63,7 @@ namespace geEngineSDK {
       ~NullProgram() = default;
 
       bool
-      isSupported() const {
+      isSupported() const override {
         return false;
       }
 

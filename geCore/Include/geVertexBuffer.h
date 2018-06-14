@@ -112,8 +112,8 @@ namespace geEngineSDK {
     /**
      * @copydoc CoreObject::createCore
      */
-    virtual SPtr<geCoreThread::CoreObject>
-    createCore() const;
+    SPtr<geCoreThread::CoreObject>
+    createCore() const override;
 
     VertexBufferProperties m_properties;
     GPU_BUFFER_USAGE::E m_usage;

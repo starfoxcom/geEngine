@@ -41,7 +41,7 @@ struct DebugOctreeOptions
   }
 };
 
-typedef Octree<uint32, DebugOctreeOptions> DebugOctree;
+using DebugOctree = Octree<uint32, DebugOctreeOptions>;
 
 TEST(geOctree, Construct_Octree) {
   DebugOctreeData octreeData;
@@ -64,16 +64,16 @@ TEST(geOctree, Construct_Octree) {
   };
 
   float placementExtents = 750.0f;
-  for (uint32 i = 0; i < sizeof(types) / sizeof(types[0]); ++i) {
-    for (uint32 j = 0; j < types[i].count; ++j) {
+  for (auto& type : types) {
+    for (uint32 j = 0; j < type.count; ++j) {
       Vector3 position(((rand() / (float)RAND_MAX) * 2.0f - 1.0f) * placementExtents,
                        ((rand() / (float)RAND_MAX) * 2.0f - 1.0f) * placementExtents,
                        ((rand() / (float)RAND_MAX) * 2.0f - 1.0f) * placementExtents);
 
-      float realSize = types[i].sizeMax - types[i].sizeMin;
-      Vector3 extents(types[i].sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f,
-                      types[i].sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f,
-                      types[i].sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f);
+      float realSize = type.sizeMax - type.sizeMin;
+      Vector3 extents(type.sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f,
+                      type.sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f,
+                      type.sizeMin + ((rand() / (float)RAND_MAX)) * realSize * 0.5f);
 
       DebugOctreeElem elem;
       elem.box = AABox(position - extents, position + extents);
@@ -89,9 +89,9 @@ TEST(geOctree, Construct_Octree) {
   manualElems[1].box = AABox(Vector3(200.0f, 100.0f, 100.f), Vector3(250.0f, 150.0f, 150.0f));
   manualElems[2].box = AABox(Vector3(90.0f, 90.0f, 90.f), Vector3(105.0f, 105.0f, 110.0f));
 
-  for (uint32 i = 0; i < 3; ++i) {
-    uint32 elemIdx = static_cast<uint32>(octreeData.elements.size());
-    octreeData.elements.push_back(manualElems[i]);
+  for (const auto& manualElem : manualElems) {
+    auto elemIdx = static_cast<uint32>(octreeData.elements.size());
+    octreeData.elements.push_back(manualElem);
     octree.addElement(elemIdx);
   }
 
