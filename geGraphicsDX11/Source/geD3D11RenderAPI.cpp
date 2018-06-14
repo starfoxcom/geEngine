@@ -23,7 +23,7 @@
 #include "geD3D11Device.h"
 
 #include "geD3D11TextureManager.h"
-#include "geD3D11Texture.h"
+#include "geD3D11CommandBufferManager.h"
 #include "geD3D11HardwareBufferManager.h"
 #include "geD3D11RenderWindowManager.h"
 #include "geD3D11RenderStateManager.h"
@@ -38,15 +38,16 @@
 #include "geD3D11RasterizerState.h"
 #include "geD3D11DepthStencilState.h"
 #include "geD3D11SamplerState.h"
-#include "geD3D11GPUProgram.h"
-#include "geD3D11VertexBuffer.h"
-#include "geD3D11IndexBuffer.h"
-#include "geD3D11GPUParamBlockBuffer.h"
 #include "geD3D11TextureView.h"
 
-#include "geD3D11GPUBuffer.h"
+#include "geD3D11Texture.h"
 #include "geD3D11CommandBuffer.h"
-#include "geD3D11CommandBufferManager.h"
+#include "geD3D11VertexBuffer.h"
+#include "geD3D11IndexBuffer.h"
+#include "geD3D11GPUBuffer.h"
+#include "geD3D11GPUParamBlockBuffer.h"
+
+#include "geD3D11GPUProgram.h"
 
 #include <geGPUParams.h>
 #include <geGPUParamDesc.h>

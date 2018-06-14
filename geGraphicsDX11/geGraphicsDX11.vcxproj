@@ -189,6 +189,8 @@
     <ClCompile Include="Source\geD3D11Driver.cpp" />
     <ClCompile Include="Source\geD3D11DriverList.cpp" />
     <ClCompile Include="Source\geD3D11EventQuery.cpp" />
+    <ClCompile Include="Source\geD3D11HardwareBuffer.cpp" />
+    <ClCompile Include="Source\geD3D11IndexBuffer.cpp" />
     <ClCompile Include="Source\geD3D11Mappings.cpp" />
     <ClCompile Include="Source\geD3D11OcclusionQuery.cpp" />
     <ClCompile Include="Source\geD3D11Plugin.cpp" />
@@ -200,6 +202,7 @@
     <ClCompile Include="Source\geD3D11TextureManager.cpp" />
     <ClCompile Include="Source\geD3D11TextureView.cpp" />
     <ClCompile Include="Source\geD3D11TimerQuery.cpp" />
+    <ClCompile Include="Source\geD3D11VertexBuffer.cpp" />
     <ClCompile Include="Source\geD3D11VideoModeInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +213,8 @@
     <ClInclude Include="Include\geD3D11Driver.h" />
     <ClInclude Include="Include\geD3D11DriverList.h" />
     <ClInclude Include="Include\geD3D11EventQuery.h" />
+    <ClInclude Include="Include\geD3D11HardwareBuffer.h" />
+    <ClInclude Include="Include\geD3D11IndexBuffer.h" />
     <ClInclude Include="Include\geD3D11Mappings.h" />
     <ClInclude Include="Include\geD3D11OcclusionQuery.h" />
     <ClInclude Include="Include\geD3D11QueryManager.h" />
@@ -220,6 +225,7 @@
     <ClInclude Include="Include\geD3D11TextureManager.h" />
     <ClInclude Include="Include\geD3D11TextureView.h" />
     <ClInclude Include="Include\geD3D11TimerQuery.h" />
+    <ClInclude Include="Include\geD3D11VertexBuffer.h" />
     <ClInclude Include="Include\geD3D11VideoModeInfo.h" />
     <ClInclude Include="Include\gePrerequisitesD3D11.h" />
   </ItemGroup>
