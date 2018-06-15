@@ -35,6 +35,12 @@ namespace geEngineSDK {
   using std::function;
   using std::time;
 
+  /**
+   * The thread pool will check for unused threads every UNUSED_CHECK_PERIOD
+   * getThread() calls
+   */
+  static constexpr int32 UNUSED_CHECK_PERIOD = 32;
+
   HThread::HThread(ThreadPool* pool, uint32 threadId)
     : m_threadId(threadId),
       m_pool(pool) {}
@@ -279,11 +285,10 @@ namespace geEngineSDK {
       age = ++m_age;
     }
 
-    if (32 == age) {
+    if (UNUSED_CHECK_PERIOD == age) {
       clearUnused();
     }
 
-    PooledThread* newThread = nullptr;
     Lock lock(m_mutex);
 
     for (auto& pThread : m_threads) {
@@ -299,7 +304,7 @@ namespace geEngineSDK {
                 "maximum capacity has been reached.");
     }
 
-    newThread = createThread(name);
+    PooledThread* newThread = createThread(name);
     m_threads.push_back(newThread);
 
     return newThread;

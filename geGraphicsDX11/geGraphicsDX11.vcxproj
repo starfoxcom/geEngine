@@ -189,6 +189,8 @@
     <ClCompile Include="Source\geD3D11Driver.cpp" />
     <ClCompile Include="Source\geD3D11DriverList.cpp" />
     <ClCompile Include="Source\geD3D11EventQuery.cpp" />
+    <ClCompile Include="Source\geD3D11GPUBuffer.cpp" />
+    <ClCompile Include="Source\geD3D11GPUBufferView.cpp" />
     <ClCompile Include="Source\geD3D11HardwareBuffer.cpp" />
     <ClCompile Include="Source\geD3D11IndexBuffer.cpp" />
     <ClCompile Include="Source\geD3D11Mappings.cpp" />
@@ -213,6 +215,8 @@
     <ClInclude Include="Include\geD3D11Driver.h" />
     <ClInclude Include="Include\geD3D11DriverList.h" />
     <ClInclude Include="Include\geD3D11EventQuery.h" />
+    <ClInclude Include="Include\geD3D11GPUBuffer.h" />
+    <ClInclude Include="Include\geD3D11GPUBufferView.h" />
     <ClInclude Include="Include\geD3D11HardwareBuffer.h" />
     <ClInclude Include="Include\geD3D11IndexBuffer.h" />
     <ClInclude Include="Include\geD3D11Mappings.h" />

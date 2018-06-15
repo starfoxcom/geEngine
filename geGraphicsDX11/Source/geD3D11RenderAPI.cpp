@@ -257,9 +257,9 @@ namespace geEngineSDK {
         if (nullptr != pipelineState) {
           d3d11BlendState = static_cast<D3D11BlendState*>(pipelineState->getBlendState().get());
           d3d11RasterizerState = static_cast<D3D11RasterizerState*>(pipelineState->getRasterizerState().get());
-          m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(pipelineState->getDepthStencilState());
+          m_activeDepthStencilState = static_pointer_cast<D3D11DepthStencilState>(pipelineState->getDepthStencilState());
 
-          m_activeVertexShader = std::static_pointer_cast<D3D11GPUVertexProgram>(pipelineState->getVertexProgram());
+          m_activeVertexShader = static_pointer_cast<D3D11GPUVertexProgram>(pipelineState->getVertexProgram());
           d3d11FragmentProgram = static_cast<D3D11GPUFragmentProgram*>(pipelineState->getFragmentProgram().get());
           d3d11GeometryProgram = static_cast<D3D11GPUGeometryProgram*>(pipelineState->getGeometryProgram().get());
           d3d11DomainProgram = static_cast<D3D11GPUDomainProgram*>(pipelineState->getDomainProgram().get());
@@ -272,13 +272,13 @@ namespace geEngineSDK {
             d3d11RasterizerState = static_cast<D3D11RasterizerState*>(RasterizerState::getDefault().get());
 
           if (m_activeDepthStencilState == nullptr)
-            m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
+            m_activeDepthStencilState = static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
         }
         else
         {
           d3d11BlendState = static_cast<D3D11BlendState*>(BlendState::getDefault().get());
           d3d11RasterizerState = static_cast<D3D11RasterizerState*>(RasterizerState::getDefault().get());
-          m_activeDepthStencilState = std::static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
+          m_activeDepthStencilState = static_pointer_cast<D3D11DepthStencilState>(DepthStencilState::getDefault());
 
           m_activeVertexShader = nullptr;
           d3d11FragmentProgram = nullptr;
@@ -345,7 +345,7 @@ namespace geEngineSDK {
         if (pipelineState != nullptr)
           program = pipelineState->getProgram();
 
-        if (program != nullptr && program->getType() == GPT_COMPUTE_PROGRAM)
+        if (program != nullptr && program->getType() == GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM)
         {
           D3D11GPUComputeProgram *d3d11ComputeProgram = static_cast<D3D11GPUComputeProgram*>(program.get());
           m_device->getImmediateContext()->CSSetShader(d3d11ComputeProgram->getComputeShader(), nullptr, 0);
@@ -406,7 +406,7 @@ namespace geEngineSDK {
           FrameVector<ID3D11Buffer*> constBuffers(8);
           FrameVector<ID3D11SamplerState*> samplers(8);
 
-          auto populateViews = [&](GPUProgramType type)
+          auto populateViews = [&](GPU_PROGRAM_TYPE::E type)
           {
             srvs.clear();
             uavs.clear();
@@ -430,7 +430,7 @@ namespace geEngineSDK {
               if (texture != nullptr)
               {
                 SPtr<TextureView> texView = texture->requestView(surface.mipLevel, surface.numMipLevels,
-                  surface.face, surface.numFaces, GVU_DEFAULT);
+                  surface.face, surface.numFaces, GPU_VIEW_USAGE::kDEFAULT);
 
                 D3D11TextureView* d3d11texView = static_cast<D3D11TextureView*>(texView.get());
                 srvs[slot] = d3d11texView->getSRV();
@@ -442,8 +442,8 @@ namespace geEngineSDK {
               uint32 slot = iter->second.slot;
               SPtr<GPUBuffer> buffer = gpuParams->getBuffer(iter->second.set, slot);
 
-              bool isLoadStore = iter->second.type != GPOT_BYTE_BUFFER &&
-                iter->second.type != GPOT_STRUCTURED_BUFFER;
+              bool isLoadStore = iter->second.type != GPU_PARAM_OBJECT_TYPE::kBYTE_BUFFER &&
+                iter->second.type != GPU_PARAM_OBJECT_TYPE::kSTRUCTURED_BUFFER;
 
               if (!isLoadStore)
               {
@@ -482,7 +482,7 @@ namespace geEngineSDK {
               if (texture != nullptr)
               {
                 SPtr<TextureView> texView = texture->requestView(surface.mipLevel, 1,
-                  surface.face, surface.numFaces, GVU_RANDOMWRITE);
+                  surface.face, surface.numFaces, GPU_VIEW_USAGE::kRANDOMWRITE);
 
                 D3D11TextureView* d3d11texView = static_cast<D3D11TextureView*>(texView.get());
                 uavs[slot] = d3d11texView->getUAV();
@@ -533,7 +533,7 @@ namespace geEngineSDK {
           uint32 numConstBuffers = 0;
           uint32 numSamplers = 0;
 
-          populateViews(GPT_VERTEX_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kVERTEX_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numConstBuffers = (uint32)constBuffers.size();
           numSamplers = (uint32)samplers.size();
@@ -547,7 +547,7 @@ namespace geEngineSDK {
           if (numSamplers > 0)
             context->VSSetSamplers(0, numSamplers, samplers.data());
 
-          populateViews(GPT_FRAGMENT_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kFRAGMENT_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numUAVs = (uint32)uavs.size();
           numConstBuffers = (uint32)constBuffers.size();
@@ -569,7 +569,7 @@ namespace geEngineSDK {
           if (numSamplers > 0)
             context->PSSetSamplers(0, numSamplers, samplers.data());
 
-          populateViews(GPT_GEOMETRY_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kGEOMETRY_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numConstBuffers = (uint32)constBuffers.size();
           numSamplers = (uint32)samplers.size();
@@ -583,7 +583,7 @@ namespace geEngineSDK {
           if (numSamplers > 0)
             context->GSSetSamplers(0, numSamplers, samplers.data());
 
-          populateViews(GPT_HULL_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kHULL_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numConstBuffers = (uint32)constBuffers.size();
           numSamplers = (uint32)samplers.size();
@@ -597,7 +597,7 @@ namespace geEngineSDK {
           if (numSamplers > 0)
             context->HSSetSamplers(0, numSamplers, samplers.data());
 
-          populateViews(GPT_DOMAIN_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kDOMAIN_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numConstBuffers = (uint32)constBuffers.size();
           numSamplers = (uint32)samplers.size();
@@ -611,7 +611,7 @@ namespace geEngineSDK {
           if (numSamplers > 0)
             context->DSSetSamplers(0, numSamplers, samplers.data());
 
-          populateViews(GPT_COMPUTE_PROGRAM);
+          populateViews(GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM);
           numSRVs = (uint32)srvs.size();
           numUAVs = (uint32)uavs.size();
           numConstBuffers = (uint32)constBuffers.size();
@@ -652,9 +652,9 @@ namespace geEngineSDK {
       GE_INC_RENDER_STAT(NumGPUParamBinds);
     }
 
-    void D3D11RenderAPI::setViewport(const Rect2& vp, const SPtr<CommandBuffer>& commandBuffer)
+    void D3D11RenderAPI::setViewport(const Box2D& vp, const SPtr<CommandBuffer>& commandBuffer)
     {
-      auto executeRef = [&](const Rect2& vp)
+      auto executeRef = [&](const Box2D& vp)
       {
         THROW_IF_NOT_CORE_THREAD;
 
@@ -680,7 +680,7 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        uint32 maxBoundVertexBuffers = mCurrentCapabilities[0].getMaxBoundVertexBuffers();
+        uint32 maxBoundVertexBuffers = m_currentCapabilities[0].getMaxBoundVertexBuffers();
         if (index < 0 || (index + numBuffers) >= maxBoundVertexBuffers)
         {
           GE_EXCEPT(InvalidParametersException, "Invalid vertex index: " + toString(index) +
@@ -963,12 +963,16 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        if (nullptr == m_activeRenderTarget)
+        if (nullptr == m_activeRenderTarget) {
           return;
+        }
 
-        const RenderTargetProperties& rtProps = m_activeRenderTarget->getProperties();
+        const auto& rtProps = m_activeRenderTarget->getProperties();
 
-        Box2DI clearArea((int)m_viewport.TopLeftX, (int)m_viewport.TopLeftY, (int)m_viewport.Width, (int)m_viewport.Height);
+        Box2DI clearArea(static_cast<int32>(m_viewport.TopLeftX),
+                         static_cast<int32>(m_viewport.TopLeftY),
+                         static_cast<int32>(m_viewport.Width),
+                         static_cast<int32>(m_viewport.Height));
 
         bool clearEntireTarget = clearArea.width == 0 || clearArea.height == 0;
         clearEntireTarget |= (clearArea.x == 0 && clearArea.y == 0 && clearArea.width == rtProps.width &&
@@ -1011,12 +1015,11 @@ namespace geEngineSDK {
         {
           uint32 maxRenderTargets = m_currentCapabilities[0].getNumMultiRenderTargets();
 
-          ID3D11RenderTargetView** views = ge_newN<ID3D11RenderTargetView*>(maxRenderTargets);
+          auto views = ge_newN<ID3D11RenderTargetView*>(maxRenderTargets);
           memset(views, 0, sizeof(ID3D11RenderTargetView*) * maxRenderTargets);
 
           m_activeRenderTarget->getCustomAttribute("RTV", views);
-          if (!views[0])
-          {
+          if (!views[0]) {
             ge_deleteN(views, maxRenderTargets);
             return;
           }
@@ -1027,8 +1030,7 @@ namespace geEngineSDK {
           clearColor[2] = color.b;
           clearColor[3] = color.a;
 
-          for (uint32 i = 0; i < maxRenderTargets; ++i)
-          {
+          for (uint32 i = 0; i < maxRenderTargets; ++i) {
             if (views[i] != nullptr && ((1 << i) & targetMask) != 0)
               m_device->getImmediateContext()->ClearRenderTargetView(views[i], clearColor);
           }
@@ -1037,8 +1039,7 @@ namespace geEngineSDK {
         }
 
         // Clear depth stencil
-        if ((buffers & FBT_DEPTH) != 0 || (buffers & FBT_STENCIL) != 0)
-        {
+        if ((buffers & FBT_DEPTH) != 0 || (buffers & FBT_STENCIL) != 0) {
           ID3D11DepthStencilView* depthStencilView = nullptr;
           m_activeRenderTarget->getCustomAttribute("DSV", &depthStencilView);
 
@@ -1161,15 +1162,14 @@ namespace geEngineSDK {
       const RenderTargetProperties& rtProps = m_activeRenderTarget->getProperties();
 
       // Set viewport dimensions
-      m_viewport.TopLeftX = (FLOAT)(rtProps.width * m_viewportNorm.x);
-      m_viewport.TopLeftY = (FLOAT)(rtProps.height * m_viewportNorm.y);
-      m_viewport.Width = (FLOAT)(rtProps.width * m_viewportNorm.width);
-      m_viewport.Height = (FLOAT)(rtProps.height * m_viewportNorm.height);
+      m_viewport.TopLeftX = static_cast<FLOAT>(rtProps.width * m_viewportNorm.x);
+      m_viewport.TopLeftY = static_cast<FLOAT>(rtProps.height * m_viewportNorm.y);
+      m_viewport.Width = static_cast<FLOAT>(rtProps.width * m_viewportNorm.width);
+      m_viewport.Height = static_cast<FLOAT>(rtProps.height * m_viewportNorm.height);
 
-      if (rtProps.requiresTextureFlipping)
-      {
-        // Convert "top-left" to "bottom-left"
-        m_viewport.TopLeftY = rtProps.height - m_viewport.Height - m_viewport.TopLeftY;
+      if (rtProps.m_requiresTextureFlipping) {
+        //Convert "top-left" to "bottom-left"
+        m_viewport.TopLeftY = rtProps.m_height - m_viewport.Height - m_viewport.TopLeftY;
       }
 
       m_viewport.MinDepth = 0.0f;
@@ -1335,7 +1335,7 @@ namespace geEngineSDK {
 
 
         HRESULT hr;
-        uint outQuality;
+        UINT outQuality;
         hr = m_device->getD3D11Device()->CheckMultisampleQualityLevels(format, outputSampleDesc->Count, &outQuality);
 
         if (SUCCEEDED(hr) && (!tryCSAA || outQuality > outputSampleDesc->Quality))
@@ -1384,10 +1384,10 @@ namespace geEngineSDK {
       dest = matrix;
 
       // Convert depth range from [-1,+1] to [0,1]
-      dest[2][0] = (dest[2][0] + dest[3][0]) / 2;
-      dest[2][1] = (dest[2][1] + dest[3][1]) / 2;
-      dest[2][2] = (dest[2][2] + dest[3][2]) / 2;
-      dest[2][3] = (dest[2][3] + dest[3][3]) / 2;
+      dest.m[2][0] = (dest.m[2][0] + dest.m[3][0]) * 0.5f;
+      dest.m[2][1] = (dest.m[2][1] + dest.m[3][1]) * 0.5f;
+      dest.m[2][2] = (dest.m[2][2] + dest.m[3][2]) * 0.5f;
+      dest.m[2][3] = (dest.m[2][3] + dest.m[3][3]) * 0.5f;
     }
 
     const RenderAPIInfo& D3D11RenderAPI::getAPIInfo() const

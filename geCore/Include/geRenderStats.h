@@ -163,7 +163,7 @@ namespace geEngineSDK {
      *        were GPU parameters bound to the pipeline.
      */
     void
-    incNumGpuParamBinds() {
+    incNumGPUParamBinds() {
       ++m_data.numGPUParamBinds;
     }
 

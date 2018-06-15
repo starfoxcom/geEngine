@@ -76,6 +76,12 @@
     <ClCompile Include="Source\geD3D11HardwareBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11GPUBufferView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11GPUBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -142,6 +148,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\geD3D11HardwareBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11GPUBufferView.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11GPUBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

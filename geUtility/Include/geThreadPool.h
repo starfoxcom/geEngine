@@ -277,6 +277,10 @@ namespace geEngineSDK {
     SIZE_T m_defaultCapacity;
     SIZE_T m_maxCapacity;
     uint32 m_idleTimeout;
+
+    /**
+     * Unused check counter
+     */
     uint32 m_age = 0;
 
     atomic_uint m_uniqueId;
