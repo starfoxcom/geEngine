@@ -215,7 +215,7 @@ namespace geEngineSDK {
        *                      than one.
        */
       void*
-      mapStaticBuffer(PixelData lock, uint32 mipLevel, uint32 face);
+      mapStaticBuffer(const PixelData& lock, uint32 mipLevel, uint32 face);
 
       /**
        * @brief Unmaps a previously mapped static buffer and flushes its data

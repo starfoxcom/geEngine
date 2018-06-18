@@ -219,7 +219,7 @@ namespace geEngineSDK {
     using const_reference = const value_type&;
     using size_type = size_t;
     using difference_type = ptrdiff_t;
-    
+
     StdFrameAlloc() _NOEXCEPT = default;
     StdFrameAlloc(FrameAlloc* pAlloc) _NOEXCEPT : m_FrameAlloc(pAlloc) {}
 

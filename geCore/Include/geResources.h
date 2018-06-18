@@ -20,6 +20,7 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesCore.h"
+
 #include <geModule.h>
 
 namespace geEngineSDK {
@@ -380,6 +381,14 @@ namespace geEngineSDK {
     HResource
     _getResourceHandle(const UUID& uuid);
 
+    /**
+     * @brie Same as save() except it saves the resource without registering it
+     *       in the default manifest, requiring a handle, or checking for
+     *       overwrite.
+     */
+    void
+    _save(const SPtr<Resource>& resource, const Path& filePath, bool compress);
+
    private:
     friend class ResourceHandleBase;
 
@@ -429,6 +438,7 @@ namespace geEngineSDK {
 
     Mutex m_inProgressResourcesMutex;
     Mutex m_loadedResourceMutex;
+    Mutex m_defaultManifestMutex;
     RecursiveMutex m_destroyMutex;
 
     UnorderedMap<UUID, WeakResourceHandle<Resource>> m_handles;

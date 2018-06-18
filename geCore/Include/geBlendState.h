@@ -384,8 +384,8 @@ namespace geEngineSDK {
     static uint32
     getDynamicSize(const BLEND_STATE_DESC& data) {
       uint64 dataSize = sizeof(data) + sizeof(uint32);
-      uint64 maxSize = static_cast<uint64>(geEngineSDK::NumLimit::MAX_UINT32);
 #if GE_DEBUG_MODE
+      uint64 maxSize = static_cast<uint64>(geEngineSDK::NumLimit::MAX_UINT32);
       if (dataSize > maxSize) {
         GE_EXCEPT(InternalErrorException,
                   "Data overflow! Size doesn't fit into 32 bits.");

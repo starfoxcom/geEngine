@@ -82,6 +82,24 @@
     <ClCompile Include="Source\geD3D11GPUBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11GPUParamBlockBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11HardwareBufferManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11SamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\geD3D11RenderStateManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -155,6 +173,24 @@
     </ClInclude>
     <ClInclude Include="Include\geD3D11GPUBuffer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11GPUParamBlockBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11HardwareBufferManager.h">
+      <Filter>Source Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11RasterizerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11DepthStencilState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11SamplerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11RenderStateManager.h">
+      <Filter>Source Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

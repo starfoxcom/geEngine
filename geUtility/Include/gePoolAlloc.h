@@ -19,7 +19,7 @@
  */
 /*****************************************************************************/
 #include "gePrerequisitesUtil.h"
-#include <climits>
+#include "geNumericLimits.h"
 
 namespace geEngineSDK {
   /**
@@ -57,7 +57,7 @@ namespace geEngineSDK {
       {
         SIZE_T offset = 0;
         for (uint32 i = 0; i < ElemsPerBlock; ++i) {
-          SIZE_T* entryPtr = reinterpret_cast<SIZE_T*>(&data[offset]);
+          auto entryPtr = reinterpret_cast<SIZE_T*>(&data[offset]);
 
           offset += ActualElemSize;
           *entryPtr = offset;
@@ -87,7 +87,7 @@ namespace geEngineSDK {
        */
       void
       dealloc(void* data) {
-        SIZE_T* entryPtr = reinterpret_cast<SIZE_T*>(data);
+        auto entryPtr = reinterpret_cast<SIZE_T*>(data);
         *entryPtr = m_freePtr;
         ++m_freeElems;
 
@@ -106,7 +106,7 @@ namespace geEngineSDK {
                     "Pool allocator minimum allowed element size is 4 bytes.");
       static_assert(ElemsPerBlock > 0,
                     "Number of elements per block must be at least 1.");
-      static_assert(ElemsPerBlock * ActualElemSize <= UINT_MAX,
+      static_assert(ElemsPerBlock * ActualElemSize <= NumLimit::MAX_UINT32,
                     "Pool allocator block size too large.");
     }
 
@@ -216,7 +216,7 @@ namespace geEngineSDK {
         //Padding for potential alignment correction
         SIZE_T paddedBlockDataSize = blockDataSize + (Alignment - 1);
 
-        uint8* data = reinterpret_cast<uint8*>(ge_alloc(sizeof(MemBlock) +
+        auto data = reinterpret_cast<uint8*>(ge_alloc(sizeof(MemBlock) +
                                                         paddedBlockDataSize));
 
         void* blockData = data + sizeof(MemBlock);
@@ -226,7 +226,7 @@ namespace geEngineSDK {
                                paddedBlockDataSize);
 
         newBlock = new (data) MemBlock(reinterpret_cast<uint8*>(blockData));
-        m_numBlocks++;
+        ++m_numBlocks;
 
         newBlock->m_nextBlock = m_freeBlock;
       }
@@ -242,7 +242,7 @@ namespace geEngineSDK {
     deallocBlock(MemBlock* block) {
       block->~MemBlock();
       ge_free(block);
-      m_numBlocks--;
+      --m_numBlocks;
     }
 
     static constexpr SIZE_T

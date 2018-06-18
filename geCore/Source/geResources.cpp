@@ -38,6 +38,7 @@
 #include <geNumericLimits.h>
 
 namespace geEngineSDK {
+  using std::ios;
   using std::static_pointer_cast;
   using std::find;
   using std::find_if;
@@ -46,8 +47,11 @@ namespace geEngineSDK {
   using std::ofstream;
 
   Resources::Resources() {
-    m_defaultResourceManifest = ResourceManifest::create("Default");
-    m_resourceManifests.push_back(m_defaultResourceManifest);
+    {
+      Lock lock(m_defaultManifestMutex);
+      m_defaultResourceManifest = ResourceManifest::create("Default");
+      m_resourceManifests.push_back(m_defaultResourceManifest);
+    }
   }
 
   Resources::~Resources() {
@@ -213,7 +217,7 @@ namespace geEngineSDK {
         //Register an in-progress load unless there is an existing load
         //operation, or the resource is already loaded
         if (!alreadyLoading) {
-          ResourceLoadData* loadData = ge_new<ResourceLoadData>(outputResource.getWeak(), 0);
+          auto loadData = ge_new<ResourceLoadData>(outputResource.getWeak(), 0);
           m_inProgressResources[uuid] = loadData;
           loadData->resData = outputResource.getWeak();
 
@@ -603,7 +607,7 @@ namespace geEngineSDK {
       }
     }
 
-    bool fileExists = FileSystem::isFile(filePath);
+    const bool fileExists = FileSystem::isFile(filePath);
     if (fileExists && !overwrite) {
       LOGERR("Another file exists at the specified location. Not saving.");
       return;
@@ -615,11 +619,37 @@ namespace geEngineSDK {
              "available for saving. File path: " + filePath.toString());
     }
 
-    m_defaultResourceManifest->registerResource(resource.getUUID(), filePath);
+    {
+      Lock lock(m_defaultManifestMutex);
+      m_defaultResourceManifest->registerResource(resource.getUUID(), filePath);
+    }
 
-    Vector<ResourceDependency>
-      dependencyList = Utility::findResourceDependencies(*resource.get());
+    _save(resource.getInternalPtr(), filePath, compress);
+  }
 
+  void
+  Resources::save(const HResource& resource, bool compress) {
+    if (nullptr == resource) {
+      return;
+    }
+
+    Path path;
+    if (getFilePathFromUUID(resource.getUUID(), path)) {
+      save(resource, path, true, compress);
+    }
+  }
+
+  void
+  Resources::_save(const SPtr<Resource>& resource,
+                   const Path& filePath,
+                   bool compress) {
+    if (!resource->m_keepSourceData) {
+      LOGWRN("Saving a resource that was created/loaded without "
+             "RESOURCE_LOAD_FLAG::kKeepSourceData. Some data might not be "
+             "available for saving. File path: " + filePath.toString());
+    }
+
+    auto dependencyList = Utility::findResourceDependencies(*resource);
     Vector<UUID> dependencyUUIDs(dependencyList.size());
 
     for (SIZE_T i = 0; i < dependencyList.size(); ++i) {
@@ -627,10 +657,9 @@ namespace geEngineSDK {
     }
 
     uint32 compressionMethod = (compress && resource->isCompressible()) ? 1 : 0;
-    SPtr<SavedResourceData>
-      resourceData = ge_shared_ptr_new<SavedResourceData>(dependencyUUIDs,
-                                                          resource->allowAsyncLoading(),
-                                                          compressionMethod);
+    auto resourceData = ge_shared_ptr_new<SavedResourceData>(dependencyUUIDs,
+                                                             resource->allowAsyncLoading(),
+                                                             compressionMethod);
 
     Path parentDir = filePath.getDirectory();
     if (!FileSystem::exists(parentDir)) {
@@ -638,6 +667,7 @@ namespace geEngineSDK {
     }
 
     Path savePath;
+    const bool fileExists = FileSystem::isFile(filePath);
     if (fileExists) {
       //If a file exists, save to a temporary location, then copy over only
       //after a save was successful. This guards against data loss in case the
@@ -650,7 +680,7 @@ namespace geEngineSDK {
       while (FileSystem::exists(savePath)) {
         if (safetyCounter > 10) {
           LOGERR("Internal error. Unable to save resource due to not being "
-                  "able to find a unique filename.");
+                 "able to find a unique filename.");
           return;
         }
 
@@ -665,13 +695,10 @@ namespace geEngineSDK {
     Lock fileLock = FileScheduler::getLock(filePath);
 
     ofstream stream;
-    stream.open(savePath.toPlatformString().c_str(), std::ios::out | std::ios::binary);
+    stream.open(savePath.toPlatformString().c_str(), ios::out | ios::binary);
     if (stream.fail()) {
-      LOGWRN("Failed to save file: \"" +
-             filePath.toString() +
-             "\". Error: " + 
-             strerror(errno) +
-             ".");
+      LOGWRN("Failed to save file: \"" + filePath.toString() +
+             "\". Error: " + strerror(errno) + ".");
     }
 
     //Write meta-data
@@ -691,9 +718,9 @@ namespace geEngineSDK {
       uint32 numBytes = 0;
       uint8* bytes = ms.encode(resource.get(), numBytes);
 
-      SPtr<MemoryDataStream> objStream = ge_shared_ptr_new<MemoryDataStream>(bytes, numBytes);
+      auto objStream = ge_shared_ptr_new<MemoryDataStream>(bytes, numBytes);
       if (0 != compressionMethod) {
-        SPtr<DataStream> srcStream = static_pointer_cast<DataStream>(objStream);
+        auto srcStream = static_pointer_cast<DataStream>(objStream);
         objStream = Compression::compress(srcStream);
       }
 
@@ -707,18 +734,6 @@ namespace geEngineSDK {
     if (fileExists) {
       FileSystem::remove(filePath);
       FileSystem::move(savePath, filePath);
-    }
-  }
-
-  void
-  Resources::save(const HResource& resource, bool compress) {
-    if (nullptr == resource) {
-      return;
-    }
-
-    Path path;
-    if (getFilePathFromUUID(resource.getUUID(), path)) {
-      save(resource, path, true, compress);
     }
   }
 

@@ -248,12 +248,12 @@ namespace geEngineSDK {
       }
       else {
         if ((m_properties.getUsage() & TU_DYNAMIC) != 0) {
-          uint8* data = reinterpret_cast<uint8*>(map(m_tex,
-                                                     flags,
-                                                     face,
-                                                     mipLevel,
-                                                     rowPitch,
-                                                     slicePitch));
+          auto data = reinterpret_cast<uint8*>(map(m_tex,
+                                                   flags,
+                                                   face,
+                                                   mipLevel,
+                                                   rowPitch,
+                                                   slicePitch));
           lockedArea.setExternalBuffer(data);
 
           if (PixelUtil::isCompressed(m_properties.getFormat())) {
@@ -867,7 +867,7 @@ namespace geEngineSDK {
     }
 
     void*
-    D3D11Texture::mapStaticBuffer(PixelData lock, uint32 mipLevel, uint32 face) {
+    D3D11Texture::mapStaticBuffer(const PixelData& lock, uint32 mipLevel, uint32 face) {
       //uint32 sizeOfImage = lock.getConsecutiveSize();
       m_lockedSubresourceIdx = D3D11CalcSubresource(mipLevel,
                                                     face,

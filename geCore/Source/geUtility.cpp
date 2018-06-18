@@ -61,7 +61,7 @@ namespace geEngineSDK {
     do {
       rtti->onSerializationStarted(&obj, dummyParams);
 
-      uint32 numFields = rtti->getNumFields();
+      const uint32 numFields = rtti->getNumFields();
       for (uint32 i = 0; i < numFields; ++i) {
         RTTIField* field = rtti->getField(i);
         if ((field->getFlags() & RTTI_FIELD_FLAG::kSkipInReferenceSearch) != 0) {
@@ -73,7 +73,7 @@ namespace geEngineSDK {
 
           if (TYPEID_CORE::kID_ResourceHandle == reflectableField->getType()->getRTTIId()) {
             if (reflectableField->isArray()) {
-              uint32 numElements = reflectableField->getArraySize(&obj);
+              const uint32 numElements = reflectableField->getArraySize(&obj);
               for (uint32 j = 0; j < numElements; ++j) {
                 HResource resource = static_cast<HResource&>(
                   reflectableField->getArrayValue(&obj, j));
@@ -99,7 +99,7 @@ namespace geEngineSDK {
             //no reflectable children that may hold the reference.
             if (hasReflectableChildren(reflectableField->getType())) {
               if (reflectableField->isArray()) {
-                uint32 numElements = reflectableField->getArraySize(&obj);
+                const uint32 numElements = reflectableField->getArraySize(&obj);
                 for (uint32 j = 0; j < numElements; ++j) {
                   IReflectable& childObj = reflectableField->getArrayValue(&obj, j);
                   findResourceDependenciesInternal(childObj, true, dependencies);
@@ -119,9 +119,9 @@ namespace geEngineSDK {
           //no reflectable children that may hold the reference.
           if (hasReflectableChildren(reflectablePtrField->getType())) {
             if (reflectablePtrField->isArray()) {
-              uint32 numElements = reflectablePtrField->getArraySize(&obj);
+              const uint32 numElements = reflectablePtrField->getArraySize(&obj);
               for (uint32 j = 0; j < numElements; ++j) {
-                SPtr<IReflectable> childObj = reflectablePtrField->getArrayValue(&obj, j);
+                const auto& childObj = reflectablePtrField->getArrayValue(&obj, j);
 
                 if (nullptr != childObj) {
                   findResourceDependenciesInternal(*childObj, true, dependencies);
@@ -129,7 +129,7 @@ namespace geEngineSDK {
               }
             }
             else {
-              SPtr<IReflectable> childObj = reflectablePtrField->getValue(&obj);
+              const auto& childObj = reflectablePtrField->getValue(&obj);
 
               if (nullptr != childObj) {
                 findResourceDependenciesInternal(*childObj, true, dependencies);

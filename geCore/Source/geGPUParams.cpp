@@ -230,7 +230,8 @@ namespace geEngineSDK {
     for (uint32 i = 0; i < numSamplers; ++i) {
       new (&m_samplerStates[i]) SamplerType();
     }
-    data += samplerStatesSize;
+    
+    //data += samplerStatesSize;
   }
 
   template<bool Core>
@@ -937,14 +938,7 @@ namespace geEngineSDK {
       uint32 loadStoreTextureArraySize = numStorageTextures * sizeof(SPtr<Texture>);
       uint32 bufferArraySize = numBuffers * sizeof(SPtr<GPUBuffer>);
       uint32 samplerArraySize = numSamplers * sizeof(SPtr<SamplerState>);
-
-      uint32 totalSize = sampledSurfacesSize +
-                         loadStoreSurfacesSize +
-                         paramBufferSize +
-                         textureArraySize +
-                         loadStoreTextureArraySize +
-                         bufferArraySize +
-                         samplerArraySize;
+      GE_UNREFERENCED_PARAMETER(samplerArraySize); //Remove warning in Release
 
       uint32 sampledSurfacesOffset = 0;
       uint32 loadStoreSurfaceOffset = sampledSurfacesOffset + sampledSurfacesSize;
@@ -954,20 +948,30 @@ namespace geEngineSDK {
       uint32 bufferArrayOffset = loadStoreTextureArrayOffset + loadStoreTextureArraySize;
       uint32 samplerArrayOffset = bufferArrayOffset + bufferArraySize;
 
-      GE_ASSERT(data.getBufferSize() == totalSize);
+      GE_ASSERT(data.getBufferSize() == (sampledSurfacesSize +
+                                         loadStoreSurfacesSize +
+                                         paramBufferSize +
+                                         textureArraySize +
+                                         loadStoreTextureArraySize +
+                                         bufferArraySize +
+                                         samplerArraySize));
 
       uint8* dataPtr = data.getBuffer();
 
-      auto sampledSurfaces = reinterpret_cast<TextureSurface*>
-                               (dataPtr + sampledSurfacesOffset);
-      auto loadStoreSurfaces = reinterpret_cast<TextureSurface*>
-                                 (dataPtr + loadStoreSurfaceOffset);
-      auto paramBuffers = reinterpret_cast<SPtr<GPUParamBlockBuffer>*>
-                            (dataPtr + paramBufferOffset);
-      SPtr<Texture>* textures = (SPtr<Texture>*)(dataPtr + textureArrayOffset);
-      SPtr<Texture>* loadStoreTextures = (SPtr<Texture>*)(dataPtr + loadStoreTextureArrayOffset);
-      auto buffers = reinterpret_cast<SPtr<GPUBuffer>*>(dataPtr + bufferArrayOffset);
-      auto samplers = reinterpret_cast<SPtr<SamplerState>*>(dataPtr + samplerArrayOffset);
+      auto sampledSurfaces    = reinterpret_cast<TextureSurface*>
+                                  (dataPtr + sampledSurfacesOffset);
+      auto loadStoreSurfaces  = reinterpret_cast<TextureSurface*>
+                                  (dataPtr + loadStoreSurfaceOffset);
+      auto paramBuffers       = reinterpret_cast<SPtr<GPUParamBlockBuffer>*>
+                                  (dataPtr + paramBufferOffset);
+      auto textures           = reinterpret_cast<SPtr<Texture>*>
+                                  (dataPtr + textureArrayOffset);
+      auto loadStoreTextures  = reinterpret_cast<SPtr<Texture>*>
+                                  (dataPtr + loadStoreTextureArrayOffset);
+      auto buffers            = reinterpret_cast<SPtr<GPUBuffer>*>
+                                  (dataPtr + bufferArrayOffset);
+      auto samplers           = reinterpret_cast<SPtr<SamplerState>*>
+                                  (dataPtr + samplerArrayOffset);
 
       //Copy & destruct
       for (uint32 i = 0; i < numParamBlocks; ++i) {

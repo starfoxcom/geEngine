@@ -265,6 +265,8 @@ namespace geEngineSDK {
              ".");
       return NumLimit::MAX_UINT32;
     }
+#else
+    GE_UNREFERENCED_PARAMETER(type);
 #endif
     return m_setInfos[set].slotIndices[slot];
   }

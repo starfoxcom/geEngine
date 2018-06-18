@@ -959,7 +959,7 @@ namespace geEngineSDK {
     void D3D11RenderAPI::clearViewport(uint32 buffers, const LinearColor& color, float depth, uint16 stencil, uint8 targetMask,
       const SPtr<CommandBuffer>& commandBuffer)
     {
-      auto executeRef = [&](uint32 buffers, const Color& color, float depth, uint16 stencil, uint8 targetMask)
+      auto executeRef = [&](uint32 buffers, const LinearColor& color, float depth, uint16 stencil, uint8 targetMask)
       {
         THROW_IF_NOT_CORE_THREAD;
 
@@ -969,18 +969,21 @@ namespace geEngineSDK {
 
         const auto& rtProps = m_activeRenderTarget->getProperties();
 
-        Box2DI clearArea(static_cast<int32>(m_viewport.TopLeftX),
-                         static_cast<int32>(m_viewport.TopLeftY),
-                         static_cast<int32>(m_viewport.Width),
-                         static_cast<int32>(m_viewport.Height));
+        Box2DI clearArea(Vector2I(static_cast<int32>(m_viewport.TopLeftX),
+                                  static_cast<int32>(m_viewport.TopLeftY)),
+                         Vector2I(static_cast<int32>(m_viewport.Width),
+                                  static_cast<int32>(m_viewport.Height)));
 
-        bool clearEntireTarget = clearArea.width == 0 || clearArea.height == 0;
-        clearEntireTarget |= (clearArea.x == 0 && clearArea.y == 0 && clearArea.width == rtProps.width &&
-          clearArea.height == rtProps.height);
+        bool clearEntireTarget = 0 == clearArea.m_max.x ||
+                                 0 == clearArea.m_max.y;
 
-        if (!clearEntireTarget)
-        {
-          // TODO - Ignoring targetMask here
+        clearEntireTarget |= (clearArea.m_min.x == 0 &&
+                              clearArea.m_min.y == 0 &&
+                              clearArea.m_max.x == rtProps.m_width &&
+                              clearArea.m_max.y == rtProps.m_height);
+
+        if (!clearEntireTarget) {
+          //TODO: Ignoring targetMask here
           D3D11RenderUtility::instance().drawClearQuad(buffers, color, depth, stencil);
           GE_INC_RENDER_STAT(NumClears);
         }
@@ -1002,7 +1005,7 @@ namespace geEngineSDK {
     void D3D11RenderAPI::clearRenderTarget(uint32 buffers, const LinearColor& color, float depth, uint16 stencil,
       uint8 targetMask, const SPtr<CommandBuffer>& commandBuffer)
     {
-      auto executeRef = [&](uint32 buffers, const Color& color, float depth, uint16 stencil, uint8 targetMask)
+      auto executeRef = [&](uint32 buffers, const LinearColor& color, float depth, uint16 stencil, uint8 targetMask)
       {
         THROW_IF_NOT_CORE_THREAD;
 
@@ -1159,13 +1162,13 @@ namespace geEngineSDK {
         return;
       }
 
-      const RenderTargetProperties& rtProps = m_activeRenderTarget->getProperties();
+      const auto& rtProps = m_activeRenderTarget->getProperties();
 
       // Set viewport dimensions
-      m_viewport.TopLeftX = static_cast<FLOAT>(rtProps.width * m_viewportNorm.x);
-      m_viewport.TopLeftY = static_cast<FLOAT>(rtProps.height * m_viewportNorm.y);
-      m_viewport.Width = static_cast<FLOAT>(rtProps.width * m_viewportNorm.width);
-      m_viewport.Height = static_cast<FLOAT>(rtProps.height * m_viewportNorm.height);
+      m_viewport.TopLeftX = static_cast<FLOAT>(rtProps.m_width * m_viewportNorm.m_min.x);
+      m_viewport.TopLeftY = static_cast<FLOAT>(rtProps.m_height * m_viewportNorm.m_min.y);
+      m_viewport.Width = static_cast<FLOAT>(rtProps.m_width * m_viewportNorm.m_max.x);
+      m_viewport.Height = static_cast<FLOAT>(rtProps.m_height * m_viewportNorm.m_max.y);
 
       if (rtProps.m_requiresTextureFlipping) {
         //Convert "top-left" to "bottom-left"

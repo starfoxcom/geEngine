@@ -27,10 +27,13 @@ namespace geEngineSDK {
     float time;
   };
 
-  class GE_UTILITY_EXPORT ColorGradient
+  class GE_UTILITY_EXPORT ColorGradient final
   {
     constexpr static uint32 MAX_KEYS = 8;
    public:
+    ColorGradient() = default;
+    ~ColorGradient() = default;
+
     LinearColor
     evaluate(float t) const;
 

@@ -556,7 +556,7 @@ namespace geEngineSDK {
           return false;
         }
 
-        m_currentIdx++;
+        ++m_currentIdx;
 
         if (m_currentIdx == static_cast<int32>(m_elemsInGroup)) { //Next group
           m_currentElemGroup = m_currentElemGroup->next;
