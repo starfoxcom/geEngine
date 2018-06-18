@@ -103,6 +103,9 @@
     <ClCompile Include="Source\geD3D11GPUProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\geD3D11InputLayoutManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\geD3D11DriverList.h">
@@ -197,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="Include\geD3D11GPUProgram.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geD3D11InputLayoutManager.h">
+      <Filter>Source Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

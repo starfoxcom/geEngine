@@ -197,6 +197,7 @@
     <ClCompile Include="Source\geD3D11HardwareBuffer.cpp" />
     <ClCompile Include="Source\geD3D11HardwareBufferManager.cpp" />
     <ClCompile Include="Source\geD3D11IndexBuffer.cpp" />
+    <ClCompile Include="Source\geD3D11InputLayoutManager.cpp" />
     <ClCompile Include="Source\geD3D11Mappings.cpp" />
     <ClCompile Include="Source\geD3D11OcclusionQuery.cpp" />
     <ClCompile Include="Source\geD3D11Plugin.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Include\geD3D11HardwareBuffer.h" />
     <ClInclude Include="Include\geD3D11HardwareBufferManager.h" />
     <ClInclude Include="Include\geD3D11IndexBuffer.h" />
+    <ClInclude Include="Include\geD3D11InputLayoutManager.h" />
     <ClInclude Include="Include\geD3D11Mappings.h" />
     <ClInclude Include="Include\geD3D11OcclusionQuery.h" />
     <ClInclude Include="Include\geD3D11QueryManager.h" />

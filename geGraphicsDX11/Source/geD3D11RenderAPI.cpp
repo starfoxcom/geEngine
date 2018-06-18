@@ -293,7 +293,7 @@ namespace geEngineSDK {
         d3d11Context->OMSetDepthStencilState(m_activeDepthStencilState->getInternal(), m_stencilRef);
 
         if (nullptr != m_activeVertexShader) {
-          D3D11GPUVertexProgram* vertexProgram = static_cast<D3D11GPUVertexProgram*>(m_activeVertexShader.get());
+          auto vertexProgram = static_cast<D3D11GPUVertexProgram*>(m_activeVertexShader.get());
           d3d11Context->VSSetShader(vertexProgram->getVertexShader(), nullptr, 0);
         }
         else
@@ -347,7 +347,7 @@ namespace geEngineSDK {
 
         if (program != nullptr && program->getType() == GPU_PROGRAM_TYPE::kCOMPUTE_PROGRAM)
         {
-          D3D11GPUComputeProgram *d3d11ComputeProgram = static_cast<D3D11GPUComputeProgram*>(program.get());
+          auto d3d11ComputeProgram = static_cast<D3D11GPUComputeProgram*>(program.get());
           m_device->getImmediateContext()->CSSetShader(d3d11ComputeProgram->getComputeShader(), nullptr, 0);
         }
         else
@@ -373,7 +373,7 @@ namespace geEngineSDK {
       {
         THROW_IF_NOT_CORE_THREAD;
 
-        ID3D11DeviceContext* context = m_device->getImmediateContext();
+        auto context = m_device->getImmediateContext();
 
         // Clear any previously bound UAVs (otherwise shaders attempting to read resources viewed by those views will
         // be unable to)
@@ -382,8 +382,7 @@ namespace geEngineSDK {
           ID3D11UnorderedAccessView* emptyUAVs[D3D11_PS_CS_UAV_REGISTER_COUNT];
           ge_zero_out(emptyUAVs);
 
-          if (m_psUAVsBound)
-          {
+          if (m_psUAVsBound) {
             context->OMSetRenderTargetsAndUnorderedAccessViews(
               D3D11_KEEP_RENDER_TARGETS_AND_DEPTH_STENCIL, nullptr, nullptr, 0,
               D3D11_PS_CS_UAV_REGISTER_COUNT, emptyUAVs, nullptr);
@@ -391,8 +390,7 @@ namespace geEngineSDK {
             m_psUAVsBound = false;
           }
 
-          if (m_csUAVsBound)
-          {
+          if (m_csUAVsBound) {
             context->CSSetUnorderedAccessViews(0, D3D11_PS_CS_UAV_REGISTER_COUNT, emptyUAVs, nullptr);
 
             m_csUAVsBound = false;
@@ -422,7 +420,7 @@ namespace geEngineSDK {
               uint32 slot = iter->second.slot;
 
               SPtr<Texture> texture = gpuParams->getTexture(iter->second.set, slot);
-              const TextureSurface& surface = gpuParams->getTextureSurface(iter->second.set, slot);
+              const auto& surface = gpuParams->getTextureSurface(iter->second.set, slot);
 
               while (slot >= (uint32)srvs.size())
                 srvs.push_back(nullptr);
@@ -432,7 +430,7 @@ namespace geEngineSDK {
                 SPtr<TextureView> texView = texture->requestView(surface.mipLevel, surface.numMipLevels,
                   surface.face, surface.numFaces, GPU_VIEW_USAGE::kDEFAULT);
 
-                D3D11TextureView* d3d11texView = static_cast<D3D11TextureView*>(texView.get());
+                auto d3d11texView = static_cast<D3D11TextureView*>(texView.get());
                 srvs[slot] = d3d11texView->getSRV();
               }
             }
@@ -504,15 +502,14 @@ namespace geEngineSDK {
               if (samplerState == nullptr)
                 samplerState = SamplerState::getDefault();
 
-              D3D11SamplerState* d3d11SamplerState =
-                static_cast<D3D11SamplerState*>(const_cast<SamplerState*>(samplerState.get()));
+              auto d3d11SamplerState = static_cast<D3D11SamplerState*>(const_cast<SamplerState*>(samplerState.get()));
               samplers[slot] = d3d11SamplerState->getInternal();
             }
 
             for (auto iter = paramDesc->paramBlocks.begin(); iter != paramDesc->paramBlocks.end(); ++iter)
             {
               uint32 slot = iter->second.slot;
-              SPtr<GPUParamBlockBuffer> buffer = gpuParams->getParamBlockBuffer(iter->second.set, slot);
+              auto buffer = gpuParams->getParamBlockBuffer(iter->second.set, slot);
 
               while (slot >= (uint32)constBuffers.size())
                 constBuffers.push_back(nullptr);
@@ -521,8 +518,7 @@ namespace geEngineSDK {
               {
                 buffer->flushToGPU();
 
-                const D3D11GPUParamBlockBuffer* d3d11paramBlockBuffer =
-                  static_cast<const D3D11GPUParamBlockBuffer*>(buffer.get());
+                auto d3d11paramBlockBuffer = static_cast<const D3D11GPUParamBlockBuffer*>(buffer.get());
                 constBuffers[slot] = d3d11paramBlockBuffer->getD3D11Buffer();
               }
             }
