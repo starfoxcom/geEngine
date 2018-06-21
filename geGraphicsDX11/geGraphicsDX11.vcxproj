@@ -207,6 +207,7 @@
     <ClCompile Include="Source\geD3D11RenderAPIFactory.cpp" />
     <ClCompile Include="Source\geD3D11RenderStateManager.cpp" />
     <ClCompile Include="Source\geD3D11RenderTexture.cpp" />
+    <ClCompile Include="Source\geD3D11RenderUtility.cpp" />
     <ClCompile Include="Source\geD3D11SamplerState.cpp" />
     <ClCompile Include="Source\geD3D11Texture.cpp" />
     <ClCompile Include="Source\geD3D11TextureManager.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Include\geD3D11RenderAPIFactory.h" />
     <ClInclude Include="Include\geD3D11RenderStateManager.h" />
     <ClInclude Include="Include\geD3D11RenderTexture.h" />
+    <ClInclude Include="Include\geD3D11RenderUtility.h" />
     <ClInclude Include="Include\geD3D11SamplerState.h" />
     <ClInclude Include="Include\geD3D11Texture.h" />
     <ClInclude Include="Include\geD3D11TextureManager.h" />

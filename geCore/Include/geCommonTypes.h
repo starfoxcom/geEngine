@@ -191,11 +191,13 @@ namespace geEngineSDK {
   /**
    * @brief Types of frame buffers.
    */
-  enum FrameBufferType {
-    FBT_COLOR = 0x1,    //Clear the color surface.
-    FBT_DEPTH = 0x2,    //Clear the depth surface.
-    FBT_STENCIL = 0x4   //Clear the stencil surface.
-  };
+  namespace FRAME_BUFFER_TYPE {
+    enum E {
+      kCOLOR = 0x1,    //Clear the color surface.
+      kDEPTH = 0x2,    //Clear the depth surface.
+      kSTENCIL = 0x4   //Clear the stencil surface.
+    };
+  }
 
   /**
    * @brief Types of culling that determine how (and if) hardware discards
