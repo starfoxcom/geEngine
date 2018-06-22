@@ -181,9 +181,6 @@
     <ClInclude Include="Include\geSpinLock.h">
       <Filter>Source Files\Threading</Filter>
     </ClInclude>
-    <ClInclude Include="Include\geThreadDefines.h">
-      <Filter>Source Files\Threading</Filter>
-    </ClInclude>
     <ClInclude Include="Include\geThreadPool.h">
       <Filter>Source Files\Threading</Filter>
     </ClInclude>
@@ -396,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="Include\geColorGradient.h">
       <Filter>Source Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\geThreading.h">
+      <Filter>Source Files\Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

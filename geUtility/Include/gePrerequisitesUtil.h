@@ -71,7 +71,7 @@
 #include "geMemoryAllocator.h"      //Memory Allocator
 #include "geStdHeaders.h"           //Commonly used standard headers
 
-#include "geThreadDefines.h"        //Threading Defines
+#include "geThreading.h"            //Threading Defines
 #include "geFwdDeclUtil.h"          //Forward declarations
 #include "geRTTIPrerequisites.h"    //Run-time type information Prerequisites
 

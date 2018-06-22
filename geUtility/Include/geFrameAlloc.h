@@ -23,7 +23,7 @@
 #include "gePlatformDefines.h"
 #include "gePlatformTypes.h"
 #include "geStdHeaders.h"
-#include "geThreadDefines.h"
+#include "geThreading.h"
 #include "geNumericLimits.h"
 
 namespace geEngineSDK {

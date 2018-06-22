@@ -295,7 +295,7 @@
     <ClInclude Include="Include\geStringID.h" />
     <ClInclude Include="Include\geTaskScheduler.h" />
     <ClInclude Include="Include\geTextureAtlasLayout.h" />
-    <ClInclude Include="Include\geThreadDefines.h" />
+    <ClInclude Include="Include\geThreading.h" />
     <ClInclude Include="Include\geThreadPool.h" />
     <ClInclude Include="Include\geTime.h" />
     <ClInclude Include="Include\geTimer.h" />
