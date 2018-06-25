@@ -22,6 +22,9 @@
 #include "geNumericLimits.h"
 
 namespace geEngineSDK {
+  using std::false_type;
+  using std::forward;
+
   /**
    * @brief A memory allocator that allocates elements of the same size.
    *        Allows for fairly quick allocations and deallocations.
@@ -39,7 +42,7 @@ namespace geEngineSDK {
    *                        introduce additionally padding for each element,
    *                        and therefore require more internal memory.
    */
-  template<int ElemSize, int ElemsPerBlock=512, int Alignment=4>
+  template<int32 ElemSize, int32 ElemsPerBlock=512, int32 Alignment=4, bool Lock=false>
   class PoolAlloc
   {
    private:
@@ -111,6 +114,8 @@ namespace geEngineSDK {
     }
 
     ~PoolAlloc() {
+      ScopedLock<Lock> lock(m_lockPolicy);
+
       MemBlock* curBlock = m_freeBlock;
       while (nullptr != curBlock) {
         MemBlock* nextBlock = curBlock->m_nextBlock;
@@ -124,12 +129,16 @@ namespace geEngineSDK {
      */
     uint8*
     alloc() {
+      ScopedLock<Lock> lock(m_lockPolicy);
+
       if (nullptr == m_freeBlock || 0 == m_freeBlock->m_freeElems) {
         allocBlock();
       }
 
-      m_totalNumElems++;
-      return m_freeBlock->alloc();
+      ++m_totalNumElems;
+      uint8* output = m_freeBlock->alloc();
+
+      return output;
     }
 
     /**
@@ -137,6 +146,8 @@ namespace geEngineSDK {
      */
     void
     free(void* data) {
+      ScopedLock<Lock> lock(m_lockPolicy);
+
       MemBlock* curBlock = m_freeBlock;
       while (curBlock) {
         constexpr SIZE_T blockDataSize = ActualElemSize * ElemsPerBlock;
@@ -248,8 +259,94 @@ namespace geEngineSDK {
     static constexpr SIZE_T
       ActualElemSize = ((ElemSize + Alignment - 1) / Alignment) * Alignment;
 
+    LockingPolicy<Lock> m_lockPolicy;
     MemBlock* m_freeBlock = nullptr;
     SIZE_T m_totalNumElems = 0;
     SIZE_T m_numBlocks = 0;
   };
+
+  /**
+   * @brief Helper class used by GlobalPoolAlloc that allocates a static pool
+   *        allocator. GlobalPoolAlloc cannot do it directly since it gets
+   *        specialized which means the static members would need to be defined
+   *        in the implementation file, which complicates its usage.
+   */
+  template<class T, int32 ElemsPerBlock=512, int32 Alignment=4, bool Lock=true>
+  class StaticPoolAlloc
+  {
+   public:
+    static PoolAlloc<sizeof(T), ElemsPerBlock, Alignment, Lock> m;
+  };
+
+  template<class T, int ElemsPerBlock, int Alignment, bool Lock>
+  PoolAlloc<sizeof(T), ElemsPerBlock, Alignment, Lock>
+    StaticPoolAlloc<T, ElemsPerBlock, Alignment, Lock>::m;
+
+  /**
+   * @brief Specializable template that allows users to implement globally
+   *        accessible pool allocators for custom types.
+   */
+  template<class T>
+  class GlobalPoolAlloc : false_type
+  {
+    template<typename T2>
+    struct AlwaysFalse : false_type {};
+
+    static_assert(AlwaysFalse<T>::value,
+                  "No global pool allocator exists for the type.");
+  };
+
+  /**
+   * @brief Implements a global pool for the specified type.
+   *        The pool will initially have enough room for ElemsPerBlock and will
+   *        grow by that amount when exceeded. Global pools are thread safe by
+   *        default.
+   */
+#define IMPLEMENT_GLOBAL_POOL(Type, ElemsPerBlock)                            \
+	template<>                                                                  \
+  class GlobalPoolAlloc<Type> : public StaticPoolAlloc<Type>                  \
+  {};
+
+  /**
+   * @brief Allocates a new object of type T using the global pool allocator,
+   *        without constructing it.
+   */
+  template<class T>
+  T*
+  ge_pool_alloc() {
+    return reinterpret_cast<T*>(GlobalPoolAlloc<T>::m.alloc());
+  }
+
+  /**
+   * @brief Allocates and constructs a new object of type T using the global
+   *        pool allocator.
+   */
+  template<class T, class... Args>
+  T*
+  ge_pool_new(Args &&...args) {
+    T* data = ge_pool_alloc<T>();
+    new (reinterpret_cast<void*>(data)) T(forward<Args>(args)...);
+    return data;
+  }
+
+  /**
+   * @brief Frees the provided object using its global pool allocator,
+   *        without destructing it.
+   */
+  template<class T>
+  void
+  ge_pool_free(T* ptr) {
+    GlobalPoolAlloc<T>::m.free(ptr);
+  }
+
+  /**
+   * @brief Frees and destructs the provided object using its global pool
+   *        allocator.
+   */
+  template<class T>
+  void
+  ge_pool_delete(T* ptr) {
+    ptr->~T();
+    ge_pool_free(ptr);
+  }
 }
