@@ -10,6 +10,17 @@ namespace sf{
   class Font;
 }
 
+namespace PATHFINDING_TYPE {
+  enum E {
+    kDFS = 0,
+    kBFS,
+    kGBF,
+    kDijkstras,
+    kAStar,
+    kNumObjects
+  };
+}
+
 class RTSApplication
 {
  public:

@@ -31,6 +31,7 @@ class GameOptions : public Module<GameOptions>
 
   //Map Values
   static bool s_MapShowGrid;
+  static bool s_MapShowPath;
   static Color s_MapGridColor;
 
   //Global Constants
@@ -39,5 +40,34 @@ class GameOptions : public Module<GameOptions>
   static const Vector2I BITSHFT_TILESIZE;
 };
 
+class EditorOptions : public Module<EditorOptions>
+{
+public:
+  //Radial button Id
+  static int32 s_selected;
+
+  //brush size
+  static int32 s_brushSize;
+
+  //open/close flag
+  static bool s_editorIsOpen;
+};
+
+class PathfindingOptions : public Module<PathfindingOptions>
+{
+public:
+  //Radial button Id
+  static int32 s_selected;
+
+  //open/close flag
+  static bool s_editorIsOpen;
+};
+
 GameOptions&
 g_gameOptions();
+
+EditorOptions&
+g_editorOptions();
+
+PathfindingOptions&
+g_pathfindingOptions();

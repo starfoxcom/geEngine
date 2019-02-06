@@ -22,6 +22,14 @@ namespace TERRAIN_TYPE {
   };
 }
 
+static std::vector<std::string> v_terrainName =
+{
+  "Water",
+  "Grass",
+  "Marsh",
+  "Obstacle"
+};
+
 class RTSTiledMap
 {
   class MapTile

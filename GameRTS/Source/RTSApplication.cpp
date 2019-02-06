@@ -24,6 +24,15 @@
 #include "RTSApplication.h"
 #include "RTSTiledMap.h"
 
+std::vector<std::string> v_pathName =
+{
+  "Depth First Search",
+  "Breath First Search",
+  "Greedy Best First Search",
+  "Dijkstra",
+  "A*"
+};
+
 void
 loadMapFromFile(RTSApplication* pApp);
 
@@ -45,6 +54,8 @@ RTSApplication::run() {
   DynLibManager::startUp();
   Time::startUp();
   GameOptions::startUp();
+  EditorOptions::startUp();
+  PathfindingOptions::startUp();
 
   __try {
     initSystems();
@@ -55,6 +66,8 @@ RTSApplication::run() {
     PlatformUtility::terminate(true);
   }
 
+  PathfindingOptions::shutDown();
+  EditorOptions::shutDown();
   GameOptions::shutDown();
   Time::shutDown();
   DynLibManager::shutDown();
@@ -143,6 +156,7 @@ RTSApplication::gameLoop() {
 void
 RTSApplication::updateFrame() {
   float deltaTime = g_time().getFrameDelta();
+  sf::Clock clock;
   
   m_fpsTimer += deltaTime;
   if (1.0f < m_fpsTimer) {
@@ -153,10 +167,67 @@ RTSApplication::updateFrame() {
   m_fpsCounter += 1.0f;
 
   //Update the interface
-  ImGui::SFML::Update(*m_window, deltaTime);
+  ImGui::SFML::Update(*m_window, clock.getElapsedTime());
 
   //Begin the menu 
   mainMenu(this);
+
+  auto tiledMap = m_gameWorld.getTiledMap();
+
+  if (EditorOptions::s_editorIsOpen)
+  {
+    ImGui::Begin("Terrain Editor",
+      &EditorOptions::s_editorIsOpen,
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+    {
+
+      //Radio buttons
+      for (int32 i = 0; i < TERRAIN_TYPE::E::kNumObjects; ++i)
+      {
+        ImGui::RadioButton(v_terrainName[i].c_str(), &EditorOptions::s_selected, i);
+      }
+
+      //Sliders
+      ImGui::SliderInt("Brush size", &EditorOptions::s_brushSize, 1, 15);
+    }
+    ImGui::End();
+
+    //Paint tile
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
+      && !ImGui::IsMouseHoveringAnyWindow()
+      && !ImGui::IsAnyWindowFocused())
+    {
+      int32 tileX, tileY;
+      auto mousePos = sf::Mouse::getPosition();
+      tiledMap->getScreenToMapCoords(mousePos.x, mousePos.y, tileX, tileY);
+      if (EditorOptions::s_brushSize == 1)
+        tiledMap->setType(tileX, tileY, static_cast<uint8>(EditorOptions::s_selected));
+      else
+        for (int32 i = -EditorOptions::s_brushSize >> 1; i < EditorOptions::s_brushSize >> 1; ++i)
+          for (int32 j = -EditorOptions::s_brushSize >> 1; j < EditorOptions::s_brushSize >> 1; ++j)
+            if (tileX + j >= 0 &&
+              tileY + i >= 0 &&
+              tileX <= tiledMap->getMapSize().x &&
+              tileY <= tiledMap->getMapSize().y)
+              tiledMap->setType(tileX + j, tileY + i, static_cast<uint8>(EditorOptions::s_selected));
+    }
+  }
+
+  if (PathfindingOptions::s_editorIsOpen)
+  {
+    ImGui::Begin("Path finding tools",
+      &PathfindingOptions::s_editorIsOpen,
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+    {
+      //Radio buttons
+      for (int32 i = 0; i < PATHFINDING_TYPE::E::kNumObjects; ++i)
+      {
+        ImGui::RadioButton(v_pathName[i].c_str(), &PathfindingOptions::s_selected, i);
+      }
+    }
+    ImGui::End();
+  }
+
 
   //Check for camera movement
   Vector2 axisMovement(FORCE_INIT::kForceInitToZero);
@@ -203,7 +274,7 @@ RTSApplication::updateFrame() {
 
   axisMovement *= GameOptions::s_MapMovementSpeed * deltaTime;
 
-  m_gameWorld.getTiledMap()->moveCamera(axisMovement.x, axisMovement.y);
+  tiledMap->moveCamera(axisMovement.x, axisMovement.y);
 
   //Update the world
   m_gameWorld.update(deltaTime);
@@ -294,14 +365,27 @@ mainMenu(RTSApplication* pApp) {
 
       ImGui::EndMenu();
     }
+
+    if (ImGui::BeginMenu("Terrain editor"))
+    {
+      if (ImGui::MenuItem("Open terrain editor...", "CTRL+T"))
+      {
+        EditorOptions::s_editorIsOpen = true;
+      }
+
+      ImGui::EndMenu();
+    }
     
     ImGui::EndMainMenuBar();
   }
 
-  ImGui::Begin("Game Options");
+  ImGui::Begin("Game Options", 0, ImGuiWindowFlags_AlwaysAutoResize);
   {
+
+    //Text
     ImGui::Text("Framerate: %f", pApp->getFPS());
 
+    //Sliders
     ImGui::SliderFloat("Map movement speed X",
       &GameOptions::s_MapMovementSpeed.x,
       0.0f,
@@ -311,7 +395,15 @@ mainMenu(RTSApplication* pApp) {
       0.0f,
       10240.0f);
 
+    //Check boxes
     ImGui::Checkbox("Show grid", &GameOptions::s_MapShowGrid);
+    ImGui::Checkbox("Show Path", &GameOptions::s_MapShowPath);
+    ImGui::Checkbox("Show Terrain Editor", &EditorOptions::s_editorIsOpen);
+    ImGui::Checkbox("Show Path finding tools", &PathfindingOptions::s_editorIsOpen);
+
+    //Buttons
+    ImGui::SmallButton("start position");
+    ImGui::SmallButton("End position");
   }
   ImGui::End();
 
