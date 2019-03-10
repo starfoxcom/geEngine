@@ -10,6 +10,9 @@ using namespace geEngineSDK;
 class RTSTiledMap;
 class RTSMapGridWalker;
 
+class RTSPathfinding;
+class RTSBreathFirstSearchPathfinding;
+
 class RTSWorld
 {
  public:
@@ -40,16 +43,25 @@ class RTSWorld
   void
   setCurrentWalker(const int8 index);
 
+  RTSPathfinding* getCurrentWalker();
+
+  sf::VertexArray* getPathLine();
+
+  void clearPathLine();
+
  private:
   RTSTiledMap* m_pTiledMap;
   //List<RTSUnitType*> m_lstUnitTypes;
   //List<RTSUnit*> m_lstUnits;
   
   //Vector<RTSMapGridWalker*> m_walkersList;
-  Vector<void*> m_walkersList;
-  //RTSMapGridWalker* m_activeWalker;
-  void* m_activeWalker;
+  Vector<RTSPathfinding*> m_walkersList;
+  RTSPathfinding* m_activeWalker;
   int8 m_activeWalkerIndex;
 
   sf::RenderTarget* m_pTarget;
+
+  sf::RectangleShape* m_pRectangleWalker, *m_pRectangleTarget;
+
+  sf::VertexArray* m_pathLine;
 };

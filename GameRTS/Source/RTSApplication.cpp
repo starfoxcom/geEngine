@@ -23,6 +23,7 @@
 #include "RTSConfig.h"
 #include "RTSApplication.h"
 #include "RTSTiledMap.h"
+#include "RTSPathfinding.h"
 
 std::vector<std::string> v_pathName =
 {
@@ -224,6 +225,52 @@ RTSApplication::updateFrame() {
       {
         ImGui::RadioButton(v_pathName[i].c_str(), &PathfindingOptions::s_selected, i);
       }
+
+      getWorld()->setCurrentWalker(PathfindingOptions::s_selected);
+
+      ImGui::RadioButton("Start position", &PathfindingOptions::s_posSelected, 0);
+      ImGui::SameLine();
+      ImGui::RadioButton("Target position", &PathfindingOptions::s_posSelected, 1);
+
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
+        && !ImGui::IsMouseHoveringAnyWindow()
+        && !ImGui::IsAnyWindowFocused())
+      {
+        getWorld()->clearPathLine();
+        getWorld()->getCurrentWalker()->resetSearch();
+        
+        int32 tileX, tileY;
+
+        auto mousePos = sf::Mouse::getPosition();
+
+        if (PathfindingOptions::s_posSelected == 0)
+        {
+          tiledMap->getScreenToMapCoords(mousePos.x, mousePos.y,
+            tileX,
+            tileY);
+          getWorld()->getCurrentWalker()->setStartPos(tileX, tileY);
+        }
+        else if (PathfindingOptions::s_posSelected == 1)
+        {
+          tiledMap->getScreenToMapCoords(mousePos.x, mousePos.y,
+            tileX,
+            tileY);
+          getWorld()->getCurrentWalker()->setTargetPos(tileX, tileY);
+        }
+      }
+
+      if (ImGui::Button("Start search"))
+      {
+        getWorld()->clearPathLine();
+        getWorld()->getCurrentWalker()->startSearch();
+      }
+      ImGui::SameLine();
+      if (ImGui::Button("Reset search"))
+      {
+        getWorld()->clearPathLine();
+        getWorld()->getCurrentWalker()->resetSearch();
+      }
+
     }
     ImGui::End();
   }
@@ -397,13 +444,8 @@ mainMenu(RTSApplication* pApp) {
 
     //Check boxes
     ImGui::Checkbox("Show grid", &GameOptions::s_MapShowGrid);
-    ImGui::Checkbox("Show Path", &GameOptions::s_MapShowPath);
     ImGui::Checkbox("Show Terrain Editor", &EditorOptions::s_editorIsOpen);
     ImGui::Checkbox("Show Path finding tools", &PathfindingOptions::s_editorIsOpen);
-
-    //Buttons
-    ImGui::SmallButton("start position");
-    ImGui::SmallButton("End position");
   }
   ImGui::End();
 

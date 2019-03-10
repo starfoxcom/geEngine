@@ -26,6 +26,7 @@ bool EditorOptions::s_editorIsOpen = false;
 
 int32 PathfindingOptions::s_selected = 0;
 bool PathfindingOptions::s_editorIsOpen = false;
+int32 PathfindingOptions::s_posSelected = 0;
 
 GameOptions&
 g_gameOptions() {

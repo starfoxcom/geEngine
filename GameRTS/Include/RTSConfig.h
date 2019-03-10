@@ -61,6 +61,9 @@ public:
 
   //open/close flag
   static bool s_editorIsOpen;
+
+  //Radial button Id
+  static int32 s_posSelected;
 };
 
 GameOptions&

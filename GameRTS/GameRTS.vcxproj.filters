@@ -12,6 +12,9 @@
     <Filter Include="Source Files\Externals">
       <UniqueIdentifier>{05cba2b1-52b3-405c-9866-b29fae8fd3fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Pathfinding">
+      <UniqueIdentifier>{7c640594-63df-4011-a7f0-3769080e16f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Externals\imgui.cpp">
@@ -32,9 +35,6 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RTSApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\RTSConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,8 +50,23 @@
     <ClCompile Include="Source\Externals\imgui_widgets.cpp">
       <Filter>Source Files\Externals</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RTSPathfinding.cpp">
+    <ClCompile Include="Source\RTSApplication.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSBreathFirstSearchPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSNode.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSDepthFirstSearchPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSBestFisrtSearchPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,8 +88,20 @@
     <ClInclude Include="Include\RTSWorld.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\RTSBreathFirstSearchPathfinding.h">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RTSNode.h">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
     <ClInclude Include="Include\RTSPathfinding.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RTSDepthFisrtSearchPathfinding.h">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RTSBestFirstSearchPathfinding.h">
+      <Filter>Source Files\Pathfinding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

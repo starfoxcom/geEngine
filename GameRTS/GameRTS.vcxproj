@@ -174,6 +174,10 @@
     <ClCompile Include="Source\Externals\imgui_draw.cpp" />
     <ClCompile Include="Source\Externals\imgui_widgets.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\RTSBestFisrtSearchPathfinding.cpp" />
+    <ClCompile Include="Source\RTSBreathFirstSearchPathfinding.cpp" />
+    <ClCompile Include="Source\RTSDepthFirstSearchPathfinding.cpp" />
+    <ClCompile Include="Source\RTSNode.cpp" />
     <ClCompile Include="Source\RTSPathfinding.cpp" />
     <ClCompile Include="Source\RTSApplication.cpp" />
     <ClCompile Include="Source\RTSConfig.cpp" />
@@ -183,6 +187,10 @@
     <ClCompile Include="Source\RTSWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\RTSBestFirstSearchPathfinding.h" />
+    <ClInclude Include="Include\RTSBreathFirstSearchPathfinding.h" />
+    <ClInclude Include="Include\RTSDepthFisrtSearchPathfinding.h" />
+    <ClInclude Include="Include\RTSNode.h" />
     <ClInclude Include="Include\RTSPathfinding.h" />
     <ClInclude Include="Include\RTSApplication.h" />
     <ClInclude Include="Include\RTSConfig.h" />
