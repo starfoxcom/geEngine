@@ -7,6 +7,7 @@
 
 #include "RTSBreathFirstSearchPathfinding.h"
 #include "RTSDepthFisrtSearchPathfinding.h"
+#include "RTSBestFirstSearchPathfinding.h"
 
 RTSWorld::RTSWorld() {
   m_pTiledMap = nullptr;
@@ -30,13 +31,14 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   //Initialize the map (right now it's an empty map)
   m_pTiledMap = ge_new<RTSTiledMap>();
   GE_ASSERT(m_pTiledMap);
-  m_pTiledMap->init(m_pTarget, Vector2I(16, 16));
+  m_pTiledMap->init(m_pTarget, Vector2I(4096, 4096));
 
   //Create the path finding classes and push them to the walker list
   //m_walkersList.push_back(ge_new<RTSBreadthFirstSearchMapGridWalker>(m_pTiledMap));
 
   m_walkersList.push_back(ge_new<RTSDepthFirstSearchPathfinding>(m_pTiledMap));
   m_walkersList.push_back(ge_new<RTSBreathFirstSearchPathfinding>(m_pTiledMap));
+  m_walkersList.push_back(ge_new<RTSBestFirstSearchPathfinding>(m_pTiledMap));
 
   //Init the walker objects
 

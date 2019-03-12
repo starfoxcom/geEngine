@@ -206,10 +206,10 @@ RTSApplication::updateFrame() {
       else
         for (int32 i = -EditorOptions::s_brushSize >> 1; i < EditorOptions::s_brushSize >> 1; ++i)
           for (int32 j = -EditorOptions::s_brushSize >> 1; j < EditorOptions::s_brushSize >> 1; ++j)
-            if (tileX + j >= 0 &&
-              tileY + i >= 0 &&
-              tileX <= tiledMap->getMapSize().x &&
-              tileY <= tiledMap->getMapSize().y)
+            if (tileX + j > -1 &&
+              tileY + i > -1 &&
+              tileX + j < tiledMap->getMapSize().x &&
+              tileY + i < tiledMap->getMapSize().y)
               tiledMap->setType(tileX + j, tileY + i, static_cast<uint8>(EditorOptions::s_selected));
     }
   }

@@ -174,7 +174,7 @@
     <ClCompile Include="Source\Externals\imgui_draw.cpp" />
     <ClCompile Include="Source\Externals\imgui_widgets.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\RTSBestFisrtSearchPathfinding.cpp" />
+    <ClCompile Include="Source\RTSBestFirstSearchPathfinding.cpp" />
     <ClCompile Include="Source\RTSBreathFirstSearchPathfinding.cpp" />
     <ClCompile Include="Source\RTSDepthFirstSearchPathfinding.cpp" />
     <ClCompile Include="Source\RTSNode.cpp" />

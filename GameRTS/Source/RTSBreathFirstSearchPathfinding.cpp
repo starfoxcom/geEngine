@@ -20,8 +20,8 @@ bool RTSBreathFirstSearchPathfinding::startSearch()
 {
   //Reset the queues for new search
   resetSearch();
-
-  m_nextNodes.emplace_back(m_startPos, m_pTiledMap->getType(m_startPos.x, m_startPos.y));
+  if (m_pTiledMap->getType(m_startPos.x, m_startPos.y) != TERRAIN_TYPE::kObstacle)
+    m_nextNodes.emplace_back(m_startPos, m_pTiledMap->getType(m_startPos.x, m_startPos.y));
 
   m_currentState = SEARCH_STATE::onSearch;
 

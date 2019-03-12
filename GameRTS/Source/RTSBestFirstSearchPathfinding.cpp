@@ -20,10 +20,11 @@ bool RTSBestFirstSearchPathfinding::startSearch()
 {
   //Reset the queues for new search
   resetSearch();
-
-  m_nextNodes.emplace_back(m_startPos,
-    m_pTiledMap->getType(m_startPos.x, m_startPos.y),
-    m_pTiledMap->getCost(m_startPos.x, m_startPos.y));
+  if (m_pTiledMap->getType(m_startPos.x, m_startPos.y) != TERRAIN_TYPE::kObstacle)
+  m_nextNodes.emplace_back(
+    m_startPos, 
+    m_startPos - m_targetPos, 
+    m_pTiledMap->getType(m_startPos.x, m_startPos.y));
 
   m_currentState = SEARCH_STATE::onSearch;
 
@@ -39,15 +40,28 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
     return SEARCH_STATE::goalNotReached;
   }
 
-  RTSNode* bestNode;
+  RTSNode *bestNode = nullptr;
 
-  for (auto it = m_nextNodes.begin(); it < m_nextNodes.end(); it++)
+  int32 i = 0;
+  int32 bestI = 0;
+
+  float bestMag = 9999;
+  float possibleBestMag = 0;
+
+  for (auto it = m_nextNodes.begin(); it < m_nextNodes.end(); it++, ++i)
   {
-
+    possibleBestMag = Math::sqrt(Math::square(it->m_distance.x) + Math::square(it->m_distance.y));
+   
+    if (possibleBestMag < bestMag)
+    {
+      bestNode = ge_new<RTSNode>(m_nextNodes[i]);
+      bestMag = possibleBestMag;
+      bestI = i;
+    }
 
   }
   //Add the node to the closed queue
-  m_visited.push_back(m_nextNodes.back());
+  m_visited.push_back(*bestNode);
 
   //Set current node
   m_pCurrent = ge_new<RTSNode>(m_visited.back());
@@ -59,7 +73,7 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
   }
 
   //delete node from open list
-  m_nextNodes.erase(m_nextNodes.begin());
+  m_nextNodes.erase(m_nextNodes.begin() + bestI);
 
   Vector2I possibleConnection;
 
@@ -73,8 +87,8 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
     {
       m_nextNodes.emplace_back(
         possibleConnection,
-        m_pTiledMap->getType(possibleConnection.x, possibleConnection.y),
-        m_pTiledMap->getCost(possibleConnection.x, possibleConnection.y));
+        m_targetPos - possibleConnection,
+        m_pTiledMap->getType(possibleConnection.x, possibleConnection.y));
 
       //Set parent for the one added to the open queue
       m_nextNodes.back().m_parent = m_pCurrent;
