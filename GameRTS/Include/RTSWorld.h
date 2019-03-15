@@ -13,41 +13,49 @@ class RTSMapGridWalker;
 class RTSPathfinding;
 class RTSBreathFirstSearchPathfinding;
 
+class RTSNode;
+
 class RTSWorld
 {
- public:
+public:
   RTSWorld();
   ~RTSWorld();
 
- public:
+public:
   bool
-  init(sf::RenderTarget* pTarget);
+    init(sf::RenderTarget* pTarget);
 
   void
-  destroy();
+    destroy();
 
   void
-  update(float deltaTime);
+    update(float deltaTime);
 
   void
-  render();
+    render();
 
   RTSTiledMap*
-  getTiledMap() {
+    getTiledMap() {
     return m_pTiledMap;
   }
 
   void
-  updateResolutionData();
+    updateResolutionData();
 
   void
-  setCurrentWalker(const int8 index);
+    setCurrentWalker(const int8 index);
 
   RTSPathfinding* getCurrentWalker();
 
   sf::VertexArray* getPathLine();
 
   void clearPathLine();
+
+  void drawStarterNodes(sf::RectangleShape *_pRectangle, Vector2I _position);
+ 
+  void drawAlgorithmNodes(
+    sf::RectangleShape *_pRectangle, 
+    Vector<RTSNode> _nodes);
 
  private:
   RTSTiledMap* m_pTiledMap;
@@ -61,7 +69,7 @@ class RTSWorld
 
   sf::RenderTarget* m_pTarget;
 
-  sf::RectangleShape* m_pRectangleWalker, *m_pRectangleTarget;
+  sf::RectangleShape* m_pRectangleWalker, *m_pRectangleTarget, *m_pRectangleVisited, *m_pRectangleNextNode;
 
   sf::VertexArray* m_pathLine;
 };

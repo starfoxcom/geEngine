@@ -14,10 +14,42 @@ RTSPathfinding::RTSPathfinding()
 
   m_startPos = Vector2I::ZERO;
   m_targetPos = Vector2I::ZERO;
+
+  m_nextNodes.clear();
+  m_visited.clear();
 }
 
 RTSPathfinding::~RTSPathfinding()
 {
+  resetSearch();
+}
+
+bool RTSPathfinding::resetSearch()
+{
+  while (m_nextNodes.size() > 0)
+  {
+    ge_delete(m_nextNodes.back().m_parent);
+    m_nextNodes.pop_back();
+  }
+
+  while (m_visited.size() > 0)
+  {
+    if (m_pCurrent && !(*m_pCurrent == m_visited.back()))
+    {
+      ge_delete(m_visited.back().m_parent);
+    }
+    m_visited.pop_back();
+  }
+
+  if (m_pCurrent)
+  {
+    ge_delete(m_pCurrent);
+    m_pCurrent = nullptr;
+  }
+
+  m_currentState = SEARCH_STATE::idle;
+
+  return true;
 }
 
 Vector<Vector2I> RTSPathfinding::backTrace(RTSNode* _node)
@@ -33,6 +65,16 @@ Vector<Vector2I> RTSPathfinding::backTrace(RTSNode* _node)
     pParent = pParent->m_parent;
   }
   return result;
+}
+
+Vector<RTSNode> RTSPathfinding::getVisitedNodes()
+{
+  return m_visited;
+}
+
+Vector<RTSNode> RTSPathfinding::getNextNodes()
+{
+  return m_nextNodes;
 }
 
 Vector2I RTSPathfinding::getStartPos()

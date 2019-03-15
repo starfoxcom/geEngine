@@ -21,8 +21,5 @@ public:
 
   SEARCH_STATE updateSearch();
 
-  bool resetSearch();
-
   bool addConnection(Vector2I _neighbor);
-
 };

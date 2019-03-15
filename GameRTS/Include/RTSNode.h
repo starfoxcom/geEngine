@@ -19,6 +19,7 @@ public:
   { 
     m_parent = nullptr; 
   }
+
   RTSNode(Vector2I _position, Vector2I _distance, int8 _terrainType = 1) :
     m_position(_position), m_distance(_distance), m_terrainType(_terrainType) 
   {

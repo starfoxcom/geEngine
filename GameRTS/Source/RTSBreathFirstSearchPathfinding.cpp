@@ -5,11 +5,11 @@
 RTSBreathFirstSearchPathfinding::RTSBreathFirstSearchPathfinding(RTSTiledMap* _pTiledMap)
 {
   m_pTiledMap = _pTiledMap;
+  m_pCurrent = nullptr;
 }
 
 RTSBreathFirstSearchPathfinding::~RTSBreathFirstSearchPathfinding()
 {
-  ge_delete(m_pCurrent);
 }
 
 void RTSBreathFirstSearchPathfinding::init()
@@ -41,6 +41,12 @@ RTSPathfinding::SEARCH_STATE RTSBreathFirstSearchPathfinding::updateSearch()
   //Add the node to the closed queue
   m_visited.push_back(m_nextNodes.front());
 
+  if (nullptr != m_pCurrent)
+  {
+    ge_delete(m_pCurrent);
+    m_pCurrent = nullptr;
+  }
+
   //Set current node
   m_pCurrent = ge_new<RTSNode>(m_visited.back());
 
@@ -68,19 +74,10 @@ RTSPathfinding::SEARCH_STATE RTSBreathFirstSearchPathfinding::updateSearch()
         m_pTiledMap->getType(possibleConnection.x, possibleConnection.y));
 
       //Set parent for the one added to the open queue
-      m_nextNodes.back().m_parent = m_pCurrent;
+      m_nextNodes.back().m_parent = ge_new<RTSNode>(*m_pCurrent);
     }
   }
       return SEARCH_STATE::onSearch;
-}
-
-bool RTSBreathFirstSearchPathfinding::resetSearch()
-{
-  m_visited = m_nextNodes = {};
-
-  m_currentState = SEARCH_STATE::idle;
-
-  return true;
 }
 
 bool RTSBreathFirstSearchPathfinding::addConnection(Vector2I _possibleConnection)

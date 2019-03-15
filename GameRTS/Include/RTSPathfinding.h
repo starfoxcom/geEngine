@@ -29,25 +29,29 @@ public:
 
   virtual SEARCH_STATE updateSearch() = 0;
 
-  virtual bool resetSearch() = 0;
-
   virtual bool addConnection(Vector2I _possibleConnection) = 0;
 
+  bool resetSearch();
+  
+  SEARCH_STATE getCurrentState();
+
   Vector<Vector2I> backTrace(RTSNode* _node);
+
+  Vector<RTSNode> getVisitedNodes();
+
+  Vector<RTSNode> getNextNodes();
 
   Vector2I getStartPos();
   
   Vector2I getTargetPos();
 
+  RTSNode * getCurrentNode();
+
   void setStartPos(int32 _x, int32 _y);
 
   void setTargetPos(int32 _x, int32 _y);
 
-  SEARCH_STATE getCurrentState();
-
   void setCurrentState(SEARCH_STATE _state);
-
-  RTSNode * getCurrentNode();
 
   bool checkList(Vector<RTSNode> _list, Vector2I _position);
 
@@ -65,5 +69,5 @@ protected:
 
   Vector<Vector2I> m_nextPositions;
 
-  RTSNode* m_pCurrent;
+  RTSNode* m_pCurrent = nullptr;
 };

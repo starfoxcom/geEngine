@@ -5,11 +5,11 @@
 RTSBestFirstSearchPathfinding::RTSBestFirstSearchPathfinding(RTSTiledMap* _pTiledMap)
 {
   m_pTiledMap = _pTiledMap;
+  m_pCurrent = nullptr;
 }
 
 RTSBestFirstSearchPathfinding::~RTSBestFirstSearchPathfinding()
 {
-  ge_delete(m_pCurrent);
 }
 
 void RTSBestFirstSearchPathfinding::init()
@@ -40,8 +40,6 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
     return SEARCH_STATE::goalNotReached;
   }
 
-  RTSNode *bestNode = nullptr;
-
   int32 i = 0;
   int32 bestI = 0;
 
@@ -50,18 +48,23 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
 
   for (auto it = m_nextNodes.begin(); it < m_nextNodes.end(); it++, ++i)
   {
-    possibleBestMag = Math::sqrt(Math::square(it->m_distance.x) + Math::square(it->m_distance.y));
-   
+    possibleBestMag = it->m_distance.x + it->m_distance.y;
+
     if (possibleBestMag < bestMag)
     {
-      bestNode = ge_new<RTSNode>(m_nextNodes[i]);
       bestMag = possibleBestMag;
       bestI = i;
     }
 
   }
   //Add the node to the closed queue
-  m_visited.push_back(*bestNode);
+  m_visited.push_back(m_nextNodes[bestI]);
+
+  if (nullptr != m_pCurrent)
+  {
+    ge_delete(m_pCurrent);
+    m_pCurrent = nullptr;
+  }
 
   //Set current node
   m_pCurrent = ge_new<RTSNode>(m_visited.back());
@@ -87,23 +90,14 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
     {
       m_nextNodes.emplace_back(
         possibleConnection,
-        m_targetPos - possibleConnection,
+        possibleConnection - m_targetPos,
         m_pTiledMap->getType(possibleConnection.x, possibleConnection.y));
 
       //Set parent for the one added to the open queue
-      m_nextNodes.back().m_parent = m_pCurrent;
+      m_nextNodes.back().m_parent = ge_new<RTSNode>(*m_pCurrent);
     }
   }
   return SEARCH_STATE::onSearch;
-}
-
-bool RTSBestFirstSearchPathfinding::resetSearch()
-{
-  m_visited = m_nextNodes = {};
-
-  m_currentState = SEARCH_STATE::idle;
-
-  return true;
 }
 
 bool RTSBestFirstSearchPathfinding::addConnection(Vector2I _possibleConnection)

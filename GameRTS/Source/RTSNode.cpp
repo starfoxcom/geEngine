@@ -7,5 +7,4 @@ bool RTSNode::operator==(const RTSNode& _node)
 
 RTSNode::~RTSNode()
 {
-  m_parent = nullptr;
 }

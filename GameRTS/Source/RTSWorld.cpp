@@ -5,6 +5,8 @@
 
 #include "RTSPathfinding.h"
 
+#include "RTSNode.h"
+
 #include "RTSBreathFirstSearchPathfinding.h"
 #include "RTSDepthFisrtSearchPathfinding.h"
 #include "RTSBestFirstSearchPathfinding.h"
@@ -14,6 +16,8 @@ RTSWorld::RTSWorld() {
   m_pathLine = nullptr;
   m_pRectangleWalker = nullptr;
   m_pRectangleTarget = nullptr;
+  m_pRectangleVisited = nullptr;
+  m_pRectangleNextNode = nullptr;
   m_activeWalkerIndex = -1;	//-1 = Invalid index
 }
 
@@ -61,6 +65,14 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   m_pRectangleTarget->setFillColor(sf::Color::Red);
   m_pRectangleTarget->setOrigin(5, 5);
 
+  m_pRectangleVisited = ge_new<sf::RectangleShape>(sf::Vector2f(10.f, 10.f));
+  m_pRectangleVisited->setFillColor(sf::Color::Magenta);
+  m_pRectangleVisited->setOrigin(5, 5);
+
+  m_pRectangleNextNode = ge_new<sf::RectangleShape>(sf::Vector2f(10.f, 10.f));
+  m_pRectangleNextNode->setFillColor(sf::Color::Blue);
+  m_pRectangleNextNode->setOrigin(5, 5);
+
   return true;
 }
 
@@ -83,10 +95,23 @@ RTSWorld::destroy() {
     ge_delete(m_pRectangleWalker);
     m_pRectangleWalker = nullptr;
   }
+
   if (nullptr != m_pRectangleTarget)
   {
     ge_delete(m_pRectangleTarget);
     m_pRectangleTarget = nullptr;
+  }
+
+  if (nullptr != m_pRectangleVisited)
+  {
+    ge_delete(m_pRectangleVisited);
+    m_pRectangleVisited = nullptr;
+  }
+
+  if (nullptr != m_pRectangleNextNode)
+  {
+    ge_delete(m_pRectangleNextNode);
+    m_pRectangleNextNode = nullptr;
   }
 
   if (nullptr != m_pathLine)
@@ -108,53 +133,42 @@ RTSWorld::render() {
   //Screen cords
   int32 screenX, screenY;
 
-  //Get map to screen cords for starting position shape
-  m_pTiledMap->getMapToScreenCoords(
-    m_activeWalker->getStartPos().x, m_activeWalker->getStartPos().y,
-    screenX, screenY);
-
-  //Set starting position shape
-  m_pRectangleWalker->setPosition(
-    static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
-    static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
+  drawStarterNodes(m_pRectangleWalker, m_activeWalker->getStartPos());
   
-  //Get map to screen cords for target position shape
-  m_pTiledMap->getMapToScreenCoords(
-    m_activeWalker->getTargetPos().x, m_activeWalker->getTargetPos().y, screenX, screenY);
-
-  //Set target position shape
-  m_pRectangleTarget->setPosition(
-    static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
-    static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
+  drawStarterNodes(m_pRectangleTarget, m_activeWalker->getTargetPos());
   
   if (m_activeWalker->getCurrentState() == RTSPathfinding::onSearch)
   {
     m_activeWalker->setCurrentState(m_activeWalker->updateSearch());
   }
-
   else if (m_activeWalker->getCurrentState() == RTSPathfinding::goalReached)
-  { 
-    if (m_pathLine == nullptr)
+  {
+    
+    clearPathLine();
+
+    Vector<Vector2I> backTrace = m_activeWalker->backTrace(m_activeWalker->getCurrentNode());
+
+    m_pathLine = ge_new<sf::VertexArray>(sf::LineStrip, backTrace.size());
+
+    int32 i = 0;
+
+    for (auto it = backTrace.begin(); it != backTrace.end(); ++it, ++i)
     {
-      Vector<Vector2I> backTrace = m_activeWalker->backTrace(m_activeWalker->getCurrentNode());
-      m_pathLine = ge_new<sf::VertexArray>(sf::LineStrip, backTrace.size());
+      getTiledMap()->getMapToScreenCoords(it->x, it->y, screenX, screenY);
 
-      int32 i = 0;
-      for (auto it = backTrace.begin(); it != backTrace.end(); ++it, ++i)
-      {
-        getTiledMap()->getMapToScreenCoords(it->x, it->y, screenX, screenY);
+      (*m_pathLine)[i].position = sf::Vector2f(
+        static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
+        static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
 
-        (*m_pathLine)[i].position = sf::Vector2f(
-          static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
-          static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
-
-        (*m_pathLine)[i].color = sf::Color::White;
-      }
-
+      (*m_pathLine)[i].color = sf::Color::White;
     }
 
     m_pTarget->draw(*m_pathLine);
   }
+
+  drawAlgorithmNodes(m_pRectangleNextNode, m_activeWalker->getNextNodes());
+
+  drawAlgorithmNodes(m_pRectangleVisited, m_activeWalker->getVisitedNodes());
 
   m_pTarget->draw(*m_pRectangleWalker);
   m_pTarget->draw(*m_pRectangleTarget);
@@ -197,7 +211,53 @@ void RTSWorld::clearPathLine()
 {
   if (m_pathLine != nullptr)
   {
-    m_pathLine->clear();
+    ge_delete(m_pathLine);
     m_pathLine = nullptr;
   }
 }
+
+void RTSWorld::drawStarterNodes(sf::RectangleShape *_pRectangle, Vector2I _position)
+{
+
+  int32 screenX, screenY;
+
+  //Get map to screen cords for starting position shape
+  m_pTiledMap->getMapToScreenCoords(
+    _position.x, _position.y,
+    screenX, screenY);
+
+  //Set starting position shape
+  _pRectangle->setPosition(
+    static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
+    static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
+}
+
+void RTSWorld::drawAlgorithmNodes(sf::RectangleShape * _pRectangle, Vector<RTSNode> _nodes)
+{
+  Vector<sf::RectangleShape*> drawNodes;
+
+  int32 screenX, screenY;
+
+  for (int32 i = 0; i < _nodes.size(); ++i)
+  {
+    m_pTiledMap->getMapToScreenCoords(
+      _nodes[i].m_position.x, _nodes[i].m_position.y,
+      screenX, screenY);
+
+    //Set starting position shape
+    _pRectangle->setPosition(
+      static_cast<float>(screenX + GameOptions::TILEHALFSIZE.x),
+      static_cast<float>(screenY + GameOptions::TILEHALFSIZE.y));
+
+    drawNodes.push_back(_pRectangle);
+
+    m_pTarget->draw(*drawNodes.back());
+  }
+
+  for (int32 i = 0; i < drawNodes.size(); ++i)
+  {
+  }
+}
+
+
+
