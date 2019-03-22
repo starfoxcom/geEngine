@@ -30,6 +30,14 @@ static std::vector<std::string> v_terrainName =
   "Obstacle"
 };
 
+static std::vector<int8> v_terrainCost =
+{
+  5,
+  1,
+  3,
+  99
+};
+
 class RTSTiledMap
 {
   class MapTile

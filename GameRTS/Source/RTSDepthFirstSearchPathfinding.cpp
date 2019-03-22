@@ -20,6 +20,8 @@ bool RTSDepthFirstSearchPathfinding::startSearch()
 {
   //Reset the queues for new search
   resetSearch();
+
+
   if (m_pTiledMap->getType(m_startPos.x, m_startPos.y) != TERRAIN_TYPE::kObstacle)
     m_nextNodes.emplace_back(m_startPos, m_pTiledMap->getType(m_startPos.x, m_startPos.y));
 

@@ -68,6 +68,12 @@
     <ClCompile Include="Source\RTSBestFirstSearchPathfinding.cpp">
       <Filter>Source Files\Pathfinding</Filter>
     </ClCompile>
+    <ClCompile Include="Source\RTSDijkstraPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTSAStarPathfinding.cpp">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\RTSUnitType.h">
@@ -101,6 +107,12 @@
       <Filter>Source Files\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="Include\RTSBestFirstSearchPathfinding.h">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RTSDijkstraPathfinding.h">
+      <Filter>Source Files\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RTSAStarPathfinding.h">
       <Filter>Source Files\Pathfinding</Filter>
     </ClInclude>
   </ItemGroup>

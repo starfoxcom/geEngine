@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\RTSAStarPathfinding.cpp" />
     <ClCompile Include="Source\Externals\imgui-SFML.cpp" />
     <ClCompile Include="Source\Externals\imgui.cpp" />
     <ClCompile Include="Source\Externals\imgui_demo.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Source\RTSBestFirstSearchPathfinding.cpp" />
     <ClCompile Include="Source\RTSBreathFirstSearchPathfinding.cpp" />
     <ClCompile Include="Source\RTSDepthFirstSearchPathfinding.cpp" />
+    <ClCompile Include="Source\RTSDijkstraPathfinding.cpp" />
     <ClCompile Include="Source\RTSNode.cpp" />
     <ClCompile Include="Source\RTSPathfinding.cpp" />
     <ClCompile Include="Source\RTSApplication.cpp" />
@@ -187,9 +189,11 @@
     <ClCompile Include="Source\RTSWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\RTSAStarPathfinding.h" />
     <ClInclude Include="Include\RTSBestFirstSearchPathfinding.h" />
     <ClInclude Include="Include\RTSBreathFirstSearchPathfinding.h" />
     <ClInclude Include="Include\RTSDepthFisrtSearchPathfinding.h" />
+    <ClInclude Include="Include\RTSDijkstraPathfinding.h" />
     <ClInclude Include="Include\RTSNode.h" />
     <ClInclude Include="Include\RTSPathfinding.h" />
     <ClInclude Include="Include\RTSApplication.h" />

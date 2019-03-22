@@ -10,6 +10,8 @@
 #include "RTSBreathFirstSearchPathfinding.h"
 #include "RTSDepthFisrtSearchPathfinding.h"
 #include "RTSBestFirstSearchPathfinding.h"
+#include "RTSDijkstraPathfinding.h"
+#include "RTSAStarPathfinding.h"
 
 RTSWorld::RTSWorld() {
   m_pTiledMap = nullptr;
@@ -43,6 +45,8 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   m_walkersList.push_back(ge_new<RTSDepthFirstSearchPathfinding>(m_pTiledMap));
   m_walkersList.push_back(ge_new<RTSBreathFirstSearchPathfinding>(m_pTiledMap));
   m_walkersList.push_back(ge_new<RTSBestFirstSearchPathfinding>(m_pTiledMap));
+  m_walkersList.push_back(ge_new<RTSDijkstraPathfinding>(m_pTiledMap));
+  m_walkersList.push_back(ge_new<RTSAStarPathfinding>(m_pTiledMap));
 
   //Init the walker objects
 

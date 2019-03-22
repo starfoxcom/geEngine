@@ -202,7 +202,10 @@ RTSApplication::updateFrame() {
       auto mousePos = sf::Mouse::getPosition();
       tiledMap->getScreenToMapCoords(mousePos.x, mousePos.y, tileX, tileY);
       if (EditorOptions::s_brushSize == 1)
+      {
         tiledMap->setType(tileX, tileY, static_cast<uint8>(EditorOptions::s_selected));
+        tiledMap->setCost(tileX, tileY, v_terrainCost[EditorOptions::s_selected]);
+      }
       else
         for (int32 i = -EditorOptions::s_brushSize >> 1; i < EditorOptions::s_brushSize >> 1; ++i)
           for (int32 j = -EditorOptions::s_brushSize >> 1; j < EditorOptions::s_brushSize >> 1; ++j)
@@ -210,7 +213,11 @@ RTSApplication::updateFrame() {
               tileY + i > -1 &&
               tileX + j < tiledMap->getMapSize().x &&
               tileY + i < tiledMap->getMapSize().y)
+            {
               tiledMap->setType(tileX + j, tileY + i, static_cast<uint8>(EditorOptions::s_selected));
+              tiledMap->setCost(tileX + j, tileY + i, v_terrainCost[EditorOptions::s_selected]);
+
+            }
     }
   }
 
