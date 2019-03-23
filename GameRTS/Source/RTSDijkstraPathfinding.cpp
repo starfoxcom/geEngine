@@ -4,7 +4,11 @@
 
 RTSDijkstraPathfinding::RTSDijkstraPathfinding(RTSTiledMap* _pTiledMap)
 {
+
+  //Set the tiled map pointer
   m_pTiledMap = _pTiledMap;
+
+  //Set the current node pointer to nullptr
   m_pCurrent = nullptr;
 }
 
@@ -25,6 +29,7 @@ bool RTSDijkstraPathfinding::startSearch()
   if (m_pTiledMap->getType(m_startPos.x, m_startPos.y) != TERRAIN_TYPE::kObstacle)
   {
 
+    //Emplace the starting node to the vector
     m_nextNodes.emplace_back(
       m_startPos,
       m_pTiledMap->getCost(m_startPos.x, m_startPos.y),
@@ -35,11 +40,13 @@ bool RTSDijkstraPathfinding::startSearch()
   //Otherwise keep state on idle
   else
   {
+
+    //Set current state to idle
     m_currentState = SEARCH_STATE::idle;
     return true;
   }
 
-  //Set state to on search
+  //Set current state to searching
   m_currentState = SEARCH_STATE::onSearch;
 
   return true;
@@ -75,6 +82,7 @@ RTSPathfinding::SEARCH_STATE RTSDijkstraPathfinding::updateSearch()
       //Set the best node index with the node counter
       bestI = i;
 
+      //Set best cost as the total cost of the object iterated
       bestCost = it->m_totalCost;
     }
 
@@ -134,22 +142,28 @@ RTSPathfinding::SEARCH_STATE RTSDijkstraPathfinding::updateSearch()
     }
   }
 
-  //Goal reached
+  //Keep searching
   return SEARCH_STATE::onSearch;
 }
 
 bool RTSDijkstraPathfinding::addConnection(Vector2I _possibleConnection)
 {
 
-  //
+  //On the possible connection position is inside the map
   if (_possibleConnection.x > -1 &&
     _possibleConnection.y > -1 &&
     _possibleConnection.x < m_pTiledMap->getMapSize().x &&
     _possibleConnection.y < m_pTiledMap->getMapSize().y)
   {
+
+    //On the type of tile is not an obstacle
     if (m_pTiledMap->getType(_possibleConnection.x, _possibleConnection.y) != TERRAIN_TYPE::kObstacle)
     {
+
+      //On the node is not on the vector container
       if (!checkList(m_nextNodes, _possibleConnection))
+
+        //On the node is not on the vector container
         if (!checkList(m_visited, _possibleConnection))
           return true;
     }

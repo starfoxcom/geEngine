@@ -69,6 +69,7 @@ RTSAStarPathfinding::SEARCH_STATE RTSAStarPathfinding::updateSearch()
   //Magnitude between distances
   int32 possibleBestMagCost = 0;
 
+
   for (auto it = m_nextNodes.begin(); it < m_nextNodes.end(); ++it, ++i)
   {
 

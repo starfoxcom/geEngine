@@ -4,7 +4,10 @@
 
 RTSBestFirstSearchPathfinding::RTSBestFirstSearchPathfinding(RTSTiledMap* _pTiledMap)
 {
+  //Set the tiled map pointer
   m_pTiledMap = _pTiledMap;
+
+  //Set the current node pointer to nullptr
   m_pCurrent = nullptr;
 }
 
@@ -25,20 +28,23 @@ bool RTSBestFirstSearchPathfinding::startSearch()
   if (m_pTiledMap->getType(m_startPos.x, m_startPos.y) != TERRAIN_TYPE::kObstacle)
   {
 
-  m_nextNodes.emplace_back(
-    m_startPos, 
-    m_startPos - m_targetPos, 
-    m_pTiledMap->getType(m_startPos.x, m_startPos.y));
+    //Emplace the starting node to the vector
+    m_nextNodes.emplace_back(
+      m_startPos,
+      m_startPos - m_targetPos,
+      m_pTiledMap->getType(m_startPos.x, m_startPos.y));
   }
   
   //Otherwise keep state on idle
   else
   {
+
+    //Set current state to idle
     m_currentState = SEARCH_STATE::idle;
     return true;
   }
 
-  //Set state to on search
+  //Set the current state to searching
   m_currentState = SEARCH_STATE::onSearch;
 
   return true;
@@ -146,15 +152,21 @@ RTSPathfinding::SEARCH_STATE RTSBestFirstSearchPathfinding::updateSearch()
 bool RTSBestFirstSearchPathfinding::addConnection(Vector2I _possibleConnection)
 {
 
-  //
+  //On the possible connection position is inside the map
   if (_possibleConnection.x > -1 &&
     _possibleConnection.y > -1 &&
     _possibleConnection.x < m_pTiledMap->getMapSize().x &&
     _possibleConnection.y < m_pTiledMap->getMapSize().y)
   {
+
+    //On the type of tile is not an obstacle
     if (m_pTiledMap->getType(_possibleConnection.x, _possibleConnection.y) != TERRAIN_TYPE::kObstacle)
     {
+
+      //On the node is not on the vector container
       if (!checkList(m_nextNodes, _possibleConnection))
+
+        //On the node is not on the vector container
         if (!checkList(m_visited, _possibleConnection))
           return true;
     }
