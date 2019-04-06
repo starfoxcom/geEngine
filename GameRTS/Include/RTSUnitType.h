@@ -50,7 +50,7 @@ namespace RTSGame {
   class RTSUnitType
   {
    public:
-     RTSUnitType();
+     RTSUnitType(uint8 _terrainType);
      ~RTSUnitType();
 
      static RTSUnitType*
@@ -64,6 +64,8 @@ namespace RTSGame {
    private:
      uint32 m_id;
      String m_name;
+
+     uint8 m_terrainType;
 
 
      Vector<Animation> m_animationFrames;

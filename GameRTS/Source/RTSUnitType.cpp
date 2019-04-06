@@ -8,7 +8,7 @@ using namespace geEngineSDK;
 using nlohmann::json;
 
 namespace RTSGame {
-  RTSUnitType::RTSUnitType() {}
+  RTSUnitType::RTSUnitType(uint8 _terrainType) : m_terrainType(_terrainType) {}
 
   RTSUnitType::~RTSUnitType() {}
 

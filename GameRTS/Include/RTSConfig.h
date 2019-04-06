@@ -64,6 +64,9 @@ public:
 
   //Radial button Id
   static int32 s_posSelected;
+
+  //Radial button Id
+  static int32 s_terrainTypeSelected;
 };
 
 GameOptions&

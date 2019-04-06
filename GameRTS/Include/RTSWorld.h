@@ -15,6 +15,12 @@ class RTSBreathFirstSearchPathfinding;
 
 class RTSNode;
 
+namespace RTSGame
+{
+
+class RTSUnitType;
+}
+
 class RTSWorld
 {
 public:
@@ -59,7 +65,7 @@ public:
 
  private:
   RTSTiledMap* m_pTiledMap;
-  //List<RTSUnitType*> m_lstUnitTypes;
+  Vector<RTSGame::RTSUnitType*> m_lstUnitTypes;
   //List<RTSUnit*> m_lstUnits;
   
   //Vector<RTSMapGridWalker*> m_walkersList;

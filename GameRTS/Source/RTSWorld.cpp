@@ -40,8 +40,6 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   m_pTiledMap->init(m_pTarget, Vector2I(4096, 4096));
 
   //Create the path finding classes and push them to the walker list
-  //m_walkersList.push_back(ge_new<RTSBreadthFirstSearchMapGridWalker>(m_pTiledMap));
-
   m_walkersList.push_back(ge_new<RTSDepthFirstSearchPathfinding>(m_pTiledMap));
   m_walkersList.push_back(ge_new<RTSBreathFirstSearchPathfinding>(m_pTiledMap));
   m_walkersList.push_back(ge_new<RTSBestFirstSearchPathfinding>(m_pTiledMap));
@@ -57,9 +55,13 @@ RTSWorld::init(sf::RenderTarget* pTarget) {
   //Set the first walker as the active walker
   setCurrentWalker(m_walkersList.size() > 0 ? 0 : -1);
 
+  m_lstUnitTypes.push_back(ge_new<RTSGame::RTSUnitType>(0));
+  m_lstUnitTypes.push_back(ge_new<RTSGame::RTSUnitType>(1));
+  m_lstUnitTypes.push_back(ge_new<RTSGame::RTSUnitType>(2));
 
-  RTSGame::RTSUnitType unitTypes;
-  unitTypes.loadAnimationData(m_pTarget, 1);
+  for (SIZE_T it = 0; it < m_lstUnitTypes.size(); ++it) {
+    m_lstUnitTypes[it]->loadAnimationData(m_pTarget, it + 1);
+  }
 
   m_pRectangleWalker = ge_new<sf::RectangleShape>(sf::Vector2f(10.f, 10.f));
   m_pRectangleWalker->setFillColor(sf::Color::Green);
@@ -86,6 +88,11 @@ RTSWorld::destroy() {
   while (m_walkersList.size() > 0) {
     ge_delete(m_walkersList.back());
     m_walkersList.pop_back();
+  }
+
+  while (m_lstUnitTypes.size() > 0) {
+    ge_delete(m_lstUnitTypes.back());
+    m_lstUnitTypes.pop_back();
   }
 
   //As the last step, destroy the full map

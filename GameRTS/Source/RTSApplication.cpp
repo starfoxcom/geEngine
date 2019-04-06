@@ -29,7 +29,7 @@ std::vector<std::string> v_pathName =
 {
   "Depth First Search",
   "Breath First Search",
-  "Greedy Best First Search",
+  "Best First Search",
   "Dijkstra",
   "A*"
 };

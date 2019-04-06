@@ -319,6 +319,7 @@ RTSTiledMap::loadFromImageFile(sf::RenderTarget* pTarget, String fileName) {
       }
 
       setType(tmpX, tmpY, tipoTerreno);
+      setCost(tmpX, tmpY, v_terrainCost[tipoTerreno]);
     }
   }
 
